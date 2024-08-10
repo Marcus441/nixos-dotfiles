@@ -6,3 +6,4 @@ My dotfile configs. Make sure you source the the tmux config and run the theme s
 - Git
 - Zsh
 - Alacritty
+- Tmux
