@@ -8,3 +8,6 @@ My dotfile configs. Make sure you source the the tmux config and run the theme s
 - Alacritty
 - Tmux
 - GNU Stow
+- zoxide
+- fzf
+- jetbrains mono nerd fonts
