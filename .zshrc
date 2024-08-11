@@ -11,6 +11,11 @@ fi
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
 
+# javaFX
+export JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+export PATH=$JAVA_HOME/bin:$PATH
+export PATH=/opt/javafx-sdk/lib:$PATH
+
 # Created by newuser for 5.9
 # zinit plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
