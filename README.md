@@ -63,8 +63,10 @@ mkdir -p ~/.config/wofi
 - ttf-droid
 - ttf-font-awesome-4
 - waybar
-sudo pacman -S --needed amixer autotiling copyq kbdd mako network-manager-applet playerctl swaybg swaylock syncthingtray ttf-droid ttf-font-awesome-4 waybar
-
+```
+sudo pacman -S --needed --noconfirm alsa-utils copyq mako network-manager-applet swaybg swaylock ttf-droid waybar
+yay -S --noconfirm --needed input-remapper-git wofi shutter
+```
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
