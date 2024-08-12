@@ -35,15 +35,9 @@ mkdir -p ~/.config/waybar
 mkdir -p ~/.config/wofi
 ```
 
-3. Clone relevant repos
-
-```
-git clone https://github.com/catppuccin/waybar.git ~/.config/waybar/
-git clone https://github.com/quantumfate/wofi.git ~/.config/wofi/
-```
 
 ## Dependencies
-
+### Terminal
 - Git
 - Zsh
 - Alacritty
@@ -52,6 +46,24 @@ git clone https://github.com/quantumfate/wofi.git ~/.config/wofi/
 - zoxide
 - fzf
 - jetbrains mono nerd fonts
+### For Hyprland
+- amixer
+- autotiling
+- copyq
+- input-remapper-git
+- kbdd
+- mako
+- network-manager-applet
+- playerctl 
+- wofi
+- shutter
+- swaybg
+- swaylock
+- syncthingtray
+- ttf-droid
+- ttf-font-awesome-4
+- waybar
+sudo pacman -S --needed amixer autotiling copyq kbdd mako network-manager-applet playerctl swaybg swaylock syncthingtray ttf-droid ttf-font-awesome-4 waybar
 
 ## Additional Notes
 
