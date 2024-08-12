@@ -25,6 +25,23 @@ git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/theme
 
 1. Run `stow zsh` while inside the dotfiles directory.
 
+## Installing Hyprland config
+
+1. Run `stow Hyprland` while inside the dotfiles directory
+2. Create relevant paths
+
+```
+mkdir -p ~/.config/waybar
+mkdir -p ~/.config/wofi
+```
+
+3. Clone relevant repos
+
+```
+git clone https://github.com/catppuccin/waybar.git ~/.config/waybar/
+git clone https://github.com/quantumfate/wofi.git ~/.config/wofi/
+```
+
 ## Dependencies
 
 - Git
