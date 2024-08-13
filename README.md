@@ -47,21 +47,9 @@ mkdir -p ~/.config/wofi
 - fzf
 - jetbrains mono nerd fonts
 ### For Hyprland
-- amixer
-- autotiling
-- copyq
-- input-remapper-git
-- kbdd
-- mako
 - network-manager-applet
-- playerctl 
 - wofi
-- shutter
-- swaybg
-- swaylock
-- syncthingtray
-- ttf-droid
-- ttf-font-awesome-4
+- hyprpaper
 - waybar
 ```
 sudo pacman -S --needed --noconfirm alsa-utils copyq mako network-manager-applet swaybg swaylock ttf-droid waybar
