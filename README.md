@@ -35,9 +35,10 @@ mkdir -p ~/.config/waybar
 mkdir -p ~/.config/wofi
 ```
 
-
 ## Dependencies
+
 ### Terminal
+
 - Git
 - Zsh
 - Alacritty
@@ -46,7 +47,9 @@ mkdir -p ~/.config/wofi
 - zoxide
 - fzf
 - jetbrains mono nerd fonts
+
 ### For Hyprland
+
 - network-manager-applet
 - wofi
 - hyprpaper
@@ -54,6 +57,7 @@ mkdir -p ~/.config/wofi
 - waybar
 - pavucontrol
 - Cantarrel and noto fonts
+- otf-font-awesome
 - rose pine cursors
 - rose pine hyprcursors
 
