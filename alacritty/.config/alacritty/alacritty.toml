@@ -7,6 +7,10 @@ import = [
 [shell]
 program = "/bin/zsh"
 
+[window.padding]
+x = 15
+y = 15
+
 [font.bold]
 family = "JetBrainsMono Nerd Font"
 style = "Bold"
