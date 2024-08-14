@@ -54,6 +54,7 @@ mkdir -p ~/.config/wofi
 - otf-font-awesome
 - cantarrel-fonts
 - noto-fonts
+- materia-gtk-theme
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
