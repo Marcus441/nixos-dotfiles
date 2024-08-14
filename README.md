@@ -50,11 +50,13 @@ mkdir -p ~/.config/wofi
 - network-manager-applet
 - wofi
 - hyprpaper
+- hyprcursor
 - waybar
-```
-sudo pacman -S --needed --noconfirm alsa-utils copyq mako network-manager-applet swaybg swaylock ttf-droid waybar
-yay -S --noconfirm --needed input-remapper-git wofi shutter
-```
+- pavucontrol
+- Cantarrel and noto fonts
+- rose pine cursors
+- rose pine hyprcursors
+
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
