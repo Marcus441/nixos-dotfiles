@@ -51,10 +51,9 @@ mkdir -p ~/.config/wofi
 - wofi
 - hyprpaper
 - waybar
-```
-sudo pacman -S --needed --noconfirm alsa-utils copyq mako network-manager-applet swaybg swaylock ttf-droid waybar
-yay -S --noconfirm --needed input-remapper-git wofi shutter
-```
+- otf-font-awesome
+- cantarrel-fonts
+- noto-fonts
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
