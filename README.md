@@ -55,6 +55,10 @@ mkdir -p ~/.config/wofi
 - cantarrel-fonts
 - noto-fonts
 - materia-gtk-theme
+- dunst
+- pipewire
+- polkit-kde-agent
+- qt5-wayland and qt6-wayland
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
