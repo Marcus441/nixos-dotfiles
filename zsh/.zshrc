@@ -87,6 +87,8 @@ alias lsa='ls -lah --color'
 alias vim='nvim'
 alias c='clear'
 alias ta='tmux attach-session -t'
+alias tn='tmux new-session'
+alias tns='tmux new-session -s'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
