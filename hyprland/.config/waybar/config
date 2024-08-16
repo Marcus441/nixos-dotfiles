@@ -27,14 +27,15 @@
     ],
     "modules-right": [
         "pulseaudio",
-        "network",
         "memory",
         "cpu",
         "temperature",
+        "network",
+        "tray",
         "custom/keyboard-layout",
         "battery",
         "clock#time",
-        "tray",
+        "clock#date",
     ],
 
 
@@ -70,7 +71,7 @@
 
     "clock#date": {
       "interval": 10,
-      "format": "  {:%e %b %Y}", // Icon: calendar-alt
+      "format": "{:%e %b %Y}", 
       "tooltip-format": "{:%e %B %Y}"
     },
     
@@ -119,12 +120,12 @@
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-wifi": "{ifname}: {ipaddr}/{cidr}",
         "format-ethernet": "{ipaddr}/{cidr} ",
         "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "format-alt": "{essid} ({signalStrength}%)",
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
