@@ -94,3 +94,6 @@ eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
 
+
+# Created by `pipx` on 2024-08-26 00:13:47
+export PATH="$PATH:/home/marcus/.local/bin"
