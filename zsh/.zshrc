@@ -93,7 +93,10 @@ alias tns='tmux new-session -s'
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-
-
+# Pyenv stuff
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 # Created by `pipx` on 2024-08-26 00:13:47
 export PATH="$PATH:/home/marcus/.local/bin"
