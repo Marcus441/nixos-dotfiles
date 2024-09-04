@@ -100,3 +100,5 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 # Created by `pipx` on 2024-08-26 00:13:47
 export PATH="$PATH:/home/marcus/.local/bin"
+# LaTeX stuff
+export PATH="$PATH:/usr/local/texlive/2024/bin/x86_64-linux"
