@@ -33,6 +33,11 @@ git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/theme
 ```
 mkdir -p ~/.config/waybar
 mkdir -p ~/.config/wofi
+mkdir -p ~/.config/dunst
+mkdir -p ~/.config/scripts
+mkdir -p ~/.config/gtk-3.0
+mkdir -p ~/.config/gtk-4.0
+
 ```
 
 
