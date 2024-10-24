@@ -1,12 +1,13 @@
 #themes
+[general]
 import = [
   # "~/.config/alacritty/themes/themes/gruvbox_dark.toml",
   "~/.config/alacritty/themes/themes/gruvbox_material_hard_dark.toml",
   # "~/.config/alacritty/themes/themes/catppuccin_mocha.toml",
 ]
 
-[shell]
-program = "/bin/zsh"
+[terminal]
+shell = "/bin/zsh"
 
 [window.padding]
 x = 15
