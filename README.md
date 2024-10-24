@@ -62,7 +62,7 @@ mkdir -p ~/.config/gtk-4.0
 - materia-gtk-theme
 - dunst
 - pipewire
-- polkit-kde-agent
+- pavucontrol
 - qt5-wayland and qt6-wayland
 ## Additional Notes
 
