@@ -55,6 +55,7 @@ mkdir -p ~/.config/gtk-4.0
 - network-manager-applet
 - wofi
 - hyprpaper
+- hyprshot
 - waybar
 - otf-font-awesome
 - cantarrel-fonts
@@ -63,6 +64,8 @@ mkdir -p ~/.config/gtk-4.0
 - dunst
 - pipewire
 - pavucontrol
+- wl-clipboard
+- clipman
 - qt5-wayland and qt6-wayland
 ## Additional Notes
 
