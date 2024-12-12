@@ -67,6 +67,7 @@ mkdir -p ~/.config/gtk-4.0
 - wl-clipboard
 - clipman
 - qt5-wayland and qt6-wayland
+- wlogout
 ## Additional Notes
 
 - Alacritty Themes: Ensure that the theme file paths in your alacritty.toml are
