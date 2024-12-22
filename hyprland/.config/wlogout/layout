@@ -1,30 +1,36 @@
 {
     "label" : "lock",
-    "action" : "~/.config/scripts/power.sh lock",
+    "action" : "loginctl lock-session",
     "text" : "Lock",
     "keybind" : "l"
 }
 {
+    "label" : "hibernate",
+    "action" : "systemctl hibernate",
+    "text" : "Hibernate",
+    "keybind" : "h"
+}
+{
     "label" : "logout",
-    "action" : "~/.config/scripts/power.sh exit",
-    "text" : "Log Out",
+    "action" : "loginctl terminate-user $USER",
+    "text" : "Logout",
     "keybind" : "e"
 }
 {
+    "label" : "shutdown",
+    "action" : "systemctl poweroff",
+    "text" : "Shutdown",
+    "keybind" : "s"
+}
+{
     "label" : "suspend",
-    "action" : "~/.config/scripts/power.sh suspend",
+    "action" : "systemctl suspend",
     "text" : "Suspend",
     "keybind" : "u"
 }
 {
     "label" : "reboot",
-    "action" : "~/.config/scripts/power.sh reboot",
-    "text" : "Restart",
+    "action" : "systemctl reboot",
+    "text" : "Reboot",
     "keybind" : "r"
-}
-{
-    "label" : "shutdown",
-    "action" : "~/.config/scripts/power.sh shutdown",
-    "text" : "Power Off",
-    "keybind" : "s"
 }
