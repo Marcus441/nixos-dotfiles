@@ -48,8 +48,8 @@
 
 /* The whole bar */
 #waybar {
-	background: #323232;
-	color: white;
+	background: #1d2021;
+	color: #928374;
 	font-family: "JetBrainsMono Nerd Font", "FontAwesome", "Noto Sans", sans-serif;
 	font-size: 13px;
 }
@@ -60,10 +60,11 @@
 #cpu,
 #custom-keyboard-layout,
 #memory,
-#mode,
+#submap,
 #network,
 #pulseaudio,
 #temperature,
+#idle_inhibitor,
 #tray {
 	padding-left: 10px;
 	padding-right: 10px;
@@ -102,16 +103,22 @@
 	font-weight: bold;
 }
 
+
 #cpu {
 	/* No styles */
 }
 
 #cpu.warning {
-	color: orange;
+	color: #e78a4e;
 }
 
 #cpu.critical {
 	color: red;
+}
+
+#idle_inhibitor.activated {
+	background-color: #ea6962;
+	color: #32302f;
 }
 
 #memory {
@@ -121,7 +128,7 @@
 }
 
 #memory.warning {
-	color: orange;
+	color: #e78a4e;
 }
 
 #memory.critical {
@@ -130,7 +137,7 @@
 	animation-duration: 2s;
 }
 
-#mode {
+#submap {
 	background: #64727D;
 	border-top: 2px solid white;
 	/* To compensate for the top border and still have vertical centering */
@@ -142,7 +149,7 @@
 }
 
 #network.disconnected {
-	color: orange;
+	color: #e78a4e;
 }
 
 #pulseaudio {
@@ -166,11 +173,16 @@
 }
 
 #tray {
+	color: #928374;
+	background-color: #282828;
 	/* No styles */
 }
 
 #window {
 	font-weight: bold;
+	background-color: #282828;
+	padding-left: 7px;
+	padding-right: 7px;
 }
 
 #workspaces button {
@@ -182,10 +194,10 @@
 	color: #888888;
 }
 
-#workspaces button.focused {
-	border-color: #4c7899;
-	color: white;
-	background-color: #285577;
+#workspaces button.active {
+	border-color: #7daea3;
+	color: #928374;
+	background-color: #2e3b3b;
 }
 
 #workspaces button.urgent {

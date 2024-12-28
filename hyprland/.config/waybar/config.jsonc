@@ -15,13 +15,14 @@
     "height": 30,
     "modules-left": [
         "hyprland/workspaces",
-        "hyprland/mode"
+        "hyprland/submap"
     ],
     "modules-center": [
         "hyprland/window"
     ],
     "modules-right": [
         "network",
+        "pulseaudio",
         "memory",
         "cpu",
         "temperature",
@@ -29,7 +30,8 @@
         "battery",
         "tray",
         "clock#date",
-        "clock#time"
+        "clock#time",
+        "idle_inhibitor"
     ],
     // -------------------------------------------------------------------------
     // Modules
@@ -71,6 +73,14 @@
             "critical": 90
         }
     },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": " ",
+            "deactivated": " "
+        },
+        "on-click-right": "hyprlock"
+    },
     "memory": {
         "interval": 5,
         "format": "  {}%", // Icon: memory
@@ -81,13 +91,13 @@
     },
     "network": {
         "interval": 5,
-        "format-wifi": "  {essid} ({signalStrength}%)", // Icon: wifi
+        "format-wifi": "  ({signalStrength}%)", // Icon: wifi
         "format-ethernet": "  {ifname}: {ipaddr}/{cidr}", // Icon: ethernet
         "format-disconnected": "⚠  Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}"
     },
-    "hyprland/mode": {
-        "format": "<span style=\"italic\">  {}</span>", // Icon: expand-arrows-alt
+    "hyprland/submap": {
+        "format": "  {}", // Icon: expand-arrows-alt
         "tooltip": false
     },
     "hyprland/window": {
@@ -95,8 +105,8 @@
         "max-length": 120
     },
     "hyprland/workspaces": {
-        "format": "{icon} {windows}",
-        "format-window-separator": "\n",
+        "format": "{windows} ",
+        "format-window-separator": "  ",
         "window-rewrite-default": "",
         "window-rewrite": {
             "title<.*youtube.*>": "", // Windows whose titles contain "youtube"
