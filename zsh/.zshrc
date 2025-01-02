@@ -103,3 +103,6 @@ eval "$(pyenv virtualenv-init -)"
 export PATH="$PATH:/home/marcus/.local/bin"
 # LaTeX stuff
 export PATH="$PATH:/usr/local/texlive/2024/bin/x86_64-linux"
+# Rust binaries
+export PATH="$PATH:/home/marcus/.cargo/bin"
+
