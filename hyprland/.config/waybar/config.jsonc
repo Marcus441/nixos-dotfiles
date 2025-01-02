@@ -109,10 +109,13 @@
         "format-window-separator": "  ",
         "window-rewrite-default": "",
         "window-rewrite": {
+            "title<.*[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+.*>": "", // Any window with "user/project" format in the title
             "title<.*youtube.*>": "", // Windows whose titles contain "youtube"
+            "title<.*github.*>": "", // Firefox with "github" in title    
             "class<firefox>": "", // Firefox
-            "class<firefox> title<.*github.*>": "", // Firefox with "github" in title
             "code": "󰨞", // Code editor
+            "class<thunar>": "", // Thunar file manager
+            "class<dolphin>": "", // Dolphin file manager
             "class<alacritty>": "", // Alacritty terminal icon
             "title<.*discord.*>": "", // Discord
             "title<.*thunderbird.*>": "" // Thunderbird
