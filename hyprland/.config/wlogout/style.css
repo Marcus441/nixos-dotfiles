@@ -15,7 +15,7 @@ button {
 	background-size: 20%;
 	background-color: #282828;
 	animation: gradient_f 20s ease-in infinite;
-	border: 5px solid #282828;
+	border: 5px solid #32302f;
 	border-radius: 0;
 }
 
@@ -24,8 +24,8 @@ button:focus,
 button:active,
 button:hover {
 	color: #7c6f64;
-	background-color: #282828;
-	border: 5px solid #333e34;
+	background-color: #2e3b3b;
+	border: 5px solid #7daea3;
 	border-radius: 0;
 }
 
