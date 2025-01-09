@@ -1,6 +1,7 @@
 # My dotfiles
 
 My dotfile configs. Make sure all dependencies are installed before proceeding.
+```git clone https://github.com/Marcus441/dotfiles```
 
 ## Installing Alacritty Config
 
