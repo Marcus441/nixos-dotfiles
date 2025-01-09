@@ -30,7 +30,11 @@ git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/theme
 
 ## Installing Hyprland config
 
-1. Run `stow Hyprland` while inside the dotfiles directory
+1. Manually symlink `hyprland.conf`
+   ```
+   ln -sf /path/to/your/custom/hyprland.conf ~/.config/hypr/hyprland.conf
+   ```
+2. Run `stow Hyprland` while inside the dotfiles directory
 
 ## Dependencies
 ### Terminal
