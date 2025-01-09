@@ -28,18 +28,6 @@ git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/theme
 ## Installing Hyprland config
 
 1. Run `stow Hyprland` while inside the dotfiles directory
-2. Create relevant paths
-
-```
-mkdir -p ~/.config/waybar
-mkdir -p ~/.config/wofi
-mkdir -p ~/.config/dunst
-mkdir -p ~/.config/scripts
-mkdir -p ~/.config/gtk-3.0
-mkdir -p ~/.config/gtk-4.0
-
-```
-
 
 ## Dependencies
 ### Terminal
