@@ -10,6 +10,9 @@
           style = lib.mkForce "Bold";
         };
       };
+      terminal.shell = {
+        program = "zsh";
+      };
     };
   };
 }

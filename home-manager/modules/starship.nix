@@ -1,26 +1,17 @@
 {
   programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      add_newline = true;
-      hostname = {
-        ssh_only = false;
-        format = "[$ssh_symbol$hostname]($style) ";
-        style = "bold purple";
-      };
-      character = {
-        success_symbol = "[ > ](bold green)";
-        error_symbol = "[ > ](bold red)";
-      };
-      username = {
-        show_always = true;
-        format = "[$user]($style)@";
-      };
-      directory = {
-        read_only = " 🔒";
-        truncation_symbol = "…/";
-      };
+  enable = true;
+  enableZshIntegration = true;
+  settings = {
+    # Optional: tweak your prompt settings here
+    add_newline = false;
+    character = {
+      success_symbol = "[➜](bold green)";
+      error_symbol = "[✗](bold red)";
     };
   };
+};
 }
+
+
+
