@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  home.packages = [ booksScript ];
+  home.packages = [  ];
 
   wayland.windowManager.hyprland.settings = {
     bind = [
