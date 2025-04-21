@@ -3,6 +3,7 @@
     home-manager
     git
     gcc
+    gh
     kdenlive
     vim
     htop
