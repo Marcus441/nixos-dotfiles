@@ -17,21 +17,20 @@
     ]; 
     shellAliases =
       let
-        modulesDir = "~/nixos-dotfiles/home-manager";
+        home-managerDir = "~/nixos-dotfiles/home-manager";
       in {
         sw = "nh os switch";
         upd = "nh os switch --update";
         hms = "nh home switch";
 
-        pkgs = "nvim ${flakeDir}/nixos/home-packages.nix";
+        pkgs = "nvim ${home-managerDir}/home-packages.nix";
 
         r = "ranger";
         v = "nvim";
         se = "sudoedit";
         microfetch = "microfetch && echo";
 
-        ls="ls --color";
-        lsa="ls -lah --color";
+        lsa="ls -lah";
         vim="nvim";
         c="clear";
         t="tmux";
