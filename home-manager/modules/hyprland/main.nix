@@ -26,12 +26,12 @@
       ];
 
       general = {
-        gaps_in = 0;
-        gaps_out = 0;
+        gaps_in = 5;
+        gaps_out = 5;
 
-        border_size = 1;
+        border_size = 3;
 
-        "col.active_border" = "rgba(98971aff) rgba(98971aff) 45deg";
+        "col.active_border" = "rgba(689D6Aff) rgba(458588ff) 45deg";
         "col.inactive_border" = "rgba(3c3836ff)";
 
         resize_on_border = true;
@@ -93,11 +93,11 @@
         "move 990 60,size 900 170,pin,noinitialfocus,class:(showmethekey-gtk)"
         "noborder,nofocus,class:(showmethekey-gtk)"
 
-        "workspace 3,class:(obsidian)"
-        "workspace 3,class:(zathura)"
-        "workspace 4,class:(com.obsproject.Studio)"
-        "workspace 5,class:(telegram)"
-        "workspace 5,class:(vesktop)"
+        "workspace 1,class:(chromium)"
+        "workspace 2,class:(terminal)"
+        "workspace 3,class:(discord)"
+        "workspace 4,class:(mail)"
+        "workspace 5,class:(file)"
         "workspace 6,class:(teams-for-linux)"
 
         "suppressevent maximize, class:.*"
