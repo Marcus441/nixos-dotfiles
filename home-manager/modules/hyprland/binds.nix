@@ -1,20 +1,6 @@
 { pkgs, ... }:
-let
-  booksDir = "$HOME/Downloads/books";
-  booksScript = pkgs.writeScriptBin "open_books" ''
-    #!/bin/sh
 
-    BOOKS_DIR="${booksDir}"
-
-    BOOK=$(find "$BOOKS_DIR" -type f \( -iname "*.pdf" -o -iname "*.epub" -o -iname "*.djvu" \) | wofi --dmenu --prompt "Select a book" --width 1200 --height 400)
-
-    if [[ -n "$BOOK" ]]; then
-        zathura "$BOOK" &
-    else
-        echo "No book selected."
-    fi
-  '';
-in {
+{
   home.packages = [ booksScript ];
 
   wayland.windowManager.hyprland.settings = {
@@ -22,62 +8,61 @@ in {
       "$mainMod SHIFT, Return, exec, $terminal"
       "$mainMod SHIFT, C, killactive,"
       "$mainMod SHIFT, Q, exit,"
-      "$mainMod,       R, exec, $fileManager"
+      "$mainMod SHIFT, E, exec, $fileManager"
       "$mainMod,       F, togglefloating,"
-      "$mainMod,       D, exec, $menu --show drun"
-      "$mainMod,       P, pin,"
+      "$mainMod SHIFT, R, exec, $menu --show drun"
+      "$mainMod,       C, pin,"
       "$mainMod,       J, togglesplit,"
-      "$mainMod,       E, exec, bemoji -cn"
+      "$mainMod,       M, exec, bemoji -cn"
       "$mainMod,       V, exec, cliphist list | $menu --dmenu | cliphist decode | wl-copy"
       "$mainMod,       B, exec, pkill -SIGUSR2 waybar"
       "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       "$mainMod,       L, exec, loginctl lock-session"
-      "$mainMod,       P, exec, hyprpicker -an"
+      "$mainMod,       C, exec, hyprpicker -an"
       "$mainMod,       N, exec, swaync-client -t"
       ", Print, exec, grimblast --notify --freeze copysave area"
-      "$mainMod,       W, exec, ${booksScript}/bin/open_books"
 
       # Moving focus
-      "$mainMod, left, movefocus, l"
-      "$mainMod, right, movefocus, r"
-      "$mainMod, up, movefocus, u"
-      "$mainMod, down, movefocus, d"
+      "$mainMod, H, movefocus, l"
+      "$mainMod, L, movefocus, r"
+      "$mainMod, K, movefocus, u"
+      "$mainMod, J, movefocus, d"
 
       # Moving windows
-      "$mainMod SHIFT, left,  swapwindow, l"
-      "$mainMod SHIFT, right, swapwindow, r"
-      "$mainMod SHIFT, up,    swapwindow, u"
-      "$mainMod SHIFT, down,  swapwindow, d"
+      "$mainMod SHIFT, H, swapwindow, l"
+      "$mainMod SHIFT, L, swapwindow, r"
+      "$mainMod SHIFT, K, swapwindow, u"
+      "$mainMod SHIFT, J, swapwindow, d"
 
-      # Resizeing windows                   X  Y
-      "$mainMod CTRL, left,  resizeactive, -60 0"
-      "$mainMod CTRL, right, resizeactive,  60 0"
-      "$mainMod CTRL, up,    resizeactive,  0 -60"
-      "$mainMod CTRL, down,  resizeactive,  0  60"
+      # Resizeing windows               X  Y
+      "$mainMod CTRL, H, resizeactive, -60 0"
+      "$mainMod CTRL, L, resizeactive,  60 0"
+      "$mainMod CTRL, K, resizeactive,  0 -60"
+      "$mainMod CTRL, J, resizeactive,  0  60"
 
       # Switching workspaces
-      "$mainMod, 1, workspace, 1"
-      "$mainMod, 2, workspace, 2"
-      "$mainMod, 3, workspace, 3"
-      "$mainMod, 4, workspace, 4"
-      "$mainMod, 5, workspace, 5"
-      "$mainMod, 6, workspace, 6"
-      "$mainMod, 7, workspace, 7"
-      "$mainMod, 8, workspace, 8"
-      "$mainMod, 9, workspace, 9"
-      "$mainMod, 0, workspace, 10"
+      "$mainMod, Q, workspace, 1"
+      "$mainMod, W, workspace, 2"
+      "$mainMod, E, workspace, 3"
+      "$mainMod, R, workspace, 4"
+      "$mainMod, T, workspace, 5"
+      "$mainMod, Y, workspace, 6"
+      "$mainMod, U, workspace, 7"
+      "$mainMod, I, workspace, 8"
+      "$mainMod, O, workspace, 9"
+      "$mainMod, P, workspace, 10"
 
       # Moving windows to workspaces
-      "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-      "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-      "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-      "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-      "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-      "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-      "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-      "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-      "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-      "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+      "$mainMod SHIFT, Q, movetoworkspacesilent, 1"
+      "$mainMod SHIFT, W, movetoworkspacesilent, 2"
+      "$mainMod SHIFT, E, movetoworkspacesilent, 3"
+      "$mainMod SHIFT, R, movetoworkspacesilent, 4"
+      "$mainMod SHIFT, T, movetoworkspacesilent, 5"
+      "$mainMod SHIFT, Y, movetoworkspacesilent, 6"
+      "$mainMod SHIFT, U, movetoworkspacesilent, 7"
+      "$mainMod SHIFT, I, movetoworkspacesilent, 8"
+      "$mainMod SHIFT, O, movetoworkspacesilent, 9"
+      "$mainMod SHIFT, P, movetoworkspacesilent, 10"
 
       # Scratchpad
       "$mainMod,       S, togglespecialworkspace,  magic"
