@@ -7,7 +7,7 @@
     ./git.nix
     ./hyprland
     ./lazygit.nix
-    ./neovim.nix
+    ./neovim.nix 
     ./obsidian.nix
     ./ranger.nix
     ./starship.nix 

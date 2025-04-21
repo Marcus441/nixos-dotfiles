@@ -1,11 +1,14 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+
+{
   programs.neovim = {
     enable = true;
-    extraPackages = with pkgs; [
-      lua-language-server
-      python311Packages.python-lsp-server
-      nixd
-      vimPlugins.nvim-treesitter-parsers.hyprlang
+
+    # Directly give HM a list of plugins:
+    plugins = with pkgs.vimPlugins; [
+      lazy-nvim
+      # other vimPlugins.* you want…
     ];
   };
 }
+
