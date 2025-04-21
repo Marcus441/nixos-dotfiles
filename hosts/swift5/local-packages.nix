@@ -1,10 +1,11 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
+    home-manager
+    git
     gcc
     kdenlive
-    # jetbrains.pycharm-professional
-    # jre8
-    # qemu
-    # quickemu
-  ];
+    vim
+    htop
+    wget
+    ];
 }
