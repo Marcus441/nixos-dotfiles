@@ -7,7 +7,7 @@
     bind = [
       "$mainMod SHIFT, Return, exec, $terminal"
       "$mainMod SHIFT, C, killactive,"
-      "$mainMod SHIFT, L, exit,"
+      "$mainMod SHIFT, Z, exit,"
       "$mainMod SHIFT, F, exec, $fileManager"
       "$mainMod,       F, togglefloating,"
       "$mainMod SHIFT, N, exec, $menu --show drun"

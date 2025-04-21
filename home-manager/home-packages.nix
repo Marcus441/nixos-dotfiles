@@ -21,6 +21,7 @@
     bottom
     brightnessctl
     cliphist
+    dnsutils
     ffmpeg
     ffmpegthumbnailer
     fzf
