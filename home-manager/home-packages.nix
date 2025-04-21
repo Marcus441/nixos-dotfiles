@@ -3,7 +3,9 @@
 
   home.packages = with pkgs; [
     # Packages in each category are sorted alphabetically
-
+    # Zsh
+    zoxide
+   
     # Desktop apps
     anki
     code-cursor
@@ -13,7 +15,6 @@
     obsidian
     pavucontrol
     teams-for-linux
-    telegram-desktop
     vesktop
 
     # CLI utils
@@ -49,6 +50,9 @@
     openjdk23
     nodejs
     python311
+    pyenv
+    texlive.combined.scheme-full
+    rustc
 
     # WM stuff
     libsForQt5.xwaylandvideobridge
