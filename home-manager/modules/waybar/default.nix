@@ -17,15 +17,15 @@
           all-outputs = false;
           format = "{icon}";
           format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            "7" = "";
-            "8" = "";
-            "9" = "";
+	    "1" = "";       # Browser (Chrome)
+	    "2" = "";       # Terminal
+	    "3" = "";       # Discord
+	    "4" = "";       # Email
+	    "5" = "";       # Files / Folder
+	    "6" = "";       # Notes / Documents
+	    "7" = "";       # Gaming / Controller
+	    "8" = "";       # Music / Headphones
+	    "9" = "";        # AI 
             "magic" = "";
           };
 
@@ -34,17 +34,9 @@
           };
         };
 
-        "hyprland/language" = {
-          format-en = "🇺🇸";
-          format-ru = "🇷🇺";
-          format-he = "🇮🇱";
-          min-length = 5;
-          tooltip = false;
-        };
-
         "custom/weather" = {
           format = " {} ";
-          exec = "curl -s 'wttr.in/Tashkent?format=%c%t'";
+          exec = "curl -s 'wttr.in/Brisbane?format=%c%t'";
           interval = 300;
           class = "weather";
         };
