@@ -41,14 +41,14 @@
         
         # GIT
         gs="git status";
-        a="git add";
-        c="git commit -m";
-        p="git push";
-        pl="git pull";
-        st="git stash";
-        sp="git stash; git pull";
-        check="git checkout";
-        credential="git config credential.helper store";
+        ga="git add";
+        gc="git commit -m";
+        gp="git push";
+        gpl="git pull";
+        gst="git stash";
+        gsp="git stash; git pull";
+        gcheck="git checkout";
+        gcredential="git config credential.helper store";
         ".." = "cd ..";
       };
 
