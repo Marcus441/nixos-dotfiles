@@ -17,24 +17,38 @@
     ]; 
     shellAliases =
       let
-        flakeDir = "~/flake";
+        modulesDir = "~/nixos-dotfiles/home-manager";
       in {
         sw = "nh os switch";
         upd = "nh os switch --update";
         hms = "nh home switch";
 
-        pkgs = "nvim ${flakeDir}/nixos/packages.nix";
+        pkgs = "nvim ${flakeDir}/nixos/home-packages.nix";
 
         r = "ranger";
         v = "nvim";
         se = "sudoedit";
         microfetch = "microfetch && echo";
 
-        gs = "git status";
-        ga = "git add";
-        gc = "git commit";
-        gp = "git push";
-
+        ls="ls --color";
+        lsa="ls -lah --color";
+        vim="nvim";
+        c="clear";
+        t="tmux";
+        ta="tmux attach-session -t";
+        tn="tmux new-session";
+        tns="tmux new-session -s";
+        
+        # GIT
+        gs="git status";
+        a="git add";
+        c="git commit -m";
+        p="git push";
+        pl="git pull";
+        st="git stash";
+        sp="git stash; git pull";
+        check="git checkout";
+        credential="git config credential.helper store";
         ".." = "cd ..";
       };
 
