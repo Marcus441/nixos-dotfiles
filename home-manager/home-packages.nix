@@ -12,7 +12,6 @@
     imv
     mpv
     obs-studio
-    obsidian
     pavucontrol
     teams-for-linux
     vesktop
