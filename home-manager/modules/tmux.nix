@@ -1,4 +1,12 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: 
+
+let
+ minimalTmux = builtins.fetchGit {
+    url = "https://github.com/niksingh710/minimal-tmux-status.git";
+    rev = "d7188c1aeb1c7dd03230982445b7360f5e230131";
+    allRefs = true;
+  };
+in { 
   programs.tmux = {
     enable = true;
     baseIndex = 1;
@@ -22,18 +30,23 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind -n M-H select-pane -L
-      bind -n M-J select-pane -R
-      bind -n M-K select-pane -U
-      bind -n M-L select-pane -D
+      bind -n M-Left  select-pane -L
+      bind -n M-Right select-pane -R
+      bind -n M-Up    select-pane -U
+      bind -n M-Down  select-pane -D
 
-      bind -n M-S-H resize-pane -L 5
-      bind -n M-S-J resize-pane -R 5
-      bind -n M-S-K resize-pane -U 3
-      bind -n M-S-L resize-pane -D 3
+      bind -n M-Left  resize-pane -L 5
+      bind -n M-Right resize-pane -R 5
+      bind -n M-Up    resize-pane -U 3
+      bind -n M-Down  resize-pane -D 3
+      
+      bind -n M-S-Left  resize-pane -L 15
+      bind -n M-S-Right resize-pane -R 15
+      bind -n M-S-Up    resize-pane -U 9
+      bind -n M-S-Down  resize-pane -D 9
 
-      bind -n M-s split-window -v
-      bind -n M-v split-window -h
+      bind -n M-s split-window -v -c "#{pane_current_path}"
+      bind -n M-v split-window -h -c "#{pane_current_path}"
 
       bind -n M-o new-window -c ~/para "nvim -c 'Telescope find_files' '0 Inbox/todolist.md'"
       bind -n M-f new-window -c ~/flake "nvim -c 'Telescope find_files' flake.nix"
@@ -42,9 +55,11 @@
       bind -n M-c kill-pane
       bind -n M-q kill-window
       bind -n M-Q kill-session
+
+    run-shell ${minimalTmux}/minimal.tmux.conf
+
     '';
-    plugins = with pkgs; [
-      tmuxPlugins.gruvbox
+    plugins =  [
       # {
       #   plugin = tmuxPlugins.resurrect;
       #   extraConfig = "set -g @resurrect-strategy-nvim 'session'";
@@ -56,6 +71,7 @@
       # set -g @continuum-save-interval '60' # minutes
       #   '';
       # }
+
     ];
   };
 }
