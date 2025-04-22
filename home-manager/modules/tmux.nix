@@ -22,15 +22,15 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind -n M-Left select-pane -L
-      bind -n M-Right select-pane -R
-      bind -n M-Up select-pane -U
-      bind -n M-Down select-pane -D
+      bind -n M-H select-pane -L
+      bind -n M-J select-pane -R
+      bind -n M-K select-pane -U
+      bind -n M-L select-pane -D
 
-      bind -n M-S-Left resize-pane -L 5
-      bind -n M-S-Right resize-pane -R 5
-      bind -n M-S-Up resize-pane -U 3
-      bind -n M-S-Down resize-pane -D 3
+      bind -n M-S-H resize-pane -L 5
+      bind -n M-S-J resize-pane -R 5
+      bind -n M-S-K resize-pane -U 3
+      bind -n M-S-L resize-pane -D 3
 
       bind -n M-s split-window -v
       bind -n M-v split-window -h
