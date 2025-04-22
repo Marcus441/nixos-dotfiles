@@ -1,7 +1,7 @@
 window {
   margin: 0px;
-  border: 5px solid;
-  border-image: linear-gradient(135deg, #d65d0e 0%, #98971a 100%) 1;
+  border: 1px solid;
+  border-image: #1D2021;
   background-color: #282828;
   font-family: "JetBrains Mono";
   font-weight: bold;
@@ -39,6 +39,6 @@ window {
 }
 
 #entry:selected {
-  background-color: #d65d0e;
+  background-color: #689D6A;
   color: #ffffff;
 }
