@@ -46,14 +46,6 @@
     yt-dlp
     zip
 
-    # Coding stuff
-    openjdk23
-    nodejs
-    python311
-    pyenv
-    texlive.combined.scheme-full
-    rustc
-
     # WM stuff
     libsForQt5.xwaylandvideobridge
     libnotify
