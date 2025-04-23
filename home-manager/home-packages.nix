@@ -9,6 +9,7 @@
     # Desktop apps
     anki
     code-cursor
+    discord 
     imv
     mpv
     obs-studio
