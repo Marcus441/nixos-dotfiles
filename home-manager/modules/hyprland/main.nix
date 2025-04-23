@@ -1,3 +1,11 @@
+{ hostname, ... }:
+
+let
+  monitorConfig = if hostname == "gpc" then
+    "DP-6,2560x1440@170,auto,1"
+  else
+    "eDP-1,1920x1080@60,auto,1";
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -12,8 +20,8 @@
         "QT_QPA_PLATFORM,wayland"
         "XDG_SCREENSHOTS_DIR,$HOME/screens"
       ];
-
-      monitor = ",1920x1080@60,auto,1";
+      
+      monitor = monitorConfig;
       "$mainMod" = "SUPER";
       "$terminal" = "alacritty";
       "$fileManager" = "$terminal -e sh -c 'ranger'";
