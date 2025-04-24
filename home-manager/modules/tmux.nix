@@ -53,8 +53,8 @@ in {
       bind -n M-n new-window -c ~/.config/nvim "nvim -c 'Telescope find_files' init.lua"
       bind -n M-Enter new-window
       bind -n M-c kill-pane
-      bind -n M-q kill-window
-      bind -n M-Q kill-session
+      bind -n M-x kill-window
+      bind -n M-X kill-session
 
     run-shell ${minimalTmux}/minimal.tmux.conf
 

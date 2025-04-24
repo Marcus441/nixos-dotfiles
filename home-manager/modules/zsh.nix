@@ -7,6 +7,10 @@
     
     plugins = [
       {
+         name = "zsh-vi-mode";
+         src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
+      }
+      {
          name = "fzf-tab";
          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
       }
@@ -24,7 +28,7 @@
         r = "ranger";
         v = "nvim";
         se = "sudoedit";
-        microfetch = "microfetch && echo";
+        fetch = "fastfetch && echo";
 
         lsa="ls -lah";
         vim="nvim";
