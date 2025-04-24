@@ -6,20 +6,20 @@
   wayland.windowManager.hyprland.settings = {
     bind = [
       "$mainMod,       Return, exec, $terminal"
-      "$mainMod SHIFT, C, killactive,"
+      "$mainMod,       X, killactive,"
       "$mainMod SHIFT, Z, exit,"
+      "$mainMod,       Z, exec, loginctl lock-session"
       "$mainMod SHIFT, F, exec, $fileManager"
       "$mainMod,       F, togglefloating,"
-      "$mainMod SHIFT, N, exec, $menu --show drun"
+      "$mainMod,       N, exec, $menu --show drun"
       "$mainMod,       C, pin,"
+      "$mainMod,       C, exec, hyprpicker -an"
       "$mainMod,       A, togglesplit,"
       "$mainMod,       M, exec, bemoji -cn"
       "$mainMod,       V, exec, cliphist list | $menu --dmenu | cliphist decode | wl-copy"
       "$mainMod,       B, exec, pkill -SIGUSR2 waybar"
       "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
-      "$mainMod,       Z, exec, loginctl lock-session"
-      "$mainMod,       C, exec, hyprpicker -an"
-      "$mainMod,       N, exec, swaync-client -t"
+      "$mainMod SHIFT, N, exec, swaync-client -t"
       ", Print, exec, grimblast --notify --freeze copysave area"
 
       # Moving focus
