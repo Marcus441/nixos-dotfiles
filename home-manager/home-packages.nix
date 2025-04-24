@@ -9,7 +9,7 @@
     # Desktop apps
     anki
     code-cursor
-    discord 
+    floorp
     imv
     mpv
     obs-studio
@@ -23,6 +23,7 @@
     brightnessctl
     cliphist
     dnsutils
+    fastfetch
     ffmpeg
     ffmpegthumbnailer
     fzf
@@ -32,7 +33,6 @@
     hyprpicker
     ntfs3g
     mediainfo
-    microfetch
     playerctl
     ripgrep
     showmethekey
@@ -52,6 +52,15 @@
     libnotify
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
+    
+    # Lua
+    lua
+    lua-language-server
+    stylua
+
+    # Nix
+    nixpkgs-fmt
+    nil
 
     # Other
     bemoji
