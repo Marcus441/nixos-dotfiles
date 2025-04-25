@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.ssh.enable = true;
-
+  services.ssh-agent.enable = true;
+  programs.ssh.addKeysToAgent = "yes";
   programs.ssh.extraConfig = ''
     IdentityFile ~/.ssh/id_ed25519
   '';
@@ -17,6 +18,7 @@
       # Ensure submodules use SSH as well
       submodule.recurse = "true";
       submodule.url = "git@github.com:";
+      core.sshCommand = "ssh -i /home/marcus/.ssh/id_ed25519";
     };
   };
 }
