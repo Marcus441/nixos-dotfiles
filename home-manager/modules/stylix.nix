@@ -67,8 +67,8 @@
     };
 
     image = pkgs.fetchurl {
-      url = "https://codeberg.org/lunik1/nixos-logo-gruvbox-wallpaper/raw/branch/master/png/gruvbox-dark-rainbow.png";
-      sha256 = "036gqhbf6s5ddgvfbgn6iqbzgizssyf7820m5815b2gd748jw8zc";
+      url = "https://codeberg.org/AXP-OS/wallpapers/raw/branch/main/RAW/alex-holzreiter-408703.jpg";
+      sha256 = "12e026e92d2f5e3634332fc94678b9d2f57826e3cb83f852982150052d121b5a";
     };
   };
 }
