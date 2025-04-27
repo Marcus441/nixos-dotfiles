@@ -1,4 +1,5 @@
 {
+ 
   description = "My system configuration";
 
   inputs = {
@@ -15,14 +16,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    nvf = {
-      url = "github:notashelf/nvf";
+    minimal-tmux = {
+      url = "github:niksingh710/minimal-tmux-status";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
   };
 
-  outputs = { self, nixpkgs, home-manager, nvf, ... }@inputs: let
+  outputs = { self, nixpkgs, home-manager, minimal-tmux, ... }@inputs: let
     system = "x86_64-linux";
     homeStateVersion = "24.11";
     user = "marcus";
