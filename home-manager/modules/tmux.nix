@@ -9,7 +9,8 @@
     keyMode = "vi";
     terminal = "screen-256color";
     extraConfig = ''
-      set -as terminal-features ',screen-256color:Tc'
+      set-option -a terminal-features 'xterm-256color:RGB'
+      set -as terminal-features ",alacritty*:RGB"
       bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
       bind C-p previous-window
       bind C-n next-window

@@ -1,14 +1,10 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
 
 
 {
   programs.alacritty = {
     enable = true;
     settings = {
-
-      general.import = [
-        "${pkgs.alacritty-theme}/themes/gruvbox_material_hard_dark.toml"
-      ];
 
       window = {
 	 padding.x = 15;

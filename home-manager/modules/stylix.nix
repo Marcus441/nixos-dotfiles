@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{config,lib, pkgs, inputs, ... }: {
   imports = [ inputs.stylix.homeManagerModules.stylix ];
 
   home.packages = with pkgs; [
@@ -13,12 +13,14 @@
     powerline-symbols
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
-
   stylix = {
     enable = true;
     polarity = "dark";
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+    override = {
+       base00 = "#1d2021";  # Correct the base00 color (background)
+       # You can override other colors as needed, e.g., base01, base08, etc.
+    };    
     targets = {
       neovim.enable = false;
       waybar.enable = false;
