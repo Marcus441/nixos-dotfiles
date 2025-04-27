@@ -1,12 +1,15 @@
-{ pkgs, inputs, ... }:
-
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
-    ./plugins.nix
-    ./lsp.nix
+    inputs.nvf.homeManagerModules.default
+    #    ./plugins
+    # ./lsp
     ./keymaps.nix
+    ./options.nix
   ];
 
   programs.nvf.enable = true;
 }
-
