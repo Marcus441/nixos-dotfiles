@@ -6,7 +6,8 @@
   imports = [
     inputs.nvf.homeManagerModules.default
     #    ./plugins
-    # ./lsp
+    ./lsp
+    ./autocmds.nix
     ./keymaps.nix
     ./options.nix
   ];
