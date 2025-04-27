@@ -1,12 +1,6 @@
-{ pkgs, config, ... }: 
+{ pkgs, inputs, ... }: 
 
-let
- minimalTmux = builtins.fetchGit {
-    url = "https://github.com/niksingh710/minimal-tmux-status.git";
-    rev = "d7188c1aeb1c7dd03230982445b7360f5e230131";
-    allRefs = true;
-  };
-in { 
+{ 
   programs.tmux = {
     enable = true;
     baseIndex = 1;
@@ -15,7 +9,7 @@ in {
     keyMode = "vi";
     terminal = "screen-256color";
     extraConfig = ''
-      set -as terminal-features ",alacritty*:RGB"
+      set -as terminal-features ',screen-256color:Tc'
       bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
       bind C-p previous-window
       bind C-n next-window
@@ -55,9 +49,6 @@ in {
       bind -n M-c kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
-
-    run-shell ${minimalTmux}/minimal.tmux.conf
-
     '';
     plugins =  [
       # {
@@ -72,6 +63,7 @@ in {
       #   '';
       # }
 
+       { plugin = inputs.minimal-tmux.packages.${pkgs.system}.default; }
     ];
   };
 }
