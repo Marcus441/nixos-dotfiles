@@ -62,6 +62,9 @@
     rustc
     cargo
 
+    # Javascript
+    nodejs_23
+
     # Other
     bemoji
     nix-prefetch-scripts
