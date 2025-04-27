@@ -33,6 +33,7 @@
     htop
     hyprpicker
     ntfs3g
+    neovim
     mediainfo
     playerctl
     ripgrep
@@ -56,12 +57,10 @@
     
     # Lua
     lua
-    lua-language-server
-    stylua
 
-    # Nix
-    nixpkgs-fmt
-    nil
+    # Rust
+    rustc
+    cargo
 
     # Other
     bemoji
