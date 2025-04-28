@@ -4,7 +4,6 @@
     git
     gcc
     gh
-    kdenlive
     vim
     htop
     wget
