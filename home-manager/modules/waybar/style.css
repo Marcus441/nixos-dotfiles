@@ -1,7 +1,7 @@
 * {
   border: none;
   border-radius: 0px;
-  font-family: "JetBrains Mono";
+  font-family: "JetBrains Mono Nerd Font";
   font-weight: bold;
   font-size: 16px;
   min-height: 0;
@@ -13,18 +13,25 @@ window#waybar {
 }
 
 /* Workspace Buttons */
-#workspaces button label{
+#workspaces button label {
   color: #ebdbb2;
   padding: 0 10px;
 }
+
 #workspaces button.active label {
   color: #1d2021;
 }
+
 #workspaces button.active {
   background: #689D6A;
 }
 
-#clock, #battery, #pulseaudio, #tray, #language, #weather {
+#clock,
+#battery,
+#pulseaudio,
+#tray,
+#language,
+#weather {
   padding: 0 10px;
   margin: 0 10px;
 }

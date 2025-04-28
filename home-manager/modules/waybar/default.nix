@@ -17,14 +17,14 @@
           all-outputs = false;
           format = "{icon}";
           format-icons = {
-	    "1" = "";       # Browser (Chrome)
+	    "1" = "";       # Browser (firefox)
 	    "2" = "";       # Terminal
 	    "3" = "";       # Discord
 	    "4" = "";       # Email
 	    "5" = "";       # Files / Folder
-	    "6" = "";       # Notes / Documents
-	    "7" = "";       # Gaming / Controller
-	    "8" = "";       # Music / Headphones
+	    "6" = "󰊻";       # Teams
+	    "7" = "";       # Gaming / Steam
+	    "8" = "";       # Gaming / Controller
 	    "9" = "";        # AI 
             "magic" = "";
           };

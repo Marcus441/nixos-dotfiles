@@ -10,7 +10,7 @@
     font-awesome
     powerline-fonts
     powerline-symbols
-    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
   ];
   stylix = {
     enable = true;
