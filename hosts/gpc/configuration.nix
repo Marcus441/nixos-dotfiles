@@ -1,4 +1,4 @@
-{ pkgs, stateVersion, hostname, config, lib, ... }:
+{ pkgs, stateVersion, hostname, config, lib, user, ... }:
 
 {
   imports = [
@@ -9,11 +9,12 @@
   
   networking.hostName = hostname;
   
+  # nvidia stuff 
   hardware.graphics = {
      enable = true;
      enable32Bit = true;
   };
-  
+ 
   nixpkgs.config.allowUnfree = true; 
 
   services.xserver.videoDrivers = ["nvidia"];
@@ -33,7 +34,14 @@
       package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 
+  # gaming stuff
+  programs.steam.enable = true;
+  programs.steam.gamescopeSession.enable = true;
 
+  programs.gamemode.enable = true;
+  environment.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${user}/.steam/root/compatibilitytoolds.d";
+  };
   system.stateVersion = stateVersion;
 }
 

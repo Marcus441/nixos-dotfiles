@@ -7,5 +7,7 @@
     vim
     htop
     wget
-    ];
+    mangohud # gaming performance
+    protonup
+  ];
 }
