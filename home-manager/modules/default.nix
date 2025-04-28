@@ -10,6 +10,7 @@
     # ./nvim 
     ./ranger.nix
     ./starship.nix 
+    ./steam.nix
     ./stylix.nix
     ./swaync
     ./tmux.nix

@@ -55,6 +55,11 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     
+    # Gaming
+    mangohud
+    gamemode
+    steam
+    
     # Lua
     lua
 
