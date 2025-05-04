@@ -119,7 +119,7 @@ in
       };
 
       windowrulev2 = [
-        # "bordersize 0, floating:0, onworkspace:w[t1]"
+        "bordersize 0, floating:0, onworkspace:w[t1]"
 
         "float,class:(mpv)|(imv)|(showmethekey-gtk)"
         "move 990 60,size 900 170,pin,noinitialfocus,class:(showmethekey-gtk)"
@@ -141,10 +141,10 @@ in
         "nofocus, class:^(xwaylandvideobridge)$"
       ];
 
-      # workspace = [
-      #   "w[tv1], gapsout:0, gapsin:0"
-      #   "f[1], gapsout:0, gapsin:0"
-      # ];
+      workspace = [
+        "w[tv1], gapsout:0, gapsin:0"
+        "f[1], gapsout:0, gapsin:0"
+      ];
     };
   };
 }
