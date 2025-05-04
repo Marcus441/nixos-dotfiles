@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: 
+{ config, pkgs, inputs, ... }: 
 
 { 
   programs.tmux = {
@@ -63,8 +63,14 @@
       # set -g @continuum-save-interval '60' # minutes
       #   '';
       # }
-       { plugin = pkgs.tmuxPlugins.vim-tmux-navigator; }
-       { plugin = inputs.minimal-tmux.packages.${pkgs.system}.default; }
+       { plugin = pkgs.tmuxPlugins.vim-tmux-navigator; 
+      }
+       { plugin = inputs.minimal-tmux.packages.${pkgs.system}.default; 
+        extraConfig = ''
+           set -g @minimal-tmux-bg "#A9B665"
+           set -g @minimal-tmux-fg "#32302F"
+           '';
+      }
     ];
   };
 }
