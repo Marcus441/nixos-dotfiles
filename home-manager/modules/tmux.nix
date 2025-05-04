@@ -63,7 +63,7 @@
       # set -g @continuum-save-interval '60' # minutes
       #   '';
       # }
-
+       { plugin = pkgs.tmuxPlugins.vim-tmux-navigator; }
        { plugin = inputs.minimal-tmux.packages.${pkgs.system}.default; }
     ];
   };
