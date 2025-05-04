@@ -12,8 +12,8 @@
       set-option -a terminal-features 'xterm-256color:RGB'
       set -as terminal-features ",alacritty*:RGB"
       bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
-      bind C-p previous-window
-      bind C-n next-window
+      bind -n M-p previous-window
+      bind -n M-n next-window
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -45,7 +45,7 @@
 
       bind -n M-o new-window -c ~/para "nvim -c 'Telescope find_files' '0 Inbox/todolist.md'"
       bind -n M-f new-window -c ~/flake "nvim -c 'Telescope find_files' flake.nix"
-      bind -n M-n new-window -c ~/.config/nvim "nvim -c 'Telescope find_files' init.lua"
+      bind -n M-l new-window -c ~/.config/nvim "nvim -c 'Telescope find_files' init.lua"
       bind -n M-Enter new-window
       bind -n M-c kill-pane
       bind -n M-x kill-window
