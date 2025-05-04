@@ -30,6 +30,7 @@
     hosts = [
       { hostname = "swift5"; stateVersion = "24.11"; }
       { hostname = "gpc"; stateVersion = "24.11"; }
+      { hostname = "UM790pro"; stateVersion = "24.11"; }
     ];
 
     makeSystem = { hostname, stateVersion }: nixpkgs.lib.nixosSystem {
