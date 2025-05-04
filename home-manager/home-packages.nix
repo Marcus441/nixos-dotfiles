@@ -1,11 +1,11 @@
- { pkgs, ... }: {
+{ pkgs, ... }: {
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
     # Packages in each category are sorted alphabetically
     # Zsh
     zoxide
-   
+
     # Desktop apps
     anki
     code-cursor
@@ -54,7 +54,7 @@
     libnotify
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
- 
+
     # Lua
     lua
 

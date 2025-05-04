@@ -9,6 +9,8 @@
 
   networking.hostName = hostname;
 
+  programs.nix-ld.enable = true;
+
   system.stateVersion = stateVersion;
 }
 
