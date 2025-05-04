@@ -66,8 +66,8 @@
     };
 
     image = pkgs.fetchurl {
-      url = "https://codeberg.org/AXP-OS/wallpapers/raw/branch/main/RAW/joshua-sortino-274493.jpg";
-      sha256 = "f209775f7d398f7a828c7b51e66a37b64fb5d6f2ecaff513d6ee39eddad37a37";
+      url = "https://codeberg.org/lunik1/nixos-logo-gruvbox-wallpaper/media/branch/master/png/gruvbox-dark-blue.png";
+      sha256 = "fa37d3baf975549a1c37e60da74e1854e351d39e065fea7fcb1357cb286c35cb";
     };
   };
 }
