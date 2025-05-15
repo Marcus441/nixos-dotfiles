@@ -63,7 +63,7 @@
     cargo
 
     # Javascript
-    nodejs_23
+    nodePackages_latest.nodejs
 
     # Other
     bemoji
