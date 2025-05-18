@@ -66,8 +66,8 @@
     };
 
     image = pkgs.fetchurl {
-      url = "https://codeberg.org/lunik1/nixos-logo-gruvbox-wallpaper/media/branch/master/png/gruvbox-dark-blue.png";
-      sha256 = "fa37d3baf975549a1c37e60da74e1854e351d39e065fea7fcb1357cb286c35cb";
+      url = "https://w.wallhaven.cc/full/m3/wallhaven-m3y8pm.jpg";
+      sha256 = "c050e26db121ac76606b9671af8c99b609e2114aca248036e7fc50e5bc026960";
     };
   };
 }
