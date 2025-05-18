@@ -1,10 +1,11 @@
 { hostname, ... }:
 
 let
-  monitorConfig = if hostname == "gpc" then
-    "DP-6,2560x1440@170,auto,1"
-  else
-    "eDP-1,1920x1080@60,auto,1";
+  monitorConfig =
+    if hostname == "gpc" then
+      "DP-6,2560x1440@170,auto,1"
+    else
+      "eDP-1,1920x1080@60,auto,1";
 in
 {
   wayland.windowManager.hyprland = {
@@ -20,7 +21,7 @@ in
         "QT_QPA_PLATFORM,wayland"
         "XDG_SCREENSHOTS_DIR,$HOME/screens"
       ];
-      
+
       monitor = monitorConfig;
       "$mainMod" = "SUPER";
       "$terminal" = "alacritty";
@@ -49,7 +50,7 @@ in
       };
 
       decoration = {
-        rounding = 0;
+        rounding = 3;
 
         active_opacity = 1.0;
         inactive_opacity = 1.0;
@@ -93,13 +94,13 @@ in
         touchpad = {
           natural_scroll = true;
           scroll_factor = 0.6;
-          };
+        };
       };
 
       gestures = {
         workspace_swipe = true;
         workspace_swipe_invert = false;
-        workspace_swipe_forever	= true;
+        workspace_swipe_forever = true;
       };
 
       dwindle = {
@@ -119,7 +120,7 @@ in
       };
 
       windowrulev2 = [
-        "bordersize 0, floating:0, onworkspace:w[t1]"
+        # "bordersize 0, floating:0, onworkspace:w[t1]"
 
         "float,class:(mpv)|(imv)|(showmethekey-gtk)"
         "move 990 60,size 900 170,pin,noinitialfocus,class:(showmethekey-gtk)"
@@ -141,10 +142,10 @@ in
         "nofocus, class:^(xwaylandvideobridge)$"
       ];
 
-      workspace = [
-        "w[tv1], gapsout:0, gapsin:0"
-        "f[1], gapsout:0, gapsin:0"
-      ];
+      # workspace = [
+      #   "w[tv1], gapsout:0, gapsin:0"
+      #   "f[1], gapsout:0, gapsin:0"
+      # ];
     };
   };
 }
