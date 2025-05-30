@@ -126,17 +126,28 @@ in
         "workspace 1,class:(chromium)"
         "workspace 2,class:(terminal)"
         "workspace 3,class:(vesktop)"
-        "workspace 8,class:(teams-for-linux)"
+        "workspace 6,class:(teams-for-linux)"
 
+        # windows that should not be focused
         "suppressevent maximize, class:.*"
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
 
+        # xwayland windows that should not be focused
         "opacity 0.0 override, class:^(xwaylandvideobridge)$"
         "noanim, class:^(xwaylandvideobridge)$"
         "noinitialfocus, class:^(xwaylandvideobridge)$"
         "maxsize 1 1, class:^(xwaylandvideobridge)$"
         "noblur, class:^(xwaylandvideobridge)$"
         "nofocus, class:^(xwaylandvideobridge)$"
+
+        # windows that should be floating
+        "float,  class:^(org.pulseaudio.pavucontrol)$"
+        "float,  class:^(blueman-manager)$"
+        "float,  class:^(nm-applet)$"
+        "float,  class:^(nm-connection-editor)$"
+
+        # alacritty terminal transparency
+        "opacity 0.9, class:^(Alacritty)$"
       ];
 
       # workspace = [
