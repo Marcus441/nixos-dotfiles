@@ -46,7 +46,7 @@ in
         resize_on_border = true;
 
         allow_tearing = false;
-        layout = "master";
+        layout = "dwindle";
       };
 
       decoration = {
