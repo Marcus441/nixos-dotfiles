@@ -120,11 +120,8 @@ in
       };
 
       windowrulev2 = [
+        # match all windows that are not floating
         # "bordersize 0, floating:0, onworkspace:w[t1]"
-
-        "float,class:(mpv)|(imv)|(showmethekey-gtk)"
-        "move 990 60,size 900 170,pin,noinitialfocus,class:(showmethekey-gtk)"
-        "noborder,nofocus,class:(showmethekey-gtk)"
 
         "workspace 1,class:(chromium)"
         "workspace 2,class:(terminal)"
