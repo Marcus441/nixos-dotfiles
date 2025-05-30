@@ -64,6 +64,9 @@
     # Javascript
     nodePackages_latest.nodejs
 
+    # make
+    gnumake
+
     # Other
     bemoji
     nix-prefetch-scripts
