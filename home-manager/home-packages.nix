@@ -37,7 +37,6 @@
     mediainfo
     playerctl
     ripgrep
-    showmethekey
     silicon
     udisks
     ueberzugpp
