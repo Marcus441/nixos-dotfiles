@@ -1,25 +1,64 @@
-{ inputs
-, config
-, ...
-}:
 {
-  imports = [ inputs.nvf.homeManagerModules.default ];
+  pkgs,
+  inputs,
+  config,
+  lib,
+  ...
+}: {
+  imports = [inputs.nvf.homeManagerModules.default];
 
   programs.nvf = {
     enable = true;
 
     settings.vim = {
       lsp.enable = true;
-      vimAlias = true;
+      augroups = [{name = "UserSetup";}];
+      autocmds = [
+        {
+          event = ["TextYankPost"];
+          desc = "Highlight when yanking (copying) text";
+          group = "UserSetup";
+          callback = lib.mkLuaInline ''
+            function()
+              vim.highlight.on_yank()
+            end
+          '';
+        }
+      ];
+      extraPlugins = {
+        vim-tmux-navigator = {
+          package = pkgs.vimPlugins.vim-tmux-navigator;
+          setup = "
+          vim.g.tmux_navigator_no_mappings = 1
+          vim.g.tmux_navigator_no_wrap = 1
+          ";
+        };
+        gruvbox-material = {
+          package = pkgs.vimPlugins.gruvbox-material;
+          setup = "
+          vim.g.gruvbox_material_background = 'hard'
+          vim.g.gruvbox_material_better_performance = 1 
+	      vim.cmd('colorscheme gruvbox-material') 
+          ";
+          after = ["vim-tmux-navigator"];
+        };
+        undotree = {
+          package = pkgs.vimPlugins.undotree;
+          setup = "";
+          after = ["gruvbox-material"];
+        };
+      };
       viAlias = true;
+      vimAlias = true;
+      undoFile.enable = true;
       lineNumberMode = "relNumber";
       enableLuaLoader = true;
       preventJunkFiles = true;
-      # options = {
-      #   tabstop = 4;
-      #   shiftwidth = 2;
-      #   wrap = false;
-      # };
+      options = {
+        tabstop = 4;
+        shiftwidth = 2;
+        wrap = false;
+      };
 
       clipboard = {
         enable = true;
@@ -33,7 +72,7 @@
       maps = {
         normal = {
           "<C-n>" = {
-            action = "<CMD>Neotree toggle<CR>";
+            action = "<CMD>Neotree float toggle<CR>";
             silent = false;
           };
         };
@@ -48,67 +87,356 @@
       };
 
       keymaps = [
+        # Clear highlights on search when pressing <Esc> in normal mode
+        # See `:help hlsearch`
         {
-          key = "jk";
-          mode = [ "i" ];
-          action = "<ESC>";
-          desc = "Exit insert mode";
-        }
-        {
-          key = "<ESC>";
-          mode = [ "n" ];
-          action = ":nohl<CR>";
+          mode = ["n"];
+          key = "<Esc>";
+          action = "<cmd>nohlsearch<CR>";
           desc = "Clear search highlights";
         }
+        # bind jk to esc in insert mode
         {
-          key = "<leader>ff";
-          mode = [ "n" ];
-          action = "<cmd>Telescope find_files<cr>";
-          desc = "Search files by name";
+          mode = ["i"];
+          key = "jk";
+          action = "<Esc>";
+          desc = "Exit insert mode";
+        }
+        # Git status
+        {
+          mode = ["n"];
+          key = "<leader>gs";
+          action = "<CMD>Git<CR>";
+          desc = "Show Git status";
+        }
+        # Keep cursor to the left when appending lines
+        {
+          mode = ["n"];
+          key = "J";
+          action = "mzJ`z";
+          desc = "Join line and keep cursor position";
+        }
+
+        # keep cursor in center when moving up and down half page and in finds
+        {
+          mode = ["n"];
+          key = "<C-d>";
+          action = "<C-d>zz";
+          desc = "Half page down and <cmd><C-U>TmuxNavigateLeft<CR>center";
         }
         {
-          key = "<leader>lg";
-          mode = [ "n" ];
-          action = "<cmd>Telescope live_grep<cr>";
-          desc = "Search files by contents";
+          mode = ["n"];
+          key = "<C-u>";
+          action = "<C-u>zz";
+          desc = "Half page up and center";
         }
         {
-          key = "<leader>fe";
-          mode = [ "n" ];
-          action = "<cmd>Neotree toggle<cr>";
-          desc = "File browser toggle";
+          mode = ["n"];
+          key = "n";
+          action = "nzzzv";
+          desc = "Next search match and center";
         }
         {
+          mode = ["n"];
+          key = "N";
+          action = "Nzzzv";
+          desc = "Previous search match and center";
+        }
+
+        # reset lsp config
+        {
+          mode = ["n"];
+          key = "<leader>rlsp";
+          action = "<cmd>LspRestart<cr>";
+          desc = "Restart LSP server";
+        }
+
+        # Diagnostic keymaps
+        {
+          mode = ["n"];
+          key = "<leader>q";
+          action = "<cmd>Trouble diagnostics<cr>"; # A common alternative if you use 'trouble.nvim'
+          # action = "<cmd>lua vim.diagnostic.setloclist()<CR>"; # This is the direct Lua call, might work depending on NixVim's handling
+          desc = "Open diagnostic [Q]uickfix list";
+        }
+
+        # Exit terminal mode in the builtin terminal
+        {
+          mode = ["t"];
+          key = "<Esc><Esc>";
+          action = "<C-\\><C-n>";
+          desc = "Exit terminal mode";
+        }
+
+        # Keybinds to make split navigation easier.
+        # Use CTRL+<hjkl> to switch between windows
+        {
+          mode = ["n"];
           key = "<C-h>";
-          mode = [ "i" ];
-          action = "<Left>";
-          desc = "Move left in insert mode";
+          action = "<cmd>TmuxNavigateLeft<CR>";
+          desc = "Move focus to the left window";
         }
         {
-          key = "<C-j>";
-          mode = [ "i" ];
-          action = "<Down>";
-          desc = "Move down in insert mode";
-        }
-        {
-          key = "<C-k>";
-          mode = [ "i" ];
-          action = "<Up>";
-          desc = "Move up in insert mode";
-        }
-        {
+          mode = ["n"];
           key = "<C-l>";
-          mode = [ "i" ];
-          action = "<Right>";
-          desc = "Move right in insert mode";
+          action = "<cmd>TmuxNavigateRight<CR>";
+          desc = "Move focus to the right window";
+        }
+        {
+          mode = ["n"];
+          key = "<C-j>";
+          action = "<cmd>TmuxNavigateDown<CR>";
+          desc = "Move focus to the lower window";
+        }
+        {
+          mode = ["n"];
+          key = "<C-k>";
+          action = "<cmd>TmuxNavigateUp<CR>";
+          desc = "Move focus to the upper window";
+        }
+
+        # Move highlighted section up and down
+        {
+          mode = ["v"];
+          key = "J";
+          action = ":m '>+1<CR>gv=gv";
+          desc = "Move visual block down";
+        }
+        {
+          mode = ["v"];
+          key = "K";
+          action = ":m '<-2<CR>gv=gv";
+          desc = "Move visual block up";
+        }
+
+        # Clipboard and void register
+        # For these, the 'action' field needs to be a string representing the Vim command.
+        # The '"_d' and '"+y' are normal mode commands, so you'd represent them as such.
+        {
+          mode = ["x"]; # Visual mode
+          key = "<leader>p";
+          action = "\"_dP"; # Pastes from system clipboard (") into void register (_)
+          desc = "Paste into void register";
+        }
+        {
+          mode = ["n"]; # Normal mode only
+          key = "<leader>Y";
+          action = "\"+Y"; # Yank line to system clipboard
+          desc = "Yank line to system clipboard";
+        }
+        {
+          mode = ["v"]; # Visual mode
+          key = "<leader>y";
+          action = "\"+y"; # Yank into system clipboard
+          desc = "Yank to system clipboard";
+        }
+        {
+          mode = ["n"]; # Normal mode
+          key = "<leader>y";
+          action = "\"+y"; # Yank into system clipboard
+          desc = "Yank to system clipboard";
+        }
+        {
+          mode = ["v"]; # Visual mode
+          key = "<leader>d";
+          action = "\"_d"; # Delete to void register (effectively delete without copying)
+          desc = "Delete to void register";
+        }
+        {
+          mode = ["n"]; # Normal mode
+          key = "<leader>d";
+          action = "\"_d"; # Delete to void register (effectively delete without copying)
+          desc = "Delete to void register";
+        }
+        # undotree
+        {
+          mode = ["n"];
+          key = "<leader>u";
+          action = "<CMD>UndotreeToggle<CR>";
+          desc = "[U]ndotree";
+        }
+        # Telescope Bindings
+        {
+          mode = ["n"];
+          key = "<leader>sh";
+          action = "<CMD> Telescope help_tags <CR>";
+          desc = "[S]earch [H]elp";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sk";
+          action = "<cmd>Telescope keymaps<cr>";
+          desc = "[S]earch [K]eymaps";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sf";
+          action = "<cmd>Telescope find_files<cr>";
+          desc = "[S]earch [F]iles";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>ss";
+          action = "<cmd>Telescope builtin<cr>";
+          desc = "[S]earch [S]elect Telescope";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sw";
+          action = "<cmd>Telescope grep_string<cr>";
+          desc = "[S]earch current [W]ord";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sg";
+          action = "<cmd>Telescope live_grep<cr>";
+          desc = "[S]earch by [G]rep";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sd";
+          action = "<cmd>Telescope diagnostics<cr>";
+          desc = "[S]earch [D]iagnostics";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>sr";
+          action = "<cmd>Telescope resume<cr>";
+          desc = "[S]earch [R]esume";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>s.";
+          action = "<cmd>Telescope oldfiles<cr>";
+          desc = "[S]earch Recent Files (\".\" for repeat)";
+        }
+        {
+          mode = ["n"];
+          key = "<leader><leader>";
+          action = "<cmd>Telescope current_buffer_fuzzy_find<cr>";
+          desc = "[ ] Find existing buffers";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>/";
+          action = "<cmd>Telescope buffers<cr>";
+          desc = "[/] Fuzzily search in current buffer";
+        }
+        # Telescope LSP: Goto Definition
+        {
+          mode = ["n"];
+          key = "gd";
+          action = "<cmd>Telescope lsp_definitions<cr>";
+          desc = "[G]oto [D]efinition";
+        }
+
+        # Telescope LSP: Find References
+        {
+          mode = ["n"];
+          key = "gr";
+          action = "<cmd>Telescope lsp_references<cr>";
+          desc = "[G]oto [R]eferences";
+        }
+
+        # Telescope LSP: Goto Implementation
+        {
+          mode = ["n"];
+          key = "gI";
+          action = "<cmd>Telescope lsp_implementations<cr>";
+          desc = "[G]oto [I]mplementation";
+        }
+
+        # Telescope LSP: Type Definition
+        {
+          mode = ["n"];
+          key = "<leader>D";
+          action = "<cmd>Telescope lsp_type_definitions<cr>";
+          desc = "Type [D]efinition";
+        }
+
+        # Telescope LSP: Document Symbols
+        {
+          mode = ["n"];
+          key = "<leader>ds";
+          action = "<cmd>Telescope lsp_document_symbols<cr>";
+          desc = "[D]ocument [S]ymbols";
+        }
+
+        # Telescope LSP: Workspace Symbols
+        {
+          mode = ["n"];
+          key = "<leader>ws";
+          action = "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>";
+          desc = "[W]orkspace [S]ymbols";
+        }
+
+        # LSP: Rename
+        {
+          mode = ["n"];
+          key = "<leader>rn";
+          action = "<cmd>lua vim.lsp.buf.rename()<cr>";
+          desc = "[R]e[n]ame";
+        }
+
+        # LSP: Code Action
+        {
+          mode = ["n"];
+          key = "<leader>ca";
+          action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
+          desc = "[C]ode [A]ction";
+        }
+
+        # LSP: Goto Declaration
+        {
+          mode = ["n"];
+          key = "gD";
+          action = "<cmd>lua vim.lsp.buf.declaration()<cr>";
+          desc = "[G]oto [D]eclaration";
+        }
+
+        # Trouble Keybinds
+        {
+          mode = ["n"];
+          key = "<leader>xx";
+          action = "<cmd>Trouble diagnostics toggle<cr>";
+          desc = "Diagnostics (Trouble)";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>xX";
+          action = "<cmd>Trouble diagnostics toggle filter.buf=0<cr>";
+          desc = "Buffer Diagnostics (Trouble)";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>cs";
+          action = "<cmd>Trouble symbols toggle focus=false<cr>";
+          desc = "Symbols (Trouble)";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>cl";
+          action = "<cmd>Trouble lsp toggle focus=false win.position=right<cr>";
+          desc = "LSP Definitions / references / ... (Trouble)";
+        }
+        {
+          mode = ["n"];
+          key = "<leadexL";
+          action = "<cmd>Trouble loclist toggle<cr>";
+          desc = "Location List (Trouble)";
+        }
+        {
+          mode = ["n"];
+          key = "<leader>xQ";
+          action = "<cmd>Trouble qflist toggle<cr>";
+          desc = "Quickfix List (Trouble)";
         }
       ];
-
       telescope.enable = true;
 
       spellcheck = {
         enable = true;
-        languages = [ "en" ];
+        languages = ["en"];
         programmingWordlist.enable = true;
       };
 
@@ -131,7 +459,11 @@
         clang.enable = true;
         zig.enable = true;
         python.enable = true;
-        markdown.enable = true;
+        markdown = {
+          enable = true;
+          extensions.markview-nvim.enable = true;
+          extensions.render-markdown-nvim.enable = true;
+        };
         ts = {
           enable = true;
           lsp.enable = true;
@@ -147,6 +479,7 @@
           crates.enable = true;
         };
       };
+
       visuals = {
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
@@ -157,32 +490,53 @@
         rainbow-delimiters.enable = true;
       };
 
-      statusline.lualine = {
-        enable = true;
-        theme = "base16";
-      };
-
       autopairs.nvim-autopairs.enable = true;
+
       autocomplete.nvim-cmp.enable = true;
+
       snippets.luasnip.enable = true;
-      tabline.nvimBufferline.enable = true;
+
       treesitter.context.enable = false;
+
       binds = {
         whichKey.enable = true;
+        whichKey.register = {
+          "<leader>c" = "[C]ode";
+          "<leader>d" = "[D]ocument";
+          "<leader>r" = "[R]ename";
+          "<leader>s" = "[S]earch";
+          "<leader>w" = "[W]orkspace";
+          "<leader>t" = "[T]oggle";
+          "<leader>h" = "Git [H]unk";
+        };
         cheatsheet.enable = true;
       };
+
       git = {
         enable = true;
         gitsigns.enable = true;
         gitsigns.codeActions.enable = false;
       };
+
+      dashboard.startify.enable = true;
+
       projects.project-nvim.enable = true;
-      dashboard.dashboard-nvim.enable = true;
-      filetree.neo-tree.enable = true;
+
+      filetree.neo-tree = {
+        enable = true;
+      };
+
+      mini = {
+        ai.enable = true;
+        surround.enable = true;
+        statusline.enable = true;
+      };
+
       notify = {
         nvim-notify.enable = true;
         nvim-notify.setupOpts.background_colour = "#${config.lib.stylix.colors.base01}";
       };
+
       utility = {
         preview.markdownPreview.enable = true;
         ccc.enable = false;
@@ -199,6 +553,35 @@
           image-nvim.enable = false;
         };
       };
+
+      navigation = {
+        harpoon = {
+          enable = true;
+          mappings = {
+            file1 = "<A-q>";
+            file2 = "<A-w>";
+            file3 = "<A-e>";
+            file4 = "<A-r>";
+            markFile = "<A-a>";
+            listMarks = "<A-m>";
+          };
+          setupOpts = {
+            defaults = {
+              save_on_toggle = true;
+              sync_on_ui_close = true;
+            };
+
+            # Optional: customize UI style for the menu
+            menu = {
+              title = "Harpoon";
+              title_pos = "center";
+              border = "rounded";
+              ui_width_ratio = 0.40;
+            };
+          };
+        };
+      };
+
       ui = {
         borders.enable = true;
         noice.enable = true;
@@ -217,10 +600,11 @@
       session = {
         nvim-session-manager.enable = false;
       };
+
+      notes.todo-comments.enable = true;
       comments = {
         comment-nvim.enable = true;
       };
     };
   };
 }
-
