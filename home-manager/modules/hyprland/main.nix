@@ -95,6 +95,8 @@ in
           natural_scroll = true;
           scroll_factor = 0.6;
         };
+        accel_profile = "flat";
+        force_no_accel = true;
       };
 
       gestures = {

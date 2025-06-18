@@ -7,8 +7,8 @@
     settings = {
 
       window = {
-	 padding.x = 15;
-	 padding.y = 15;
+        padding.x = 15;
+        padding.y = 15;
       };
 
       font = {

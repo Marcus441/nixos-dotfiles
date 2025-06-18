@@ -15,6 +15,7 @@
     obs-studio
     pavucontrol
     teams-for-linux
+    thunderbird
     vesktop
 
     # CLI utils
