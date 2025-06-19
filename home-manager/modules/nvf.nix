@@ -122,7 +122,7 @@
           mode = ["n"];
           key = "<C-d>";
           action = "<C-d>zz";
-          desc = "Half page down and <cmd><C-U>TmuxNavigateLeft<CR>center";
+          desc = "Half page down and center";
         }
         {
           mode = ["n"];
