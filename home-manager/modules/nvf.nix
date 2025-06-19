@@ -538,7 +538,6 @@
       };
 
       utility = {
-        preview.markdownPreview.enable = true;
         ccc.enable = false;
         vim-wakatime.enable = false;
         icon-picker.enable = true;
