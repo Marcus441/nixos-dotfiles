@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
@@ -54,16 +54,6 @@
     libnotify
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
-
-    # Lua
-    lua
-
-    # Rust
-    rustc
-    cargo
-
-    # Javascript
-    nodePackages_latest.nodejs
 
     # make
     gnumake
