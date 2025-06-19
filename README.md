@@ -1,4 +1,4 @@
-# ❄️NixOS Config ❄️
+# ❄️ NixOS Config ❄️
 
 This is my personal NixOS configuration, featuring a Gruvbox Material themed
 desktop environment.
