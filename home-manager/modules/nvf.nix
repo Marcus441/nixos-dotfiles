@@ -462,7 +462,6 @@
         markdown = {
           enable = true;
           extensions.markview-nvim.enable = true;
-          extensions.render-markdown-nvim.enable = true;
         };
         ts = {
           enable = true;
