@@ -468,6 +468,13 @@
           action = "<cmd>Trouble qflist toggle<cr>";
           desc = "Quickfix List (Trouble)";
         }
+        # Markview toggle
+        {
+          mode = ["n"];
+          key = "<C-m>";
+          action = "<cmd>Markview<cr>";
+          desc = "Toggle markview ";
+        }
       ];
       telescope.enable = true;
 
