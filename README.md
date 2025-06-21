@@ -41,8 +41,8 @@ To get started with this NixOS setup, follow these steps:
 2. **Clone this Repository:**
 
    ```bash
-   git clone [https://github.com/Marcus441/nixos-dotfiles.git](https://github.com/Marcus441/nixos-dotfiles.git)
-   cd nixos-dotfiles
+   git clone https://github.com/Marcus441/nixos-dotfiles.git ~/flake
+   cd flake
    ```
 
 3. **Prepare Your Host Configuration:** Navigate to the `hosts` directory and
@@ -102,14 +102,14 @@ To get started with this NixOS setup, follow these steps:
    the root of your cloned repository and rebuild your NixOS system.
 
    ```bash
-   # Ensure you are in the root of your 'nixos-dotfiles' repository
-   # Example: cd ~/nixos-dotfiles
+   # Ensure you are in the root of cloned 'nixos-dotfiles' directory (now /home/<user>/flake) 
+   # Example: cd ~/flake
 
    git add . # Stage your changes
    sudo nixos-rebuild switch --flake .#<hostname> # Use '.' for the current directory
    # OR: sudo nixos-install --flake .#<hostname> # for a fresh install 
 
-   home-manager switch --flake .#<hostname>
+   home-manager switch --flake .#<user> #eg alice
    ```
 
 ## 🤝 Contributions
