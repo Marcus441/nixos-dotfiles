@@ -78,6 +78,16 @@
       zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
       eval "$(zoxide init --cmd cd zsh)"
+
+      # Shell function for initializing a project template
+      nt() {
+        if [ -z "$1" ]; then
+          echo "Usage: nt <template-name>"
+          return 1
+        fi
+        nix flake init --template "github:Marcus441/nix-templates/main#$1"
+      }
+
     '';
   };
 }
