@@ -538,9 +538,11 @@
       autocomplete.nvim-cmp.enable = true;
 
       snippets.luasnip.enable = true;
+      snippets.luasnip.providers = [
+        "friendly-snippets"
+      ];
 
       treesitter.context.enable = false;
-
       binds = {
         whichKey.enable = true;
         whichKey.register = {
