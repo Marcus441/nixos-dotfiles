@@ -538,9 +538,7 @@
       autocomplete.nvim-cmp.enable = true;
 
       snippets.luasnip.enable = true;
-      snippets.luasnip.providers = [
-        "friendly-snippets"
-      ];
+      snippets.luasnip.loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
 
       treesitter.context.enable = false;
       binds = {
