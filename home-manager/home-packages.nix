@@ -9,7 +9,7 @@
     # Desktop apps
     anki
     code-cursor
-    floorp
+    firefox
     imv
     mpv
     obs-studio
