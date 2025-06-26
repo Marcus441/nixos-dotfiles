@@ -20,7 +20,7 @@
       }
     ];
     shellAliases = let
-      home-managerDir = "~/nixos-dotfiles/home-manager";
+      home-managerDir = "~/flake/home-manager";
     in {
       sw = "nh os switch";
       upd = "nh os switch --update";
