@@ -10,6 +10,7 @@
     anki
     code-cursor
     firefox
+    arc-browser
     imv
     mpv
     obs-studio
