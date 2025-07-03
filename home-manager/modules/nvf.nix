@@ -503,6 +503,7 @@
         enableExtraDiagnostics = true;
         nix.enable = true;
         clang.enable = true;
+        clang.dap.enable = true;
         zig.enable = true;
         python.enable = true;
         markdown = {
