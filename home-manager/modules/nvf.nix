@@ -11,6 +11,8 @@
     enable = true;
 
     settings.vim = {
+      debugger.nvim-dap.enable = true;
+      debugger.nvim-dap.ui.enable = true;
       lsp.enable = true;
       augroups = [
         {
