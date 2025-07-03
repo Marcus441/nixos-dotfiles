@@ -25,6 +25,7 @@
       sw = "nh os switch";
       upd = "nh os switch --update";
       hms = "nh home switch";
+      nd = "nix develop -c zsh";
 
       pkgs = "nvim ${home-managerDir}/home-packages.nix";
 
