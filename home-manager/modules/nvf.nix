@@ -120,8 +120,9 @@
       diagnostics = {
         enable = true;
         config = {
-          virtual_lines.enable = true;
+          virtual_text.enable = true;
           underline = true;
+          signs = true;
         };
       };
 
