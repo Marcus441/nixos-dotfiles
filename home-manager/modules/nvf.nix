@@ -539,7 +539,14 @@
 
       autopairs.nvim-autopairs.enable = true;
 
-      autocomplete.nvim-cmp.enable = true;
+      autocomplete.nvim-cmp = {
+        enable = true;
+        mappings = {
+          next = "<C-n>";
+          previous = "<C-p>";
+          confirm = "<C-y>";
+        };
+      };
 
       snippets.luasnip.enable = true;
       snippets.luasnip.loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
