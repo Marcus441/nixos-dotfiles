@@ -8,7 +8,6 @@
 
     # Desktop apps
     anki
-    code-cursor
     firefox
     imv
     mpv
@@ -16,6 +15,7 @@
     pavucontrol
     teams-for-linux
     thunderbird
+    xfce.thunar
     vesktop
 
     # CLI utils
@@ -32,6 +32,7 @@
     git-graph
     grimblast
     htop
+    httpie
     hyprpicker
     ntfs3g
     neovim

@@ -16,16 +16,17 @@
           special-visible-only = true;
           all-outputs = false;
           format = "{icon}";
+
           format-icons = {
-	    "1" = "";       # Browser (firefox)
-	    "2" = "";       # Terminal
-	    "3" = "";       # Discord
-	    "4" = "";       # Email
-	    "5" = "";       # Files / Folder
-	    "6" = "󰊻";       # Teams
-	    "7" = "";       # Gaming / Steam
-	    "8" = "";       # Gaming / Controller
-	    "9" = "";        # AI 
+            "1" = ""; # Browser
+            "2" = ""; # Terminal (full screen)
+            "3" = ""; # Code Editor (Neovim / VS Code)
+            "4" = "󱁤"; # Files / Folder
+            "5" = "󰊻"; # Teams
+            "6" = ""; # Discord
+            "7" = ""; # Email
+            "8" = "󰆼"; # Database / API Tools
+            "9" = ""; # AI
             "magic" = "";
           };
 

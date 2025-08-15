@@ -17,7 +17,7 @@
 
       "$mainMod" = "SUPER";
       "$terminal" = "alacritty";
-      "$fileManager" = "$terminal -e sh -c 'ranger'";
+      "$fileManager" = "thunar";
       "$menu" = "wofi";
 
       exec-once = [
@@ -117,10 +117,14 @@
         # match all windows that are not floating
         # "bordersize 0, floating:0, onworkspace:w[t1]"
 
-        "workspace 1,class:(chromium)"
-        "workspace 2,class:(terminal)"
-        "workspace 3,class:(vesktop)"
-        "workspace 6,class:(teams-for-linux)"
+        "workspace 1,class:(firefox)" # Browser
+        "workspace 2,class:(Alacritty|kitty)" # Terminal
+        "workspace 3,class:(code|code-cursor)" # Code editor
+        "workspace 5,class:(teams-for-linux)" # Teams
+        "workspace 6,class:(vesktop)" # Discord
+        "workspace 7,class:(thunderbird)" # Email
+        "workspace 8,class:(dbeaver|postman)" # DB/API tools
+        "workspace 9,class:(chromium|electron|firefox)" # AI apps
 
         # windows that should not be focused
         "suppressevent maximize, class:.*"
