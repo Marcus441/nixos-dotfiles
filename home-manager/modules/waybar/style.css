@@ -1,79 +1,99 @@
 * {
-  border: none;
-  border-radius: 0px;
-  font-family: "JetBrains Mono Nerd Font";
-  font-weight: bold;
-  font-size: 16px;
-  min-height: 0;
-  color: #ebdbb2;
+    border: none;
+    font-size: 14px;
+    font-family: "JetBrainsMono Nerd Font,JetBrainsMono NF" ;
+    min-height: 25px;
 }
 
 window#waybar {
+  background: transparent;
+  margin: 5px;
+ }
+
+#custom-logo {
+  padding: 0 10px;
+}
+
+.modules-right {
+  padding-left: 5px;
+  border-radius: 5px 0 0 5px;
+  margin-top: 2px;
   background: #1d2021;
 }
 
-/* Workspace Buttons */
-#workspaces button label {
-  color: #ebdbb2;
-  padding: 0 10px;
+.modules-center {
+  padding: 0 5px;
+  margin-top: 2px;
+  border-radius: 5px 1px 1px 5px;
+  background: #1d2021;
 }
 
-#workspaces button.active label {
-  color: #1d2021;
+.modules-left {
+  border-radius: 0 5px 5px 0;
+  margin-top: 2px;
+  background: #1d2021;
 }
 
-#workspaces button.active {
-  background: #689D6A;
-}
-
-#clock,
 #battery,
+#custom-clipboard,
+#custom-colorpicker,
+#custom-powerDraw,
+#bluetooth,
 #pulseaudio,
+#network,
+#disk,
+#memory,
+#backlight,
+#cpu,
+#temperature,
+#custom-weather,
+#idle_inhibitor,
+#jack,
 #tray,
-#language,
-#weather {
-  padding: 0 10px;
-  margin: 0 10px;
-}
-
-#language {
-  margin: 0;
-  color: #A9B665;
-  border-bottom: 5px solid #A9B665;
-}
-
-#custom-weather {
-  margin: 0;
-  color: #89B482;
-  border-bottom: 5px solid #89B482;
+#window,
+#workspaces,
+#clock {
+  padding: 0 5px;
 }
 
 #pulseaudio {
-  margin: 0;
-  color: #7DAEA3;
-  border-bottom: 5px solid #7DAEA3;
+  padding-top: 3px;
 }
 
+#temperature.critical,
 #pulseaudio.muted {
-  padding: 0 20px;
-  color: #EA6962;
-  border-bottom: 5px solid #7DAEA3;
+  color: #E96962;
+  padding-top: 0;
 }
 
-#battery {
-  margin: 0;
-  color: #D3869B;
-  border-bottom: 5px solid #D3869B;
+#clock{
+  color: #7DAEA3;
 }
 
-#clock {
-  margin: 0;
-  color: #D3869B;
-  border-bottom: 5px solid #D3869B;
+#battery.charging {
+    color: #ffffff;
+    background-color: #26A65B;
 }
 
-#tray {
-  margin: 0;
-  color: #EA6962;
-  border-bottom: 5px solid #EA6962;
+#battery.warning:not(.charging) {
+    background-color: #ffbe61;
+    color: black;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
 }

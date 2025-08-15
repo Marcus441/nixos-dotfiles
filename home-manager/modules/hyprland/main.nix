@@ -117,15 +117,6 @@
         # match all windows that are not floating
         # "bordersize 0, floating:0, onworkspace:w[t1]"
 
-        "workspace 1,class:(firefox)" # Browser
-        "workspace 2,class:(Alacritty|kitty)" # Terminal
-        "workspace 3,class:(code|code-cursor)" # Code editor
-        "workspace 5,class:(teams-for-linux)" # Teams
-        "workspace 6,class:(vesktop)" # Discord
-        "workspace 7,class:(thunderbird)" # Email
-        "workspace 8,class:(dbeaver|postman)" # DB/API tools
-        "workspace 9,class:(chromium|electron|firefox)" # AI apps
-
         # windows that should not be focused
         "suppressevent maximize, class:.*"
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
@@ -140,7 +131,7 @@
 
         # windows that should be floating
         "float,  class:^(org.pulseaudio.pavucontrol)$"
-        "float,  class:^(blueman-manager)$"
+        "float,  class:^(.blueman-manager-wrapped)$"
         "float,  class:^(nm-applet)$"
         "float,  class:^(nm-connection-editor)$"
 
