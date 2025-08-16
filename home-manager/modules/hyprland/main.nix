@@ -18,7 +18,7 @@
       "$mainMod" = "SUPER";
       "$terminal" = "alacritty";
       "$fileManager" = "thunar";
-      "$menu" = "wofi";
+      "$menu" = "rofi";
 
       exec-once = [
         "waybar"
@@ -132,8 +132,7 @@
         # windows that should be floating
         "float,  class:^(org.pulseaudio.pavucontrol)$"
         "float,  class:^(.blueman-manager-wrapped)$"
-        "float,  class:^(nm-applet)$"
-        "float,  class:^(nm-connection-editor)$"
+        "float,  class:^(nmtui-float)$"
 
         # alacritty terminal transparency
         "opacity 0.9, class:^(Alacritty)$"

@@ -73,7 +73,7 @@
 
         "custom/clipboard" = {
           format = "";
-          on-click = "cliphist list | $menu --dmenu | cliphist decode | wl-copy";
+          on-click = "cliphist list | rofi -dmenu | cliphist decode | wl-copy";
           interval = 86400;
         };
 
@@ -98,7 +98,7 @@
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
           tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
-          on-click = "rofi-bluetooth";
+          on-click = "blueman-manager";
         };
 
         network = {
@@ -108,7 +108,7 @@
           tooltip-format = "{ipaddr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
           tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
-          on-click = "networkmanager_dmenu";
+          on-click = "alacritty --class nmtui-float -e nmtui";
         };
 
         battery = {
@@ -158,7 +158,7 @@
 
         cpu = {
           interval = 1;
-          format = " {usage}%";
+          format = " {usage}%";
           min-length = 6;
           max-length = 6;
           format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];

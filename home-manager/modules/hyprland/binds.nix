@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-
 {
-  home.packages = [  ];
+  home.packages = [];
 
   wayland.windowManager.hyprland.settings = {
     bind = [
@@ -11,12 +9,12 @@
       "$mainMod,       Z, exec, loginctl lock-session"
       "$mainMod SHIFT, F, exec, $fileManager"
       "$mainMod,       F, togglefloating,"
-      "$mainMod,       N, exec, $menu --show drun"
+      "$mainMod,       N, exec, $menu -show drun"
       "$mainMod,       C, pin,"
       "$mainMod,       C, exec, hyprpicker -an"
       "$mainMod,       A, togglesplit,"
       "$mainMod,       M, exec, bemoji -cn"
-      "$mainMod,       V, exec, cliphist list | $menu --dmenu | cliphist decode | wl-copy"
+      "$mainMod,       V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
       "$mainMod,       B, exec, pkill -SIGUSR2 waybar"
       "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       "$mainMod SHIFT, N, exec, swaync-client -t"

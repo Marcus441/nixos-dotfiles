@@ -9,12 +9,12 @@
     ./lazygit.nix
     ./nvf.nix
     ./ranger.nix
+    ./rofi
     ./starship.nix
     ./stylix.nix
     ./swaync
     ./tmux.nix
     ./waybar
-    ./wofi
     ./zathura.nix
     ./zsh.nix
   ];
