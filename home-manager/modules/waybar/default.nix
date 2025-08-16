@@ -185,7 +185,7 @@
         pulseaudio = {
           format = "{volume}% {icon}";
           format-bluetooth = "󰂰";
-          format-muted = "<span font='12'></span>";
+          format-muted = "<span font=''> </span>";
           format-icons = {
             headphones = "";
             bluetooth = "󰥰";
@@ -194,10 +194,10 @@
             phone = "";
             portable = "";
             car = "";
-            default = ["🕨" "🕩" "🕪"];
+            default = [" " " " " "];
           };
           justify = "center";
-          on-click = "amixer sset Master toggle";
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           on-click-right = "pavucontrol";
           tooltip-format = "{icon}  {volume}%";
         };
