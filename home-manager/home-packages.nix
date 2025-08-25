@@ -43,6 +43,7 @@
     udisks
     ueberzugpp
     unzip
+    usbutils
     w3m
     wget
     wl-clipboard
