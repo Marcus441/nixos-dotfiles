@@ -75,7 +75,11 @@
         gruvbox-material = {
           package = pkgs.vimPlugins.gruvbox-flat-nvim;
           setup = "
-          vim.g.gruvbox_flat_style = 'hard'
+          vim.g.gruvbox_flat_style = 'dark'
+          vim.g.gruvbox_colors = { 
+              bg = '#1d2021',
+              bg2 ='#17191a'
+          }
           vim.cmd[[colorscheme gruvbox-flat]]
           ";
           after = ["vim-tmux-navigator"];
