@@ -72,16 +72,23 @@
           vim.g.tmux_navigator_no_wrap = 1
           ";
         };
-        gruvbox-material = {
-          package = pkgs.vimPlugins.gruvbox-flat-nvim;
+        theme-plugin = {
+          package = pkgs.vimPlugins.kanagawa-nvim;
           setup = "
-          vim.g.gruvbox_flat_style = 'dark'
-          vim.g.gruvbox_colors = { 
-              bg = 'black',
-              bg2 ='black'
-          }
-          vim.cmd[[colorscheme gruvbox-flat]]
-          ";
+            require('kanagawa').setup({
+              overrides = function(colors)
+                local theme = colors.theme
+                return {
+                  NormalFloat = { bg = 'none' },
+                  FloatBorder = { bg = 'none' },
+                  FloatTitle = { bg = 'none' },
+
+                  NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
+                }
+              end
+            })
+            vim.cmd[[colorscheme kanagawa-dragon]]
+         ";
           after = ["vim-tmux-navigator"];
         };
         undotree = {
@@ -527,29 +534,6 @@
         };
       };
 
-      theme = {
-        enable = false;
-        name = "base16";
-        base16-colors = {
-          base00 = "#202021";
-          base01 = "#2a2827";
-          base02 = "#504945";
-          base03 = "#5a524c";
-          base04 = "#bdae93";
-          base05 = "#ddc7a1";
-          base06 = "#ebdbb2";
-          base07 = "#fbf1c7";
-          base08 = "#ea6962";
-          base09 = "#e78a4e";
-          base0A = "#d8a657";
-          base0B = "#a9b665";
-          base0C = "#89b482";
-          base0D = "#7daea3";
-          base0E = "#d3869b";
-          base0F = "#bd6f3e";
-        };
-      };
-
       visuals = {
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
@@ -601,6 +585,7 @@
       };
 
       projects.project-nvim.enable = true;
+      filetree.neo-tree.enable = true;
 
       filetree.nvimTree = {
         enable = true;
@@ -613,6 +598,7 @@
               restrict_above_cwd = false;
             };
           };
+          renderer.icons.show.git = true;
           view = {
             float = {
               enable = true;
