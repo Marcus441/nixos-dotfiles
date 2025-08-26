@@ -83,12 +83,12 @@
                   FloatBorder = { bg = 'none' },
                   FloatTitle = { bg = 'none' }, 
 
-                  NoiceCmdlinePopup = { bg = '#181616', fg = '#cdd6f4' },
-                  NoiceCmdlinePopupBorder = { bg = '#181616', fg = '#f5c2e7' },
-                  NoiceCmdlinePrompt = { bg = 'NONE', fg = '#cdd6f4' },
+                  NoiceCmdlinePopup = { bg = '#181616' },
+                  NoiceCmdlinePopupBorder = { bg = '#181616' },
+                  NoiceCmdlinePrompt = { bg = 'NONE'},
                   NoiceCmdlineIcon = { bg = 'NONE', fg = '#cdd6f4' },
-                  NoicePopupmenu = { bg = '#181616', fg = '#cdd6f4' },
-                  NoicePopupmenuBorder = { bg = '#181616', fg = '#f5c2e7' },
+                  NoicePopupmenu = { bg = '#181616'  },
+                  NoicePopupmenuBorder = { bg = '#181616'},
                   
                   NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
                 }
