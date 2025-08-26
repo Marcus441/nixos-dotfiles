@@ -7,7 +7,6 @@
     zoxide
 
     # Desktop apps
-    anki
     firefox
     imv
     mpv
