@@ -73,21 +73,20 @@
           ";
         };
         gruvbox-material = {
-          package = pkgs.vimPlugins.gruvbox-material;
+          package = pkgs.vimPlugins.gruvbox-flat-nvim;
           setup = "
-          vim.g.gruvbox_material_background = 'hard'
-          vim.g.gruvbox_material_better_performance = 1 
-	      vim.cmd('colorscheme gruvbox-material') 
+          vim.g.gruvbox_flat_style = 'hard'
+          vim.cmd[[colorscheme gruvbox-flat]]
           ";
           after = ["vim-tmux-navigator"];
         };
         undotree = {
           package = pkgs.vimPlugins.undotree;
           setup = "";
-          after = ["gruvbox-material"];
+          after = ["vim-tmux-navigator"];
         };
       };
-      viAlias = true;
+
       vimAlias = true;
       undoFile.enable = true;
       lineNumberMode = "relNumber";
@@ -524,6 +523,29 @@
         };
       };
 
+      theme = {
+        enable = false;
+        name = "base16";
+        base16-colors = {
+          base00 = "#202021";
+          base01 = "#2a2827";
+          base02 = "#504945";
+          base03 = "#5a524c";
+          base04 = "#bdae93";
+          base05 = "#ddc7a1";
+          base06 = "#ebdbb2";
+          base07 = "#fbf1c7";
+          base08 = "#ea6962";
+          base09 = "#e78a4e";
+          base0A = "#d8a657";
+          base0B = "#a9b665";
+          base0C = "#89b482";
+          base0D = "#7daea3";
+          base0E = "#d3869b";
+          base0F = "#bd6f3e";
+        };
+      };
+
       visuals = {
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
@@ -609,27 +631,6 @@
                 '';
               };
             };
-          };
-          expand_all = {
-            exclude = [".git" "target" "build" "result"];
-            max_folder_discovery = 300;
-          };
-          open_file = {
-            eject = false;
-            quit_on_open = false;
-            resize_window = false;
-            window_picker = {
-              enable = false;
-              chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-              exclude = {
-                buftype = ["nofile" "terminal" "help"];
-                filetype = ["notify" "packer" "qf" "diff" "fugitive" "fugitiveblame"];
-              };
-              picker = "default";
-            };
-          };
-          remove_file = {
-            close_window = true;
           };
           auto_reload_on_write = true;
         };

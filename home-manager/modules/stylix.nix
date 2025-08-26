@@ -25,6 +25,7 @@
       # You can override other colors as needed, e.g., base01, base08, etc.
     };
     targets = {
+      nvf.enable = false;
       neovim.enable = false;
       waybar.enable = false;
       rofi.enable = false;
