@@ -52,7 +52,9 @@
         };
 
         blur = {
-          enabled = false;
+          enabled = true;
+          new_optimizations = true;
+          passes = 3;
         };
       };
 
@@ -135,7 +137,7 @@
         "float,  class:^(nmtui-float)$"
 
         # alacritty terminal transparency
-        "opacity 0.9, class:^(Alacritty)$"
+        "opacity 0.8, class:^(Alacritty)$"
       ];
 
       # workspace = [
