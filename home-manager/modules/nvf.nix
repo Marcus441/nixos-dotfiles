@@ -81,8 +81,15 @@
                 return {
                   NormalFloat = { bg = 'none' },
                   FloatBorder = { bg = 'none' },
-                  FloatTitle = { bg = 'none' },
+                  FloatTitle = { bg = 'none' }, 
 
+                  NoiceCmdlinePopup = { bg = '#181616', fg = '#cdd6f4' },
+                  NoiceCmdlinePopupBorder = { bg = '#181616', fg = '#f5c2e7' },
+                  NoiceCmdlinePrompt = { bg = 'NONE', fg = '#cdd6f4' },
+                  NoiceCmdlineIcon = { bg = 'NONE', fg = '#cdd6f4' },
+                  NoicePopupmenu = { bg = '#181616', fg = '#cdd6f4' },
+                  NoicePopupmenuBorder = { bg = '#181616', fg = '#f5c2e7' },
+                  
                   NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
                 }
               end
@@ -585,7 +592,6 @@
       };
 
       projects.project-nvim.enable = true;
-      filetree.neo-tree.enable = true;
 
       filetree.nvimTree = {
         enable = true;
