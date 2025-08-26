@@ -77,8 +77,8 @@
           setup = "
           vim.g.gruvbox_flat_style = 'dark'
           vim.g.gruvbox_colors = { 
-              bg = '#1d2021',
-              bg2 ='#17191a'
+              bg = 'black',
+              bg2 ='black'
           }
           vim.cmd[[colorscheme gruvbox-flat]]
           ";
