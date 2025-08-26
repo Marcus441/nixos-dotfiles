@@ -2,7 +2,6 @@
   imports = [
     ./alacritty.nix
     ./bat.nix
-    ./chromium.nix
     ./eza.nix
     ./git.nix
     ./hyprland
