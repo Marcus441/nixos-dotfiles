@@ -108,15 +108,6 @@
         };
       };
 
-      maps = {
-        normal = {
-          "<C-n>" = {
-            action = "<CMD>Neotree float toggle<CR>";
-            silent = false;
-          };
-        };
-      };
-
       diagnostics = {
         enable = true;
         config = {
@@ -127,6 +118,12 @@
       };
 
       keymaps = [
+        {
+          mode = ["n"];
+          key = "<C-n>";
+          action = "<CMD>NvimTreeFindFileToggle<CR>";
+          desc = "Toggle file explorer";
+        }
         # Clear highlights on search when pressing <Esc> in normal mode
         # See `:help hlsearch`
         {
@@ -572,12 +569,70 @@
         gitsigns.codeActions.enable = false;
       };
 
-      dashboard.startify.enable = true;
+      dashboard.alpha = {
+        enable = true;
+        theme = "theta";
+      };
 
       projects.project-nvim.enable = true;
 
-      filetree.neo-tree = {
+      filetree.nvimTree = {
         enable = true;
+        openOnSetup = true;
+        setupOpts = {
+          actions = {
+            change_dir = {
+              enable = true;
+              global = false;
+              restrict_above_cwd = false;
+            };
+          };
+          view = {
+            float = {
+              enable = true;
+              quit_on_focus_loss = true;
+              # This ensures the window opens in the center
+              open_win_config = {
+                border = "rounded";
+                relative = "editor";
+                width = lib.mkLuaInline ''
+                  math.floor(vim.o.columns * 0.4)
+                '';
+                height = lib.mkLuaInline ''
+                  math.floor((vim.o.lines - vim.o.cmdheight) * 0.6)
+                '';
+                row = lib.mkLuaInline ''
+                  math.floor(((vim.o.lines - vim.o.cmdheight) - math.floor((vim.o.lines - vim.o.cmdheight) * 0.6)) / 2)
+                '';
+                col = lib.mkLuaInline ''
+                  math.floor((vim.o.columns - math.floor(vim.o.columns * 0.4)) / 2)
+                '';
+              };
+            };
+          };
+          expand_all = {
+            exclude = [".git" "target" "build" "result"];
+            max_folder_discovery = 300;
+          };
+          open_file = {
+            eject = false;
+            quit_on_open = false;
+            resize_window = false;
+            window_picker = {
+              enable = false;
+              chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+              exclude = {
+                buftype = ["nofile" "terminal" "help"];
+                filetype = ["notify" "packer" "qf" "diff" "fugitive" "fugitiveblame"];
+              };
+              picker = "default";
+            };
+          };
+          remove_file = {
+            close_window = true;
+          };
+          auto_reload_on_write = true;
+        };
       };
 
       mini = {
