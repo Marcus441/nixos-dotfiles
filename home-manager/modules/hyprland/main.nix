@@ -16,7 +16,7 @@
       monitor = ", preferred, auto, auto ";
 
       "$mainMod" = "SUPER";
-      "$terminal" = "ghostty";
+      "$terminal" = "ghostty --gtk-single-instance=true";
       "$fileManager" = "thunar";
       "$menu" = "rofi";
 
@@ -24,6 +24,7 @@
         "waybar"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
       ];
 
       general = {
