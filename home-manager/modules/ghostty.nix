@@ -17,7 +17,7 @@
       term = "xterm-256color";
       keybind = [
         # Create splits
-        "alt+h=new_split:right"
+        "alt+h=new_split:left"
         "alt+j=new_split:down"
         "alt+k=new_split:up"
         "alt+l=new_split:right"
