@@ -1,6 +1,6 @@
 {
   imports = [
-    ./alacritty.nix
+    ./ghostty.nix
     ./bat.nix
     ./eza.nix
     ./git.nix

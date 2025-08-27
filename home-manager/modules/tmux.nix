@@ -12,7 +12,7 @@
     terminal = "screen-256color";
     extraConfig = ''
       set-option -a terminal-features 'xterm-256color:RGB'
-      set -as terminal-features ",alacritty*:RGB"
+      set -as terminal-features ",ghostty*:RGB"
       bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
       bind -n M-p previous-window
       bind -n M-n next-window
@@ -68,25 +68,25 @@
       bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane -R }
     '';
     plugins = [
-      # {
-      #   plugin = tmuxPlugins.resurrect;
-      #   extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      # }
-      # {
-      #   plugin = tmuxPlugins.continuum;
-      #   extraConfig = ''
-      # set -g @continuum-restore 'on'
-      # set -g @continuum-save-interval '60' # minutes
-      #   '';
-      # }
+      {
+        plugin = pkgs.tmuxPlugins.resurrect;
+        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+      }
+      {
+        plugin = pkgs.tmuxPlugins.continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '60' # minutes
+        '';
+      }
       {
         plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
       }
       {
         plugin = inputs.minimal-tmux.packages.${pkgs.system}.default;
         extraConfig = ''
-          set -g @minimal-tmux-bg "#A9B665"
-          set -g @minimal-tmux-fg "#32302F"
+          set -g @minimal-tmux-bg "#708590"
+          set -g @minimal-tmux-fg "#191A19"
         '';
       }
     ];
