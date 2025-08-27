@@ -64,6 +64,7 @@
           '';
         }
       ];
+
       extraPlugins = {
         vim-tmux-navigator = {
           package = pkgs.vimPlugins.vim-tmux-navigator;
@@ -71,32 +72,6 @@
           vim.g.tmux_navigator_no_mappings = 1
           vim.g.tmux_navigator_no_wrap = 1
           ";
-        };
-        theme-plugin = {
-          package = pkgs.vimPlugins.kanagawa-nvim;
-          setup = "
-            require('kanagawa').setup({
-              overrides = function(colors)
-                local theme = colors.theme
-                return {
-                  NormalFloat = { bg = 'none' },
-                  FloatBorder = { bg = 'none' },
-                  FloatTitle = { bg = 'none' }, 
-
-                  NoiceCmdlinePopup = { bg = '#181616' },
-                  NoiceCmdlinePopupBorder = { bg = '#181616' },
-                  NoiceCmdlinePrompt = { bg = 'NONE'},
-                  NoiceCmdlineIcon = { bg = 'NONE', fg = '#cdd6f4' },
-                  NoicePopupmenu = { bg = '#181616'  },
-                  NoicePopupmenuBorder = { bg = '#181616'},
-                  
-                  NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
-                }
-              end
-            })
-            vim.cmd[[colorscheme kanagawa-dragon]]
-         ";
-          after = ["vim-tmux-navigator"];
         };
         undotree = {
           package = pkgs.vimPlugins.undotree;
@@ -137,9 +112,15 @@
       keymaps = [
         {
           mode = ["n"];
-          key = "<C-n>";
-          action = "<CMD>NvimTreeFindFileToggle<CR>";
-          desc = "Toggle file explorer";
+          key = "-";
+          action = "<CMD>Oil<CR>";
+          desc = "Toggle oil-nvim";
+        }
+        {
+          mode = ["n"];
+          key = "<space>-";
+          action = "<CMD>Oil --float<CR>";
+          desc = "Toggle oil-nvim";
         }
         # Clear highlights on search when pressing <Esc> in normal mode
         # See `:help hlsearch`
@@ -593,49 +574,16 @@
 
       projects.project-nvim.enable = true;
 
-      filetree.nvimTree = {
-        enable = true;
-        openOnSetup = true;
-        setupOpts = {
-          actions = {
-            change_dir = {
-              enable = true;
-              global = false;
-              restrict_above_cwd = false;
-            };
-          };
-          renderer.icons.show.git = true;
-          view = {
-            float = {
-              enable = true;
-              quit_on_focus_loss = true;
-              # This ensures the window opens in the center
-              open_win_config = {
-                border = "rounded";
-                relative = "editor";
-                width = lib.mkLuaInline ''
-                  math.floor(vim.o.columns * 0.4)
-                '';
-                height = lib.mkLuaInline ''
-                  math.floor((vim.o.lines - vim.o.cmdheight) * 0.6)
-                '';
-                row = lib.mkLuaInline ''
-                  math.floor(((vim.o.lines - vim.o.cmdheight) - math.floor((vim.o.lines - vim.o.cmdheight) * 0.6)) / 2)
-                '';
-                col = lib.mkLuaInline ''
-                  math.floor((vim.o.columns - math.floor(vim.o.columns * 0.4)) / 2)
-                '';
-              };
-            };
-          };
-          auto_reload_on_write = true;
-        };
-      };
+      utility.oil-nvim.enable = true;
 
       mini = {
         ai.enable = true;
         surround.enable = true;
-        statusline.enable = true;
+      };
+
+      statusline.lualine = {
+        enable = true;
+        theme = "base16";
       };
 
       notify = {
