@@ -16,7 +16,7 @@
       monitor = ", preferred, auto, auto ";
 
       "$mainMod" = "SUPER";
-      "$terminal" = "alacritty";
+      "$terminal" = "ghostty";
       "$fileManager" = "thunar";
       "$menu" = "rofi";
 
@@ -136,8 +136,8 @@
         "float,  class:^(.blueman-manager-wrapped)$"
         "float,  class:^(nmtui-float)$"
 
-        # alacritty terminal transparency
-        "opacity 0.8, class:^(Alacritty)$"
+        # ghostty terminal transparency
+        "opacity 0.8, class:^(com.mitchellh.ghostty)$"
       ];
 
       # workspace = [

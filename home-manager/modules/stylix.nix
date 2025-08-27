@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }: {
   imports = [inputs.stylix.homeModules.stylix];
@@ -16,21 +17,19 @@
     powerline-symbols
     nerd-fonts.symbols-only
   ];
+
   stylix = {
     enable = true;
     polarity = "dark";
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
-    override = {
-      base00 = "#1d2021"; # Correct the base00 color (background)
-      # You can override other colors as needed, e.g., base01, base08, etc.
-    };
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
     targets = {
-      nvf.enable = false;
+      starship.enable = true;
+      nvf.enable = true;
       neovim.enable = false;
       waybar.enable = false;
-      rofi.enable = false;
+      rofi.enable = true;
       hyprland.enable = false;
-      hyprlock.enable = false;
+      hyprlock.enable = true;
     };
 
     cursor = {
@@ -40,14 +39,11 @@
     };
 
     fonts = {
-      emoji = {
-        name = "Noto Color Emoji";
-        package = pkgs.noto-fonts-color-emoji;
-      };
       monospace = {
         name = "JetBrains Mono";
-        package = pkgs.jetbrains-mono;
+        package = pkgs.nerd-fonts.jetbrains-mono;
       };
+
       sansSerif = {
         name = "Noto Sans";
         package = pkgs.noto-fonts;
@@ -55,6 +51,11 @@
       serif = {
         name = "Noto Serif";
         package = pkgs.noto-fonts;
+      };
+
+      emoji = {
+        name = "Noto Color Emoji";
+        package = pkgs.noto-fonts-color-emoji;
       };
 
       sizes = {
@@ -71,8 +72,8 @@
     };
 
     image = pkgs.fetchurl {
-      url = "https://w.wallhaven.cc/full/m3/wallhaven-m3y8pm.jpg";
-      sha256 = "c050e26db121ac76606b9671af8c99b609e2114aca248036e7fc50e5bc026960";
+      url = "https://w.wallhaven.cc/full/vp/wallhaven-vpx5el.png";
+      sha256 = "11hlb1hpdmmr2fdr4lm6l1dn8krv4r6ydx0p97h1f0vak4knyi34";
     };
   };
 }

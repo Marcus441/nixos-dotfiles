@@ -1,7 +1,6 @@
 * {
     border: none;
     font-size: 14px;
-    font-family: "JetBrainsMono Nerd Font,JetBrainsMono NF" ;
     min-height: 25px;
 }
 
@@ -18,20 +17,20 @@ window#waybar {
   padding-left: 5px;
   border-radius: 5px 0 0 5px;
   margin-top: 2px;
-  background: #1d2021;
+  background: #181616;
 }
 
 .modules-center {
   padding: 0 5px;
   margin-top: 2px;
   border-radius: 5px 1px 1px 5px;
-  background: #1d2021;
+  background: #181616;
 }
 
 .modules-left {
   border-radius: 0 5px 5px 0;
   margin-top: 2px;
-  background: #1d2021;
+  background: #181616;
 }
 
 #battery,
@@ -62,12 +61,12 @@ window#waybar {
 
 #temperature.critical,
 #pulseaudio.muted {
-  color: #E96962;
+  color: #c4746e;
   padding-top: 0;
 }
 
 #clock{
-  color: #7DAEA3;
+  color: #8BA4B0;
 }
 
 #battery.charging {

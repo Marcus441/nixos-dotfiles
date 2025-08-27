@@ -1,7 +1,7 @@
-{
+{lib, ...}: {
   programs.waybar = {
     enable = true;
-    style = ./style.css;
+    style = lib.mkForce ./style.css;
 
     settings = {
       mainBar = {
@@ -26,7 +26,6 @@
           "custom/clipboard"
           "backlight"
           "idle_inhibitor"
-          "custom/colorpicker"
           "bluetooth"
           "pulseaudio"
           "network"
@@ -108,7 +107,7 @@
           tooltip-format = "{ipaddr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
           tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
-          on-click = "alacritty --class nmtui-float -e nmtui";
+          on-click = "ghostty --class nmtui-float -e nmtui";
         };
 
         battery = {
@@ -145,15 +144,6 @@
           interval = 30;
           format = "  {percentage_used}%";
           path = "/";
-        };
-
-        "custom/colorpicker" = {
-          format = "{}";
-          return-type = "json";
-          interval = "once";
-          exec = "~/.config/waybar/scripts/colorpicker.sh -j";
-          on-click = "sleep 1 && ~/.config/waybar/scripts/colorpicker.sh";
-          signal = 1;
         };
 
         cpu = {
