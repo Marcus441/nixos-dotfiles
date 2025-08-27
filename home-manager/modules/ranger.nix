@@ -12,6 +12,7 @@
 
     settings = {
       preview_images = true;
+      preview_images_method = "kitty";
       draw_borders = true;
       w3m_delay = 0;
     };
