@@ -30,7 +30,8 @@
 
         # Tab management
         "alt+enter=new_tab"
-        "alt+c=close_tab"
+        "alt+x=close_tab"
+        "alt+c=close_surface"
         "alt+n=next_tab"
         "alt+p=previous_tab"
 
