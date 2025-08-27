@@ -135,7 +135,6 @@
         # windows that should be floating
         "float,  class:^(org.pulseaudio.pavucontrol)$"
         "float,  class:^(.blueman-manager-wrapped)$"
-        "float,  class:^(nmtui-float)$"
 
         # ghostty terminal transparency
         "opacity 0.8, class:^(com.mitchellh.ghostty)$"

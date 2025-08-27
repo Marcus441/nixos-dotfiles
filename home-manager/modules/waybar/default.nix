@@ -107,7 +107,7 @@
           tooltip-format = "{ipaddr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
           tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
-          on-click = "ghostty --class nmtui-float -e nmtui";
+          on-click = "DMENU='rofi -dmenu -i -p Network:' networkmanager_dmenu";
         };
 
         battery = {

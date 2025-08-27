@@ -56,7 +56,7 @@ window#waybar {
 }
 
 #pulseaudio {
-  padding-top: 3px;
+  padding-top: 0;
 }
 
 #temperature.critical,

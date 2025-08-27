@@ -15,6 +15,7 @@
     teams-for-linux
     thunderbird
     xfce.thunar
+    networkmanager_dmenu
     vesktop
 
     # CLI utils
