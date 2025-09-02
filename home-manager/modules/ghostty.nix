@@ -23,27 +23,28 @@
         "alt+l=new_split:right"
 
         # Split navigation like Vim
-        "ctrl+h=goto_split:left"
-        "ctrl+j=goto_split:down"
-        "ctrl+k=goto_split:up"
-        "ctrl+l=goto_split:right"
-
-        # Tab management
-        "alt+enter=new_tab"
-        "alt+x=close_tab"
-        "alt+c=close_surface"
-        "alt+n=next_tab"
-        "alt+p=previous_tab"
-
-        # Copy/Paste
-        "ctrl+shift+c=copy_to_clipboard"
-        "ctrl+shift+v=paste_from_clipboard"
+        "unconsumed:ctrl+h=goto_split:left"
+        "unconsumed:ctrl+j=goto_split:down"
+        "unconsumed:ctrl+k=goto_split:up"
+        "unconsumed:ctrl+l=goto_split:right"
 
         # Resize splits
         "ctrl+shift+h=resize_split:left,10"
         "ctrl+shift+l=resize_split:right,10"
         "ctrl+shift+j=resize_split:down,10"
         "ctrl+shift+k=resize_split:up,10"
+
+        # Clear screen
+        "ctrl+s=clear_screen"
+
+        # Tab management
+        "alt+enter=new_tab"
+        "alt+n=next_tab"
+        "alt+p=previous_tab"
+
+        # Copy/Paste
+        "ctrl+shift+c=copy_to_clipboard"
+        "ctrl+shift+v=paste_from_clipboard"
       ];
     };
   };
