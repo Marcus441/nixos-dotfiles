@@ -23,16 +23,10 @@
         "alt+l=new_split:right"
 
         # Split navigation like Vim
-        "unconsumed:ctrl+h=goto_split:left"
-        "unconsumed:ctrl+j=goto_split:down"
-        "unconsumed:ctrl+k=goto_split:up"
-        "unconsumed:ctrl+l=goto_split:right"
-
-        # Resize splits
-        "ctrl+shift+h=resize_split:left,10"
-        "ctrl+shift+l=resize_split:right,10"
-        "ctrl+shift+j=resize_split:down,10"
-        "ctrl+shift+k=resize_split:up,10"
+        "unconsumed:shift+ctrl+h=goto_split:left"
+        "unconsumed:shift+ctrl+j=goto_split:down"
+        "unconsumed:shift+ctrl+k=goto_split:up"
+        "unconsumed:shift+ctrl+l=goto_split:right"
 
         # Clear screen
         "ctrl+s=clear_screen"
