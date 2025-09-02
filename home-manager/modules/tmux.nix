@@ -13,9 +13,12 @@
     extraConfig = ''
       set-option -a terminal-features 'xterm-256color:RGB'
       set -as terminal-features ",ghostty*:RGB"
+      set -g renumber-windows on
       bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
       bind -n M-p previous-window
       bind -n M-n next-window
+      bind -n M-a choose-tree -s
+      bind -n M-A
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -45,27 +48,12 @@
       bind -n M-s split-window -v -c "#{pane_current_path}"
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
-      bind -n M-o new-window -c ~/para "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
-      bind -n M-f new-window -c ~/flake "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' flake.nix"
+      bind -n M-o new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
       bind -n M-Enter new-window
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
 
-      # Smart pane switching with awareness of Vim splits.
-      # See: https://github.com/christoomey/vim-tmux-navigator
-      vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
-      is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-          | grep -iqE '^[^TXZ ]+ +''${vim_pattern}$'"
-      bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
-      bind-key -n 'C-j' if-shell "$is_vim" { send-keys C-j } { if-shell -F '#{pane_at_bottom}' {} { select-pane -D } }
-      bind-key -n 'C-k' if-shell "$is_vim" { send-keys C-k } { if-shell -F '#{pane_at_top}'    {} { select-pane -U } }
-      bind-key -n 'C-l' if-shell "$is_vim" { send-keys C-l } { if-shell -F '#{pane_at_right}'  {} { select-pane -R } }
-
-      bind-key -T copy-mode-vi 'C-h' if-shell -F '#{pane_at_left}'   {} { select-pane -L }
-      bind-key -T copy-mode-vi 'C-j' if-shell -F '#{pane_at_bottom}' {} { select-pane -D }
-      bind-key -T copy-mode-vi 'C-k' if-shell -F '#{pane_at_top}'    {} { select-pane -U }
-      bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane -R }
     '';
     plugins = [
       {
@@ -75,12 +63,28 @@
       {
         plugin = pkgs.tmuxPlugins.continuum;
         extraConfig = ''
-          set -g @continuum-restore 'on'
-          set -g @continuum-save-interval '60' # minutes
+          set-option -g @continuum-restore 'on'
+          set-option -g @continuum-save-interval '5' # minutes
         '';
       }
       {
         plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
+        extraConfig = ''
+          # Smart pane switching with awareness of Vim splits.
+          # See: https://github.com/christoomey/vim-tmux-navigator
+          vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
+          is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+              | grep -iqE '^[^TXZ ]+ +''${vim_pattern}$'"
+          bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
+          bind-key -n 'C-j' if-shell "$is_vim" { send-keys C-j } { if-shell -F '#{pane_at_bottom}' {} { select-pane -D } }
+          bind-key -n 'C-k' if-shell "$is_vim" { send-keys C-k } { if-shell -F '#{pane_at_top}'    {} { select-pane -U } }
+          bind-key -n 'C-l' if-shell "$is_vim" { send-keys C-l } { if-shell -F '#{pane_at_right}'  {} { select-pane -R } }
+
+          bind-key -T copy-mode-vi 'C-h' if-shell -F '#{pane_at_left}'   {} { select-pane -L }
+          bind-key -T copy-mode-vi 'C-j' if-shell -F '#{pane_at_bottom}' {} { select-pane -D }
+          bind-key -T copy-mode-vi 'C-k' if-shell -F '#{pane_at_top}'    {} { select-pane -U }
+          bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane -R }
+        '';
       }
       {
         plugin = inputs.minimal-tmux.packages.${pkgs.system}.default;
