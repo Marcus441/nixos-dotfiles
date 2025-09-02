@@ -23,18 +23,13 @@
         "alt+l=new_split:right"
 
         # Split navigation like Vim
-        "unconsumed:shift+ctrl+h=goto_split:left"
-        "unconsumed:shift+ctrl+j=goto_split:down"
-        "unconsumed:shift+ctrl+k=goto_split:up"
-        "unconsumed:shift+ctrl+l=goto_split:right"
+        "unconsumed:ctrl+h=goto_split:left"
+        "unconsumed:ctrl+j=goto_split:down"
+        "unconsumed:ctrl+k=goto_split:up"
+        "unconsumed:ctrl+l=goto_split:right"
 
         # Clear screen
         "ctrl+s=clear_screen"
-
-        # Tab management
-        "alt+enter=new_tab"
-        "alt+n=next_tab"
-        "alt+p=previous_tab"
 
         # Copy/Paste
         "ctrl+shift+c=copy_to_clipboard"
