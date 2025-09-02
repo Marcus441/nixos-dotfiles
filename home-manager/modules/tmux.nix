@@ -48,7 +48,7 @@
       bind -n M-o new-window -c ~/para "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
       bind -n M-f new-window -c ~/flake "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' flake.nix"
       bind -n M-Enter new-window
-      bind -n M-c kill-pane
+      bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
 

@@ -17,23 +17,27 @@
       term = "xterm-256color";
       keybind = [
         # Create splits
-        "alt+h=new_split:left"
-        "alt+j=new_split:down"
-        "alt+k=new_split:up"
-        "alt+l=new_split:right"
+        "ctrl+alt+h=new_split:left"
+        "ctrl+alt+j=new_split:down"
+        "ctrl+alt+k=new_split:up"
+        "ctrl+alt+l=new_split:right"
 
         # Split navigation like Vim
-        "unconsumed:ctrl+h=goto_split:left"
-        "unconsumed:ctrl+j=goto_split:down"
-        "unconsumed:ctrl+k=goto_split:up"
-        "unconsumed:ctrl+l=goto_split:right"
+        "unconsumed:ctrl+alt+h=goto_split:left"
+        "unconsumed:ctrl+alt+j=goto_split:down"
+        "unconsumed:ctrl+alt+k=goto_split:up"
+        "unconsumed:ctrl+alt+l=goto_split:right"
 
-        # Clear screen
-        "ctrl+s=clear_screen"
-
-        # Copy/Paste
-        "ctrl+shift+c=copy_to_clipboard"
-        "ctrl+shift+v=paste_from_clipboard"
+        "alt+1=unbind"
+        "alt+2=unbind"
+        "alt+3=unbind"
+        "alt+4=unbind"
+        "alt+5=unbind"
+        "alt+6=unbind"
+        "alt+7=unbind"
+        "alt+8=unbind"
+        "alt+9=unbind"
+        "alt+0=unbind"
       ];
     };
   };
