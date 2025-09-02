@@ -11,6 +11,7 @@
     imv
     mpv
     obs-studio
+    kdePackages.kdenlive
     pavucontrol
     teams-for-linux
     thunderbird
@@ -37,6 +38,7 @@
     ntfs3g
     neovim
     mediainfo
+    tree
     playerctl
     ripgrep
     silicon
