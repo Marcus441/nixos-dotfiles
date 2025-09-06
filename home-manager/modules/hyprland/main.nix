@@ -13,7 +13,7 @@
         "XDG_SCREENSHOTS_DIR,$HOME/screens"
       ];
 
-      monitor = ", preferred, auto, auto ";
+      monitor = ", 3840x2160@120.00Hz, auto, auto ";
 
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";

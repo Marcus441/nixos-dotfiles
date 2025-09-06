@@ -18,7 +18,7 @@
       bind -n M-p previous-window
       bind -n M-n next-window
       bind -n M-a choose-tree -s
-      bind -n M-A
+      bind -n M-D detach
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -48,12 +48,12 @@
       bind -n M-s split-window -v -c "#{pane_current_path}"
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
-      bind -n M-o new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
+      bind -n M-t new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
       bind -n M-Enter new-window
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
-
+      set-option -g status-right '#{continuum_status}'
     '';
     plugins = [
       {
