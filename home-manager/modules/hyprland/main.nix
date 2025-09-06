@@ -1,4 +1,10 @@
 {
+  inputs,
+  hostname,
+  ...
+}: let
+  hostMonitors = import "${inputs.self}/hosts/monitors.nix";
+in {
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -13,7 +19,11 @@
         "XDG_SCREENSHOTS_DIR,$HOME/screens"
       ];
 
-      monitor = ", 3840x2160@120.00Hz, auto, auto ";
+      monitor = builtins.concatStringsSep " " (
+        if builtins.hasAttr hostname hostMonitors
+        then builtins.getAttr hostname hostMonitors
+        else []
+      );
 
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
