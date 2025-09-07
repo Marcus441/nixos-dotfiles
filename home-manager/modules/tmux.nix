@@ -53,7 +53,7 @@
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
-      set-option -g status-right '#{continuum_status}'
+      run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
     '';
     plugins = [
       {
@@ -64,7 +64,7 @@
         plugin = pkgs.tmuxPlugins.continuum;
         extraConfig = ''
           set-option -g @continuum-restore 'on'
-          set-option -g @continuum-save-interval '5' # minutes
+          set-option -g @continuum-save-interval '30' # minutes
         '';
       }
       {
