@@ -19,7 +19,7 @@
         #!/usr/bin/env bash
         for bat in /sys/class/power_supply/BAT*/power_now; do
           if [ -f "$bat" ]; then
-            powerDraw="󰠰 $(($(cat "$bat") / 1000000))w"
+            powerDraw="󰠰  $(($(cat "$bat") / 1000000))w"
             break
           fi
         done

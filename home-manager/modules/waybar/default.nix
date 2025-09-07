@@ -160,6 +160,9 @@
           rewrite = {
             "(.*) — Mozilla Firefox" = "🌎 $1";
             "ghostty-zsh" = "👻 >_";
+            "(.*) - (.*) - Mozilla Thunderbird" = "📧 $2 ($1)";
+            "(.*) Discord \| (.*)$" = "  $1 - $2";
+            "(.*) \| (.*) \| Microsoft Teams$" = "💼 $1 - $2";
           };
         };
 
@@ -168,7 +171,7 @@
           format-critical = " {temperatureC}°C";
           interval = 1;
           critical-threshold = 80;
-          on-click = "ghostty --gtk-single-instance=true -e htop";
+          on-click = "ghostty --gtk-single-instance=true -e btm";
         };
 
         pulseaudio = {
