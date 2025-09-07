@@ -1,13 +1,14 @@
 * {
-    border: none;
-    font-size: 14px;
-    min-height: 25px;
+  border: none;
+  font-size: 14px;
+  min-height: 25px;
+  font-family: "Noto Sans", "Font Awesome 7 Free Solid";
 }
 
 window#waybar {
   background: transparent;
   margin: 5px;
- }
+}
 
 #custom-logo {
   padding: 0 10px;
@@ -65,34 +66,33 @@ window#waybar {
   padding-top: 0;
 }
 
-#clock{
-  color: #8BA4B0;
+#clock {
+  color: #8ba4b0;
 }
 
 #battery.charging {
-    color: #ffffff;
-    background-color: #26A65B;
+  color: #ffffff;
+  background-color: #26a65b;
 }
 
 #battery.warning:not(.charging) {
-    background-color: #ffbe61;
-    color: black;
+  background-color: #ffbe61;
+  color: black;
 }
 
 #battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+  background-color: #f53c3c;
+  color: #ffffff;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
-
 @keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
+  to {
+    background-color: #ffffff;
+    color: #000000;
+  }
 }

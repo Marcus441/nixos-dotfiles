@@ -1,7 +1,7 @@
-{lib, ...}: {
+{
   programs.waybar = {
     enable = true;
-    style = lib.mkForce ./style.css;
+    style = ./style.css;
 
     settings = {
       mainBar = {
@@ -65,9 +65,8 @@
         "custom/weather" = {
           format = "{}";
           return-type = "json";
-          exec = "~/flake/home-manager/modules/waybar/scripts/weather.sh";
+          exec = "$HOME/.config/waybar/scripts/weather.sh";
           interval = 10;
-          on-click = "firefox https://wttr.in";
         };
 
         "custom/clipboard" = {
@@ -142,25 +141,25 @@
 
         disk = {
           interval = 30;
-          format = "  {percentage_used}%";
+          format = " {percentage_used}%";
           path = "/";
         };
 
         cpu = {
           interval = 1;
-          format = " {usage}%";
+          format = "  {usage}%";
           min-length = 6;
           max-length = 6;
           format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
         };
 
-        memory = {format = " {percentage}%";};
+        memory = {format = "  {percentage}%";};
 
         "hyprland/window" = {
-          format = "( {class} )";
+          format = "{}";
           rewrite = {
-            "(.*) - Mozilla Firefox" = "🌎 $1";
-            "(.*) - zsh" = "> [$1]";
+            "(.*) — Mozilla Firefox" = "🌎 $1";
+            "ghostty-zsh" = "👻 >_";
           };
         };
 
@@ -169,7 +168,7 @@
           format-critical = " {temperatureC}°C";
           interval = 1;
           critical-threshold = 80;
-          on-click = "foot btop";
+          on-click = "ghostty --gtk-single-instance=true -e htop";
         };
 
         pulseaudio = {
@@ -214,7 +213,7 @@
         "custom/powerDraw" = {
           format = "{}";
           interval = 1;
-          exec = "~/flake/home-manager/modules/waybar/scripts/powerdraw.sh";
+          exec = "$HOME/.config/waybar/scripts/powerdraw.sh";
           return-type = "json";
         };
       };

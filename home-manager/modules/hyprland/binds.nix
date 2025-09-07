@@ -3,7 +3,7 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, $terminal"
+      "$mainMod,       Return, exec, $terminal --title=ghostty-zsh"
       "$mainMod,       X, killactive,"
       "$mainMod SHIFT, Z, exit,"
       "$mainMod,       Z, exec, loginctl lock-session"
