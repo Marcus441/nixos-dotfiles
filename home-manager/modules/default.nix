@@ -16,5 +16,6 @@
     ./waybar
     ./zathura.nix
     ./zsh.nix
+    ./services
   ];
 }
