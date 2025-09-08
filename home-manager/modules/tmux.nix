@@ -5,18 +5,70 @@
 }: {
   programs.tmux = {
     enable = true;
+    prefix = "C-a";
     baseIndex = 1;
     mouse = true;
     escapeTime = 0;
     keyMode = "vi";
     terminal = "screen-256color";
+    plugins = [
+      {
+        plugin = inputs.minimal-tmux.packages.${pkgs.system}.default;
+        extraConfig = ''
+          set -g @minimal-tmux-bg "#708590"
+          set -g @minimal-tmux-fg "#191A19"
+        '';
+      }
+      {
+        plugin = pkgs.tmuxPlugins.resurrect;
+        extraConfig = ''
+
+          set -g @resurrect-strategy-nvim 'session'
+          set -g @resurrect-strategy-vim 'session'
+
+          set -g @resurrect-capture-pane-contents 'on'
+
+          # Thanks to
+          # https://discourse.nixos.org/t/how-to-get-tmux-resurrect-to-restore-neovim-sessions/30819/10
+          set -g @resurrect-dir "$HOME/.tmux/resurrect"
+          set -g @resurrect-hook-post-save-all "sed -i -E 's|:/nix/store/[^ ]+/bin/nvim.*|:nvim|g; s|/home/[^/]+/.nix-profile/bin/||g; s|--cmd.*||g' $HOME/.tmux/resurrect/last"
+          set -g @resurrect-processes '"~nvim"'
+        '';
+      }
+      {
+        plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
+      }
+      {
+        plugin = pkgs.tmuxPlugins.yank;
+      }
+      {
+        plugin = pkgs.tmuxPlugins.continuum;
+        extraConfig = ''
+          set-option -g @continuum-restore 'on'
+          set-option -g @continuum-save-interval '10' # minutes
+        '';
+      }
+    ];
     extraConfig = ''
       set-option -a terminal-features 'xterm-256color:RGB'
       set -as terminal-features ",ghostty*:RGB"
+
+      set -g allow-passthrough on
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
+
       set -g renumber-windows on
-      bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
-      bind -n M-p previous-window
-      bind -n M-n next-window
+
+      set-option -g detach-on-destroy off
+
+      bind-key r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+      bind-key -T copy-mode-vi v send-keys -X begin-selection
+      bind-key -T copy-mode-vi V send-keys -X select-line
+      bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
+      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+
+      bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
+
       bind -n M-a choose-tree -s
       bind -n M-D detach
 
@@ -29,11 +81,6 @@
       bind -n M-7 select-window -t 7
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
-
-      bind -n M-Left  select-pane -L
-      bind -n M-Right select-pane -R
-      bind -n M-Up    select-pane -U
-      bind -n M-Down  select-pane -D
 
       bind -n M-Left  resize-pane -L 5
       bind -n M-Right resize-pane -R 5
@@ -48,51 +95,11 @@
       bind -n M-s split-window -v -c "#{pane_current_path}"
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
-      bind -n M-t new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
+      bind -n M-T new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
       bind -n M-Enter new-window
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
-      run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
     '';
-    plugins = [
-      {
-        plugin = pkgs.tmuxPlugins.resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      }
-      {
-        plugin = pkgs.tmuxPlugins.continuum;
-        extraConfig = ''
-          set-option -g @continuum-restore 'on'
-          set-option -g @continuum-save-interval '30' # minutes
-        '';
-      }
-      {
-        plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
-        extraConfig = ''
-          # Smart pane switching with awareness of Vim splits.
-          # See: https://github.com/christoomey/vim-tmux-navigator
-          vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?'
-          is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-              | grep -iqE '^[^TXZ ]+ +''${vim_pattern}$'"
-          bind-key -n 'C-h' if-shell "$is_vim" { send-keys C-h } { if-shell -F '#{pane_at_left}'   {} { select-pane -L } }
-          bind-key -n 'C-j' if-shell "$is_vim" { send-keys C-j } { if-shell -F '#{pane_at_bottom}' {} { select-pane -D } }
-          bind-key -n 'C-k' if-shell "$is_vim" { send-keys C-k } { if-shell -F '#{pane_at_top}'    {} { select-pane -U } }
-          bind-key -n 'C-l' if-shell "$is_vim" { send-keys C-l } { if-shell -F '#{pane_at_right}'  {} { select-pane -R } }
-
-          bind-key -T copy-mode-vi 'C-h' if-shell -F '#{pane_at_left}'   {} { select-pane -L }
-          bind-key -T copy-mode-vi 'C-j' if-shell -F '#{pane_at_bottom}' {} { select-pane -D }
-          bind-key -T copy-mode-vi 'C-k' if-shell -F '#{pane_at_top}'    {} { select-pane -U }
-          bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane -R }
-        '';
-      }
-      {
-        plugin = inputs.minimal-tmux.packages.${pkgs.system}.default;
-        extraConfig = ''
-          set -g @minimal-tmux-bg "#708590"
-          set -g @minimal-tmux-fg "#191A19"
-        '';
-      }
-    ];
   };
 }

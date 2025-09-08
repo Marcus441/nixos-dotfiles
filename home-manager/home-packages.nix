@@ -28,7 +28,6 @@
     fastfetch
     fd
     ffmpeg
-    ffmpegthumbnailer
     fzf
     git-graph
     grimblast

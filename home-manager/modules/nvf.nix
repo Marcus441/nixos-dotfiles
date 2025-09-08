@@ -665,7 +665,12 @@
       };
 
       session = {
-        nvim-session-manager.enable = false;
+        nvim-session-manager = {
+          enable = true;
+          setupOpts = {
+            autoload_mode = "GitSession";
+          };
+        };
       };
 
       notes.todo-comments.enable = true;
