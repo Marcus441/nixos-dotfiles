@@ -2,7 +2,7 @@
   systemd.user.services.tmux-server = {
     Unit = {
       Description = "Tmux server";
-      After = ["graphical.target"]; # optional
+      After = ["graphical.target"];
     };
 
     Service = {
@@ -13,7 +13,7 @@
     };
 
     Install = {
-      WantedBy = ["default.target"]; # or graphical-session.target
+      WantedBy = ["default.target"];
     };
   };
 }

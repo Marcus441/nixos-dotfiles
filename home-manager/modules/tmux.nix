@@ -39,9 +39,6 @@
         plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
       }
       {
-        plugin = pkgs.tmuxPlugins.yank;
-      }
-      {
         plugin = pkgs.tmuxPlugins.continuum;
         extraConfig = ''
           set-option -g @continuum-restore 'on'
@@ -65,7 +62,6 @@
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi V send-keys -X select-line
       bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
-      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 
       bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
 

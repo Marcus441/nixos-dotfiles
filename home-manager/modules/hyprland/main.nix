@@ -70,7 +70,7 @@ in {
       };
 
       animations = {
-        enabled = true;
+        enabled = false;
 
         bezier = [
           "linear, 0, 0, 1, 1"
