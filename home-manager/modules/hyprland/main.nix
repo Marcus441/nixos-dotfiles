@@ -29,6 +29,7 @@ in {
       "$terminal" = "ghostty --gtk-single-instance=true";
       "$fileManager" = "thunar";
       "$menu" = "rofi";
+      "$browser" = "firefox";
 
       exec-once = [
         "waybar"

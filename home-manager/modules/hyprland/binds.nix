@@ -15,7 +15,7 @@
       "$mainMod,       A, togglesplit,"
       "$mainMod,       M, exec, bemoji -cn"
       "$mainMod,       V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
-      "$mainMod,       B, exec, pkill -SIGUSR2 waybar"
+      "$mainMod,       B, exec, $browser"
       "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       "$mainMod SHIFT, N, exec, swaync-client -t"
       ", Print, exec, grimblast --notify --freeze copysave area"
