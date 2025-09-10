@@ -13,8 +13,8 @@
       cursor-style = "block";
       copy-on-select = true;
 
-      # Env
-      term = "xterm-256color";
+      # # Env
+      # term = "xterm-256color";
       keybind = [
         # Create splits
         "ctrl+alt+h=new_split:left"
