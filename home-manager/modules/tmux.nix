@@ -40,6 +40,19 @@
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 
+      set -g status-position top
+      set -g pane-border-style fg=black,bright
+      set -g pane-active-border-style fg=magenta
+
+      set -g status-style bg=default
+      set -g status-left ""
+      set -g status-right "#S"
+
+      set -g window-status-format "● #W "
+      set -g window-status-current-format "● #W "
+      set -g window-status-style "bg=default"
+      set -g window-status-current-style "#{?window_zoomed_flag,fg=yellow,fg=magenta,nobold}"
+
       set -g renumber-windows on
 
       set-option -g detach-on-destroy off
@@ -83,6 +96,13 @@
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
+
+
+      # tmuxplugin-continuum
+      # ---------------------
+      set-option -g @continuum-restore 'on'
+      set-option -g @continuum-save-interval '5' # minutes
+      run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
     '';
   };
 }
