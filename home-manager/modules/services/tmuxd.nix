@@ -2,18 +2,19 @@
   systemd.user.services.tmux-server = {
     Unit = {
       Description = "Tmux server";
-      After = ["graphical.target"];
+      After = ["graphical-session.target"];
+      PartOf = ["graphical-session.target"];
     };
 
     Service = {
       Type = "forking";
       ExecStart = "${pkgs.tmux}/bin/tmux start-server";
       ExecStop = "${pkgs.tmux}/bin/tmux kill-server";
-      Restart = "always";
+      Restart = "on-failure";
     };
 
     Install = {
-      WantedBy = ["default.target"];
+      WantedBy = ["graphical-session.target"];
     };
   };
 }
