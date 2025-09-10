@@ -1,8 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.tmux = {
     enable = true;
     prefix = "C-a";
@@ -10,15 +6,8 @@
     mouse = true;
     escapeTime = 0;
     keyMode = "vi";
-    terminal = "screen-256color";
+    terminal = "xterm-ghostty";
     plugins = [
-      {
-        plugin = inputs.minimal-tmux.packages.${pkgs.system}.default;
-        extraConfig = ''
-          set -g @minimal-tmux-bg "#708590"
-          set -g @minimal-tmux-fg "#191A19"
-        '';
-      }
       {
         plugin = pkgs.tmuxPlugins.resurrect;
         extraConfig = ''
@@ -47,9 +36,6 @@
       }
     ];
     extraConfig = ''
-      set-option -a terminal-features 'xterm-256color:RGB'
-      set -as terminal-features ",ghostty*:RGB"
-
       set -g allow-passthrough on
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
@@ -62,6 +48,7 @@
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi V send-keys -X select-line
       bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
+      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \; run-shell "tmux save-buffer - | wl-copy --no-newline"
 
       bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
 
