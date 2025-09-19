@@ -38,7 +38,7 @@
       vim = "nvim";
       c = "clear";
       t = "tmux";
-      ta = "tmux attach-session -t";
+      ta = "tmux attach";
       tn = "tmux new-session";
       tns = "tmux new-session -s";
 

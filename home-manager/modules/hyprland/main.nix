@@ -106,9 +106,9 @@ in {
       };
 
       gestures = {
-        workspace_swipe = true;
+        gesture = "3, horizontal, workspace";
         workspace_swipe_invert = false;
-        workspace_swipe_forever = true;
+        workspace_swipe_distance = 700;
       };
 
       dwindle = {

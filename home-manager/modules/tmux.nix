@@ -41,8 +41,6 @@
       set -ga update-environment TERM_PROGRAM
 
       set -g status-position top
-      set -g pane-border-style fg=black,bright
-      set -g pane-active-border-style fg=magenta
 
       set -g status-style bg=default
       set -g status-left ""

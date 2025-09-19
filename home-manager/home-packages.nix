@@ -13,7 +13,6 @@
     obs-studio
     kdePackages.kdenlive
     pavucontrol
-    teams-for-linux
     thunderbird
     xfce.thunar
     networkmanager_dmenu
