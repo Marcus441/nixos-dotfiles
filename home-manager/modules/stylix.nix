@@ -22,11 +22,11 @@
     polarity = "dark";
     base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
     targets = {
-      starship.enable = true;
+      starship.enable = false;
       nvf.enable = true;
       neovim.enable = false;
       waybar.enable = false;
-      rofi.enable = true;
+      rofi.enable = false;
       hyprland.enable = false;
       hyprlock.enable = true;
     };

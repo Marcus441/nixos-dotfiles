@@ -1,4 +1,8 @@
-{
+{config, ...}: let
+  accent = "#${config.lib.stylix.colors.base0E}";
+  red = "#${config.lib.stylix.colors.base08}";
+  green = "#${config.lib.stylix.colors.base0B}";
+in {
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
@@ -8,24 +12,24 @@
       hostname = {
         ssh_only = false;
         format = "[$ssh_symbol$hostname]($style) ";
-        # style = "bold #87AF87";
+        style = "bold ${green}";
       };
 
       character = {
-        success_symbol = "[➜]($style)"; # arrow forward(bold #929D5B)
-        error_symbol = "[✘]($style)"; # error: red cross (bold #f2594b)
+        success_symbol = "[➜](bold ${accent})";
+        error_symbol = "[✘](bold ${red})";
       };
 
       username = {
         show_always = true;
         format = "[$user]($style)@";
-        # style_user = "bold #EA6962"; # red
+        style_user = "bold ${accent}";
       };
 
       directory = {
         read_only = " 🔒";
         truncation_symbol = "…/";
-        # style = "#A5B163";
+        style = "${green}";
       };
     };
   };
