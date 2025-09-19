@@ -9,7 +9,7 @@
     ./nvf.nix
     ./ranger.nix
     ./rofi
-    ./starship.nix
+    ./oh-my-posh.nix
     ./stylix.nix
     ./swaync
     ./tmux.nix
