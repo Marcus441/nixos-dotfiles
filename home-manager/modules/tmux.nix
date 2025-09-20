@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.tmux = {
     enable = true;
-    prefix = "C-a";
+    prefix = "C-Space";
     baseIndex = 1;
     mouse = true;
     escapeTime = 0;
