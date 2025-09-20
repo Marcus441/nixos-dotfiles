@@ -1,14 +1,22 @@
 {
-  pkgs,
   config,
+  pkgs,
   ...
 }: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
 
+    autosuggestion = {
+      enable = true;
+      strategy = ["history" "completion"];
+      highlight = "fg=#555555,bold";
+    };
+
+    syntaxHighlighting = {
+      enable = true;
+      highlighters = ["main" "brackets" "pattern" "regexp" "root" "line"];
+    };
     plugins = [
       {
         name = "zsh-vi-mode";
@@ -19,6 +27,17 @@
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
       }
     ];
+    historySubstringSearch.enable = true;
+    history = {
+      ignoreDups = true;
+      save = 10000;
+      size = 10000;
+      append = true;
+      share = true;
+      extended = true;
+      ignoreAllDups = true;
+    };
+
     shellAliases = let
       home-managerDir = "~/flake/home-manager";
     in {
@@ -55,7 +74,6 @@
       ".." = "cd ..";
     };
 
-    history.size = 10000;
     history.path = "${config.xdg.dataHome}/zsh/history";
 
     initContent = ''
@@ -64,16 +82,15 @@
         exec systemd-cat -t uwsm_start uwsm start default
       fi
 
-      autoload -Uz compinit && compinit
-
       # Completion styling
-      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      zstyle ':completion:*' list-colors "$LS_COLORS"
+      zstyle ':completion:*:git-checkout:*' sort false
+      zstyle ':completion:*:descriptions' format '[%d]'
+      zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
       zstyle ':completion:*' menu no
-      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-      zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-      eval "$(zoxide init --cmd cd zsh)"
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+      zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+      zstyle ':fzf-tab:*' use-fzf-default-opts yes
+      zstyle ':fzf-tab:*' switch-group '<' '>'
 
       # Shell function for initializing a project template
       nt() {
@@ -85,5 +102,15 @@
       }
 
     '';
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = [
+        "git"
+        "sudo"
+        "zoxide"
+      ];
+      theme = "robbyrussell";
+    };
   };
 }

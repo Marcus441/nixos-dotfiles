@@ -1,7 +1,7 @@
 {
-  programs.oh-my-posh = {
+  programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
-    useTheme = "pure";
+    options = ["--cmd cd"];
   };
 }

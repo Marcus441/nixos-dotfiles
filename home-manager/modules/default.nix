@@ -9,13 +9,13 @@
     ./nvf.nix
     ./ranger.nix
     ./rofi
-    ./oh-my-posh.nix
     ./stylix.nix
     ./swaync
     ./tmux.nix
     ./waybar
     ./zathura.nix
     ./zsh.nix
+    ./zoxide.nix
     ./services
   ];
 }
