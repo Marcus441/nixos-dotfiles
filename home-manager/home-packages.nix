@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     # Desktop apps
     firefox
+    floorp-bin
     imv
     mpv
     obs-studio

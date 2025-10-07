@@ -22,8 +22,9 @@
     polarity = "dark";
     base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
     targets = {
+      zathura.enable = false;
       starship.enable = false;
-      nvf.enable = true;
+      nvf.enable = false;
       neovim.enable = false;
       waybar.enable = false;
       rofi.enable = false;
@@ -71,8 +72,8 @@
     };
 
     image = pkgs.fetchurl {
-      url = "https://w.wallhaven.cc/full/vp/wallhaven-vpx5el.png";
-      sha256 = "11hlb1hpdmmr2fdr4lm6l1dn8krv4r6ydx0p97h1f0vak4knyi34";
+      url = "https://w.wallhaven.cc/full/jx/wallhaven-jxq55y.jpg";
+      sha256 = "sha256-nrBsE/YUTUeE65Wb6azaOQBUHLb1JXwztFBEQFMi3Pk=";
     };
   };
 }

@@ -1,6 +1,7 @@
 {
   homeStateVersion,
   user,
+  pkgs,
   ...
 }: {
   imports = [
@@ -15,6 +16,23 @@
 
     # custom weather and power draw script for waybar
     file = {
+      ".config/rofi/image".source = pkgs.runCommand "rofi-wallpaper" {buildInputs = [pkgs.imagemagick];} ''
+        mkdir -p $out
+        cp ${pkgs.fetchurl {
+          url = "https://codeberg.org/lunik1/nixos-logo-gruvbox-wallpaper/raw/branch/master/png/gruvbox-dark-blue.png";
+          hash = "sha256-+jfTuvl1VJocN+YNp04YVONR054GX+p/yxNXyyhsNcs=";
+        }} source.png
+
+        magick source.png \
+          -strip \
+          -fuzz 2% \
+          -fill "#282727" -opaque "#272727" \
+          -fill "#8EA4A2" -opaque "#81A695" \
+          -fill "#8992A7" -opaque "#458587" \
+          -crop 2560x2560+2560+880 \
+          -resize 1024x1024 \
+          $out/image.jpg
+      '';
       ".config/waybar/scripts/powerdraw.sh".text = ''
         #!/usr/bin/env bash
         for bat in /sys/class/power_supply/BAT*/power_now; do

@@ -51,8 +51,8 @@
         };
         "imagebox" = {
           padding = mkLiteral "20px";
-          background-color = mkLiteral "transparent";
-          background-image = mkLiteral ''url("${config.stylix.image}", height)'';
+          background-color = mkLiteral "#282727";
+          background-image = mkLiteral ''url("~/.config/rofi/image/image.jpg")'';
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
             "inputbar"

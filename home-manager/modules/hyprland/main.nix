@@ -64,7 +64,7 @@ in {
         };
 
         blur = {
-          enabled = true;
+          enabled = false;
           new_optimizations = true;
           passes = 3;
         };
@@ -148,7 +148,7 @@ in {
         "float,  class:^(.blueman-manager-wrapped)$"
 
         # ghostty terminal transparency
-        "opacity 0.8, class:^(com.mitchellh.ghostty)$"
+        # "opacity 0.8, class:^(com.mitchellh.ghostty)$"
       ];
 
       # workspace = [
