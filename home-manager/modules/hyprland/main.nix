@@ -27,72 +27,75 @@ in {
 
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
-      "$fileManager" = "thunar";
-      "$menu" = "rofi";
-      "$browser" = "firefox";
+      "$fileManager" = "nautilus";
+      "$browser" = "chromium";
 
       exec-once = [
         "waybar"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
-        "ghostty --title=ghostty-zsh --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
+        "walker --gapplication-service"
+        "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
       ];
 
       general = {
         gaps_in = 5;
-        gaps_out = 5;
+        gaps_out = 10;
 
-        border_size = 0;
+        border_size = 2;
 
-        "col.active_border" = "rgba(689D6Aff) rgba(458588ff) 45deg";
-        "col.inactive_border" = "rgba(3c3836ff)";
+        "col.active_border" = "rgb(8BA4B0)";
 
-        resize_on_border = true;
+        resize_on_border = false;
 
         allow_tearing = false;
         layout = "dwindle";
       };
 
       decoration = {
-        rounding = 3;
+        rounding = 0;
 
         active_opacity = 1.0;
         inactive_opacity = 1.0;
 
         shadow = {
-          enabled = false;
+          enabled = true;
         };
 
         blur = {
-          enabled = false;
+          enabled = true;
           new_optimizations = true;
-          passes = 3;
+          passes = 1;
+          vibrancy = 0.1696;
         };
       };
 
       animations = {
-        enabled = false;
+        enabled = true;
 
         bezier = [
-          "linear, 0, 0, 1, 1"
-          "md3_standard, 0.2, 0, 0, 1"
-          "md3_decel, 0.05, 0.7, 0.1, 1"
-          "md3_accel, 0.3, 0, 0.8, 0.15"
-          "overshot, 0.05, 0.9, 0.1, 1.1"
-          "crazyshot, 0.1, 1.5, 0.76, 0.92"
-          "hyprnostretch, 0.05, 0.9, 0.1, 1.0"
-          "fluent_decel, 0.1, 1, 0, 1"
-          "easeInOutCirc, 0.85, 0, 0.15, 1"
-          "easeOutCirc, 0, 0.55, 0.45, 1"
-          "easeOutExpo, 0.16, 1, 0.3, 1"
+          "easeOutQuint,0.23,1,0.32,1"
+          "easeInOutCubic,0.65,0.05,0.36,1"
+          "linear,0,0,1,1"
+          "almostLinear,0.5,0.5,0.75,1.0"
+          "quick,0.15,0,0.1,1"
         ];
 
         animation = [
-          "windows, 1, 3, md3_decel, popin 60%"
-          "border, 1, 10, default"
-          "fade, 1, 2.5, md3_decel"
-          "workspaces, 1, 3.5, easeOutExpo, slide"
-          "specialWorkspace, 1, 3, md3_decel, slidevert"
+          "global, 1, 10, default"
+          "border, 1, 5.39, easeOutQuint"
+          "windows, 1, 4.79, easeOutQuint"
+          "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
+          "windowsOut, 1, 1.49, linear, popin 87%"
+          "fadeIn, 1, 1.73, almostLinear"
+          "fadeOut, 1, 1.46, almostLinear"
+          "fade, 1, 3.03, quick"
+          "layers, 1, 3.81, easeOutQuint"
+          "layersIn, 1, 4, easeOutQuint, fade"
+          "layersOut, 1, 1.5, linear, fade"
+          "fadeLayersIn, 1, 1.79, almostLinear"
+          "fadeLayersOut, 1, 1.39, almostLinear"
+          "workspaces, 0, 0, ease"
         ];
       };
 
@@ -117,7 +120,7 @@ in {
       };
 
       master = {
-        new_status = "slave";
+        new_status = "master";
         new_on_top = true;
         mfact = 0.5;
       };
@@ -125,12 +128,11 @@ in {
       misc = {
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        focus_on_activate = true;
       };
 
       windowrulev2 = [
-        # match all windows that are not floating
-        # "bordersize 0, floating:0, onworkspace:w[t1]"
-
         # windows that should not be focused
         "suppressevent maximize, class:.*"
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
@@ -143,18 +145,19 @@ in {
         "noblur, class:^(xwaylandvideobridge)$"
         "nofocus, class:^(xwaylandvideobridge)$"
 
+        # opacity
+        "opacity 0.97 0.9, class:.*"
+        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
         # windows that should be floating
-        "float,  class:^(org.pulseaudio.pavucontrol)$"
-        "float,  class:^(.blueman-manager-wrapped)$"
-
-        # ghostty terminal transparency
-        # "opacity 0.8, class:^(com.mitchellh.ghostty)$"
+        "float, tag:floating-window"
+        "center, tag:floating-window"
+        "size 800 600, tag:floating-window"
+        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus)$"
       ];
 
-      # workspace = [
-      #   "w[tv1], gapsout:0, gapsin:0"
-      #   "f[1], gapsout:0, gapsin:0"
-      # ];
+      layerrule = [
+        "noanim, walker"
+      ];
     };
   };
 }

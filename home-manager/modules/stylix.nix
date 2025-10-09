@@ -2,7 +2,14 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let
+  # Pick your theme
+  theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+  wallpaper = pkgs.fetchurl {
+    url = "https://github.com/dharmx/walls/blob/main/abstract/a_chair_on_a_platform_with_a_halo_above_it.jpg?raw=true";
+    sha256 = "sha256-3yoXPSIvUnhiaIAguxm9boBZFzkgnYMfVeXTFZ0mO5k=";
+  };
+in {
   imports = [inputs.stylix.homeModules.stylix];
 
   home.packages = with pkgs; [
@@ -20,16 +27,15 @@
   stylix = {
     enable = true;
     polarity = "dark";
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+    base16Scheme = theme;
     targets = {
       zathura.enable = false;
-      starship.enable = false;
       nvf.enable = false;
       neovim.enable = false;
       waybar.enable = false;
       rofi.enable = false;
       hyprland.enable = false;
-      hyprlock.enable = true;
+      firefox.profileNames = ["default"];
     };
 
     cursor = {
@@ -37,6 +43,8 @@
       size = 24;
       package = pkgs.vanilla-dmz;
     };
+
+    opacity.terminal = 0.80;
 
     fonts = {
       monospace = {
@@ -59,21 +67,17 @@
       };
 
       sizes = {
-        terminal = 13;
         applications = 11;
       };
     };
 
     iconTheme = {
       enable = true;
-      package = pkgs.papirus-icon-theme;
-      dark = "Papirus-Dark";
-      light = "Papirus-Light";
+      package = pkgs.vimix-icon-theme;
+      dark = "Vimix-beryl";
+      light = "Vimix-black";
     };
 
-    image = pkgs.fetchurl {
-      url = "https://w.wallhaven.cc/full/jx/wallhaven-jxq55y.jpg";
-      sha256 = "sha256-nrBsE/YUTUeE65Wb6azaOQBUHLb1JXwztFBEQFMi3Pk=";
-    };
+    image = wallpaper;
   };
 }

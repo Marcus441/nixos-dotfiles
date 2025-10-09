@@ -1,17 +1,15 @@
 {
   imports = [
-    ./ghostty.nix
     ./bat.nix
     ./eza.nix
     ./ghostty.nix
     ./git.nix
     ./hyprland
+    ./lazydocker.nix
     ./lazygit.nix
     ./nvf.nix
     ./ranger.nix
-    ./rofi
     ./stylix.nix
-    ./swaync
     ./tmux.nix
     ./waybar
     ./zathura.nix
