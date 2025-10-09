@@ -11,7 +11,6 @@
     thunderbird
     nautilus
     networkmanager_dmenu
-    discord
 
     # CLI utils
     bc

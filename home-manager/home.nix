@@ -15,8 +15,10 @@
     stateVersion = homeStateVersion;
     shell.enableFishIntegration = true;
 
-    # custom weather and power draw script for waybar
     file = {
+      # -------------------------
+      # Custom scripts for waybar
+      # -------------------------
       ".config/waybar/scripts/powerdraw.sh".text = ''
         #!/usr/bin/env bash
         for bat in /sys/class/power_supply/BAT*/power_now; do
@@ -30,7 +32,6 @@
         EOF
       '';
       ".config/waybar/scripts/powerdraw.sh".executable = true;
-
       ".config/waybar/scripts/weather.sh".text = ''
         #!/usr/bin/env bash
 
@@ -47,6 +48,10 @@
         fi
       '';
       ".config/waybar/scripts/weather.sh".executable = true;
+      # ----------------
+      # PWA Applications
+      # ----------------
+      # ChatGPT
       ".local/share/applications/chatgpt.desktop".text = ''
         [Desktop Entry]
         Name=ChatGPT
@@ -60,6 +65,7 @@
         Categories=Network;Chat;
         Terminal=false
       '';
+      # Microsoft Teams
       ".local/share/applications/teams.desktop".text = ''
         [Desktop Entry]
         Name=Teams
@@ -73,6 +79,7 @@
         Categories=Network;Chat;
         Terminal=false
       '';
+      # Github
       ".local/share/applications/github.desktop".text = ''
         [Desktop Entry]
         Name=GitHub
@@ -86,6 +93,7 @@
         Categories=Development;Network;
         Terminal=false
       '';
+      # YT Music
       ".local/share/applications/youtubemusic.desktop".text = ''
         [Desktop Entry]
         Name=YouTube Music
@@ -99,7 +107,7 @@
         Categories=AudioVideo;Music;Player;
         Terminal=false
       '';
-
+      # Google Calendar
       ".local/share/applications/googlecalendar.desktop".text = ''
         [Desktop Entry]
         Name=Google Calendar
@@ -113,7 +121,7 @@
         Categories=Office;Calendar;
         Terminal=false
       '';
-
+      # Facebook Messenger
       ".local/share/applications/messenger.desktop".text = ''
         [Desktop Entry]
         Name=Messenger
@@ -124,6 +132,20 @@
         }}
         Type=Application
         StartupWMClass=Messenger
+        Categories=Network;Chat;
+        Terminal=false
+      '';
+      # Discord
+      ".local/share/applications/discord-webapp.desktop".text = ''
+        [Desktop Entry]
+        Name=Discord (Web)
+        Exec=${pkgs.chromium}/bin/chromium --app=https://discord.com/channels/@me
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=30998&format=png&color=000000";
+          sha256 = "sha256-zb3Es1izZAwProek4Wcc7g3ZKxoVzX4JMEqpYIjmLwY=";
+        }}
+        Type=Application
+        StartupWMClass=Discord
         Categories=Network;Chat;
         Terminal=false
       '';
