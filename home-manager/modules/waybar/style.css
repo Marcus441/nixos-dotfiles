@@ -1,43 +1,32 @@
 * {
   border: none;
-  font-size: 14px;
-  min-height: 25px;
+  border-radius: 0;
+  min-height: 0;
+  font-size: 13.5px;
   font-family: "Noto Sans", "Font Awesome 7 Free Solid";
 }
 
-window#waybar {
-  background: transparent;
-  margin: 5px;
-}
-
 #custom-logo {
-  padding: 0 10px;
+  padding: 0 5px;
 }
 
 .modules-right {
-  padding-left: 5px;
-  border-radius: 5px 0 0 5px;
   margin-top: 2px;
-  background: #181616;
 }
 
 .modules-center {
   padding: 0 3px;
   margin-top: 2px;
-  border-radius: 5px 5px 5px 5px;
-  background: #181616;
 }
 
 .modules-left {
-  border-radius: 0 5px 5px 0;
   margin-top: 2px;
-  background: #181616;
 }
 
 #battery,
-#custom-clipboard,
 #custom-colorpicker,
 #custom-powerDraw,
+#group-tray-expander,
 #bluetooth,
 #pulseaudio,
 #network,
@@ -57,15 +46,14 @@ window#waybar {
 }
 
 #pulseaudio {
+  padding: 0 5px;
   padding-top: 0;
+}
+#pulseaudio.muted {
+  color: #c4746e;
 }
 
 #temperature.critical,
-#pulseaudio.muted {
-  color: #c4746e;
-  padding-top: 0;
-}
-
 #clock {
   color: #8ba4b0;
 }

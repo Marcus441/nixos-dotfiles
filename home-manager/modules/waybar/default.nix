@@ -18,22 +18,20 @@
           "cpu"
           "temperature"
           "custom/powerDraw"
-          "hyprland/window"
         ];
         modules-center = ["hyprland/workspaces"];
         modules-right = [
-          "tray"
-          "custom/clipboard"
-          "backlight"
-          "idle_inhibitor"
+          "group/tray-expander"
           "bluetooth"
-          "pulseaudio"
           "network"
           "battery"
+          "backlight"
+          "pulseaudio"
+          "idle_inhibitor"
         ];
 
         "custom/logo" = {
-          format = "";
+          format = " ";
           tooltip = false;
         };
 
@@ -57,8 +55,8 @@
         idle_inhibitor = {
           format = "<span font='12'>{icon} </span>";
           format-icons = {
-            activated = "󰈈";
-            deactivated = "󰈉";
+            activated = "󰈈 ";
+            deactivated = "󰈉 ";
           };
         };
 
@@ -67,12 +65,6 @@
           return-type = "json";
           exec = "$HOME/.config/waybar/scripts/weather.sh";
           interval = 10;
-        };
-
-        "custom/clipboard" = {
-          format = "";
-          on-click = "cliphist list | rofi -dmenu | cliphist decode | wl-copy";
-          interval = 86400;
         };
 
         clock = {
@@ -102,11 +94,11 @@
         network = {
           format-wifi = " ";
           format-ethernet = " ";
-          format-disconnected = "";
+          format-disconnected = " ";
           tooltip-format = "{ipaddr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
           tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
-          on-click = "DMENU='rofi -dmenu -i -p Network:' networkmanager_dmenu";
+          on-click = "networkmanager_dmenu";
         };
 
         battery = {
@@ -155,17 +147,6 @@
 
         memory = {format = "  {percentage}%";};
 
-        "hyprland/window" = {
-          format = "{}";
-          rewrite = {
-            "(.*) — Mozilla Firefox" = "🌎 $1";
-            "ghostty-zsh" = "👻 >_";
-            "(.*) - (.*) - Mozilla Thunderbird" = "📧 $2 ($1)";
-            "(.*) Discord \| (.*)$" = "  $1 - $2";
-            "(.*) \| (.*) \| Microsoft Teams$" = "💼 $1 - $2";
-          };
-        };
-
         temperature = {
           format = " {temperatureC}°C";
           format-critical = " {temperatureC}°C";
@@ -175,7 +156,7 @@
         };
 
         pulseaudio = {
-          format = "{volume}% {icon}";
+          format = "{icon}";
           format-bluetooth = "󰂰";
           format-muted = "<span font=''> </span>";
           format-icons = {
@@ -189,8 +170,8 @@
             default = [" " " " " "];
           };
           justify = "center";
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          on-click-right = "pavucontrol";
+          on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-click = "pavucontrol";
           tooltip-format = "{icon}  {volume}%";
         };
 
@@ -201,6 +182,18 @@
           realtime = true;
         };
 
+        "group/tray-expander" = {
+          orientation = "inherit";
+          drawer = {
+            transition-duration = 600;
+            children-class = "tray-group-item";
+          };
+          modules = ["custom/expand-icon" "tray"];
+        };
+        "custom/expand-icon" = {
+          format = " ";
+          tooltip = false;
+        };
         tray = {
           icon-size = 14;
           spacing = 10;
