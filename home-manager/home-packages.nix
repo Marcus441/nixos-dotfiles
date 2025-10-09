@@ -3,17 +3,15 @@
 
   home.packages = with pkgs; [
     # Desktop apps
-    firefox
-    floorp-bin
     imv
     mpv
     obs-studio
     kdePackages.kdenlive
     pavucontrol
     thunderbird
-    xfce.thunar
+    nautilus
     networkmanager_dmenu
-    vesktop
+    discord
 
     # CLI utils
     bc
@@ -30,6 +28,7 @@
     htop
     httpie
     hyprpicker
+    jq
     ntfs3g
     neovim
     mediainfo

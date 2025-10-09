@@ -1,7 +1,7 @@
 {
   homeStateVersion,
-  user,
   pkgs,
+  user,
   ...
 }: {
   imports = [
@@ -13,26 +13,10 @@
     username = user;
     homeDirectory = "/home/${user}";
     stateVersion = homeStateVersion;
+    shell.enableFishIntegration = true;
 
     # custom weather and power draw script for waybar
     file = {
-      ".config/rofi/image".source = pkgs.runCommand "rofi-wallpaper" {buildInputs = [pkgs.imagemagick];} ''
-        mkdir -p $out
-        cp ${pkgs.fetchurl {
-          url = "https://codeberg.org/lunik1/nixos-logo-gruvbox-wallpaper/raw/branch/master/png/gruvbox-dark-blue.png";
-          hash = "sha256-+jfTuvl1VJocN+YNp04YVONR054GX+p/yxNXyyhsNcs=";
-        }} source.png
-
-        magick source.png \
-          -strip \
-          -fuzz 2% \
-          -fill "#282727" -opaque "#272727" \
-          -fill "#8EA4A2" -opaque "#81A695" \
-          -fill "#8992A7" -opaque "#458587" \
-          -crop 2560x2560+2560+880 \
-          -resize 1024x1024 \
-          $out/image.jpg
-      '';
       ".config/waybar/scripts/powerdraw.sh".text = ''
         #!/usr/bin/env bash
         for bat in /sys/class/power_supply/BAT*/power_now; do
@@ -49,19 +33,8 @@
 
       ".config/waybar/scripts/weather.sh".text = ''
         #!/usr/bin/env bash
-        BSSIDS="$(nmcli device wifi list |
-            awk 'NR>1 {if ($1 != "*") {print $1}}' |
-            tr -d ":" |
-            tr "\n" ",")"
 
         LOC=""
-        REQUEST_GEO="$(wget -qO - "http://openwifi.su/api/v1/bssids/$BSSIDS")"
-
-        if [[ "$(jq ".count_results" <<< "$REQUEST_GEO")" -gt 0 ]]; then
-            LAT="$(jq ".lat" <<< "$REQUEST_GEO")"
-            LON="$(jq ".lon" <<< "$REQUEST_GEO")"
-            LOC="$LAT,$LON"
-        fi
 
         text="$(curl -s "https://wttr.in/$LOC?format=1" | tr -d ' ')"
         tooltip="$(curl -s "https://wttr.in/$LOC?0QT" |
@@ -74,6 +47,86 @@
         fi
       '';
       ".config/waybar/scripts/weather.sh".executable = true;
+      ".local/share/applications/chatgpt.desktop".text = ''
+        [Desktop Entry]
+        Name=ChatGPT
+        Exec=${pkgs.chromium}/bin/chromium --app=https://chatgpt.com/
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=FBO05Dys9QCg&format=png&color=FFFFFF";
+          sha256 = "sha256-/5movXxtZ/lhkfgxwQTHZYHYMtZjIW9LgXpsR4TCCP0=";
+        }}
+        Type=Application
+        StartupWMClass=ChatGPT
+        Categories=Network;Chat;
+        Terminal=false
+      '';
+      ".local/share/applications/teams.desktop".text = ''
+        [Desktop Entry]
+        Name=Teams
+        Exec=${pkgs.chromium}/bin/chromium --app=https://teams.microsoft.com
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=zQ92KI7XjZgR&format=png&color=000000";
+          sha256 = "sha256-kD4vRyTMKgKjNDxhQGu/ESIIf31ZjntDfhtEUmofeTU=";
+        }}
+        Type=Application
+        StartupWMClass=Microsoft Teams
+        Categories=Network;Chat;
+        Terminal=false
+      '';
+      ".local/share/applications/github.desktop".text = ''
+        [Desktop Entry]
+        Name=GitHub
+        Exec=${pkgs.chromium}/bin/chromium --app=https://github.com/
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=12599&format=png&color=FFFFFF";
+          sha256 = "sha256-qpDgoyvAfEl7weF5j4ctu6EqDZ02mFvB13vWvObdTYY=";
+        }}
+        Type=Application
+        StartupWMClass=GitHub
+        Categories=Development;Network;
+        Terminal=false
+      '';
+      ".local/share/applications/youtubemusic.desktop".text = ''
+        [Desktop Entry]
+        Name=YouTube Music
+        Exec=${pkgs.chromium}/bin/chromium --app=https://music.youtube.com/
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=V1cbDThDpbRc&format=png&color=000000";
+          sha256 = "sha256-xLLaOiDYQxpEiyknyNnt5wYrthHTeVMJmb6HrpaBhZM=";
+        }}
+        Type=Application
+        StartupWMClass=YouTube Music
+        Categories=AudioVideo;Music;Player;
+        Terminal=false
+      '';
+
+      ".local/share/applications/googlecalendar.desktop".text = ''
+        [Desktop Entry]
+        Name=Google Calendar
+        Exec=${pkgs.chromium}/bin/chromium --app=https://calendar.google.com/
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=WKF3bm1munsk&format=png&color=000000";
+          sha256 = "sha256-KwMlADIJS7pV3t2Hpi3YA5YEcofdIztbvs4sjPPtAho=";
+        }}
+        Type=Application
+        StartupWMClass=Google Calendar
+        Categories=Office;Calendar;
+        Terminal=false
+      '';
+
+      ".local/share/applications/messenger.desktop".text = ''
+        [Desktop Entry]
+        Name=Messenger
+        Exec=${pkgs.chromium}/bin/chromium --app=https://www.messenger.com/
+        Icon=${pkgs.fetchurl {
+          url = "https://img.icons8.com/?size=100&id=YFbzdUk7Q3F8&format=png&color=000000";
+          sha256 = "sha256-4nwEBdecinsSTDkZwQB7R1KIIV8GOSj8kGbzAcXdkTA=";
+        }}
+        Type=Application
+        StartupWMClass=Messenger
+        Categories=Network;Chat;
+        Terminal=false
+      '';
     };
   };
 }

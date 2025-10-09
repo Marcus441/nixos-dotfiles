@@ -86,7 +86,7 @@
       bind -n M-S-Up    resize-pane -U 9
       bind -n M-S-Down  resize-pane -D 9
 
-      bind -n M-s split-window -v -c "#{pane_current_path}"
+      bind -n M-c split-window -v -c "#{pane_current_path}"
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
       bind -n M-T new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"

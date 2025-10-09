@@ -3,6 +3,7 @@
     ./ghostty.nix
     ./bat.nix
     ./eza.nix
+    ./ghostty.nix
     ./git.nix
     ./hyprland
     ./lazygit.nix
@@ -14,7 +15,9 @@
     ./tmux.nix
     ./waybar
     ./zathura.nix
-    ./zsh.nix
+    ./fish.nix
+    ./starship.nix
+    ./chromium.nix
     ./zoxide.nix
     ./services
   ];

@@ -1,7 +1,7 @@
 {
+  config,
   pkgs,
   inputs,
-  config,
   lib,
   ...
 }: {
@@ -69,51 +69,68 @@
         theme-plugin = {
           package = pkgs.vimPlugins.kanagawa-nvim;
           setup = "
-           require('kanagawa').setup({
-             colors = {
-               theme = {
-                 all = {
-                   ui = {
-                     bg_gutter = 'none', 
-                     float = {
-                       bg = 'none',
-                     }
-                   }
-                 }
-               }
-             }, 
-             overrides = function(colors)
-               local theme = colors.theme
-               return {
-                 NormalFloat = { bg = 'none' },
-                 FloatBorder = { bg = 'none' },
-                 FloatTitle = { bg = 'none' },
+          require('kanagawa').setup({
+            transparent = true,
+            colors = {
+              theme = {
+                all = {
+                  ui = {
+                    bg_gutter = 'none', 
+                    float = {
+                      bg = 'none',
+                    }
+                  }
+                }
+              }
+            }, 
+            overrides = function(colors)
+              local theme = colors.theme
+              return {
+                -------------------
+                -- Floating windows
+                -------------------
+                NormalFloat = { bg = 'none' },
+                FloatBorder = { bg = 'none' },
+                FloatTitle = { bg = 'none' },
 
-                 TelescopeTitle = { fg = theme.ui.special, bold = true },
-                 TelescopePromptNormal = { bg = theme.ui.bg_p1 },
-                 TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
-                 TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
-                 TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
-                 TelescopePreviewNormal = { bg = theme.ui.bg_dim },
-                 TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-                 
-                 Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },  
-                 PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
-                 PmenuSbar = { bg = theme.ui.bg_m1 },
-                 PmenuThumb = { bg = theme.ui.bg_p2 },
+                -------------------
+                -- Telescope
+                -------------------
+                TelescopeTitle = { fg = theme.ui.special, bold = true },
+                TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+                TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+                TelescopeResultsNormal = { fg = theme.ui.fg, bg = theme.ui.bg_m1 },
+                TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+                TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+                TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
 
-                 NoiceCmdlinePopup = { bg = '#181616' },
-                 NoiceCmdlinePopupBorder = { bg = '#181616' },
-                 NoiceCmdlinePrompt = { bg = 'NONE'},
-                 NoiceCmdlineIcon = { bg = 'NONE', fg = '#cdd6f4' },
-                 NoicePopupmenu = { bg = '#181616'  },
-                 NoicePopupmenuBorder = { bg = '#181616'},
+                -------------------
+                -- nvim-cmp / popup menu
+                -------------------
+                Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },  
+                PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
+                PmenuSbar = { bg = theme.ui.bg_m1 },
+                PmenuThumb = { bg = theme.ui.bg_p2 },
 
-                 NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
-               }
-             end
-           })
-           vim.cmd[[colorscheme kanagawa-dragon]]
+                -------------------
+                -- Noice
+                -------------------
+                -- Base popup
+                NoiceCmdlinePopup       = { fg = 'NONE', bg = 'NONE'},
+                NoiceCmdlinePopupBorder = { fg = 'NONE', bg = 'NONE' },
+                NoiceCmdlinePrompt                 = { fg = theme.ui.special, bg = 'NONE' },
+                NoiceCmdlineIcon                   = { fg = theme.ui.special, bg = 'NONE' },
+                NoicePopupmenu                     = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
+                NoicePopupmenuBorder               = { fg = theme.ui.fg, bg = theme.ui.bg },
+
+                -------------------
+                -- Misc
+                -------------------
+                NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
+              }
+            end
+          })
+          vim.cmd[[colorscheme kanagawa-dragon]]
           ";
         };
         vim-tmux-navigator = {
@@ -663,7 +680,6 @@
 
       statusline.lualine = {
         enable = true;
-        theme = "base16";
       };
 
       notify = {
@@ -678,8 +694,6 @@
         surround.enable = true;
         diffview-nvim.enable = true;
         motion = {
-          hop.enable = true;
-          leap.enable = true;
           precognition.enable = false;
         };
         images = {
@@ -695,8 +709,8 @@
             file2 = "<A-w>";
             file3 = "<A-e>";
             file4 = "<A-r>";
-            markFile = "<A-a>";
-            listMarks = "<A-m>";
+            markFile = "<A-m>";
+            listMarks = "<A-l>";
           };
           setupOpts = {
             defaults = {
