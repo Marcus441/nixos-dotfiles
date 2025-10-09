@@ -11,6 +11,7 @@
       "$mainMod,       Q, exec, $terminal"
       "$mainMod,       B, exec, $browser"
       "$mainMod,       A, exec, ${pkgs.chromium}/bin/chromium --app=https://chatgpt.com/"
+      "$mainMod,       D, exec, ${pkgs.chromium}/bin/chromium --app=https://discord.com/channels/@me"
       "$mainMod,       T, exec, ${pkgs.chromium}/bin/chromium --app=https://teams.microsoft.com"
       "$mainMod,       G, exec, ${pkgs.chromium}/bin/chromium --app=https://github.com"
       "$mainMod,       Y, exec, ${pkgs.chromium}/bin/chromium --app=https://music.youtube.com/"
