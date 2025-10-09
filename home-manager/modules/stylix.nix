@@ -35,7 +35,6 @@ in {
       waybar.enable = false;
       rofi.enable = false;
       hyprland.enable = false;
-      firefox.profileNames = ["default"];
     };
 
     cursor = {
