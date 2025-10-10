@@ -4,13 +4,13 @@
   home.packages = with pkgs; [
     # Desktop apps
     imv
-    mpv
-    obs-studio
     kdePackages.kdenlive
-    pavucontrol
-    thunderbird
+    mpv
     nautilus
     networkmanager_dmenu
+    obs-studio
+    pavucontrol
+    thunderbird-latest
 
     # CLI utils
     bc
@@ -28,13 +28,13 @@
     httpie
     hyprpicker
     jq
-    ntfs3g
-    neovim
     mediainfo
-    tree
+    neovim
+    ntfs3g
     playerctl
     ripgrep
     silicon
+    tree
     udisks
     ueberzugpp
     unzip

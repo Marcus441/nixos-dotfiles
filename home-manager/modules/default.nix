@@ -1,7 +1,9 @@
 {
   imports = [
     ./bat.nix
+    ./chromium.nix
     ./eza.nix
+    ./fish.nix
     ./ghostty.nix
     ./git.nix
     ./hyprland
@@ -9,14 +11,13 @@
     ./lazygit.nix
     ./nvf.nix
     ./ranger.nix
+    ./services
+    ./starship.nix
     ./stylix.nix
     ./tmux.nix
     ./waybar
+    ./xdg-pwas.nix
     ./zathura.nix
-    ./fish.nix
-    ./starship.nix
-    ./chromium.nix
     ./zoxide.nix
-    ./services
   ];
 }

@@ -6,8 +6,8 @@
   # Pick your theme
   theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
   wallpaper = pkgs.fetchurl {
-    url = "https://github.com/dharmx/walls/blob/main/abstract/a_chair_on_a_platform_with_a_halo_above_it.jpg?raw=true";
-    sha256 = "sha256-3yoXPSIvUnhiaIAguxm9boBZFzkgnYMfVeXTFZ0mO5k=";
+    url = "https://github.com/dharmx/walls/blob/main/nord/a_view_of_a_city_from_a_window.jpg?raw=true";
+    sha256 = "sha256-oqmp8RnJOpLuJvhz41yfhKKcXS3NaVCREXW47TXsYkw=";
   };
 in {
   imports = [inputs.stylix.homeModules.stylix];
