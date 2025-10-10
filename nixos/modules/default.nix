@@ -8,6 +8,7 @@
     ./home-manager.nix
     ./hyprland.nix
     ./kernel.nix
+    ./ly.nix
     ./mime.nix
     ./net.nix
     ./nh.nix
