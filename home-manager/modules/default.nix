@@ -15,6 +15,7 @@
     ./starship.nix
     ./stylix.nix
     ./tmux.nix
+    ./walker.nix
     ./waybar
     ./xdg-pwas.nix
     ./zathura.nix
