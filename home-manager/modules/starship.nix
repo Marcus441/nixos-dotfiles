@@ -5,11 +5,18 @@
     enableTransience = true;
 
     settings = {
+      character = {
+        error_symbol = "[✗](bold red)";
+        success_symbol = "[❯](bold green)";
+      };
       aws = {
-        symbol = "  ";
+        symbol = " ";
         format = "\\[[$symbol($profile)(\\($region\\))(\\[$duration\\])]($style)\\]";
       };
-      buf = {symbol = " ";};
+      buf = {
+        symbol = " ";
+        format = "\\[[$symbol($version)]($style)\\]";
+      };
       bun = {
         symbol = " ";
         format = "\\[[$symbol($version)]($style)\\]";
@@ -79,7 +86,18 @@
         format = "\\[[$tag_symbol$commit_hash]($style)\\]";
       };
       git_status = {
-        format = "([\\[$all_status$ahead_behind\\]]($style))";
+        format = "\\[[$all_status]($style)\\]";
+        ahead = "⇡$/{count} ";
+        diverged = "⇕⇡$\{ahead_count}⇣$\{behind_count} ";
+        behind = "⇣$/{count} ";
+        conflicted = "";
+        up_to_date = "";
+        untracked = "?";
+        modified = "";
+        staged = "";
+        renamed = "➜";
+        deleted = "";
+        stashed = "⚑";
       };
       golang = {
         symbol = " ";

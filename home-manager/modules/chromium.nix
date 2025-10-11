@@ -5,9 +5,14 @@
     commandLineArgs = [
       "--ignore-gpu-blocklist"
       "--ozone-platform=wayland"
-      "--enable-logging=stderr"
       "--force-color-profile=srgb"
       "--enable-blink-features=MiddleClickAutoscroll"
+      "--enable-features=UseOzonePlatform,VaapiVideoDecoder,OverlayStrategies,RawDraw,AcceleratedVideoDecode,ThreadedScrolling,SmoothScrolling"
+      "--disable-features=UseSkiaRenderer"
+      "--enable-zero-copy"
+      "--enable-gpu-rasterization"
+      "--enable-native-gpu-memory-buffers"
+      "--enable-features=CanvasOopRasterization"
     ];
     dictionaries = [pkgs.hunspellDictsChromium.en_US];
     extensions = [
