@@ -151,7 +151,7 @@ in {
         "float, tag:floating-window"
         "center, tag:floating-window"
         "size 800 600, tag:floating-window"
-        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus)$"
+        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus|com.network.manager)$"
       ];
 
       layerrule = [

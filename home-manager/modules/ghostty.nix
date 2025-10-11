@@ -13,6 +13,8 @@
       # Font
       font-feature = "builtin_box_drawing";
 
+      app-notifications = "no-clipboard-copy";
+
       # Cursor
       cursor-style = "block";
       copy-on-select = true;

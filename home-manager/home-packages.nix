@@ -5,9 +5,9 @@
     # Desktop apps
     imv
     kdePackages.kdenlive
+    nmgui
     mpv
     nautilus
-    networkmanager_dmenu
     obs-studio
     pavucontrol
     thunderbird-latest

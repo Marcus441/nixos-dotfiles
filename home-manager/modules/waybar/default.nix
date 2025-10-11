@@ -101,7 +101,7 @@
           tooltip-format = "{ipaddr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
           tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
-          on-click = "networkmanager_dmenu";
+          on-click = "nmgui";
         };
 
         battery = {

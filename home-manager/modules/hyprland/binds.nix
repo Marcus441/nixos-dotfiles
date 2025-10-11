@@ -3,10 +3,8 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, walker -m Apps"
+      "$mainMod,       Return, exec, walker"
       "$mainMod,       V, exec, walker -m clipboard"
-      "$mainMod,       N, exec, walker -m Emojis"
-      "$mainMod SHIFT, F, exec, walker -m Finder"
       "$mainMod,       E, exec, $fileManager"
       "$mainMod,       Q, exec, $terminal"
       "$mainMod,       B, exec, $browser"
@@ -19,7 +17,7 @@
       "$mainMod,       M, exec, ${pkgs.chromium}/bin/chromium --app=https://www.messenger.com/"
       "$mainMod,       W, killactive,"
       "$mainMod,       F, togglefloating,"
-      "$mainMod,       P, exec, hyprpicker -an"
+      "$mainMod SHIFT, C, exec, hyprpicker -an"
       "$mainMod,       S, togglesplit,"
       "$mainMod SHIFT, Z, exit,"
       "$mainMod,       Z, exec, loginctl lock-session"
