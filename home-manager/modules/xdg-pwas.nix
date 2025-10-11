@@ -56,7 +56,7 @@
     }
     {
       id = "discord";
-      name = "Discord (Web)";
+      name = "Discord";
       url = "https://discord.com/channels/@me";
       iconUrl = "https://img.icons8.com/?size=100&id=30998&format=png&color=000000";
       iconSha = "sha256-zb3Es1izZAwProek4Wcc7g3ZKxoVzX4JMEqpYIjmLwY=";

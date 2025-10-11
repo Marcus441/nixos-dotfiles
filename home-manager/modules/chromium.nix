@@ -12,6 +12,7 @@
     dictionaries = [pkgs.hunspellDictsChromium.en_US];
     extensions = [
       {id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";} # Dark Reader
+      {id = "dhdgffkkebhmkfjojejmpbldmpobfkfo";} # Tampermonkey
       {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";} # uBlock Origin Lite
       {id = "mnjggcdmjocbbbhaepdhchncahnbgone";} # Sponsor Block
       {id = "nngceckbapebfimnlniiiahkandclblb";} # Vault Warden
