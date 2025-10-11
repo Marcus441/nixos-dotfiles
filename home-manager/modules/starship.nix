@@ -87,9 +87,9 @@
       };
       git_status = {
         format = "\\[[$all_status]($style)\\]";
-        ahead = "⇡$/{count} ";
-        diverged = "⇕⇡$\{ahead_count}⇣$\{behind_count} ";
-        behind = "⇣$/{count} ";
+        ahead = "⇡$ahead_count ";
+        diverged = "⇕⇡$ahead_count⇣$behind_count ";
+        behind = "⇣$behind_count ";
         conflicted = "";
         up_to_date = "";
         untracked = "?";
