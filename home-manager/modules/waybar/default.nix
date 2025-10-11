@@ -9,6 +9,7 @@
     settings = {
       mainBar = {
         layer = "top";
+        spacing = 0;
         position = "top";
         height = 35;
 
@@ -34,7 +35,7 @@
         ];
 
         "custom/logo" = {
-          format = " ";
+          format = "";
           tooltip = false;
         };
 
@@ -56,10 +57,10 @@
         };
 
         idle_inhibitor = {
-          format = "<span font='12'>{icon} </span>";
+          format = "{icon}";
           format-icons = {
-            activated = "󰈈 ";
-            deactivated = "󰈉 ";
+            activated = "󰈈";
+            deactivated = "󰈉";
           };
         };
 
@@ -71,14 +72,9 @@
         };
 
         clock = {
-          format = "{:%I:%M:%S %p}";
-          interval = 1;
-          tooltip-format = "\n<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          calendar-weeks-pos = "right";
-          today-format = "<span color='#7645AD'><b><u>{}</u></b></span>";
-          format-calendar = "<span color='#aeaeae'><b>{}</b></span>";
-          format-calendar-weeks = "<span color='#aeaeae'><b>W{:%V}</b></span>";
-          format-calendar-weekdays = "<span color='#aeaeae'><b>{}</b></span>";
+          format = "{:%A %I:%M %p}";
+          format-alt = "{:L%d %B %Y}";
+          tooltip = false;
         };
 
         bluetooth = {
@@ -95,12 +91,16 @@
         };
 
         network = {
-          format-wifi = " ";
-          format-ethernet = " ";
-          format-disconnected = " ";
-          tooltip-format = "{ipaddr}";
-          tooltip-format-wifi = "{essid} ({signalStrength}%)  | {ipaddr}";
-          tooltip-format-ethernet = "{ifname} 🖧 | {ipaddr}";
+          format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+          format = "{icon}";
+          format-wifi = "{icon}";
+          format-ethernet = "󰀂";
+          format-disconnected = "󰤮";
+          tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+          tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+          tooltip-format-disconnected = "Disconnected";
+          interval = 3;
+          spacing = 1;
           on-click = "nmgui";
         };
 
@@ -127,7 +127,7 @@
 
         backlight = {
           device = "intel_backlight";
-          format = "<span font='12'>{icon}</span>";
+          format = "{icon}";
           format-icons = ["" "" "" "" "" "" "" "" "" ""];
           on-scroll-down = "light -A 10";
           on-scroll-up = "light -U 10";
@@ -136,19 +136,20 @@
 
         disk = {
           interval = 30;
-          format = " {percentage_used}%";
+          format = " {percentage_used}%";
           path = "/";
         };
 
         cpu = {
           interval = 1;
-          format = "  {usage}%";
-          min-length = 6;
-          max-length = 6;
-          format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
+          format = " {usage}%";
+          tooltip = true;
         };
-
-        memory = {format = "  {percentage}%";};
+        memory = {
+          interval = 1;
+          format = " {percentage}%";
+          tooltip = true;
+        };
 
         temperature = {
           format = " {temperatureC}°C";
@@ -161,21 +162,15 @@
         pulseaudio = {
           format = "{icon}";
           format-bluetooth = "󰂰";
-          format-muted = "<span font=''> </span>";
+          format-muted = "";
           format-icons = {
-            headphones = "";
-            bluetooth = "󰥰";
-            handsfree = "";
             headset = "󱡬";
-            phone = "";
-            portable = "";
-            car = "";
-            default = [" " " " " "];
+            default = ["" "" ""];
           };
           justify = "center";
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           on-click = "pavucontrol";
-          tooltip-format = "{icon}  {volume}%";
+          tooltip-format = "{icon} {volume}%";
         };
 
         jack = {
@@ -193,10 +188,12 @@
           };
           modules = ["custom/expand-icon" "tray"];
         };
+
         "custom/expand-icon" = {
           format = " ";
           tooltip = false;
         };
+
         tray = {
           icon-size = 14;
           spacing = 10;

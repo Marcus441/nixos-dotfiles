@@ -6,49 +6,39 @@
   font-family: "Noto Sans", "Font Awesome 7 Free Solid";
 }
 
-#custom-logo {
-  padding: 0 5px;
+.modules-left {
+  margin-left: 8px;
 }
 
 .modules-right {
-  margin-top: 2px;
+  margin-right: 8px;
 }
 
-.modules-center {
-  padding: 0 3px;
-  margin-top: 2px;
-}
-
-.modules-left {
-  margin-top: 2px;
-}
-
-#battery,
-#custom-colorpicker,
-#custom-powerDraw,
-#group-tray-expander,
-#bluetooth,
-#pulseaudio,
-#network,
-#disk,
-#memory,
 #backlight,
+#battery,
+#bluetooth,
+#clock,
 #cpu,
-#temperature,
+#custom-logo,
+#custom-powerDraw,
 #custom-weather,
+#disk,
 #idle_inhibitor,
-#jack,
+#memory,
+#network,
+#pulseaudio,
+#temperature,
 #tray,
 #window,
-#workspaces,
-#clock {
-  padding: 0 5px;
+#workspaces {
+  min-width: 12px;
+  margin: 0 7.5px;
 }
 
-#pulseaudio {
-  padding: 0 5px;
-  padding-top: 0;
+#custom-expand-icon {
+  margin-right: 7px;
 }
+
 #pulseaudio.muted {
   color: #c4746e;
 }
