@@ -97,8 +97,8 @@
       sw = "nh os switch";
       upd = "nh os switch --update";
       hms = "nh home switch";
-      nd = "nix develop";
-      ndi = "nix develop --impure";
+      nd = "nix develop -c $SHELL";
+      ndi = "nix develop --impure -c $SHELL";
 
       pkgs = "nvim ~/flake/home-manager/home-packages.nix";
 
