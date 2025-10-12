@@ -77,27 +77,21 @@
     ];
 
     shellAbbrs = {
-      c = "clear";
       lsa = "ls -lah";
-      t = "tmux";
       ta = "tmux attach";
-      tn = "tmux new-session";
-      tns = "tmux new-session -s";
-    };
+      lg = "lazygit";
+      ldo = "lazydocker";
 
-    shellAliases = let
-      home-managerDir = "~/flake/home-manager";
-    in {
       sw = "nh os switch";
       upd = "nh os switch --update";
       hms = "nh home switch";
       nd = "nix develop -c fish";
+      ndi = "nix develop --impure";
 
-      pkgs = "nvim ${home-managerDir}/home-packages.nix";
+      pkgs = "nvim ~/flake/home-manager/home-packages.nix";
 
       r = "ranger";
       vim = "nvim";
-      se = "sudoedit";
       fetch = "fastfetch && echo";
 
       # GIT
@@ -111,5 +105,7 @@
       gcheck = "git checkout";
       gcredential = "git config credential.helper store";
     };
+
+    shellAliases = {};
   };
 }
