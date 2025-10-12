@@ -1,9 +1,17 @@
-{
-  inputs,
-  hostname,
-  ...
-}: let
-  hostMonitors = import "${inputs.self}/hosts/monitors.nix";
+{hostname, ...}: let
+  hostMonitors = {
+    swift5 = [
+      "eDP-1,1920x1080@60,0x0,1"
+    ];
+    gpc = [
+      "DisplayPort-1,2560x1440@144,0x0,1"
+      "DisplayPort-2,1920x1080@60,2560x0,1"
+    ];
+    UM790pro = [
+      "HDMI-A-1,3840x2160@120,0x0,1.5"
+    ];
+  };
+  monitors = hostMonitors.${hostname} or [];
 in {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -19,11 +27,7 @@ in {
         "XDG_SCREENSHOTS_DIR,$HOME/screens"
       ];
 
-      monitor = builtins.concatStringsSep " " (
-        if builtins.hasAttr hostname hostMonitors
-        then builtins.getAttr hostname hostMonitors
-        else []
-      );
+      monitor = monitors;
 
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
