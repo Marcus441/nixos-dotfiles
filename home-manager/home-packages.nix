@@ -3,9 +3,9 @@
     # Desktop apps
     imv
     kdePackages.kdenlive
-    nmgui
     mpv
     nautilus
+    nmgui
     obs-studio
     pavucontrol
     thunderbird-latest
@@ -27,17 +27,13 @@
     hyprpicker
     jq
     mediainfo
-    neovim
     ntfs3g
     playerctl
     ripgrep
-    silicon
-    tree
     udisks
     ueberzugpp
     unzip
     usbutils
-    w3m
     wget
     wl-clipboard
     wtype

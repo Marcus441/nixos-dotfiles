@@ -1,7 +1,6 @@
 {
   programs.starship = {
     enable = true;
-    enableInteractive = false; # may break some commands
     enableTransience = true;
 
     settings = {

@@ -1,6 +1,17 @@
 {pkgs, ...}: {
   programs.fish = {
     enable = true;
+    binds = {
+      "alt-shift-b" = {
+        command = "fish_commandline_append bat";
+        mode = "insert";
+      };
+      "alt-s" = {
+        erase = true;
+        operate = "preset";
+        mode = "insert";
+      };
+    };
 
     functions = {
       mkcd = ''
@@ -19,6 +30,7 @@
     };
 
     interactiveShellInit = ''
+      set fish_greeting ""
       fish_vi_key_bindings
 
       set -l foreground DCD7BA normal
