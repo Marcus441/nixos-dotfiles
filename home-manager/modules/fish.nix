@@ -97,7 +97,7 @@
       sw = "nh os switch";
       upd = "nh os switch --update";
       hms = "nh home switch";
-      nd = "nix develop -c fish";
+      nd = "nix develop";
       ndi = "nix develop --impure";
 
       pkgs = "nvim ~/flake/home-manager/home-packages.nix";
