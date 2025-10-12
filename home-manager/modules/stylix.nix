@@ -35,6 +35,7 @@ in {
       waybar.enable = false;
       rofi.enable = false;
       hyprland.enable = false;
+      vesktop.enable = false;
     };
 
     cursor = {

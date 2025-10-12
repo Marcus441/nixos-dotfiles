@@ -2,6 +2,7 @@
   imports = [
     ./bat.nix
     ./chromium.nix
+    ./discord.nix
     ./eza.nix
     ./fish.nix
     ./ghostty.nix
