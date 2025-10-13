@@ -2,10 +2,6 @@
   programs.fish = {
     enable = true;
     binds = {
-      "alt-shift-b" = {
-        command = "fish_commandline_append bat";
-        mode = "insert";
-      };
       "alt-s" = {
         erase = true;
         operate = "preset";
@@ -91,31 +87,22 @@
     shellAbbrs = {
       lsa = "ls -lah";
       ta = "tmux attach";
-      lg = "lazygit";
-      ldo = "lazydocker";
 
-      sw = "nh os switch";
-      upd = "nh os switch --update";
+      ost = "nh os test";
+      osw = "nh os switch";
       hms = "nh home switch";
+      upd = "nh os switch --update";
       nd = "nix develop -c $SHELL";
       ndi = "nix develop --impure -c $SHELL";
 
       pkgs = "nvim ~/flake/home-manager/home-packages.nix";
 
-      r = "ranger";
       vim = "nvim";
-      fetch = "fastfetch && echo";
 
       # GIT
       gs = "git status";
-      ga = "git add";
-      gc = "git commit -m";
-      gp = "git push";
-      gpl = "git pull";
-      gst = "git stash";
-      gsp = "git stash; git pull";
-      gcheck = "git checkout";
-      gcredential = "git config credential.helper store";
+      gc = "git checkout";
+      gl = "git log --oneline --graph --decorate | bat";
     };
 
     shellAliases = {};
