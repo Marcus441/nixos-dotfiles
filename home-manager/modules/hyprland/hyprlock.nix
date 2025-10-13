@@ -15,11 +15,10 @@
         position = "0, 600";
         halign = "center";
         walign = "center";
-
         shadow_passes = 1;
       };
 
-      background = lib.mkForce [
+      background = lib.mkDefault [
         {
           path = "screenshot";
           blur_passes = 3;
@@ -27,7 +26,7 @@
         }
       ];
 
-      input-field = lib.mkForce [
+      input-field = lib.mkDefault [
         {
           size = "200, 50";
           position = "0, -80";

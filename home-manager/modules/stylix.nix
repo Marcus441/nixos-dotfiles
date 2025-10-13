@@ -23,8 +23,8 @@
     base0E = "a292a3";
   };
   wallpaper = pkgs.fetchurl {
-    url = "https://github.com/dharmx/walls/blob/main/nord/a_view_of_a_city_from_a_window.jpg?raw=true";
-    sha256 = "sha256-oqmp8RnJOpLuJvhz41yfhKKcXS3NaVCREXW47TXsYkw=";
+    url = "https://w.wallhaven.cc/full/3q/wallhaven-3q97jd.jpg";
+    sha256 = "sha256-DBRyNUaySVNQ8a6I8gi5CI7eqX5Nda4nIy/QeLxGqRg=";
   };
 in {
   imports = [inputs.stylix.homeModules.stylix];
