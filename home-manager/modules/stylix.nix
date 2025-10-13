@@ -14,7 +14,6 @@ in {
 
   home.packages = with pkgs; [
     dejavu_fonts
-    jetbrains-mono
     noto-fonts
     noto-fonts-lgc-plus
     noto-fonts-emoji
@@ -22,6 +21,7 @@ in {
     powerline-fonts
     powerline-symbols
     nerd-fonts.symbols-only
+    nerd-fonts.jetbrains-mono
   ];
 
   stylix = {
@@ -33,7 +33,6 @@ in {
       nvf.enable = false;
       neovim.enable = false;
       waybar.enable = false;
-      rofi.enable = false;
       hyprland.enable = false;
       vesktop.enable = false;
     };
@@ -44,11 +43,12 @@ in {
       package = pkgs.vanilla-dmz;
     };
 
-    opacity.terminal = 0.80;
+    # Set terminal opacity
+    # opacity.terminal = 1.00;
 
     fonts = {
       monospace = {
-        name = "JetBrains Mono";
+        name = "JetBrainsMono Nerd Font Mono";
         package = pkgs.nerd-fonts.jetbrains-mono;
       };
 

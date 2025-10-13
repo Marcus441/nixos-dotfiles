@@ -42,14 +42,14 @@
         "hyprland/workspaces" = {
           format = "{icon}";
           format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            "active" = "";
-            "default" = "";
+            "1" = "";
+            "2" = "";
+            "3" = "";
+            "4" = "";
+            "5" = "";
+            "6" = "";
+            "active" = "";
+            "default" = "";
           };
           persistent-workspaces = {
             "*" = [2 3 4 5 6];
@@ -78,10 +78,10 @@
         };
 
         bluetooth = {
-          format-on = "";
-          format-off = "";
+          format-on = "󰂯";
+          format-off = "󰂯";
           format-disabled = "󰂲";
-          format-connected = "󰂴";
+          format-connected = "󰂱";
           format-connected-battery = "{device_battery_percentage}% 󰂴";
           tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
@@ -100,7 +100,6 @@
           tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
           interval = 3;
-          spacing = 1;
           on-click = "nmgui";
         };
 
@@ -111,7 +110,7 @@
             warning = 30;
             critical = 20;
           };
-          format = "{capacity}%  {icon}";
+          format = "{capacity}% {icon}";
           format-charging = "{capacity}% 󰂄";
           format-plugged = "{capacity}% 󰂄 ";
           format-alt = "{time} {icon}";
@@ -162,10 +161,10 @@
         pulseaudio = {
           format = "{icon}";
           format-bluetooth = "󰂰";
-          format-muted = "";
+          format-muted = "󰝟";
           format-icons = {
             headset = "󱡬";
-            default = ["" "" ""];
+            default = ["󰕿" "󰖀" "󰕾"];
           };
           justify = "center";
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
@@ -190,7 +189,7 @@
         };
 
         "custom/expand-icon" = {
-          format = "";
+          format = "";
           tooltip = false;
         };
 
