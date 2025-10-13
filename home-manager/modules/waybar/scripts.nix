@@ -4,7 +4,7 @@
       #!/usr/bin/env bash
       for bat in /sys/class/power_supply/BAT*/power_now; do
         if [ -f "$bat" ]; then
-          powerDraw="󰠰  $(($(cat "$bat") / 1000000))w"
+          powerDraw="󱐋 $(($(cat "$bat") / 1000000))w"
           break
         fi
       done
@@ -17,9 +17,9 @@
     "waybar/scripts/weather.sh".text = ''
       #!/usr/bin/env bash
 
-      LOC=""
+      LOC="brisbane"
 
-      text="$(curl -s "https://wttr.in/$LOC?format=1" | tr -d ' ')"
+      text="$(curl -s "https://wttr.in/$LOC?format=1&d" | tr -d ' ')"
       tooltip="$(curl -s "https://wttr.in/$LOC?0QT" |
           sed 's/\\/\\\\/g' |
           sed ':a;N;$!ba;s/\n/\\n/g' |

@@ -142,11 +142,13 @@
         cpu = {
           interval = 1;
           format = " {usage}%";
+          on-click = "ghostty --gtk-single-instance=true -e btm";
           tooltip = true;
         };
         memory = {
           interval = 1;
-          format = " {percentage}%";
+          format = " {percentage}%";
+          on-click = "ghostty --gtk-single-instance=true -e btm";
           tooltip = true;
         };
 
@@ -155,7 +157,6 @@
           format-critical = " {temperatureC}°C";
           interval = 1;
           critical-threshold = 80;
-          on-click = "ghostty --gtk-single-instance=true -e btm";
         };
 
         pulseaudio = {
