@@ -30,6 +30,7 @@
     ntfs3g
     playerctl
     ripgrep
+    silicon
     udisks
     ueberzugpp
     unzip

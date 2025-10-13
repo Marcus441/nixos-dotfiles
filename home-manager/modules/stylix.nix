@@ -5,6 +5,23 @@
 }: let
   # Pick your theme
   theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+  kanagawaColors = {
+    base00 = "181616";
+    base01 = "0d0c0c";
+    base02 = "2d4f67";
+    base03 = "a6a69c";
+    base04 = "7fb4ca";
+    base05 = "c5c9c5";
+    base06 = "938aa9";
+    base07 = "c5c9c5";
+    base08 = "c4746e";
+    base09 = "e46876";
+    base0A = "c4b28a";
+    base0B = "8a9a7b";
+    base0C = "8ea4a2";
+    base0D = "8ba4b0";
+    base0E = "a292a3";
+  };
   wallpaper = pkgs.fetchurl {
     url = "https://github.com/dharmx/walls/blob/main/nord/a_view_of_a_city_from_a_window.jpg?raw=true";
     sha256 = "sha256-oqmp8RnJOpLuJvhz41yfhKKcXS3NaVCREXW47TXsYkw=";
@@ -28,6 +45,7 @@ in {
     enable = true;
     polarity = "dark";
     base16Scheme = theme;
+    override = kanagawaColors;
     targets = {
       zathura.enable = false;
       nvf.enable = false;
