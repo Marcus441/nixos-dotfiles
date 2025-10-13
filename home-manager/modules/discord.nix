@@ -1,4 +1,14 @@
-{
+{pkgs, ...}: {
+  xdg.desktopEntries.vesktop = {
+    name = "Discord";
+    categories = ["Network" "Chat"];
+    terminal = false;
+    icon = pkgs.fetchurl {
+      url = "https://img.icons8.com/?size=100&id=30998&format=png&color=000000";
+      sha256 = "sha256-zb3Es1izZAwProek4Wcc7g3ZKxoVzX4JMEqpYIjmLwY=";
+    };
+    exec = "${pkgs.vesktop}/bin/vesktop --enable-blink-features=MiddleClickAutoscroll --ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true";
+  };
   programs.vesktop = {
     enable = true;
 
@@ -148,7 +158,7 @@
           };
           ClientTheme = {
             enabled = true;
-            color = 181616;
+            color = "181616";
           };
           ColorSighted = {
             enabled = true;
