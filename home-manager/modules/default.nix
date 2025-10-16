@@ -1,6 +1,7 @@
 {
   imports = [
     ./bat.nix
+    ./btop.nix
     ./chromium.nix
     ./discord.nix
     ./eza.nix
@@ -11,7 +12,6 @@
     ./lazydocker.nix
     ./lazygit.nix
     ./nvf.nix
-    ./ranger.nix
     ./services
     ./starship.nix
     ./stylix.nix
@@ -19,6 +19,7 @@
     ./walker.nix
     ./waybar
     ./xdg-pwas.nix
+    ./yazi.nix
     ./zathura.nix
     ./zoxide.nix
   ];

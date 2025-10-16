@@ -142,13 +142,13 @@
         cpu = {
           interval = 1;
           format = " {usage}%";
-          on-click = "ghostty --gtk-single-instance=true -e btm";
+          on-click = "ghostty --gtk-single-instance=true -e btop";
           tooltip = true;
         };
         memory = {
           interval = 1;
           format = " {percentage}%";
-          on-click = "ghostty --gtk-single-instance=true -e btm";
+          on-click = "ghostty --gtk-single-instance=true -e btop";
           tooltip = true;
         };
 
