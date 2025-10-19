@@ -29,10 +29,6 @@
       }
       {
         plugin = pkgs.tmuxPlugins.continuum;
-        extraConfig = ''
-          set-option -g @continuum-restore 'on'
-          set-option -g @continuum-save-interval '10' # minutes
-        '';
       }
     ];
     extraConfig = ''
@@ -46,8 +42,8 @@
       set -g status-left ""
       set -g status-right "#S"
 
-      set -g window-status-format "● #W "
-      set -g window-status-current-format "● #W "
+      set -g window-status-format ""
+      set -g window-status-current-format ""
       set -g window-status-style "bg=default"
       set -g window-status-current-style "#{?window_zoomed_flag,fg=yellow,fg=magenta,nobold}"
 
@@ -89,7 +85,7 @@
       bind -n M-c split-window -v -c "#{pane_current_path}"
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
-      bind -n M-T new-window -c "$HOME" "nvim --cmd 'autocmd VimEnter * ++once lua vim.defer_fn(function() require(\"telescope.builtin\").find_files() end, 100)' todolist.md"
+      bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
       bind -n M-d kill-pane
       bind -n M-x kill-window
