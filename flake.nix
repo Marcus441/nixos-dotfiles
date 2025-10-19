@@ -9,10 +9,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    elephant.url = "github:abenz1267/elephant/1bc6a4075f129674b0980beadc0b3b506a335dc7";
+    # elephant.url = "github:abenz1267/elephant/1bc6a4075f129674b0980beadc0b3b506a335dc7";
+    #
+    # walker = {
+    #   url = "github:abenz1267/walker/98671afb9e27ef34f30d991a147e190907a0bf9f";
+    #   inputs.elephant.follows = "elephant";
+    # };
+    elephant.url = "github:abenz1267/elephant";
 
     walker = {
-      url = "github:abenz1267/walker/98671afb9e27ef34f30d991a147e190907a0bf9f";
+      url = "github:abenz1267/walker";
       inputs.elephant.follows = "elephant";
     };
 
