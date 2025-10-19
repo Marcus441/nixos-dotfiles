@@ -152,10 +152,10 @@ in {
         "opacity 0.97 0.9, class:.*"
         "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
         # windows that should be floating
+        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus|com.network.manager|xdg-desktop-portal-gtk)$"
         "float, tag:floating-window"
         "center, tag:floating-window"
-        "size 800 600, tag:floating-window"
-        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus|com.network.manager)$"
+        "size 1200 600, tag:floating-window"
       ];
 
       layerrule = [
