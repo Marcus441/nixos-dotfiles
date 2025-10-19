@@ -111,8 +111,8 @@
         format = "\\[[$symbol$version ]($style)\\]";
       };
       memory_usage = {
-        symbol = " 󰍛 ";
-        format = "\\[[$symbol( [$ram( | $swap)])]($style)\\]";
+        symbol = "  ";
+        format = "\\[[$symbol($ram | $swap )]($style)\\]";
         disabled = false;
       };
       # ==================================================
