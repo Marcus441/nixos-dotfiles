@@ -1,160 +1,32 @@
 {
   config,
-  pkgs,
   inputs,
-  lib,
   ...
 }: {
   imports = [
     inputs.nvf.homeManagerModules.default
+    ./autoCmds.nix
+    ./autoComplete.nix
+    ./debugger.nix
+    ./extraPlugins.nix
     ./keymaps
+    ./navigation.nix
+    ./formatter.nix
+    ./languages.nix
+    ./lsp.nix
   ];
 
   programs.nvf = {
     enable = true;
 
     settings.vim = {
-      debugger.nvim-dap.enable = true;
-      debugger.nvim-dap.ui.enable = true;
-      lsp.enable = true;
-      augroups = [
-        {
-          name = "UserSetup";
-        }
-        {
-          name = "MacroRecordingNotificationGroup";
-        }
-      ];
-      autocmds = [
-        {
-          event = ["TextYankPost"];
-          desc = "Highlight when yanking (copying) text";
-          group = "UserSetup";
-          callback = lib.mkLuaInline ''
-            function()
-              vim.highlight.on_yank()
-            end
-          '';
-        }
-        {
-          event = ["RecordingEnter"];
-          desc = "Notify when macro recording starts";
-          group = "MacroRecordingNotificationGroup";
-          callback = lib.mkLuaInline ''
-            function()
-              local msg = string.format("Register: %s", vim.fn.reg_recording())
-              _MACRO_RECORDING_STATUS = true
-              vim.notify(msg, vim.log.levels.INFO, {
-                title = "Macro Recording",
-                -- The `keep` function is embedded directly within the Lua string
-                keep = function() return _MACRO_RECORDING_STATUS end,
-              })
-            end
-          '';
-        }
-        {
-          event = ["RecordingLeave"];
-          desc = "Notify when macro recording ends";
-          group = "MacroRecordingNotificationGroup";
-          callback = lib.mkLuaInline ''
-            function()
-              _MACRO_RECORDING_STATUS = false
-              vim.notify("Success!", vim.log.levels.INFO, {
-                title = "Macro Recording End",
-                timeout = 2000,
-              })
-            end
-          '';
-        }
-      ];
-
-      extraPlugins = {
-        theme-plugin = {
-          package = pkgs.vimPlugins.kanagawa-nvim;
-          setup = "
-          require('kanagawa').setup({
-            transparent = true,
-            colors = {
-              theme = {
-                all = {
-                  ui = {
-                    bg_gutter = 'none', 
-                    float = {
-                      bg = 'none',
-                    }
-                  }
-                }
-              }
-            }, 
-            overrides = function(colors)
-              local theme = colors.theme
-              return {
-                -------------------
-                -- Floating windows
-                -------------------
-                NormalFloat = { bg = 'none' },
-                FloatBorder = { bg = 'none' },
-                FloatTitle = { bg = 'none' },
-
-                -------------------
-                -- Telescope
-                -------------------
-                TelescopeTitle = { fg = theme.ui.special, bold = true },
-                TelescopePromptNormal = { bg = theme.ui.bg_p1 },
-                TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
-                TelescopeResultsNormal = { fg = theme.ui.fg, bg = theme.ui.bg_m1 },
-                TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
-                TelescopePreviewNormal = { bg = theme.ui.bg_dim },
-                TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-
-                -------------------
-                -- nvim-cmp / popup menu
-                -------------------
-                Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },  
-                PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
-                PmenuSbar = { bg = theme.ui.bg_m1 },
-                PmenuThumb = { bg = theme.ui.bg_p2 },
-
-                -------------------
-                -- Noice
-                -------------------
-                -- Base popup
-                NoiceCmdlinePopup       = { fg = 'NONE', bg = 'NONE'},
-                NoiceCmdlinePopupBorder = { fg = 'NONE', bg = 'NONE' },
-                NoiceCmdlinePrompt                 = { fg = theme.ui.special, bg = 'NONE' },
-                NoiceCmdlineIcon                   = { fg = theme.ui.special, bg = 'NONE' },
-                NoicePopupmenu                     = { fg = theme.ui.shade0, bg = theme.ui.bg_m1 },
-                NoicePopupmenuBorder               = { fg = theme.ui.fg, bg = theme.ui.bg },
-
-                -------------------
-                -- Misc
-                -------------------
-                NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_3 },
-              }
-            end
-          })
-          vim.cmd[[colorscheme kanagawa-dragon]]
-          ";
-        };
-        vim-tmux-navigator = {
-          package = pkgs.vimPlugins.vim-tmux-navigator;
-          setup = "
-          vim.g.tmux_navigator_no_mappings = 1
-          vim.g.tmux_navigator_no_wrap = 1
-          ";
-        };
-        undotree = {
-          package = pkgs.vimPlugins.undotree;
-          setup = "";
-          after = ["vim-tmux-navigator"];
-        };
-      };
-
       vimAlias = true;
       undoFile.enable = true;
       lineNumberMode = "relNumber";
       enableLuaLoader = true;
       preventJunkFiles = true;
+      telescope.enable = true;
+      treesitter.context.enable = false;
       options = {
         tabstop = 4;
         shiftwidth = 2;
@@ -179,67 +51,10 @@
         };
       };
 
-      telescope.enable = true;
-
       spellcheck = {
         enable = true;
         languages = ["en"];
         programmingWordlist.enable = true;
-      };
-
-      lsp = {
-        formatOnSave = true;
-        lspkind.enable = false;
-        lightbulb.enable = false;
-        lspsaga.enable = false;
-        trouble.enable = true;
-        lspSignature.enable = true;
-        otter-nvim.enable = false;
-        nvim-docs-view.enable = false;
-      };
-
-      formatter.conform-nvim = {
-        enable = true;
-        setupOpts.formatters_by_ft = {
-          javascript = ["prettierd"];
-          javascriptreact = ["prettierd"];
-          typescript = ["prettierd"];
-          typescriptreact = ["prettierd"];
-          json = ["prettierd"];
-          css = ["prettierd"];
-          html = ["prettierd"];
-          markdown = ["prettierd"];
-        };
-      };
-
-      languages = {
-        enableFormat = true;
-        enableTreesitter = true;
-        enableExtraDiagnostics = true;
-        nix.enable = true;
-        clang.enable = true;
-        clang.dap.enable = true;
-        zig.enable = true;
-        python.enable = true;
-        markdown = {
-          enable = true;
-          extensions.markview-nvim.enable = true;
-        };
-        terraform.enable = true;
-        ts = {
-          enable = true;
-          lsp.enable = true;
-          format.type = "prettierd";
-          extensions.ts-error-translator.enable = true;
-        };
-        html.enable = true;
-        lua.enable = true;
-        css.enable = false;
-        typst.enable = true;
-        rust = {
-          enable = true;
-          crates.enable = true;
-        };
       };
 
       visuals = {
@@ -254,34 +69,9 @@
 
       autopairs.nvim-autopairs.enable = true;
 
-      autocomplete.nvim-cmp = {
-        enable = true;
-        mappings = {
-          next = "<C-n>";
-          previous = "<C-p>";
-          confirm = "<C-y>";
-        };
-        setupOpts = {
-          window = {
-            completion = {
-              border = "rounded";
-              winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder";
-            };
-            documentation = {
-              border = "rounded";
-              winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder";
-            };
-          };
-          completion = {
-            completeopt = "menu,menuone,noinsert";
-          };
-        };
-      };
-
       snippets.luasnip.enable = true;
       snippets.luasnip.loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
 
-      treesitter.context.enable = false;
       binds = {
         whichKey.enable = true;
         whichKey.register = {
@@ -309,8 +99,6 @@
 
       projects.project-nvim.enable = true;
 
-      utility.oil-nvim.enable = true;
-
       mini = {
         ai.enable = true;
         surround.enable = true;
@@ -327,44 +115,13 @@
 
       utility = {
         ccc.enable = false;
-        vim-wakatime.enable = false;
-        icon-picker.enable = true;
-        surround.enable = true;
         diffview-nvim.enable = true;
-        motion = {
-          precognition.enable = false;
-        };
-        images = {
-          image-nvim.enable = false;
-        };
-      };
-
-      navigation = {
-        harpoon = {
-          enable = true;
-          mappings = {
-            file1 = "<A-q>";
-            file2 = "<A-w>";
-            file3 = "<A-e>";
-            file4 = "<A-r>";
-            markFile = "<A-m>";
-            listMarks = "<A-l>";
-          };
-          setupOpts = {
-            defaults = {
-              save_on_toggle = true;
-              sync_on_ui_close = true;
-            };
-
-            # Optional: customize UI style for the menu
-            menu = {
-              title = "Harpoon";
-              title_pos = "center";
-              border = "rounded";
-              ui_width_ratio = 0.40;
-            };
-          };
-        };
+        icon-picker.enable = true;
+        images = {image-nvim.enable = false;};
+        motion = {precognition.enable = false;};
+        oil-nvim.enable = true;
+        surround.enable = true;
+        vim-wakatime.enable = false;
       };
 
       ui = {
