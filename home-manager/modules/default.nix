@@ -11,12 +11,12 @@
     ./hyprland
     ./lazydocker.nix
     ./lazygit.nix
-    ./nvf.nix
+    ./neovim
     ./services
     ./starship.nix
     ./stylix.nix
     ./tmux.nix
-    ./walker.nix
+    ./walker
     ./waybar
     ./xdg-pwas.nix
     ./yazi.nix
