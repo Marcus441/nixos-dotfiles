@@ -1,4 +1,8 @@
 {
+  config,
+  lib,
+  ...
+}: {
   programs.zathura = {
     enable = true;
     mappings = {
@@ -8,16 +12,15 @@
     };
     options = {
       font = "JetBrains Mono Bold 13";
-      default-bg = "#1D1C19";
-      default-fg = "#C5C9C5";
-      index-bg = "#1D1C19";
-      index-fg = "#C5C9C5";
 
-      highlight-active-color = "rgba(139, 164, 176, 0.5)";
-      highlight-color = "rgba(139, 164, 176, 0.5)";
+      default-fg = lib.mkForce "#${config.lib.stylix.colors.base05}";
+      index-fg = lib.mkForce "#${config.lib.stylix.colors.base05}";
 
-      recolor-lightcolor = "#1D1C19";
-      recolor-darkcolor = "#C5C9C5";
+      highlight-active-color = lib.mkForce "rgba(${config.lib.stylix.colors.base0D}, 0.5)";
+      highlight-color = lib.mkForce "rgba(${config.lib.stylix.colors.base0D}, 0.5)";
+
+      recolor-lightcolor = lib.mkForce "#${config.lib.stylix.colors.base00}";
+      recolor-darkcolor = lib.mkForce "#${config.lib.stylix.colors.base05}";
 
       adjust-open = "width";
       render-loading = true;

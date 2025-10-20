@@ -49,7 +49,7 @@ in {
     base16Scheme = theme;
     override = kanagawaColors;
     targets = {
-      zathura.enable = false;
+      zathura.enable = true;
       nvf.enable = false;
       neovim.enable = false;
       waybar.enable = false;
