@@ -1,4 +1,8 @@
-{hostname, ...}: let
+{
+  hostname,
+  config,
+  ...
+}: let
   hostMonitors = {
     swift5 = [
       "eDP-1,1920x1080@60,0x0,1"
@@ -47,7 +51,7 @@ in {
 
         border_size = 2;
 
-        "col.active_border" = "rgb(8BA4B0)";
+        "col.active_border" = "rgb(${config.lib.stylix.colors.base0D})";
 
         resize_on_border = false;
 

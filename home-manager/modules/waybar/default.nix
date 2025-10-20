@@ -1,11 +1,6 @@
-{
-  imports = [
-    ./scripts.nix
-  ];
+{config, ...}: {
   programs.waybar = {
     enable = true;
-    style = ./style.css;
-
     settings = {
       mainBar = {
         layer = "top";
@@ -214,5 +209,83 @@
         };
       };
     };
+    style = ''
+      * {
+        border: none;
+        border-radius: 0;
+        min-height: 0;
+        font-size: 13.5px;
+        font-family: "Noto Sans", "Symbols Nerd Font Mono", "Font Awesome 7 Free Solid";
+      }
+
+      .modules-left {
+        margin-left: 8px;
+      }
+
+      .modules-right {
+        margin-right: 8px;
+      }
+
+      #backlight,
+      #battery,
+      #bluetooth,
+      #clock,
+      #cpu,
+      #custom-logo,
+      #custom-powerDraw,
+      #custom-weather,
+      #disk,
+      #idle_inhibitor,
+      #memory,
+      #network,
+      #pulseaudio,
+      #temperature,
+      #tray,
+      #window,
+      #workspaces {
+        min-width: 12px;
+        margin: 0 7.5px;
+      }
+
+      #custom-expand-icon {
+        margin-right: 7px;
+      }
+
+      #pulseaudio.muted {
+        color: #${config.lib.stylix.colors.base08};
+      }
+
+      #temperature.critical,
+      #clock {
+        color: #${config.lib.stylix.colors.base0D};
+      }
+
+      #battery.charging {
+        color: #${config.lib.stylix.colors.base07};
+        background-color: #${config.lib.stylix.colors.base0B};
+      }
+
+      #battery.warning:not(.charging) {
+        background-color: #${config.lib.stylix.colors.base0A};
+        color: #${config.lib.stylix.colors.base00};
+      }
+
+      #battery.critical:not(.charging) {
+        background-color: #${config.lib.stylix.colors.base08};
+        color: #${config.lib.stylix.colors.base07};
+        animation-name: blink;
+        animation-duration: 0.5s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+
+      @keyframes blink {
+        to {
+          background-color: #${config.lib.stylix.colors.base07};
+          color: #${config.lib.stylix.colors.base00};
+        }
+      }
+    '';
   };
 }

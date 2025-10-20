@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   programs.tmux = {
     enable = true;
     prefix = "C-b";
@@ -45,9 +49,9 @@
       set -g window-status-format " #I: #W "
       set -g window-status-current-format " #I: #W "
       set -g window-status-style "bg=default"
-      set -g window-status-current-style "#{?window_zoomed_flag,fg=default,fg=#8ba4b0,nobold}"
-      set -g pane-border-style 'fg=#8ba4b0'
-      set -g pane-active-border-style 'fg=#8ba4b0'
+      set -g window-status-current-style "#{?window_zoomed_flag,fg=default,fg=#${config.lib.stylix.colors.base0D},nobold}"
+      set -g pane-border-style 'fg=#${config.lib.stylix.colors.base0D}'
+      set -g pane-active-border-style 'fg=#${config.lib.stylix.colors.base0D}'
 
       set -g renumber-windows on
 

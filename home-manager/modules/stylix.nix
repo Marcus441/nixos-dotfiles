@@ -6,21 +6,21 @@
   # Pick your theme
   theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
   kanagawaColors = {
-    base00 = "181616";
-    base01 = "0d0c0c";
-    base02 = "2d4f67";
-    base03 = "a6a69c";
-    base04 = "7fb4ca";
-    base05 = "c5c9c5";
-    base06 = "938aa9";
-    base07 = "c5c9c5";
-    base08 = "c4746e";
-    base09 = "e46876";
-    base0A = "c4b28a";
-    base0B = "8a9a7b";
-    base0C = "8ea4a2";
-    base0D = "8ba4b0";
-    base0E = "a292a3";
+    base00 = "181616"; #"#181616"
+    base01 = "0D0C0C"; #"#0D0C0C"
+    base02 = "2D4F67"; #"#2D4F67"
+    base03 = "A6A69C"; #"#A6A69C"
+    base04 = "7FB4CA"; #"#7FB4CA"
+    base05 = "C5C9C5"; #"#C5C9C5"
+    base06 = "938AA9"; #"#938AA9"
+    base07 = "C5C9C5"; #"#C5C9C5"
+    base08 = "C4746E"; #"#C4746E"
+    base09 = "E46876"; #"#E46876"
+    base0A = "C4B28A"; #"#C4B28A"
+    base0B = "8A9A7B"; #"#8A9A7B"
+    base0C = "8EA4A2"; #"#8EA4A2"
+    base0D = "8BA4B0"; #"#8BA4B0"
+    base0E = "A292A3"; #"#A292A3"
   };
   wallpaper = pkgs.fetchurl {
     url = "https://w.wallhaven.cc/full/kx/wallhaven-kxy7ld.jpg";

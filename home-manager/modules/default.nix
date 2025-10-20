@@ -2,6 +2,7 @@
   imports = [
     ./bat.nix
     ./btop.nix
+    ./colors.nix
     ./chromium.nix
     ./discord.nix
     ./eza.nix
