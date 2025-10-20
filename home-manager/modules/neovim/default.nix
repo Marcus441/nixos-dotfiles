@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   ...
 }: {
   imports = [
@@ -99,13 +100,21 @@
 
       projects.project-nvim.enable = true;
 
+      statusline.lualine.enable = true;
       mini = {
         ai.enable = true;
         surround.enable = true;
-        statusline.enable = true;
-        files = {
+        indentscope = {
           enable = true;
+          setupOpts = {
+            symbol = "┃";
+            draw = {
+              delay = 0;
+              animation = lib.mkLuaInline ''require('mini.indentscope').gen_animation.none()'';
+            };
+          };
         };
+        files.enable = true;
       };
 
       notify = {

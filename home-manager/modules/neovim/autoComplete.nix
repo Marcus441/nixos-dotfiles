@@ -11,11 +11,9 @@
         window = {
           completion = {
             border = "rounded";
-            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder";
           };
           documentation = {
             border = "rounded";
-            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder";
           };
         };
         completion = {
