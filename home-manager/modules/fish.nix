@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   programs.fish = {
     enable = true;
     binds = {
@@ -28,19 +32,37 @@
     interactiveShellInit = ''
       set fish_greeting ""
       fish_vi_key_bindings
+      # Base16 color mapping from Stylix
+      set -l base00 ${config.lib.stylix.colors.base00} # Background
+      set -l base01 ${config.lib.stylix.colors.base01}
+      set -l base02 ${config.lib.stylix.colors.base02}
+      set -l base03 ${config.lib.stylix.colors.base03}
+      set -l base04 ${config.lib.stylix.colors.base04}
+      set -l base05 ${config.lib.stylix.colors.base05} # Foreground
+      set -l base06 ${config.lib.stylix.colors.base06}
+      set -l base07 ${config.lib.stylix.colors.base07}
+      set -l base08 ${config.lib.stylix.colors.base08} # Red
+      set -l base09 ${config.lib.stylix.colors.base09} # Orange
+      set -l base0A ${config.lib.stylix.colors.base0A} # Yellow
+      set -l base0B ${config.lib.stylix.colors.base0B} # Green
+      set -l base0C ${config.lib.stylix.colors.base0C} # Cyan
+      set -l base0D ${config.lib.stylix.colors.base0D} # Blue
+      set -l base0E ${config.lib.stylix.colors.base0E} # Purple
+      set -l base0F ${config.lib.stylix.colors.base0F} # Pink/Bright Red
 
-      set -l foreground DCD7BA normal
-      set -l selection 2D4F67 brcyan
-      set -l comment 727169 brblack
-      set -l red C34043 red
-      set -l orange FF9E64 brred
-      set -l yellow C0A36E yellow
-      set -l green 76946A green
-      set -l purple 957FB8 magenta
-      set -l cyan 7AA89F cyan
-      set -l pink D27E99 brmagenta
+      # Semantic assignments
+      set -l foreground $base05
+      set -l selection $base02
+      set -l comment $base03
+      set -l red $base08
+      set -l orange $base09
+      set -l yellow $base0A
+      set -l green $base0B
+      set -l cyan $base0C
+      set -l purple $base0E
+      set -l pink $base0F
 
-      # Syntax Highlighting Colors
+      # Syntax Highlighting
       set -g fish_color_normal $foreground
       set -g fish_color_command $cyan
       set -g fish_color_keyword $pink
@@ -56,14 +78,14 @@
       set -g fish_color_escape $pink
       set -g fish_color_autosuggestion $comment
 
-      # Completion Pager Colors
+      # Completion Pager
       set -g fish_pager_color_progress $comment
       set -g fish_pager_color_prefix $cyan
       set -g fish_pager_color_completion $foreground
       set -g fish_pager_color_description $comment
 
-      # LS_COLORS
-      set -x LS_COLORS "di=1;34:fi=1;33:ex=32:ln=1;36:*.sh=32:*.md=1;34:*.nix=36:*.py=35:*.rs=33"
+      # LS_COLORS (Base16-inspired mapping)
+      set -x LS_COLORS "di=1;34:fi=0:$base05:ex=32:ln=1;36:*.sh=32:*.md=1;34:*.nix=36:*.py=35:*.rs=33"
     '';
 
     loginShellInit = ''
