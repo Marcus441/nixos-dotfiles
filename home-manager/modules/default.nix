@@ -9,7 +9,7 @@
     ./fish.nix
     ./fzf.nix
     ./gh-dash.nix
-    ./ghostty.nix
+    ./ghostty
     ./git.nix
     ./hyprland
     ./lazydocker.nix

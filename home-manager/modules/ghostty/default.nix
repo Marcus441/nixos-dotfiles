@@ -8,6 +8,7 @@
       font-size = 13.5;
 
       confirm-close-surface = false;
+      custom-shader = "/home/marcus/flake/home-manager/modules/ghostty/cursor_smear.glsl";
 
       # Font
       font-feature = "builtin_box_drawing";
