@@ -5,19 +5,18 @@
       mappings = {
         next = "<C-n>";
         previous = "<C-p>";
-        confirm = "<C-y>";
+        confirm = "<CR>";
       };
       setupOpts = {
         window = {
-          completion = {
-            border = "rounded";
-          };
-          documentation = {
-            border = "rounded";
-          };
+          completion = {border = "rounded";};
+          documentation = {border = "rounded";};
         };
         completion = {
-          completeopt = "menu,menuone,noinsert";
+          completeopt = "menu,menuone,noinsert,noselect";
+        };
+        snippet = {
+          expand = "luasnip#anonymous";
         };
       };
     };
