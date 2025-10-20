@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.tmux = {
     enable = true;
-    prefix = "C-Space";
+    prefix = "C-b";
     baseIndex = 1;
     mouse = true;
     escapeTime = 0;
@@ -40,12 +40,14 @@
 
       set -g status-style bg=default
       set -g status-left ""
-      set -g status-right "#S"
+      set -g status-right "#S "
 
-      set -g window-status-format ""
-      set -g window-status-current-format ""
+      set -g window-status-format " #I: #W "
+      set -g window-status-current-format " #I: #W "
       set -g window-status-style "bg=default"
-      set -g window-status-current-style "#{?window_zoomed_flag,fg=yellow,fg=magenta,nobold}"
+      set -g window-status-current-style "#{?window_zoomed_flag,fg=default,fg=#8ba4b0,nobold}"
+      set -g pane-border-style 'fg=#8ba4b0'
+      set -g pane-active-border-style 'fg=#8ba4b0'
 
       set -g renumber-windows on
 
@@ -59,7 +61,9 @@
 
       bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
 
-      bind -n M-a choose-tree -s
+      bind -n M-g display-popup -E -w 90% -h 90% -T "LazyGit" "lazygit"
+      bind -n M-p display-popup -E -w 90% -h 90% -T "gh-dash" "gh-dash"
+      bind -n M-d display-popup -E -w 90% -h 90% -T "LazyDocker" "lazydocker"
       bind -n M-D detach
 
       bind -n M-1 select-window -t 1
@@ -72,22 +76,12 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind -n M-Left  resize-pane -L 5
-      bind -n M-Right resize-pane -R 5
-      bind -n M-Up    resize-pane -U 3
-      bind -n M-Down  resize-pane -D 3
-
-      bind -n M-S-Left  resize-pane -L 15
-      bind -n M-S-Right resize-pane -R 15
-      bind -n M-S-Up    resize-pane -U 9
-      bind -n M-S-Down  resize-pane -D 9
-
-      bind -n M-c split-window -v -c "#{pane_current_path}"
-      bind -n M-v split-window -h -c "#{pane_current_path}"
+      bind _ split-window -v -c "#{pane_current_path}"
+      bind | split-window -h -c "#{pane_current_path}"
 
       bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
-      bind -n M-d kill-pane
+      bind -n M-c kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
 

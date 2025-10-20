@@ -3,7 +3,7 @@ let
   telescope = import ./telescope.nix;
   lsp = import ./lsp.nix;
   trouble = import ./trouble.nix;
-  oil = import ./oil.nix;
+  mini-files = import ./mini-files.nix;
 in {
-  programs.nvf.settings.vim.keymaps = general ++ telescope ++ lsp ++ trouble ++ oil;
+  programs.nvf.settings.vim.keymaps = general ++ telescope ++ lsp ++ trouble ++ mini-files;
 }

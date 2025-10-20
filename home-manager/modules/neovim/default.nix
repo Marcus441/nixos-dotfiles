@@ -102,10 +102,10 @@
       mini = {
         ai.enable = true;
         surround.enable = true;
-      };
-
-      statusline.lualine = {
-        enable = true;
+        statusline.enable = true;
+        files = {
+          enable = true;
+        };
       };
 
       notify = {
@@ -127,7 +127,21 @@
       ui = {
         borders.enable = true;
         noice.enable = true;
-        colorizer.enable = true;
+        colorizer = {
+          enable = true;
+          setupOpts = {
+            filetypes = {
+              "*" = {
+                RGB = true;
+                RRGGBB = true;
+                always_update = true;
+                css = true;
+                mode = "background";
+              };
+            };
+          };
+        };
+
         illuminate.enable = true;
         breadcrumbs = {
           enable = false;

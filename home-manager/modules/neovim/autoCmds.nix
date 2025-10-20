@@ -20,6 +20,18 @@
         '';
       }
       {
+        event = ["User"];
+        pattern = ["MiniFilesWindowUpdate"];
+        desc = "Enable line numbers in MiniFiles windows";
+        group = "UserSetup";
+        callback = lib.mkLuaInline ''
+          function(args)
+            vim.wo[args.data.win_id].number = true
+            vim.wo[args.data.win_id].relativenumber = true
+          end
+        '';
+      }
+      {
         event = ["RecordingEnter"];
         desc = "Notify when macro recording starts";
         group = "MacroRecordingNotificationGroup";

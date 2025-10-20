@@ -23,8 +23,8 @@
     base0E = "a292a3";
   };
   wallpaper = pkgs.fetchurl {
-    url = "https://w.wallhaven.cc/full/3q/wallhaven-3q97jd.jpg";
-    sha256 = "sha256-DBRyNUaySVNQ8a6I8gi5CI7eqX5Nda4nIy/QeLxGqRg=";
+    url = "https://w.wallhaven.cc/full/kx/wallhaven-kxy7ld.jpg";
+    sha256 = "sha256-KoIuO3LV1MkHhzCQeSaehTwZ3QXTO2X7P12uDfRfJjo=";
   };
 in {
   imports = [inputs.stylix.homeModules.stylix];

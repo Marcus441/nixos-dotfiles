@@ -4,6 +4,7 @@
     enableTransience = true;
 
     settings = {
+      add_newline = false;
       character = {
         error_symbol = "[✗](bold red)";
         success_symbol = "[➜](bold green)";

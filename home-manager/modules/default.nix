@@ -6,6 +6,8 @@
     ./discord.nix
     ./eza.nix
     ./fish.nix
+    ./fzf.nix
+    ./gh-dash.nix
     ./ghostty.nix
     ./git.nix
     ./hyprland
@@ -13,6 +15,7 @@
     ./lazygit.nix
     ./neovim
     ./services
+    ./sesh.nix
     ./starship.nix
     ./stylix.nix
     ./tmux.nix

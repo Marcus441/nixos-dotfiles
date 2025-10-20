@@ -18,7 +18,6 @@
     fastfetch
     fd
     ffmpeg
-    fzf
     git-graph
     grimblast
     htop
