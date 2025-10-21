@@ -115,6 +115,32 @@
         setupOpts = {
           theme = "hyper";
           shortcut_type = "letter";
+          config = {
+            week_header = {
+              enable = true;
+            };
+            shortcut = [
+              {
+                icon = "󰍉  ";
+                icon_hl = "Label";
+                desc = "Find Files";
+                group = "Label";
+                key = "f";
+                action = "Telescope find_files";
+              }
+              {
+                icon = "󰈞 ";
+                icon_hl = "Label";
+                desc = "Live Grep";
+                group = "Label";
+                key = "s";
+                action = "Telescope live_grep";
+              }
+            ];
+            packages = {enable = false;};
+            footer = {};
+            vertical_center = true;
+          };
         };
       };
 

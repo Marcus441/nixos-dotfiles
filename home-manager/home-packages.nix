@@ -23,6 +23,7 @@
     htop
     httpie
     hyprpicker
+    imagemagick
     jq
     mediainfo
     ntfs3g
