@@ -1,36 +1,38 @@
-# ❄️ NixOS Config ❄️
+# NixOS Config
 
-This is my personal NixOS configuration, featuring a Gruvbox Material themed
+This is my personal NixOS configuration, featuring a Kanagawa Dragon themed
 desktop environment.
 
 ## Inspiration and Attribution
 
 This project is heavily derived from concepts and ideas found in
 [nixos-config-reborn](https://github.com/Andrey0189/nixos-config-reborn) by
-**@Andrey0189**. Their exceptional YouTube guides and well-structured repository
-were instrumental in my journey learning NixOS. I highly recommend checking out
-their work for anyone interested in advanced NixOS setups.
+**@Andrey0189**. Their YouTube guides and repository were extremely helpful in
+my own configuration.
 
 As this configuration builds upon their foundational work, it is also licensed
 under the **GNU General Public License v3.0 (GPL-3.0)**, in accordance with the
 original project's licensing. You can find a copy of the license in the
 `LICENSE` file within this repository.
 
-## ✨ Features
+## Features
 
-- 🎨 **Gruvbox Material Hard Dark Theme:** A consistent and eye-pleasing dark
-  theme.
-- 🪟 **Hyprland + Waybar:** A modern and efficient Wayland compositor setup with
-  a customizable bar.
-- 🧇 **Tmux + Neovim Setup (via nvf):** A powerful terminal multiplexer combined
-  with a highly customized Neovim environment for efficient coding.
-- 🌟 **Zsh + Starship:** A delightful and feature-rich shell with a cross-shell
-  prompt.
-- 🖥️ **Multiple Hosts:** Designed to be easily adaptable for various machines.
-- 🏠 **Home Manager Integration:** Seamless management of user-specific
+![render_local_images](image.png)
+
+- **Kanagawa Dragon Theme:** A consistent and eye-pleasing muted yet saturated
+  theme
+- **Hyprland + Waybar:** Minimal Hyprland setup with muted Kanagawa Dragon
+  themed colors
+- **Tmux + Neovim Setup (via NVF):** A powerful terminal multiplexer combined
+  with a highly customized Neovim environment.
+- **Fish + Starship:** A feature-rich shell with a cross-shell prompt.
+- **Multiple Hosts:** Designed to be easily adaptable for various machines.
+- **Home Manager Integration:** Seamless management of user-specific
   configurations.
+- **Base 16 compliant:** Base 16 theme can easily be switched in the stylix
+  module, just remember that the Neovim theme must be updated too.
 
-## 🚀 Installation
+## Installation
 
 To get started with this NixOS setup, follow these steps:
 
@@ -78,24 +80,18 @@ To get started with this NixOS setup, follow these steps:
    ```diff
    --- a/flake.nix
    +++ b/flake.nix
-   @@ -5,17 +5,17 @@
-        outputs = { self, nixpkgs, home-manager, ... }@inputs: let
-            system = "x86_64-linux";
-   -        homeStateVersion = "24.11"; # <--- Update this to your Home Manager state version
-   -        user = "marcus";            # <--- Update this to your username
+   @@
+   -        homeStateVersion = "24.11"; # Update to your Home Manager version
+   -        user = "marcus";            # Update to your username
    +        homeStateVersion = "<your_home_manager_state_version>";
    +        user = "<your_username>";
             hosts = [
    -            { hostname = "swift5"; stateVersion = "24.11"; }
    -            { hostname = "gpc"; stateVersion = "24.11"; }
    -            { hostname = "UM790pro"; stateVersion = "24.11"; }
-   +            # { hostname = "swift5"; stateVersion = "24.11"; } # Uncomment or add your hosts here
-   +            # { hostname = "gpc"; stateVersion = "24.11"; }
-   +            # { hostname = "UM790pro"; stateVersion = "24.11"; }
-   +            { hostname = "<hostname>"; stateVersion = "<your_state_version>"; } # Add your specific host
+   +            # Uncomment or add your hosts here
+   +            { hostname = "<hostname>"; stateVersion = "<your_state_version>"; }
             ];
-            lib = nixpkgs.lib;
-        in {
    ```
 
 7. **Rebuild Your System:** After making the necessary changes, navigate back to
@@ -109,10 +105,10 @@ To get started with this NixOS setup, follow these steps:
    sudo nixos-rebuild switch --flake .#<hostname> # Use '.' for the current directory
    # OR: sudo nixos-install --flake .#<hostname> # for a fresh install 
 
-   home-manager switch --flake .#<user> #eg alice
+   home-manager switch --flake .#<user>@<hostname> #eg alice@nixos
    ```
 
-## 🤝 Contributions
+## Contributions
 
 Contributions are welcome! Feel free to open pull requests or issues if you have
 suggestions, improvements, or encounter problems. Please ensure any
