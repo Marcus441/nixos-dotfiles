@@ -1,5 +1,4 @@
 {
-  config,
   inputs,
   lib,
   ...
@@ -62,9 +61,27 @@
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
         cinnamon-nvim.enable = true;
-        fidget-nvim.enable = true;
+        fidget-nvim = {
+          enable = true;
+          setupOpts = {
+            notification.window.winblend = 0;
+            progress = {
+              display = {
+                done_icon = "✓";
+              };
+            };
+          };
+        };
         highlight-undo.enable = true;
         indent-blankline.enable = true;
+        indent-blankline.setupOpts = {
+          exclude = {
+            filetypes = ["dashboard" "lspinfo" "packer"];
+          };
+          scope = {
+            enabled = false;
+          };
+        };
         rainbow-delimiters.enable = true;
       };
 
@@ -93,20 +110,32 @@
         gitsigns.codeActions.enable = false;
       };
 
-      dashboard.alpha = {
+      dashboard.dashboard-nvim = {
         enable = true;
-        theme = "theta";
+        setupOpts = {
+          theme = "hyper";
+          shortcut_type = "letter";
+        };
       };
 
       projects.project-nvim.enable = true;
 
       statusline.lualine.enable = true;
       mini = {
+        icons.enable = true;
         ai.enable = true;
         surround.enable = true;
         indentscope = {
           enable = true;
           setupOpts = {
+            extra = lib.mkLuaInline ''
+              vim.api.nvim_create_autocmd("FileType", {
+                pattern = "dashboard",
+                callback = function()
+                  vim.b.miniindentscope_disable = true
+                end,
+              })
+            '';
             symbol = "┃";
             draw = {
               delay = 0;
@@ -119,16 +148,23 @@
 
       notify = {
         nvim-notify.enable = true;
-        nvim-notify.setupOpts.background_colour = "#${config.lib.stylix.colors.base01}";
       };
 
       utility = {
         ccc.enable = false;
         diffview-nvim.enable = true;
         icon-picker.enable = true;
-        images = {image-nvim.enable = false;};
+        images = {
+          image-nvim = {
+            enable = true;
+            setupOpts = {
+              backend = "kitty";
+              integrations.neorg.downloadRemoteImages = true;
+              integrations.markdown.downloadRemoteImages = true;
+            };
+          };
+        };
         motion = {precognition.enable = false;};
-        oil-nvim.enable = true;
         surround.enable = true;
         vim-wakatime.enable = false;
       };
@@ -136,6 +172,7 @@
       ui = {
         borders.enable = true;
         noice.enable = true;
+        noice.setupOpts.lsp.signature.enabled = true;
         colorizer = {
           enable = true;
           setupOpts = {
@@ -158,6 +195,13 @@
         };
         smartcolumn = {
           enable = true;
+          setupOpts.disabled_filetypes = [
+            "help"
+            "text"
+            "markdown"
+            "NvimTree"
+            "dashboard"
+          ];
         };
         fastaction.enable = true;
       };

@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   programs.nvf.settings.vim = {
     autocomplete.nvim-cmp = {
       enable = true;
@@ -9,14 +9,33 @@
       };
       setupOpts = {
         window = {
-          completion = {border = "rounded";};
-          documentation = {border = "rounded";};
+          completion = {
+            border = lib.mkForce [
+              "🭽"
+              "▔"
+              "🭾"
+              "▕"
+              "🭿"
+              "▁"
+              "🭼"
+              "▏"
+            ];
+          };
+          documentation = {
+            border = lib.mkForce [
+              "🭽"
+              "▔"
+              "🭾"
+              "▕"
+              "🭿"
+              "▁"
+              "🭼"
+              "▏"
+            ];
+          };
         };
         completion = {
           completeopt = "menu,menuone,noinsert,noselect";
-        };
-        snippet = {
-          expand = "luasnip#anonymous";
         };
       };
     };
