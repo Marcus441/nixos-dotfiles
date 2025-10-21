@@ -180,13 +180,11 @@
         ccc.enable = false;
         diffview-nvim.enable = true;
         icon-picker.enable = true;
-        images = {
-          image-nvim = {
-            enable = true;
-            setupOpts = {
-              backend = "kitty";
-              integrations.neorg.downloadRemoteImages = true;
-              integrations.markdown.downloadRemoteImages = true;
+        snacks-nvim = {
+          enable = true;
+          setupOpts = {
+            image = {
+              enabled = true;
             };
           };
         };
