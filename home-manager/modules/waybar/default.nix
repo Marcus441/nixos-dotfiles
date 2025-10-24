@@ -1,4 +1,5 @@
 {config, ...}: {
+  imports = [./scripts.nix];
   programs.waybar = {
     enable = true;
     settings = {
@@ -47,7 +48,7 @@
             "default" = "";
           };
           persistent-workspaces = {
-            "*" = [2 3 4 5 6];
+            "*" = [1 2 3 4 5 6];
           };
         };
 
@@ -152,6 +153,11 @@
           format-critical = " {temperatureC}°C";
           interval = 1;
           critical-threshold = 80;
+          hwmon-path = [
+            "/sys/class/hwmon/hwmon2/temp1_input"
+            "/sys/class/hwmon/hwmon3/temp1_input"
+            "/sys/class/thermal/thermal_zone0/temp"
+          ];
         };
 
         pulseaudio = {
@@ -247,17 +253,22 @@
         margin: 0 7.5px;
       }
 
+      #clock {
+        color: #${config.lib.stylix.colors.base0D};
+      }
+
+      #idle_inhibitor.activated {
+        color: #${config.lib.stylix.colors.base0E};
+      }
+
       #custom-expand-icon {
         margin-right: 7px;
       }
 
-      #pulseaudio.muted {
+      #pulseaudio.muted,
+      #temperature.critical
+      {
         color: #${config.lib.stylix.colors.base08};
-      }
-
-      #temperature.critical,
-      #clock {
-        color: #${config.lib.stylix.colors.base0D};
       }
 
       #battery.charging {

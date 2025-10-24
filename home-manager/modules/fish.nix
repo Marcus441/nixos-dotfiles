@@ -83,6 +83,10 @@
       set -g fish_pager_color_prefix $cyan
       set -g fish_pager_color_completion $foreground
       set -g fish_pager_color_description $comment
+      set -g fish_pager_color_selected_background --background=$selection
+      set -g fish_pager_color_selected_prefix $cyan
+      set -g fish_pager_color_selected_completion $foreground
+      set -g fish_pager_color_selected_description $comment
 
       # LS_COLORS (Base16-inspired mapping)
       set -x LS_COLORS "di=1;34:fi=0:$base05:ex=32:ln=1;36:*.sh=32:*.md=1;34:*.nix=36:*.py=35:*.rs=33"
