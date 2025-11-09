@@ -26,6 +26,7 @@
     imagemagick
     jq
     mediainfo
+    nmap
     ntfs3g
     playerctl
     ripgrep
