@@ -36,7 +36,7 @@ in {
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
       "$fileManager" = "nautilus";
-      "$browser" = "chromium";
+      "$browser" = "brave";
 
       exec-once = [
         "waybar"
@@ -154,7 +154,7 @@ in {
 
         # opacity
         "opacity 0.97 0.9, class:.*"
-        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
+        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|org.gnome.NautilusPreviewer)$"
         # windows that should be floating
         "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus|com.network.manager|xdg-desktop-portal-gtk)$"
         "float, tag:floating-window"
