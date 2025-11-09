@@ -14,6 +14,7 @@
     ./nfs.nix
     ./nh.nix
     ./nix.nix
+    ./qemu.nix
     ./timezone.nix
     ./user.nix
     ./zram.nix
