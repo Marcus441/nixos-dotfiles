@@ -1,6 +1,7 @@
 {
   imports = [
     ./audio.nix
+    ./binfmt.nix
     ./bluetooth.nix
     ./boot.nix
     ./docker.nix
