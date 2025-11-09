@@ -11,6 +11,7 @@
     ./ly.nix
     ./mime.nix
     ./net.nix
+    ./nfs.nix
     ./nh.nix
     ./nix.nix
     ./timezone.nix
