@@ -35,7 +35,7 @@ in {
 
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
-      "$fileManager" = "nautilus";
+      "$fileManager" = "thunar";
       "$browser" = "zen-twilight";
 
       exec-once = [
@@ -72,7 +72,7 @@ in {
         blur = {
           enabled = true;
           new_optimizations = true;
-          passes = 1;
+          passes = 3;
           vibrancy = 0.1696;
         };
       };
@@ -153,10 +153,12 @@ in {
         "nofocus, class:^(xwaylandvideobridge)$"
 
         # opacity
-        "opacity 0.97 0.9, class:.*"
-        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|org.gnome.NautilusPreviewer)$"
+        # "opacity 0.9 0.80, class:.*"
+        # "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
+
         # windows that should be floating
-        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|org.gnome.Nautilus|com.network.manager|xdg-desktop-portal-gtk)$"
+        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
+        "tag +floating-window, title:^(ghostty-float)$"
         "float, tag:floating-window"
         "center, tag:floating-window"
         "size 1200 600, tag:floating-window"
