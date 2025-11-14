@@ -96,7 +96,7 @@
           tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
           interval = 3;
-          on-click = "nmgui";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e impala\"";
         };
 
         battery = {
@@ -138,26 +138,27 @@
         cpu = {
           interval = 1;
           format = " {usage}%";
-          on-click = "ghostty --gtk-single-instance=true -e btop";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e btop\"";
           tooltip = true;
         };
         memory = {
           interval = 1;
           format = " {percentage}%";
-          on-click = "ghostty --gtk-single-instance=true -e btop";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e btop\"";
           tooltip = true;
         };
 
+        # TODO: Automate this in nix, use sensors as a build input
+        # Run sensors, grab the cpu temp and export the abs hwmon path
+        # to set hwmon-path-abs
         temperature = {
-          format = " {temperatureC}°C";
-          format-critical = " {temperatureC}°C";
+          format = "{icon} {temperatureC}°C";
+          format-critical = "{icon} {temperatureC}°C";
+          format-icons = ["" "" ""];
           interval = 1;
           critical-threshold = 80;
-          hwmon-path = [
-            "/sys/class/hwmon/hwmon2/temp1_input"
-            "/sys/class/hwmon/hwmon3/temp1_input"
-            "/sys/class/thermal/thermal_zone0/temp"
-          ];
+          hwmon-path-abs = ["/sys/devices/pci0000:00/0000:00:18.3/hwmon"];
+          input-filename = "temp1_input";
         };
 
         pulseaudio = {
