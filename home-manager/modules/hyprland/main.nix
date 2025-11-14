@@ -36,7 +36,7 @@ in {
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
       "$fileManager" = "nautilus";
-      "$browser" = "brave";
+      "$browser" = "zen-twilight";
 
       exec-once = [
         "waybar"
