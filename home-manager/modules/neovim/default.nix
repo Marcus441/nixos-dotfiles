@@ -10,7 +10,6 @@
     ./debugger.nix
     ./extraPlugins.nix
     ./keymaps
-    ./navigation.nix
     ./formatter.nix
     ./languages.nix
     ./lsp.nix
@@ -76,7 +75,7 @@
         indent-blankline.enable = true;
         indent-blankline.setupOpts = {
           exclude = {
-            filetypes = ["dashboard" "lspinfo" "packer"];
+            filetypes = ["snacks_dashboard" "lspinfo" "packer"];
           };
           scope = {
             enabled = false;
@@ -110,40 +109,6 @@
         gitsigns.codeActions.enable = false;
       };
 
-      dashboard.dashboard-nvim = {
-        enable = true;
-        setupOpts = {
-          theme = "hyper";
-          shortcut_type = "letter";
-          config = {
-            week_header = {
-              enable = true;
-            };
-            shortcut = [
-              {
-                icon = "󰍉  ";
-                icon_hl = "Label";
-                desc = "Find Files";
-                group = "Label";
-                key = "f";
-                action = "Telescope find_files";
-              }
-              {
-                icon = "󰈞 ";
-                icon_hl = "Label";
-                desc = "Live Grep";
-                group = "Label";
-                key = "s";
-                action = "Telescope live_grep";
-              }
-            ];
-            packages = {enable = false;};
-            footer = {};
-            vertical_center = true;
-          };
-        };
-      };
-
       projects.project-nvim.enable = true;
 
       statusline.lualine.enable = true;
@@ -156,7 +121,7 @@
           setupOpts = {
             extra = lib.mkLuaInline ''
               vim.api.nvim_create_autocmd("FileType", {
-                pattern = "dashboard",
+                pattern = "snacks_dashboard",
                 callback = function()
                   vim.b.miniindentscope_disable = true
                 end,
@@ -169,7 +134,26 @@
             };
           };
         };
-        files.enable = true;
+        files = {
+          enable = true;
+          setupOpts = {
+            mappings = {
+              close = "q";
+              go_in = "l";
+              go_in_plus = "<CR>";
+              go_out = "h";
+              go_out_plus = "H";
+              mark_goto = "\"";
+              mark_set = "m";
+              reset = "<BS>";
+              reveal_cwd = "@";
+              show_help = "g?";
+              synchronize = "<C-y>";
+              trim_left = "<";
+              trim_right = ">";
+            };
+          };
+        };
       };
 
       notify = {
@@ -183,6 +167,17 @@
         snacks-nvim = {
           enable = true;
           setupOpts = {
+            dashboard = {
+              enabled = true;
+              sections = lib.mkLuaInline ''
+                {
+                  { section = "header" },
+                  { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+                  { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+                  { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+                }
+              '';
+            };
             image = {
               enabled = true;
             };
@@ -224,19 +219,10 @@
             "text"
             "markdown"
             "NvimTree"
-            "dashboard"
+            "snacks_dashboard"
           ];
         };
         fastaction.enable = true;
-      };
-
-      session = {
-        nvim-session-manager = {
-          enable = true;
-          setupOpts = {
-            autoload_mode = "GitSession";
-          };
-        };
       };
 
       notes.todo-comments.enable = true;
