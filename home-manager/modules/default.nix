@@ -5,6 +5,7 @@
     ./chromium.nix
     ./discord.nix
     ./eza.nix
+    ./fastfetch.nix
     ./fish.nix
     ./fzf.nix
     ./gh-dash.nix
@@ -24,6 +25,7 @@
     ./xdg-pwas.nix
     ./yazi.nix
     ./zathura.nix
+    ./zen.nix
     ./zoxide.nix
   ];
 }

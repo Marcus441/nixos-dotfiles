@@ -30,7 +30,7 @@
 in {
   programs.chromium = {
     enable = true;
-    package = pkgs.brave;
+    package = pkgs.chromium;
     commandLineArgs = [
       "--disable-background-networking"
       "--disable-background-timer-throttling"

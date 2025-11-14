@@ -4,8 +4,6 @@
     imv
     kdePackages.kdenlive
     mpv
-    nautilus
-    nmgui
     obs-studio
     pavucontrol
     thunderbird-latest
@@ -15,7 +13,6 @@
     brightnessctl
     cliphist
     dnsutils
-    fastfetch
     fd
     ffmpeg
     git-graph
@@ -24,6 +21,7 @@
     httpie
     hyprpicker
     imagemagick
+    impala
     jq
     mediainfo
     nmap

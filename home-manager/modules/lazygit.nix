@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   programs.lazygit = {
     enable = true;
     settings = {
@@ -7,6 +7,7 @@
         nerdFontsVersion = 3;
         theme = {
           lightTheme = false;
+          selectedLineBgColor = lib.mkForce ["default"];
         };
       };
     };
