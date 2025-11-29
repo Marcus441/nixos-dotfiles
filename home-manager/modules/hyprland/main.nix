@@ -72,7 +72,7 @@ in {
         blur = {
           enabled = true;
           new_optimizations = true;
-          passes = 3;
+          passes = 1;
           vibrancy = 0.1696;
         };
       };

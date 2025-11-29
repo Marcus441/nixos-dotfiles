@@ -24,8 +24,8 @@
   #   base0F = "7AA89F"; # "#7AA89F"  → "#a292a3"
   # };
   wallpaper = pkgs.fetchurl {
-    url = "https://w.wallhaven.cc/full/x1/wallhaven-x1jrqo.jpg";
-    sha256 = "sha256-Lgl6LkYmrLqpyhjDlt3tLwQVtTHvOykNslX7xIr0MSk=";
+    url = "https://w.wallhaven.cc/full/3l/wallhaven-3lj5r6.png";
+    sha256 = "sha256-12REUbhvnOoBd7kppaAyKkD2ViazPOKiBeUW/lMmkvQ=";
   };
 in {
   imports = [inputs.stylix.homeModules.stylix];
@@ -57,9 +57,9 @@ in {
     };
 
     cursor = {
-      name = "phinger-cursors-dark";
+      name = "Qogir";
       size = 24;
-      package = pkgs.phinger-cursors;
+      package = pkgs.qogir-icon-theme;
     };
 
     # Set terminal opacity
@@ -92,9 +92,9 @@ in {
 
     iconTheme = {
       enable = true;
-      package = pkgs.vimix-icon-theme;
-      dark = "Vimix-beryl";
-      light = "Vimix-black";
+      package = pkgs.qogir-icon-theme;
+      dark = "Qogir-Dark";
+      light = "Qogir-Light";
     };
 
     image = wallpaper;

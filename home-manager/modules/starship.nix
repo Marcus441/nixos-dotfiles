@@ -28,6 +28,7 @@
       cpp = {
         symbol = "  ";
         format = "\\[[$symbol($version(-$name) )]($style)\\]";
+        disabled = false;
       };
       cmake = {
         symbol = "  ";
