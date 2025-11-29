@@ -25,7 +25,7 @@
   }
   {
     mode = ["n"];
-    key = "<leadexL";
+    key = "<leader>xL";
     action = "<cmd>Trouble loclist toggle<cr>";
     desc = "Location List (Trouble)";
   }

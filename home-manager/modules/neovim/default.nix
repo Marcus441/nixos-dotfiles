@@ -4,15 +4,16 @@
   ...
 }: {
   imports = [
-    inputs.nvf.homeManagerModules.default
+    ./assistant.nix
     ./autoCmds.nix
     ./autoComplete.nix
     ./debugger.nix
     ./extraPlugins.nix
-    ./keymaps
     ./formatter.nix
+    ./keymaps
     ./languages.nix
     ./lsp.nix
+    inputs.nvf.homeManagerModules.default
   ];
 
   programs.nvf = {
@@ -27,8 +28,7 @@
       telescope.enable = true;
       treesitter.context.enable = false;
       options = {
-        tabstop = 4;
-        shiftwidth = 2;
+        tabstop = 4; shiftwidth = 2;
         wrap = false;
       };
 
@@ -44,7 +44,7 @@
       diagnostics = {
         enable = true;
         config = {
-          virtual_lines.enable = true;
+          virtual_text.enable = true;
           underline = true;
           signs = true;
         };
@@ -72,13 +72,15 @@
           };
         };
         highlight-undo.enable = true;
-        indent-blankline.enable = true;
-        indent-blankline.setupOpts = {
-          exclude = {
-            filetypes = ["snacks_dashboard" "lspinfo" "packer"];
-          };
-          scope = {
-            enabled = false;
+        indent-blankline = {
+          enable = true;
+          setupOpts = {
+            exclude = {
+              filetypes = ["snacks_dashboard"];
+            };
+            scope = {
+              enabled = false;
+            };
           };
         };
         rainbow-delimiters.enable = true;

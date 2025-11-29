@@ -1,68 +1,56 @@
 [
   {
     mode = ["n"];
-    key = "<leader>sh";
-    action = "<CMD> Telescope help_tags <CR>";
-    desc = "[S]earch [H]elp";
+    key = "gd";
+    action = "<cmd>Telescope lsp_definitions<cr>";
+    desc = "[G]oto [D]efinition";
   }
   {
     mode = ["n"];
-    key = "<leader>sk";
-    action = "<cmd>Telescope keymaps<cr>";
-    desc = "[S]earch [K]eymaps";
+    key = "gr";
+    action = "<cmd>Telescope lsp_references<cr>";
+    desc = "[G]oto [R]eferences";
   }
   {
     mode = ["n"];
-    key = "<leader>sf";
-    action = "<cmd>Telescope find_files<cr>";
-    desc = "[S]earch [F]iles";
+    key = "gI";
+    action = "<cmd>Telescope lsp_implementations<cr>";
+    desc = "[G]oto [I]mplementation";
   }
   {
     mode = ["n"];
-    key = "<leader>ss";
-    action = "<cmd>Telescope builtin<cr>";
-    desc = "[S]earch [S]elect Telescope";
+    key = "<leader>D";
+    action = "<cmd>Telescope lsp_type_definitions<cr>";
+    desc = "Type [D]efinition";
   }
   {
     mode = ["n"];
-    key = "<leader>sw";
-    action = "<cmd>Telescope grep_string<cr>";
-    desc = "[S]earch current [W]ord";
+    key = "<leader>ds";
+    action = "<cmd>Telescope lsp_document_symbols<cr>";
+    desc = "[D]ocument [S]ymbols";
   }
   {
     mode = ["n"];
-    key = "<leader>sg";
-    action = "<cmd>Telescope live_grep<cr>";
-    desc = "[S]earch by [G]rep";
+    key = "<leader>ws";
+    action = "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>";
+    desc = "[W]orkspace [S]ymbols";
   }
   {
     mode = ["n"];
-    key = "<leader>sd";
-    action = "<cmd>Telescope diagnostics<cr>";
-    desc = "[S]earch [D]iagnostics";
+    key = "<leader>rn";
+    action = "<cmd>lua vim.lsp.buf.rename()<cr>";
+    desc = "[R]e[n]ame";
   }
   {
     mode = ["n"];
-    key = "<leader>sr";
-    action = "<cmd>Telescope resume<cr>";
-    desc = "[S]earch [R]esume";
+    key = "<leader>ca";
+    action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
+    desc = "[C]ode [A]ction";
   }
   {
     mode = ["n"];
-    key = "<leader>s.";
-    action = "<cmd>Telescope oldfiles<cr>";
-    desc = "[S]earch Recent Files (\".\" for repeat)";
-  }
-  {
-    mode = ["n"];
-    key = "<leader><leader>";
-    action = "<cmd>Telescope current_buffer_fuzzy_find<cr>";
-    desc = "[ ] Find existing buffers";
-  }
-  {
-    mode = ["n"];
-    key = "<leader>/";
-    action = "<cmd>Telescope buffers<cr>";
-    desc = "[/] Fuzzily search in current buffer";
+    key = "gD";
+    action = "<cmd>lua vim.lsp.buf.declaration()<cr>";
+    desc = "[G]oto [D]eclaration";
   }
 ]
