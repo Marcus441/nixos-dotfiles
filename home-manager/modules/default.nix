@@ -8,6 +8,7 @@
     ./fastfetch.nix
     ./fish.nix
     ./fzf.nix
+    ./gemini.nix
     ./gh-dash.nix
     ./ghostty
     ./git.nix
