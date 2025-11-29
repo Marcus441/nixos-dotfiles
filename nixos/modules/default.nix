@@ -12,7 +12,6 @@
     ./ly.nix
     ./mime.nix
     ./net.nix
-    ./nfs.nix
     ./nh.nix
     ./nix.nix
     ./qemu.nix
