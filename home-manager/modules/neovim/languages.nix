@@ -4,17 +4,30 @@
       enableFormat = true;
       enableTreesitter = true;
       enableExtraDiagnostics = true;
-      nix = { 
+      nix = {
+        enable = true;
+        lsp.enable = true;
+      };
+      bash = {
         enable = true;
         lsp.enable = true;
       };
       clang = {
         enable = true;
-        lsp.enable = true;
+        lsp = {
+          enable = true;
+          servers = [
+            "ccls"
+            /*
+            "clangd"
+            */
+          ];
+        };
         dap.enable = true;
       };
       python = {
         enable = true;
+        format.type = ["ruff"];
         lsp.enable = true;
       };
       markdown = {
@@ -22,9 +35,9 @@
         lsp.enable = true;
         extensions.markview-nvim.enable = true;
       };
-      terraform = { 
+      terraform = {
         enable = true;
-        lsp.enable= true;
+        lsp.enable = true;
       };
       ts = {
         enable = true;
@@ -36,7 +49,7 @@
       lua.enable = true;
       typst = {
         enable = true;
-        lsp.enable = true; 
+        lsp.enable = true;
       };
       rust = {
         enable = true;

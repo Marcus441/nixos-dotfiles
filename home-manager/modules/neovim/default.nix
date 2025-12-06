@@ -25,10 +25,14 @@
       lineNumberMode = "relNumber";
       enableLuaLoader = true;
       preventJunkFiles = true;
-      telescope.enable = true;
+      telescope = {
+        enable = true;
+        setupOpts.defaults.color_devicons = true;
+      };
       treesitter.context.enable = false;
       options = {
-        tabstop = 4; shiftwidth = 2;
+        tabstop = 4;
+        shiftwidth = 2;
         wrap = false;
       };
 
@@ -44,9 +48,10 @@
       diagnostics = {
         enable = true;
         config = {
-          virtual_text.enable = true;
-          underline = true;
           signs = true;
+          underline = true;
+          virtual_lines.enable = true;
+          # virtual_text.enable = true;
         };
       };
 
@@ -88,19 +93,23 @@
 
       autopairs.nvim-autopairs.enable = true;
 
-      snippets.luasnip.enable = true;
-      snippets.luasnip.loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
+      snippets = {
+        luasnip.enable = true;
+        luasnip.loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
+      };
 
       binds = {
-        whichKey.enable = true;
-        whichKey.register = {
-          "<leader>c" = "[C]ode";
-          "<leader>d" = "[D]ocument";
-          "<leader>r" = "[R]ename";
-          "<leader>s" = "[S]earch";
-          "<leader>w" = "[W]orkspace";
-          "<leader>t" = "[T]oggle";
-          "<leader>h" = "Git [H]unk";
+        whichKey = {
+          enable = true;
+          register = {
+            "<leader>c" = "[C]ode";
+            "<leader>d" = "[D]ocument";
+            "<leader>r" = "[R]ename";
+            "<leader>s" = "[S]earch";
+            "<leader>w" = "[W]orkspace";
+            "<leader>t" = "[T]oggle";
+            "<leader>h" = "Git [H]unk";
+          };
         };
         cheatsheet.enable = true;
       };
@@ -121,14 +130,14 @@
         indentscope = {
           enable = true;
           setupOpts = {
-            extra = lib.mkLuaInline ''
-              vim.api.nvim_create_autocmd("FileType", {
-                pattern = "snacks_dashboard",
-                callback = function()
-                  vim.b.miniindentscope_disable = true
-                end,
-              })
-            '';
+            ignore_filetypes = [
+              "NvimTree"
+              "TelescopePrompt"
+              "help"
+              "neo-tree"
+              "notify"
+              "snacks_dashboard"
+            ];
             symbol = "┃";
             draw = {
               delay = 0;
@@ -171,13 +180,27 @@
           setupOpts = {
             dashboard = {
               enabled = true;
+              preset = lib.mkLuaInline ''
+                {
+                  header = [[
+                   ███▄▄▄▄      ▄████████  ▄██████▄   ▄█    █▄   ▄█    ▄▄▄▄███▄▄▄▄
+                   ███▀▀▀██▄   ███    ███ ███    ███ ███    ███ ███  ▄██▀▀▀███▀▀▀██▄
+                   ███   ███   ███    █▀  ███    ███ ███    ███ ███▌ ███   ███   ███
+                   ███   ███  ▄███▄▄▄     ███    ███ ███    ███ ███▌ ███   ███   ███
+                   ███   ███ ▀▀███▀▀▀     ███    ███ ███    ███ ███▌ ███   ███   ███
+                   ███   ███   ███    █▄  ███    ███ ███    ███ ███  ███   ███   ███
+                   ███   ███   ███    ███ ███    ███ ███    ███ ███  ███   ███   ███
+                    ▀█   █▀    ██████████  ▀██████▀   ▀██████▀  █▀    ▀█   ███   █▀
+                  ]]
+                }
+              '';
               sections = lib.mkLuaInline ''
                 {
                   { section = "header" },
                   { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
                   { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
                   { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-                }
+                },
               '';
             };
             image = {
@@ -192,8 +215,10 @@
 
       ui = {
         borders.enable = true;
-        noice.enable = true;
-        noice.setupOpts.lsp.signature.enabled = true;
+        noice = {
+          enable = true;
+          setupOpts.lsp.signature.enabled = true;
+        };
         colorizer = {
           enable = true;
           setupOpts = {
