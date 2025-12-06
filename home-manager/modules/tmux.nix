@@ -46,8 +46,8 @@
       set -g status-left ""
       set -g status-right "#S "
 
-      set -g window-status-format " #I: #W "
-      set -g window-status-current-format " #I: #W "
+      set -g window-status-format " #{?#{==:#{b:pane_current_command},fish},#{s|$HOME|~|:pane_current_path},#{pane_current_command}} "
+      set -g window-status-current-format " #{?#{==:#{b:pane_current_command},fish},#{s|$HOME|~|:pane_current_path},#{pane_current_command}} "
       set -g window-status-style "bg=default"
       set -g window-status-current-style "#{?window_zoomed_flag,fg=default,fg=#${config.lib.stylix.colors.base0D},nobold}"
       set -g pane-border-style 'fg=#${config.lib.stylix.colors.base0D}'
@@ -80,14 +80,29 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind _ split-window -v -c "#{pane_current_path}"
-      bind | split-window -h -c "#{pane_current_path}"
+      bind -n M-_ split-window -v -c "#{pane_current_path}"
+      bind -n M-| split-window -h -c "#{pane_current_path}"
 
       bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
       bind -n M-c kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
+
+      bind -n M-a run-shell "sesh connect \"$(
+        sesh list --icons | fzf-tmux -p 80%,70% \
+          --no-sort --ansi --border-label ' sesh ' --prompt '  ' \
+          --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
+          --bind 'tab:down,btab:up' \
+          --bind 'ctrl-a:change-prompt(  )+reload(sesh list --icons)' \
+          --bind 'ctrl-t:change-prompt(  )+reload(sesh list -t --icons)' \
+          --bind 'ctrl-g:change-prompt(  )+reload(sesh list -c --icons)' \
+          --bind 'ctrl-x:change-prompt(  )+reload(sesh list -z --icons)' \
+          --bind 'ctrl-f:change-prompt(  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+          --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(  )+reload(sesh list --icons)' \
+          --preview-window 'right:55%' \
+          --preview 'sesh preview {}'
+      )\""
 
 
       # tmuxplugin-continuum

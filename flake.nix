@@ -2,7 +2,7 @@
   description = "My system configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
     nur = {
       url = "github:nix-community/NUR";
@@ -10,7 +10,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -27,7 +27,7 @@
     };
 
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:danth/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -43,20 +43,20 @@
     ...
   } @ inputs: let
     system = "x86_64-linux";
-    homeStateVersion = "24.11";
+    homeStateVersion = "25.11";
     user = "marcus";
     hosts = [
       {
         hostname = "swift5";
-        stateVersion = "24.11";
+        stateVersion = "25.11";
       }
       {
         hostname = "gpc";
-        stateVersion = "24.11";
+        stateVersion = "25.11";
       }
       {
         hostname = "UM790pro";
-        stateVersion = "24.11";
+        stateVersion = "25.11";
       }
     ];
 

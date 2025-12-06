@@ -57,9 +57,9 @@ in {
     };
 
     cursor = {
-      name = "Qogir";
+      name = "Adwaita";
       size = 24;
-      package = pkgs.qogir-icon-theme;
+      package = pkgs.adwaita-icon-theme;
     };
 
     # Set terminal opacity
@@ -92,9 +92,9 @@ in {
 
     iconTheme = {
       enable = true;
-      package = pkgs.qogir-icon-theme;
-      dark = "Qogir-Dark";
-      light = "Qogir-Light";
+      package = pkgs.tela-icon-theme;
+      dark = "Tela-black-dark";
+      light = "Tela-light";
     };
 
     image = wallpaper;

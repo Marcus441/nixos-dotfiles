@@ -63,6 +63,7 @@
           bitwarden
           darkreader
           sponsorblock
+          vimium
         ];
       };
 

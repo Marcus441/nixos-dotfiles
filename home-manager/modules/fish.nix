@@ -27,11 +27,32 @@
 
         nix flake init --template "github:Marcus441/nix-templates/main#$argv[1]"
       '';
+      # --- TMUX Title Functions for Clean Window Status ---
+
+      fish_preexec = ''
+        if test -n "$TMUX"
+          # Set the pane title to the command being run
+          tmux select-pane -T "$argv"
+        end
+      '';
+
+      fish_postexec = ''
+        if test -n "$TMUX"
+          # Reset the pane title to the current directory basename
+          # This keeps the window name clean when waiting for input
+          tmux select-pane -T (basename (pwd))
+        end
+      '';
     };
 
     interactiveShellInit = ''
-      set fish_greeting ""
+      set -g fish_greeting
       fish_vi_key_bindings
+
+      if test -n "$TMUX"
+        tmux select-pane -T (basename (pwd))
+      end
+
       # Base16 color mapping from Stylix
       set -l base00 ${config.lib.stylix.colors.base00} # Background
       set -l base01 ${config.lib.stylix.colors.base01}
@@ -90,6 +111,8 @@
 
       # LS_COLORS (Base16-inspired mapping)
       set -x LS_COLORS "di=1;34:fi=0:$base05:ex=32:ln=1;36:*.sh=32:*.md=1;34:*.nix=36:*.py=35:*.rs=33"
+
+      fastfetch
     '';
 
     loginShellInit = ''

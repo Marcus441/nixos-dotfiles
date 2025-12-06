@@ -67,13 +67,19 @@ in {
 
         shadow = {
           enabled = true;
+          range = 2;
+          render_power = 3;
+          color = "rgba(1a1a1aee)";
         };
 
         blur = {
           enabled = true;
           new_optimizations = true;
-          passes = 1;
-          vibrancy = 0.1696;
+          size = 2;
+          passes = 2;
+          special = true;
+          brightness = 0.60;
+          contrast = 0.75;
         };
       };
 
@@ -153,8 +159,8 @@ in {
         "nofocus, class:^(xwaylandvideobridge)$"
 
         # opacity
-        # "opacity 0.9 0.80, class:.*"
-        # "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
+        "opacity 0.97 0.9, class:.*"
+        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
 
         # windows that should be floating
         "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
