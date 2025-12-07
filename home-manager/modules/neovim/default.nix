@@ -7,12 +7,14 @@
     ./assistant.nix
     ./autoCmds.nix
     ./autoComplete.nix
+    ./dashboard.nix
     ./debugger.nix
     ./extraPlugins.nix
     ./formatter.nix
     ./keymaps
     ./languages.nix
     ./lsp.nix
+    ./sessions.nix
     inputs.nvf.homeManagerModules.default
   ];
 
@@ -81,7 +83,7 @@
           enable = true;
           setupOpts = {
             exclude = {
-              filetypes = ["snacks_dashboard"];
+              filetypes = ["alpha"];
             };
             scope = {
               enabled = false;
@@ -136,7 +138,7 @@
               "help"
               "neo-tree"
               "notify"
-              "snacks_dashboard"
+              "alpha"
             ];
             symbol = "┃";
             draw = {
@@ -178,31 +180,6 @@
         snacks-nvim = {
           enable = true;
           setupOpts = {
-            dashboard = {
-              enabled = true;
-              preset = lib.mkLuaInline ''
-                {
-                  header = [[
-                   ███▄▄▄▄      ▄████████  ▄██████▄   ▄█    █▄   ▄█    ▄▄▄▄███▄▄▄▄
-                   ███▀▀▀██▄   ███    ███ ███    ███ ███    ███ ███  ▄██▀▀▀███▀▀▀██▄
-                   ███   ███   ███    █▀  ███    ███ ███    ███ ███▌ ███   ███   ███
-                   ███   ███  ▄███▄▄▄     ███    ███ ███    ███ ███▌ ███   ███   ███
-                   ███   ███ ▀▀███▀▀▀     ███    ███ ███    ███ ███▌ ███   ███   ███
-                   ███   ███   ███    █▄  ███    ███ ███    ███ ███  ███   ███   ███
-                   ███   ███   ███    ███ ███    ███ ███    ███ ███  ███   ███   ███
-                    ▀█   █▀    ██████████  ▀██████▀   ▀██████▀  █▀    ▀█   ███   █▀
-                  ]]
-                }
-              '';
-              sections = lib.mkLuaInline ''
-                {
-                  { section = "header" },
-                  { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
-                  { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-                  { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-                },
-              '';
-            };
             image = {
               enabled = true;
             };
@@ -246,7 +223,7 @@
             "text"
             "markdown"
             "NvimTree"
-            "snacks_dashboard"
+            "alpha"
           ];
         };
         fastaction.enable = true;

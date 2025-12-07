@@ -2,7 +2,6 @@
   programs.nvf.settings.vim = {
     autocomplete.nvim-cmp = {
       enable = true;
-      sourcePlugins = ["avante-nvim"];
       mappings = {
         next = "<C-n>";
         previous = "<C-p>";
