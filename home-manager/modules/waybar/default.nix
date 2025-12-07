@@ -7,17 +7,12 @@
         layer = "top";
         spacing = 0;
         position = "top";
-        height = 35;
+        height = 25;
 
         modules-left = [
-          "custom/logo"
           "clock"
           "custom/weather"
-          "disk"
-          "memory"
-          "cpu"
-          "temperature"
-          "custom/powerDraw"
+          "group/system-stats"
         ];
         modules-center = ["hyprland/workspaces"];
         modules-right = [
@@ -30,11 +25,6 @@
           "idle_inhibitor"
         ];
 
-        "custom/logo" = {
-          format = "";
-          tooltip = false;
-        };
-
         "hyprland/workspaces" = {
           format = "{icon}";
           format-icons = {
@@ -43,12 +33,11 @@
             "3" = "";
             "4" = "";
             "5" = "";
-            "6" = "";
             "active" = "";
             "default" = "";
           };
           persistent-workspaces = {
-            "*" = [1 2 3 4 5 6];
+            "*" = [1 2 3 4 5];
           };
         };
 
@@ -64,7 +53,7 @@
           format = "{}";
           return-type = "json";
           exec = "$HOME/.config/waybar/scripts/weather.sh";
-          interval = 10;
+          interval = 60;
         };
 
         clock = {
@@ -191,11 +180,31 @@
           modules = ["custom/expand-icon" "tray"];
         };
 
+        "group/system-stats" = {
+          orientation = "inherit";
+          drawer = {
+            transition-duration = 600;
+            children-class = "stats-group-item";
+          };
+
+          modules = [
+            "custom/stats-expand-icon"
+            "disk"
+            "cpu"
+            "memory"
+            "temperature"
+            "custom/powerDraw"
+          ];
+        };
+
         "custom/expand-icon" = {
           format = "";
           tooltip = false;
         };
-
+        "custom/stats-expand-icon" = {
+          format = "";
+          tooltip = false;
+        };
         tray = {
           icon-size = 14;
           spacing = 10;
@@ -220,7 +229,7 @@
       * {
         border: none;
         border-radius: 0;
-        min-height: 0;
+        min-height: 25px;
         font-size: 13.5px;
         font-family: "Noto Sans", "Symbols Nerd Font Mono", "Font Awesome 7 Free Solid";
       }
@@ -238,7 +247,6 @@
       #bluetooth,
       #clock,
       #cpu,
-      #custom-logo,
       #custom-powerDraw,
       #custom-weather,
       #disk,
@@ -265,6 +273,10 @@
       #custom-expand-icon {
         margin-right: 7px;
       }
+      #custom-stats-expand-icon {
+        margin-left: 7px;
+      }
+
 
       #pulseaudio.muted,
       #temperature.critical
