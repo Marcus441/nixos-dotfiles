@@ -40,18 +40,66 @@
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 
+      # Define colors
+      BG_COLOR="#${config.lib.stylix.colors.base00}"
+      ACTIVE_COLOR="#${config.lib.stylix.colors.base05}"
+      INACTIVE_COLOR="#${config.lib.stylix.colors.base0D}"
+      TEXT_COLOR="#${config.lib.stylix.colors.base0D}"
+      ACCENT_COLOR="#${config.lib.stylix.colors.base03}"
+      PANE_BORDER_COLOR="#${config.lib.stylix.colors.base02}"
+
+      # Basic status bar setup
+      set -g status on
       set -g status-position top
+      set -g status-interval 3
+      set -g status-justify left
 
-      set -g status-style bg=default
-      set -g status-left ""
-      set -g status-right "#S "
+      # Status bar colors and style
+      set -g status-style "bg=default"
+      set -g status-left-length 100
+      set -g status-right-length 100
 
-      set -g window-status-format " #{?#{==:#{b:pane_current_command},fish},#{s|$HOME|~|:pane_current_path},#{pane_current_command}} "
-      set -g window-status-current-format " #{?#{==:#{b:pane_current_command},fish},#{s|$HOME|~|:pane_current_path},#{pane_current_command}} "
-      set -g window-status-style "bg=default"
-      set -g window-status-current-style "#{?window_zoomed_flag,fg=default,fg=#${config.lib.stylix.colors.base0D},nobold}"
-      set -g pane-border-style 'fg=#${config.lib.stylix.colors.base0D}'
-      set -g pane-active-border-style 'fg=#${config.lib.stylix.colors.base0D}'
+      # Pane borders
+      set -g pane-border-style "fg=$PANE_BORDER_COlOR"
+      set -g pane-active-border-style "fg=$ACTIVE_COLOR"
+
+      # Message style
+      set -g message-style "bg=$BG_COLOR,fg=$TEXT_COLOR,bold"
+      set -g message-command-style "bg=$BG_COLOR,fg=$TEXT_COLOR,bold"
+
+      # Window status format - using dots instead of asterisks
+      set -g window-status-format "#[fg=$INACTIVE_COLOR,bg=$BG_COLOR] #I:#W "
+      set -g window-status-current-format "#[fg=$ACTIVE_COLOR,bg=$BG_COLOR,bold] #I:#W "
+
+      # Window status separator
+      set -g window-status-separator ""
+
+      # Status left (session name with minimal styling)
+      set -g status-left "#[fg=$ACCENT_COLOR,bold]  #S #[fg=$INACTIVE_COLOR]│ "
+
+      # Status right (current path and time)
+      # set -g status-right "#[fg=$TEXT_COLOR] #(echo #{pane_current_path} | sed \"s:^$HOME:~:\") #[fg=$INACTIVE_COLOR]│ #[fg=$ACCENT_COLOR]#(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% #[fg=$INACTIVE_COLOR]│ #[fg=$ACTIVE_COLOR,bold]%I:%M %p "
+
+      # Status right (CPU %, RAM %, Battery %, Date)
+      set -g status-right "\
+      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#([ #{pane_current_path} = $HOME ] && echo '~' || basename #{pane_current_path}) \
+      #[fg=$INACTIVE_COLOR]│ \
+      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(free | awk '/^Mem/ { printf(\"%.0f%%\", $3/$2 * 100 - 0.5) }' ) \
+      #[fg=$INACTIVE_COLOR]│ \
+      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%d) \
+      #[fg=$INACTIVE_COLOR]│ \
+      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%H:%M) \
+      #[fg=$INACTIVE_COLOR]│ \
+      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% "
+
+      # [fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%I:%M\ %p) \ for 12 hour format
+
+      # Copy mode styling
+      set -g mode-style "bg=$ACTIVE_COLOR,fg=$BG_COLOR"
+
+      # Clock mode
+      set -g clock-mode-colour "$ACTIVE_COLOR"
+      set -g clock-mode-style 24
 
       set -g renumber-windows on
 
@@ -61,7 +109,9 @@
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi V send-keys -X select-line
       bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
-      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \; run-shell "tmux save-buffer - | wl-copy --no-newline"
+      bind-key -T copy-mode-vi y \
+        send-keys -X copy-selection-and-cancel \;\
+        run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
 
       bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
 

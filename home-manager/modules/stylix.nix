@@ -63,7 +63,7 @@ in {
     };
 
     # Set terminal opacity
-    opacity.terminal = 0.85;
+    opacity.terminal = 0.70;
 
     fonts = {
       monospace = {
