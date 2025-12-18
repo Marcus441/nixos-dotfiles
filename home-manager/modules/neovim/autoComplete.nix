@@ -1,42 +1,24 @@
-{lib, ...}: {
+{pkgs, ...}: {
   programs.nvf.settings.vim = {
-    autocomplete.nvim-cmp = {
+    autocomplete.blink-cmp = {
       enable = true;
-      mappings = {
-        next = "<C-n>";
-        previous = "<C-p>";
-        confirm = "<CR>";
+      friendly-snippets.enable = true;
+      sourcePlugins = {
+        spell.enable = true;
+        emoji.enable = true;
+        "nerdfont" = {
+          enable = true;
+          module = "blink-nerdfont";
+          package = pkgs.vimPlugins.blink-nerdfont-nvim;
+        };
+        ripgrep.enable = true;
       };
+
       setupOpts = {
-        window = {
-          completion = {
-            border = lib.mkForce [
-              "🭽"
-              "▔"
-              "🭾"
-              "▕"
-              "🭿"
-              "▁"
-              "🭼"
-              "▏"
-            ];
-          };
-          documentation = {
-            border = lib.mkForce [
-              "🭽"
-              "▔"
-              "🭾"
-              "▕"
-              "🭿"
-              "▁"
-              "🭼"
-              "▏"
-            ];
-          };
-        };
-        completion = {
-          completeopt = "menu,menuone,noinsert,noselect";
-        };
+        keymap.preset = "enter";
+        cmdline.keymap.preset = "default";
+        signature.enabled = true;
+        completion.ghost_text.enabled = true;
       };
     };
   };

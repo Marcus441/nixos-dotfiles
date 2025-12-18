@@ -7,7 +7,7 @@
       lightbulb.enable = false;
       lspsaga.enable = false;
       trouble.enable = true;
-      lspSignature.enable = true;
+      lspSignature.enable = false;
       otter-nvim.enable = false;
       nvim-docs-view.enable = false;
     };
