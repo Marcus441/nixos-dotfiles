@@ -52,8 +52,19 @@
         config = {
           signs = true;
           underline = true;
-          virtual_lines.enable = true;
-          # virtual_text.enable = true;
+          update_in_insert = false;
+          virtual_lines = {
+            current_line = true;
+            severity = {
+              min = "ERROR";
+            };
+          };
+          virtual_text = {
+            severity = {
+              min = "INFO";
+              max = "WARN";
+            };
+          };
         };
       };
 
