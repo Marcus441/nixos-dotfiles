@@ -2,7 +2,19 @@
   pkgs,
   config,
   ...
-}: {
+}: let
+  # Define colors
+  thm_bg = "#272626";
+  thm_fg = "#c5c9c5";
+  thm_cyan = "#879FAB";
+  thm_black = "#0d0c0c";
+  thm_gray = "#2d4f67";
+  thm_magenta = "#a292a3";
+  thm_red = "#BE716B";
+  thm_blue = "#8ba4b0";
+  thm_darkBlue = "#242434";
+  thm_black4 = "#181616";
+in {
   programs.tmux = {
     enable = true;
     prefix = "C-b";
@@ -40,69 +52,55 @@
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 
-      # Define colors
-      BG_COLOR="#${config.lib.stylix.colors.base00}"
-      ACTIVE_COLOR="#${config.lib.stylix.colors.base05}"
-      INACTIVE_COLOR="#${config.lib.stylix.colors.base0D}"
-      TEXT_COLOR="#${config.lib.stylix.colors.base0D}"
-      ACCENT_COLOR="#${config.lib.stylix.colors.base03}"
-      PANE_BORDER_COLOR="#${config.lib.stylix.colors.base02}"
+      # Status bar settings
+      set -g status "on"
+      set -g status-bg "${thm_bg}"
+      set -g status-justify "left"
+      set -g status-left-length "100"
+      set -g status-right-length "100"
 
-      # Basic status bar setup
-      set -g status on
-      set -g status-position top
-      set -g status-interval 3
-      set -g status-justify left
+      # Messages
+      set -g message-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
+      set -g message-command-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
 
-      # Status bar colors and style
-      set -g status-style "bg=default"
-      set -g status-left-length 100
-      set -g status-right-length 100
+      # Panes
+      set -g pane-border-style "fg=${thm_gray}"
+      set -g pane-active-border-style "fg=${thm_blue}"
 
-      # Pane borders
-      set -g pane-border-style "fg=$PANE_BORDER_COlOR"
-      set -g pane-active-border-style "fg=$ACTIVE_COLOR"
-
-      # Message style
-      set -g message-style "bg=$BG_COLOR,fg=$TEXT_COLOR,bold"
-      set -g message-command-style "bg=$BG_COLOR,fg=$TEXT_COLOR,bold"
-
-      # Window status format - using dots instead of asterisks
-      set -g window-status-format "#[fg=$INACTIVE_COLOR,bg=$BG_COLOR] #I:#W "
-      set -g window-status-current-format "#[fg=$ACTIVE_COLOR,bg=$BG_COLOR,bold] #I:#W "
-
-      # Window status separator
+      # Windows
+      set -g window-status-activity-style "fg=${thm_fg},bg=${thm_bg},none"
       set -g window-status-separator ""
+      set -g window-status-style "fg=${thm_fg},bg=${thm_bg},none"
 
-      # Status left (session name with minimal styling)
-      set -g status-left "#[fg=$ACCENT_COLOR,bold]  #S #[fg=$INACTIVE_COLOR]│ "
+      # Statusline - current window (Active)
+      set -g window-status-current-format "\
+      #[fg=${thm_black},bg=${thm_cyan}] #I \
+      #[fg=${thm_cyan},bg=${thm_darkBlue}]\
+      #[fg=${thm_blue},bg=${thm_darkBlue}] #{b:pane_current_path} \
+      #[fg=${thm_darkBlue},bg=${thm_bg}]"
 
-      # Status right (current path and time)
-      # set -g status-right "#[fg=$TEXT_COLOR] #(echo #{pane_current_path} | sed \"s:^$HOME:~:\") #[fg=$INACTIVE_COLOR]│ #[fg=$ACCENT_COLOR]#(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% #[fg=$INACTIVE_COLOR]│ #[fg=$ACTIVE_COLOR,bold]%I:%M %p "
+      # Statusline - other windows (Inactive)
+      set -g window-status-format "\
+      #[fg=${thm_fg},bg=${thm_bg}] #I #[fg=${thm_fg}]"
 
-      # Status right (CPU %, RAM %, Battery %, Date)
+      # Statusline - right side
       set -g status-right "\
-      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#([ #{pane_current_path} = $HOME ] && echo '~' || basename #{pane_current_path}) \
-      #[fg=$INACTIVE_COLOR]│ \
-      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(free | awk '/^Mem/ { printf(\"%.0f%%\", $3/$2 * 100 - 0.5) }' ) \
-      #[fg=$INACTIVE_COLOR]│ \
-      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%d) \
-      #[fg=$INACTIVE_COLOR]│ \
-      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%H:%M) \
-      #[fg=$INACTIVE_COLOR]│ \
-      #[fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% "
+      #{?client_prefix,#[fg=${thm_black4}],#[fg=${thm_darkBlue}]}#[bg=${thm_bg},nobold,nounderscore,noitalics]\
+      #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_blue} bg=${thm_darkBlue}]}  #W \
+      #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_cyan} bg=${thm_darkBlue}]}\
+      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}] \
+      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}] #S "
 
-      # [fg=$ACCENT_COLOR] #[fg=$TEXT_COLOR]#(date +%I:%M\ %p) \ for 12 hour format
 
-      # Copy mode styling
-      set -g mode-style "bg=$ACTIVE_COLOR,fg=$BG_COLOR"
 
-      # Clock mode
-      set -g clock-mode-colour "$ACTIVE_COLOR"
-      set -g clock-mode-style 24
+      # Statusline - left side (empty)
+      set -g status-left ""
+
+      # Modes
+      set -g clock-mode-colour "${thm_blue}"
+      set -g mode-style "fg=${thm_blue} bg=${thm_black4} bold"
 
       set -g renumber-windows on
-
       set-option -g detach-on-destroy off
 
       bind-key r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
@@ -117,8 +115,7 @@
 
       bind -n M-g display-popup -E -w 90% -h 90% -T "LazyGit" "lazygit"
       bind -n M-p display-popup -E -w 90% -h 90% -T "gh-dash" "gh-dash"
-      bind -n M-d display-popup -E -w 90% -h 90% -T "LazyDocker" "lazydocker"
-      bind -n M-D detach
+      bind -n M-d detach
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -130,8 +127,8 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind -n M-_ split-window -v -c "#{pane_current_path}"
-      bind -n M-| split-window -h -c "#{pane_current_path}"
+      bind -n M-v split-window -v -c "#{pane_current_path}"
+      bind -n M-s split-window -h -c "#{pane_current_path}"
 
       bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
@@ -141,10 +138,10 @@
 
       bind -n M-a run-shell "sesh connect \"$(
         sesh list --icons | fzf-tmux -p 80%,70% \
-          --no-sort --ansi --border-label ' sesh ' --prompt '  ' \
+          --no-sort --ansi --border-label ' sesh ' --prompt '  ' \
           --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
           --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(  )+reload(sesh list --icons)' \
+          --bind 'ctrl-a:change-prompt(  )+reload(sesh list --icons)' \
           --bind 'ctrl-t:change-prompt(  )+reload(sesh list -t --icons)' \
           --bind 'ctrl-g:change-prompt(  )+reload(sesh list -c --icons)' \
           --bind 'ctrl-x:change-prompt(  )+reload(sesh list -z --icons)' \
