@@ -1,14 +1,51 @@
 {
   pkgs,
   inputs,
+  config,
   ...
-}: {
+}: let
+  wallpapersRepo = pkgs.fetchFromGitHub {
+    owner = "D3Ext";
+    repo = "aesthetic-wallpapers";
+    rev = "e34f05935c5b768f4c016b0893924d18ec1dba61";
+    hash = "sha256-yN+0g8mQKWB29miQjtQDYySJWTwb/MQ5x5dXgoBuTkY=";
+    sparseCheckout = ["images"];
+  };
+  inherit (config.lib.stylix) colors;
+in {
   imports = [
     inputs.noctalia.homeModules.default
   ];
 
   programs.noctalia-shell = {
     enable = true;
+    colors = {
+      # Backgrounds
+      mSurface = "#${colors.base00}";
+      mSurfaceVariant = "#${colors.base01}";
+      mHover = "#${colors.base02}";
+
+      # Accents
+      mPrimary = "#${colors.base0D}";
+      mSecondary = "#${colors.base0E}";
+      mTertiary = "#${colors.base0B}";
+
+      # Text/Icons on top of surfaces
+      mOnSurface = "#${colors.base05}";
+      mOnSurfaceVariant = "#${colors.base04}";
+      mOnHover = "#${colors.base07}";
+
+      # Text/Icons on top of accents (Contrast colors)
+      mOnPrimary = "#${colors.base00}";
+      mOnSecondary = "#${colors.base00}";
+      mOnTertiary = "#${colors.base00}";
+
+      # Status & UI Elements
+      mError = "#${colors.base08}";
+      mOnError = "#${colors.base00}";
+      mOutline = "#${colors.base03}";
+      mShadow = "#000000";
+    };
     settings = {
       settingsVersion = 0;
       bar = {
@@ -22,15 +59,10 @@
         floating = false;
         marginVertical = 0.25;
         marginHorizontal = 0.25;
-        outerCorners = true;
+        outerCorners = false;
         exclusive = true;
         widgets = {
           left = [
-            {
-              icon = "rocket";
-              id = "CustomButton";
-              leftClickExec = "qs -c noctalia-shell ipc call launcher toggle";
-            }
             {
               id = "Clock";
               usePrimaryColor = false;
@@ -47,7 +79,9 @@
           ];
           center = [
             {
+              hideUnoccupied = false;
               id = "Workspace";
+              labelMode = "none";
             }
           ];
           right = [
@@ -70,6 +104,7 @@
               id = "Brightness";
             }
             {
+              useDistroLogo = true;
               id = "ControlCenter";
             }
           ];
@@ -91,7 +126,7 @@
         lockOnSuspend = true;
         showSessionButtonsOnLockScreen = true;
         showHibernateOnLockScreen = false;
-        enableShadows = true;
+        enableShadows = false;
         shadowDirection = "bottom_right";
         shadowOffsetX = 2;
         shadowOffsetY = 3;
@@ -99,8 +134,8 @@
         allowPanelsOnScreenWithoutBar = true;
       };
       ui = {
-        fontDefault = "";
-        fontFixed = "";
+        fontDefault = "Noto Sans";
+        fontFixed = "JetBrainsMono Nerd Font Mono";
         fontDefaultScale = 1;
         fontFixedScale = 1;
         tooltipsEnabled = true;
@@ -109,7 +144,7 @@
         settingsPanelMode = "attached";
       };
       location = {
-        name = "Tokyo";
+        name = "Brisbane";
         weatherEnabled = true;
         weatherShowEffects = true;
         useFahrenheit = false;
@@ -154,7 +189,7 @@
       wallpaper = {
         enabled = true;
         overviewEnabled = false;
-        directory = "";
+        directory = "${wallpapersRepo}/images";
         monitorDirectories = [];
         enableMultiMonitorDirectories = false;
         recursiveSearch = false;
@@ -268,12 +303,12 @@
         memPollingInterval = 3000;
         diskPollingInterval = 3000;
         networkPollingInterval = 3000;
-        useCustomColors = false;
-        warningColor = "";
-        criticalColor = "";
+        useCustomColors = true;
+        warningColor = "#${colors.base09}";
+        criticalColor = "#${colors.base08}";
       };
       dock = {
-        enabled = true;
+        enabled = false;
         displayMode = "auto_hide";
         backgroundOpacity = 1;
         floatingRatio = 1;
@@ -374,7 +409,7 @@
         enableDdcSupport = false;
       };
       colorSchemes = {
-        useWallpaperColors = false;
+        useWallpaperColors = true;
         predefinedScheme = "Noctalia (default)";
         darkMode = true;
         schedulingMode = "off";

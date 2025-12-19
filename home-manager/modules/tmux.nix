@@ -54,6 +54,7 @@ in {
 
       # Status bar settings
       set -g status "on"
+      set -g status-position top
       set -g status-bg "${thm_bg}"
       set -g status-justify "left"
       set -g status-left-length "100"

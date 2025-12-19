@@ -16,13 +16,14 @@
     ./lazydocker.nix
     ./lazygit.nix
     ./neovim
+    ./noctalia.nix
     ./services
     ./sesh.nix
     ./starship.nix
     ./stylix.nix
     ./tmux.nix
     ./walker
-    ./waybar
+    ./wallpapers
     ./xdg-pwas.nix
     ./yazi.nix
     ./zathura.nix

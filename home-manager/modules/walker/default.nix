@@ -39,8 +39,8 @@
       # === Keybinds ===
       keybinds = {
         close = ["Escape"];
-        next = ["alt j"];
-        previous = ["alt k"];
+        next = ["Down"];
+        previous = ["Up"];
         toggle_exact = ["ctrl e"];
         resume_last_query = ["ctrl r"];
         quick_activate = [];
@@ -92,7 +92,7 @@
         background: @window_bg_color;
         padding: 20px;
         border-radius: 0px;
-        border: 2px solid @accent_bg_color;
+        border: 1px solid @accent_bg_color;
       }
 
       .preview-box,

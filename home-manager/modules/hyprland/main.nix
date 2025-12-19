@@ -39,17 +39,17 @@ in {
       "$browser" = "zen-twilight";
 
       exec-once = [
-        "waybar"
+        "noctalia-shell"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
       ];
 
       general = {
-        gaps_in = 5;
-        gaps_out = 10;
+        gaps_in = 2;
+        gaps_out = 3;
 
-        border_size = 2;
+        border_size = 1;
 
         "col.active_border" = "rgb(${config.lib.stylix.colors.base0D})";
 
@@ -73,7 +73,7 @@ in {
         };
 
         blur = {
-          enabled = true;
+          enabled = false;
           new_optimizations = true;
           size = 2;
           passes = 2;
@@ -114,7 +114,7 @@ in {
 
       input = {
         touchpad = {
-          natural_scroll = true;
+          natural_scroll = false;
           scroll_factor = 0.6;
         };
         accel_profile = "flat";

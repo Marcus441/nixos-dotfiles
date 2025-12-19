@@ -5,7 +5,6 @@
     kdePackages.kdenlive
     mpv
     obs-studio
-    pavucontrol
     thunderbird-latest
 
     # CLI utils
@@ -21,7 +20,6 @@
     httpie
     hyprpicker
     imagemagick
-    impala
     jq
     mediainfo
     nmap
