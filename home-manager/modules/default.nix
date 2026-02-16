@@ -23,11 +23,11 @@
     ./stylix.nix
     ./tmux.nix
     ./walker
-    ./wallpapers
+    # ./wallpapers
     ./xdg-pwas.nix
     ./yazi.nix
     ./zathura.nix
-    ./zen.nix
+    ./zen
     ./zoxide.nix
   ];
 }

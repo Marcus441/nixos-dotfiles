@@ -4,6 +4,10 @@
       enableFormat = true;
       enableTreesitter = true;
       enableExtraDiagnostics = true;
+      assembly = {
+        enable = true;
+        lsp.enable = true;
+      };
       nix = {
         enable = true;
         lsp.enable = true;
@@ -17,10 +21,7 @@
         lsp = {
           enable = true;
           servers = [
-            "ccls"
-            /*
             "clangd"
-            */
           ];
         };
         dap.enable = true;

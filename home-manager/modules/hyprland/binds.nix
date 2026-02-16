@@ -3,19 +3,19 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, walker -N"
-      "$mainMod,       V, exec, walker -m clipboard"
+      "$mainMod,       Return, exec, uwsm app -- walker -N"
+      "$mainMod,       V, exec,  uwsm app -- walker -m clipboard"
       "$mainMod,       E, exec, $fileManager"
       "$mainMod,       Q, exec, $terminal"
-      "$mainMod,       D, exec, vesktop --enable-blink-features=MiddleClickAutoscroll"
+      "$mainMod,       D, exec, uwsm app -- vesktop --enable-blink-features=MiddleClickAutoscroll"
       "$mainMod,       B, exec, $browser"
-      "$mainMod,       A, exec, chromium --app=https://chatgpt.com/"
+      "$mainMod,       A, exec, uwsm app -- chromium --app=https://chatgpt.com/"
       "$mainMod,       W, killactive,"
       "$mainMod,       F, togglefloating,"
       "$mainMod SHIFT, C, exec, hyprpicker -an"
       "$mainMod,       S, togglesplit,"
-      "$mainMod SHIFT, Z, exit,"
-      "$mainMod,       Z, exec, loginctl lock-session"
+      "$mainMod SHIFT, Z, exec, uwsm stop"
+      "$mainMod,       Z, exec, noctalia-shell ipc call lockScreen lock"
       ",               Print, exec, grimblast --notify --freeze copysave area"
 
       # Moving focus

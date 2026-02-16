@@ -90,7 +90,7 @@ in {
       #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_blue} bg=${thm_darkBlue}]}  #W \
       #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_cyan} bg=${thm_darkBlue}]}\
       #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}] \
-      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}] #S "
+      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}]#S "
 
 
 

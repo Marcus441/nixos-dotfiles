@@ -5,11 +5,29 @@
   ...
 }: let
   wallpapersRepo = pkgs.fetchFromGitHub {
-    owner = "D3Ext";
-    repo = "aesthetic-wallpapers";
-    rev = "e34f05935c5b768f4c016b0893924d18ec1dba61";
-    hash = "sha256-yN+0g8mQKWB29miQjtQDYySJWTwb/MQ5x5dXgoBuTkY=";
-    sparseCheckout = ["images"];
+    owner = "dharmx";
+    repo = "walls";
+    rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
+    hash = "sha256-DrE/WcymO1AqL05bf7bjv1w0brOR8Gz+WgtMvLYzn3o=";
+    sparseCheckout = [
+      "abstract"
+      "aerial"
+      "apeiros"
+      "apocalypse"
+      "architecture"
+      "centered"
+      "digital"
+      "geometry"
+      "minimal"
+      "mountain"
+      "nord"
+      "outrun"
+      "pixel"
+      "radium"
+      "retro"
+      "spam"
+      "stalenhag"
+    ];
   };
   inherit (config.lib.stylix) colors;
 in {
@@ -189,10 +207,10 @@ in {
       wallpaper = {
         enabled = true;
         overviewEnabled = false;
-        directory = "${wallpapersRepo}/images";
+        directory = "${wallpapersRepo}/";
         monitorDirectories = [];
         enableMultiMonitorDirectories = false;
-        recursiveSearch = false;
+        recursiveSearch = true;
         setWallpaperOnAllMonitors = true;
         fillMode = "crop";
         fillColor = "#000000";

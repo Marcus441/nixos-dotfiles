@@ -43,12 +43,14 @@ in {
     base16Scheme = theme;
     autoEnable = false;
     targets = {
+      btop.enable = true;
       gtk.enable = true;
       qt.enable = true;
+      yazi.enable = true;
       zathura.enable = true;
       zen-browser = {
         enable = true;
-        profileNames = ["user"];
+        profileNames = ["default"];
       };
     };
 
@@ -85,9 +87,9 @@ in {
 
     iconTheme = {
       enable = true;
-      package = pkgs.tela-icon-theme;
-      dark = "Tela-black-dark";
-      light = "Tela-light";
+      package = pkgs.whitesur-icon-theme;
+      dark = "WhiteSur-dark";
+      light = "WhiteSur-light";
     };
   };
 }

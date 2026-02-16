@@ -28,21 +28,21 @@ in {
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
         "QT_QPA_PLATFORM,wayland"
-        "XDG_SCREENSHOTS_DIR,$HOME/screens"
+        "XDG_SCREENSHOTS_DIR,$HOME/Screenshots"
       ];
 
       monitor = monitors;
 
       "$mainMod" = "SUPER";
-      "$terminal" = "ghostty --gtk-single-instance=true";
-      "$fileManager" = "thunar";
-      "$browser" = "zen-twilight";
+      "$terminal" = "uwsm app -- ghostty --gtk-single-instance=true";
+      "$fileManager" = "uwsm app -- thunar";
+      "$browser" = "uwsm app -- zen-twilight";
 
       exec-once = [
-        "noctalia-shell"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-        "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
+        "uwsm app -- noctalia-shell"
+        "uwsm app -- wl-paste --type text --watch cliphist store"
+        "uwsm app -- wl-paste --type image --watch cliphist store"
+        "uwsm app -- ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
       ];
 
       general = {
@@ -66,7 +66,7 @@ in {
         inactive_opacity = 1.0;
 
         shadow = {
-          enabled = true;
+          enabled = false;
           range = 2;
           render_power = 3;
           color = "rgba(1a1a1aee)";
@@ -159,8 +159,8 @@ in {
         "nofocus, class:^(xwaylandvideobridge)$"
 
         # opacity
-        "opacity 0.97 0.9, class:.*"
-        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
+        # "opacity 0.97 0.9, class:.*"
+        # "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
 
         # windows that should be floating
         "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
