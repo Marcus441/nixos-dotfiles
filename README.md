@@ -21,8 +21,8 @@ original project's licensing. You can find a copy of the license in the
 
 - **Kanagawa Dragon Theme:** A consistent and eye-pleasing muted yet saturated
   theme
-- **Hyprland + Waybar:** Minimal Hyprland setup with muted Kanagawa Dragon
-  themed colors
+- **Hyprland + Noctalia-Shell:** Minimal Hyprland setup with muted Kanagawa
+  Dragon themed colors
 - **Tmux + Neovim Setup (via NVF):** A powerful terminal multiplexer combined
   with a highly customized Neovim environment.
 - **Fish + Starship:** A feature-rich shell with a cross-shell prompt.
