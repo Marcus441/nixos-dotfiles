@@ -46,8 +46,8 @@ in {
       ];
 
       general = {
-        gaps_in = 2;
-        gaps_out = 3;
+        gaps_in = 2.5;
+        gaps_out = 5;
 
         border_size = 1;
 
@@ -60,7 +60,7 @@ in {
       };
 
       decoration = {
-        rounding = 0;
+        rounding = 12;
 
         active_opacity = 1.0;
         inactive_opacity = 1.0;

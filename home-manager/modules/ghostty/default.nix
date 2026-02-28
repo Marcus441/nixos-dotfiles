@@ -3,7 +3,7 @@
     enable = true;
     themes = {
       kanagawa-dragon-nvim = {
-        background = "#181616";
+        background = "#1D1C19";
         cursor-color = "#c8c093";
         foreground = "#c5c9c5";
         palette = [
@@ -42,8 +42,7 @@
       font-feature = "builtin_box_drawing";
 
       app-notifications = "no-clipboard-copy";
-      background-opacity = "0.9";
-      background-blur = true;
+      background-opacity = "1";
       # Cursor
       cursor-style = "block";
       copy-on-select = true;

@@ -39,7 +39,7 @@ in {
     enable = true;
     colors = {
       # Backgrounds
-      mSurface = "#${colors.base01}";
+      mSurface = "#${colors.base00}";
       mSurfaceVariant = "#${colors.base01}";
       mHover = "#${colors.base02}";
 
@@ -69,15 +69,17 @@ in {
       bar = {
         position = "top";
         monitors = [];
-        density = "default";
+        density = "compact";
         transparent = false;
         showOutline = false;
-        showCapsule = true;
+        showCapsule = false;
         capsuleOpacity = 1;
         floating = true;
-        marginVertical = 0.25;
-        marginHorizontal = 0.25;
-        outerCorners = false;
+        frameThickness = 8;
+        frameRadius = 10;
+        marginVertical = 4;
+        marginHorizontal = 4;
+        outerCorners = true;
         exclusive = true;
         widgets = {
           left = [
