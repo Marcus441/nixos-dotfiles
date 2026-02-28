@@ -15,7 +15,7 @@ in {
       name = app.id;
       value = {
         inherit (app) name;
-        exec = "chromium --app=${app.url}";
+        exec = "helium --app=${app.url}";
         icon = pkgs.fetchurl {
           url = app.iconUrl;
           sha256 = app.iconSha;

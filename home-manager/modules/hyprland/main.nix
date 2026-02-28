@@ -36,7 +36,7 @@ in {
       "$mainMod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty --gtk-single-instance=true";
       "$fileManager" = "uwsm app -- thunar";
-      "$browser" = "uwsm app -- zen-twilight";
+      "$browser" = "uwsm app -- helium";
 
       exec-once = [
         "uwsm app -- noctalia-shell"

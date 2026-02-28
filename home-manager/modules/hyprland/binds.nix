@@ -9,7 +9,6 @@
       "$mainMod,       Q, exec, $terminal"
       "$mainMod,       D, exec, uwsm app -- vesktop --enable-blink-features=MiddleClickAutoscroll"
       "$mainMod,       B, exec, $browser"
-      "$mainMod,       A, exec, uwsm app -- chromium --app=https://chatgpt.com/"
       "$mainMod,       W, killactive,"
       "$mainMod,       F, togglefloating,"
       "$mainMod SHIFT, C, exec, hyprpicker -an"

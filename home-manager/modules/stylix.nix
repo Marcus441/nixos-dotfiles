@@ -48,10 +48,6 @@ in {
       qt.enable = true;
       yazi.enable = true;
       zathura.enable = true;
-      zen-browser = {
-        enable = true;
-        profileNames = ["default"];
-      };
     };
 
     cursor = {

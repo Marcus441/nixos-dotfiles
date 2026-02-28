@@ -17,13 +17,9 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     elephant.url = "github:abenz1267/elephant";
 
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    helium.url = "github:FKouhai/helium2nix/main";
 
     walker = {
       url = "github:abenz1267/walker";

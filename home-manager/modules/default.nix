@@ -12,6 +12,7 @@
     ./gh-dash.nix
     ./ghostty
     ./git.nix
+    ./helium.nix
     ./hyprland
     ./lazydocker.nix
     ./lazygit.nix
@@ -27,7 +28,6 @@
     ./xdg-pwas.nix
     ./yazi.nix
     ./zathura.nix
-    ./zen
     ./zoxide.nix
   ];
 }
