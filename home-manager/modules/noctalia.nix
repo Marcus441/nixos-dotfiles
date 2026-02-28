@@ -39,7 +39,7 @@ in {
     enable = true;
     colors = {
       # Backgrounds
-      mSurface = "#${colors.base00}";
+      mSurface = "#${colors.base01}";
       mSurfaceVariant = "#${colors.base01}";
       mHover = "#${colors.base02}";
 
@@ -74,7 +74,7 @@ in {
         showOutline = false;
         showCapsule = true;
         capsuleOpacity = 1;
-        floating = false;
+        floating = true;
         marginVertical = 0.25;
         marginHorizontal = 0.25;
         outerCorners = false;
@@ -157,7 +157,7 @@ in {
         fontDefaultScale = 1;
         fontFixedScale = 1;
         tooltipsEnabled = true;
-        panelBackgroundOpacity = 0.85;
+        panelBackgroundOpacity = 1;
         panelsAttachedToBar = true;
         settingsPanelMode = "attached";
       };
@@ -232,17 +232,30 @@ in {
         wallhavenResolutionHeight = "";
       };
       appLauncher = {
-        enableClipboardHistory = false;
+        enableClipboardHistory = true;
+        autoPasteClipboard = false;
         enableClipPreview = true;
+        clipboardWrapText = true;
+        clipboardWatchTextCommand = "wl-paste --type text --watch cliphist store";
+        clipboardWatchImageCommand = "wl-paste --type image --watch cliphist store";
         position = "center";
-        pinnedExecs = [];
+        pinnedApps = [];
         useApp2Unit = false;
         sortByMostUsed = true;
-        terminalCommand = "xterm -e";
+        terminalCommand = "ghostty -e";
         customLaunchPrefixEnabled = false;
         customLaunchPrefix = "";
         viewMode = "list";
         showCategories = true;
+        iconMode = "tabler";
+        showIconBackground = false;
+        enableSettingsSearch = true;
+        enableWindowsSearch = true;
+        enableSessionSearch = true;
+        ignoreMouseInput = false;
+        screenshotAnnotationTool = "";
+        overviewLayer = false;
+        density = "default";
       };
       controlCenter = {
         position = "close_to_bar_button";

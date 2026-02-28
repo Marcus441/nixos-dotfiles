@@ -3,8 +3,8 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, uwsm app -- walker -N"
-      "$mainMod,       V, exec,  uwsm app -- walker -m clipboard"
+      "$mainMod,       Return, exec, noctalia-shell ipc call launcher toggle"
+      "$mainMod,       V, exec,  noctalia-shell ipc call launcher clipboard"
       "$mainMod,       E, exec, $fileManager"
       "$mainMod,       Q, exec, $terminal"
       "$mainMod,       D, exec, uwsm app -- vesktop --enable-blink-features=MiddleClickAutoscroll"

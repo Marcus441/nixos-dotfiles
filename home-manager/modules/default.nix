@@ -23,8 +23,6 @@
     ./starship.nix
     ./stylix.nix
     ./tmux.nix
-    ./walker
-    # ./wallpapers
     ./xdg-pwas.nix
     ./yazi.nix
     ./zathura.nix
