@@ -14,4 +14,7 @@
   programs.nix-ld.enable = true;
 
   system.stateVersion = stateVersion;
+  boot = {
+    kernelParams = ["usbcore.autosuspend=-1"];
+  };
 }
