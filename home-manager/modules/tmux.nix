@@ -105,18 +105,22 @@ in {
       set-option -g detach-on-destroy off
 
       bind-key r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi V send-keys -X select-line
       bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
       bind-key -T copy-mode-vi y \
         send-keys -X copy-selection-and-cancel \;\
         run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
+      bind-key -T copy-mode-vi MouseDragEnd1Pane \
+        send-keys -X copy-selection-and-cancel \;\
+        run-shell -b "tmux save-buffer - | wl-copy --primary --no-newline >/dev/null 2>&1 || true" \;\
+        run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
 
       bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
 
       bind -n M-g display-popup -E -w 90% -h 90% -T "LazyGit" "lazygit"
       bind -n M-p display-popup -E -w 90% -h 90% -T "gh-dash" "gh-dash"
-      bind -n M-d detach
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -129,15 +133,15 @@ in {
       bind -n M-9 select-window -t 9
 
       bind -n M-v split-window -v -c "#{pane_current_path}"
-      bind -n M-s split-window -h -c "#{pane_current_path}"
+      bind -n M-c split-window -h -c "#{pane_current_path}"
 
       bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
-      bind -n M-c kill-pane
+      bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
 
-      bind -n M-a run-shell "sesh connect \"$(
+      bind -n M-f run-shell "sesh connect \"$(
         sesh list --icons | fzf-tmux -p 80%,70% \
           --no-sort --ansi --border-label ' sesh ' --prompt '  ' \
           --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
