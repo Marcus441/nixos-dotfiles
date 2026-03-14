@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  config,
   ...
 }: let
   wallpapersRepo = pkgs.fetchFromGitHub {
@@ -29,7 +28,6 @@
       "stalenhag"
     ];
   };
-  inherit (config.lib.stylix) colors;
 in {
   imports = [
     inputs.noctalia.homeModules.default
@@ -37,33 +35,6 @@ in {
 
   programs.noctalia-shell = {
     enable = true;
-    colors = {
-      # Backgrounds
-      mSurface = "#${colors.base00}";
-      mSurfaceVariant = "#${colors.base01}";
-      mHover = "#${colors.base02}";
-
-      # Accents
-      mPrimary = "#${colors.base0D}";
-      mSecondary = "#${colors.base0E}";
-      mTertiary = "#${colors.base0B}";
-
-      # Text/Icons on top of surfaces
-      mOnSurface = "#${colors.base05}";
-      mOnSurfaceVariant = "#${colors.base04}";
-      mOnHover = "#${colors.base07}";
-
-      # Text/Icons on top of accents (Contrast colors)
-      mOnPrimary = "#${colors.base00}";
-      mOnSecondary = "#${colors.base00}";
-      mOnTertiary = "#${colors.base00}";
-
-      # Status & UI Elements
-      mError = "#${colors.base08}";
-      mOnError = "#${colors.base00}";
-      mOutline = "#${colors.base03}";
-      mShadow = "#000000";
-    };
     settings = {
       settingsVersion = 0;
       bar = {
@@ -73,7 +44,6 @@ in {
         transparent = false;
         showOutline = false;
         showCapsule = false;
-        capsuleOpacity = 1;
         floating = true;
         frameThickness = 8;
         frameRadius = 10;
@@ -159,7 +129,6 @@ in {
         fontDefaultScale = 1;
         fontFixedScale = 1;
         tooltipsEnabled = true;
-        panelBackgroundOpacity = 1;
         panelsAttachedToBar = true;
         settingsPanelMode = "attached";
       };
@@ -337,13 +306,10 @@ in {
         diskPollingInterval = 3000;
         networkPollingInterval = 3000;
         useCustomColors = true;
-        warningColor = "#${colors.base09}";
-        criticalColor = "#${colors.base08}";
       };
       dock = {
         enabled = false;
         displayMode = "auto_hide";
-        backgroundOpacity = 1;
         floatingRatio = 1;
         size = 1;
         onlySameOutput = true;
@@ -396,7 +362,6 @@ in {
         monitors = [];
         location = "top_right";
         overlayLayer = true;
-        backgroundOpacity = 1;
         respectExpireTimeout = false;
         lowUrgencyDuration = 3;
         normalUrgencyDuration = 8;
@@ -417,7 +382,6 @@ in {
         location = "top_right";
         autoHideMs = 2000;
         overlayLayer = true;
-        backgroundOpacity = 1;
         enabledTypes = [
           0
           1
