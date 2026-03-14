@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./assistant.nix
     ./autoCmds.nix
     ./autoComplete.nix
     ./dashboard.nix
@@ -31,11 +30,16 @@
         enable = true;
         setupOpts.defaults.color_devicons = true;
       };
-      treesitter.context.enable = false;
+      treesitter = {
+        context.enable = false;
+        indent.enable = false;
+      };
       options = {
+        guicursor = "i:block";
         tabstop = 4;
         shiftwidth = 2;
-        wrap = false;
+        smartindent = true;
+        wrap = true;
       };
 
       clipboard = {
@@ -97,7 +101,7 @@
               filetypes = ["alpha"];
             };
             scope = {
-              enabled = false;
+              enabled = true;
             };
           };
         };
@@ -139,6 +143,7 @@
       mini = {
         icons.enable = true;
         ai.enable = true;
+        snippets.enable = true;
         surround.enable = true;
         indentscope = {
           enable = true;

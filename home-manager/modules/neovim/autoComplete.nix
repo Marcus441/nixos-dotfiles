@@ -15,10 +15,9 @@
       };
 
       setupOpts = {
-        keymap.preset = "enter";
+        keymap.preset = "default";
         cmdline.keymap.preset = "default";
         signature.enabled = true;
-        completion.ghost_text.enabled = true;
       };
     };
   };

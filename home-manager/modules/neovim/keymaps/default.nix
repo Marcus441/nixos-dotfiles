@@ -1,9 +1,16 @@
 let
   general = import ./general.nix;
-  telescope = import ./telescope.nix;
   lsp = import ./lsp.nix;
-  trouble = import ./trouble.nix;
   mini-files = import ./mini-files.nix;
+  neogen = import ./neogen.nix;
+  telescope = import ./telescope.nix;
+  trouble = import ./trouble.nix;
 in {
-  programs.nvf.settings.vim.keymaps = general ++ telescope ++ lsp ++ trouble ++ mini-files;
+  programs.nvf.settings.vim.keymaps =
+    lsp
+    ++ mini-files
+    ++ neogen
+    ++ telescope
+    ++ trouble
+    ++ general;
 }
