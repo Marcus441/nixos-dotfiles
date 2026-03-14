@@ -145,33 +145,32 @@ in {
         focus_on_activate = true;
       };
 
-      windowrulev2 = [
-        # windows that should not be focused
-        "suppressevent maximize, class:.*"
-        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+      windowrule = [
+        # Windows that should not be focused / maximize suppression
+        "suppress_event maximize, match:class .*"
+        "no_focus on, match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false"
 
-        # xwayland windows that should not be focused
-        "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-        "noanim, class:^(xwaylandvideobridge)$"
-        "noinitialfocus, class:^(xwaylandvideobridge)$"
-        "maxsize 1 1, class:^(xwaylandvideobridge)$"
-        "noblur, class:^(xwaylandvideobridge)$"
-        "nofocus, class:^(xwaylandvideobridge)$"
+        # Xwaylandvideobridge rules
+        "opacity 0.0 override, match:class ^(xwaylandvideobridge)$"
+        "no_anim on, match:class ^(xwaylandvideobridge)$"
+        "no_initial_focus on, match:class ^(xwaylandvideobridge)$"
+        "max_size 1 1, match:class ^(xwaylandvideobridge)$"
+        "no_blur on, match:class ^(xwaylandvideobridge)$"
+        "no_focus on, match:class ^(xwaylandvideobridge)$"
 
-        # opacity
-        # "opacity 0.97 0.9, class:.*"
-        # "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|imv|thunar|Thunar)$"
+        # Windows that should be floating (Tagging)
+        "tag +floating-window, match:class ^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
+        "tag +floating-window, match:title ^(ghostty-float)$"
 
-        # windows that should be floating
-        "tag +floating-window, class:^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
-        "tag +floating-window, title:^(ghostty-float)$"
-        "float, tag:floating-window"
-        "center, tag:floating-window"
-        "size 1200 600, tag:floating-window"
+        # Applying effects to the tag
+        "float on, match:tag floating-window"
+        "center on, match:tag floating-window"
+        "size 1200 600, match:tag floating-window"
       ];
 
       layerrule = [
-        "noanim, walker"
+        # Updated to include the required match:namespace prop
+        "no_anim on, match:namespace selection"
       ];
     };
   };
