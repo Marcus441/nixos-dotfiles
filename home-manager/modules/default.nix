@@ -8,7 +8,6 @@
     ./fastfetch.nix
     ./fish.nix
     ./fzf.nix
-    ./gemini.nix
     ./gh-dash.nix
     ./ghostty
     ./git.nix
@@ -18,6 +17,7 @@
     ./lazygit.nix
     ./neovim
     ./noctalia.nix
+    ./opencode.nix
     ./services
     ./sesh.nix
     ./starship.nix
