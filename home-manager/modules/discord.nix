@@ -101,7 +101,7 @@
             enabled = false;
           };
           BetterFolders = {
-            enabled = true;
+            enabled = false;
             sidebar = true;
             showFolderIcon = 1;
             keepIcons = false;
