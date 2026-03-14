@@ -4,24 +4,25 @@
   ...
 }: let
   # Pick your theme
-  theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
-  # kanagawaColors:
-  # base00: #0d0c0c
-  # base01: #1D1C19
-  # base02: #282727
-  # base03: #737c73
-  # base04: #a6a69c
-  # base05: #c5c9c5
-  # base06: #7a8382
-  # base07: #c5c9c5
-  # base08: #c4746e
-  # base09: #b98d7b
-  # base0A: #c4b28a
-  # base0B: #87a987
-  # base0C: #8ea4a2
-  # base0D: #8ba4b0
-  # base0E: #8992a7
-  # base0F: #a292a3
+  kanagawa-dragon = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+  # kanagawa-dragon = {
+  #   base00 = "181616";
+  #   base01 = "0d0c0c";
+  #   base02 = "2d4f67";
+  #   base03 = "a6a69c";
+  #   base04 = "7fb4ca";
+  #   base05 = "c5c9c5";
+  #   base06 = "938aa9";
+  #   base07 = "c5c9c5";
+  #   base08 = "c4746e";
+  #   base09 = "e46876";
+  #   base0A = "c4b28a";
+  #   base0B = "8a9a7b";
+  #   base0C = "8ea4a2";
+  #   base0D = "8ba4b0";
+  #   base0E = "a292a3";
+  #   base0F = "7aa89f";
+  # };
 in {
   imports = [inputs.stylix.homeModules.stylix];
 
@@ -40,11 +41,15 @@ in {
   stylix = {
     enable = true;
     polarity = "dark";
-    base16Scheme = theme;
+    base16Scheme = kanagawa-dragon;
     autoEnable = false;
     targets = {
       btop.enable = true;
+      fish.enable = true;
+      ghostty.enable = true;
       gtk.enable = true;
+      noctalia-shell.enable = true;
+      opencode.enable = true;
       qt.enable = true;
       yazi.enable = true;
       zathura.enable = true;
@@ -81,11 +86,11 @@ in {
       };
     };
 
-    iconTheme = {
+    icons = {
       enable = true;
-      package = pkgs.whitesur-icon-theme;
-      dark = "WhiteSur-dark";
-      light = "WhiteSur-light";
+      package = pkgs.papirus-icon-theme;
+      dark = "Papirus-Dark";
+      light = "Papirus-Light";
     };
   };
 }
