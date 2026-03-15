@@ -3,17 +3,13 @@
   config,
   ...
 }: let
-  # Define colors
-  thm_bg = "#272626";
-  thm_fg = "#c5c9c5";
-  thm_cyan = "#879FAB";
-  thm_black = "#0d0c0c";
-  thm_gray = "#2d4f67";
-  thm_magenta = "#a292a3";
-  thm_red = "#BE716B";
-  thm_blue = "#8ba4b0";
-  thm_darkBlue = "#242434";
-  thm_black4 = "#181616";
+  c = config.lib.stylix.colors;
+  thm_bg = "#${c.base00}";
+  thm_fg = "#${c.base05}";
+  thm_gray = "#${c.base03}";
+  thm_red = "#${c.base08}";
+  thm_blue = "#${c.base0D}";
+  thm_black = "#${c.base01}";
 in {
   programs.tmux = {
     enable = true;
@@ -44,6 +40,37 @@ in {
         plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
       }
       {
+        # theme
+        plugin = pkgs.tmuxPlugins.tmux-nova;
+        extraConfig = ''
+          set -g status-position top
+          set -g @nova-nerdfonts true
+          set -g @nova-nerdfonts-left 
+          set -g @nova-nerdfonts-right 
+
+          set -g @nova-pane-active-border-style "${thm_blue}"
+          set -g @nova-pane-border-style "${thm_gray}"
+          set -g @nova-status-style-bg "${thm_bg}"
+          set -g @nova-status-style-fg "${thm_fg}"
+          set -g @nova-status-style-active-bg "${thm_blue}"
+          set -g @nova-status-style-active-fg "${thm_bg}"
+          set -g @nova-status-style-double-bg "${thm_bg}"
+
+          set -g @nova-pane "#I#{?pane_in_mode,  #{pane_mode},}  #W"
+
+          set -g @nova-segment-mode "#{?client_prefix,,}"
+          set -g @nova-segment-mode-colors "#{?client_prefix,${thm_red},${thm_blue}} #{?client_prefix,${thm_black},${thm_bg}}"
+          # set -g @nova-segment-mode-colors "${thm_blue} ${thm_bg}"
+
+          set -g @nova-segment-whoami "#(whoami)@#h"
+          set -g @nova-segment-whoami-colors "${thm_blue} ${thm_bg}"
+
+          set -g @nova-rows 0
+          set -g @nova-segments-0-left "mode"
+          set -g @nova-segments-0-right "whoami"
+        '';
+      }
+      {
         plugin = pkgs.tmuxPlugins.continuum;
       }
     ];
@@ -52,54 +79,6 @@ in {
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 
-      # Status bar settings
-      set -g status "on"
-      set -g status-position top
-      set -g status-bg "${thm_bg}"
-      set -g status-justify "left"
-      set -g status-left-length "100"
-      set -g status-right-length "100"
-
-      # Messages
-      set -g message-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
-      set -g message-command-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
-
-      # Panes
-      set -g pane-border-style "fg=${thm_gray}"
-      set -g pane-active-border-style "fg=${thm_blue}"
-
-      # Windows
-      set -g window-status-activity-style "fg=${thm_fg},bg=${thm_bg},none"
-      set -g window-status-separator ""
-      set -g window-status-style "fg=${thm_fg},bg=${thm_bg},none"
-
-      # Statusline - current window (Active)
-      set -g window-status-current-format "\
-      #[fg=${thm_black},bg=${thm_cyan}] #I \
-      #[fg=${thm_cyan},bg=${thm_darkBlue}]\
-      #[fg=${thm_blue},bg=${thm_darkBlue}] #{b:pane_current_path} \
-      #[fg=${thm_darkBlue},bg=${thm_bg}]"
-
-      # Statusline - other windows (Inactive)
-      set -g window-status-format "\
-      #[fg=${thm_fg},bg=${thm_bg}] #I #[fg=${thm_fg}]"
-
-      # Statusline - right side
-      set -g status-right "\
-      #{?client_prefix,#[fg=${thm_black4}],#[fg=${thm_darkBlue}]}#[bg=${thm_bg},nobold,nounderscore,noitalics]\
-      #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_blue} bg=${thm_darkBlue}]}  #W \
-      #{?client_prefix,#[fg=${thm_red} bg=${thm_black4}],#[fg=${thm_cyan} bg=${thm_darkBlue}]}\
-      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}] \
-      #{?client_prefix,#[bg=${thm_red}],#[bg=${thm_cyan}]}#[fg=${thm_black}]#S "
-
-
-
-      # Statusline - left side (empty)
-      set -g status-left ""
-
-      # Modes
-      set -g clock-mode-colour "${thm_blue}"
-      set -g mode-style "fg=${thm_blue} bg=${thm_black4} bold"
 
       set -g renumber-windows on
       set-option -g detach-on-destroy off
@@ -116,11 +95,6 @@ in {
         send-keys -X copy-selection-and-cancel \;\
         run-shell -b "tmux save-buffer - | wl-copy --primary --no-newline >/dev/null 2>&1 || true" \;\
         run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
-
-      bind-key -r o command-prompt -p "Name of new session:" "new-session -s '%%'"
-
-      bind -n M-g display-popup -E -w 90% -h 90% -T "LazyGit" "lazygit"
-      bind -n M-p display-popup -E -w 90% -h 90% -T "gh-dash" "gh-dash"
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -140,22 +114,6 @@ in {
       bind -n M-d kill-pane
       bind -n M-x kill-window
       bind -n M-X kill-session
-
-      bind -n M-f run-shell "sesh connect \"$(
-        sesh list --icons | fzf-tmux -p 80%,70% \
-          --no-sort --ansi --border-label ' sesh ' --prompt '  ' \
-          --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
-          --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(  )+reload(sesh list --icons)' \
-          --bind 'ctrl-t:change-prompt(  )+reload(sesh list -t --icons)' \
-          --bind 'ctrl-g:change-prompt(  )+reload(sesh list -c --icons)' \
-          --bind 'ctrl-x:change-prompt(  )+reload(sesh list -z --icons)' \
-          --bind 'ctrl-f:change-prompt(  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-          --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(  )+reload(sesh list --icons)' \
-          --preview-window 'right:55%' \
-          --preview 'sesh preview {}'
-      )\""
-
 
       # tmuxplugin-continuum
       # ---------------------
