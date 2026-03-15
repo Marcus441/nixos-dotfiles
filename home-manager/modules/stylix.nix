@@ -48,6 +48,7 @@ in {
       fish.enable = true;
       ghostty.enable = true;
       gtk.enable = true;
+      lazygit.enable = true;
       noctalia-shell.enable = true;
       opencode.enable = true;
       qt.enable = true;
