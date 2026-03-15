@@ -17,7 +17,7 @@
     ./lazygit.nix
     ./neovim
     ./noctalia.nix
-    ./opencode.nix
+    ./opencode
     ./services
     ./sesh.nix
     ./starship.nix
