@@ -24,7 +24,7 @@
     ./stylix.nix
     ./tmux.nix
     ./xdg-pwas.nix
-    ./yazi.nix
+    ./yazi
     ./zathura.nix
     ./zoxide.nix
   ];

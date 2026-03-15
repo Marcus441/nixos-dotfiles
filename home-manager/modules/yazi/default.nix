@@ -6,6 +6,10 @@
     enableFishIntegration = true;
     shellWrapperName = "y";
 
+    settings = import ./settings.nix;
+    keymap = import ./keymaps.nix;
+    theme = import ./theme.nix;
+
     plugins = {
       inherit (pkgs.yaziPlugins) lazygit;
       inherit (pkgs.yaziPlugins) full-border;
@@ -14,11 +18,9 @@
     };
 
     initLua = ''
-      require("lazygit"):setup()
       require("full-border"):setup {
         type = ui.Border.PLAIN,
       }
-
       require("git"):setup()
       require("smart-enter"):setup {
         open_multi = true,
