@@ -98,59 +98,7 @@
             }
           }
         })
-
-        -- Keybindings for triggering the annotation
-        local opts = { noremap = true, silent = true }
-        vim.keymap.set("n", "<Leader>nf", function()
-            require('neogen').generate()
-        end, opts)
       '';
     };
-    #
-    # roslyn-nvim = {
-    #   package = pkgs.vimPlugins.roslyn-nvim;
-    #   setup = ''
-    #     -- 1. Register the server settings via the standard Neovim LSP config
-    #     -- This follows the documentation's advice to use vim.lsp.config
-    #     vim.lsp.config("roslyn", {
-    #       cmd = {
-    #         "${pkgs.roslyn-ls}/bin/Microsoft.CodeAnalysis.LanguageServer",
-    #         "--stdio",
-    #         "--logLevel=Information",
-    #         "--extensionLogDirectory=" .. vim.fs.joinpath(vim.fn.stdpath("state"), "roslyn-logs"),
-    #       },
-    #       settings = {
-    #         ["csharp|background_analysis"] = {
-    #           dotnet_analyzer_diagnostics_scope = "fullSolution",
-    #           dotnet_compiler_diagnostics_scope = "fullSolution",
-    #         },
-    #         ["csharp|inlay_hints"] = {
-    #           csharp_enable_inlay_hints_for_implicit_object_creation = true,
-    #           csharp_enable_inlay_hints_for_implicit_variable_types = true,
-    #           csharp_enable_inlay_hints_for_lambda_parameter_types = true,
-    #           csharp_enable_inlay_hints_for_types = true,
-    #         },
-    #       },
-    #       on_attach = function(client, bufnr)
-    #         local opts = { buffer = bufnr }
-    #         vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    #         vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-    #         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    #         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-    #         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-    #       end,
-    #       capabilities = require('blink.cmp').get_lsp_capabilities(),
-    #     })
-    #
-    #     -- 2. Initialize the plugin orchestration
-    #     require("roslyn").setup({
-    #       -- Recommended for Nix/Linux to avoid LSP file watching warnings
-    #       filewatching = "roslyn",
-    #       broad_search = true,
-    #       lock_target = true,
-    #     })
-    #   '';
-    #   after = ["blink.cmp" "fidget-nvim"];
-    # };
   };
 }

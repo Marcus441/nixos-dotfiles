@@ -6,6 +6,12 @@
     enableFishIntegration = true;
     shellWrapperName = "yy";
 
+    theme = {
+      manager = {
+        border_symbol = "│";
+      };
+    };
+
     settings = {
       mgr = {
         ratio = [1 4 3];

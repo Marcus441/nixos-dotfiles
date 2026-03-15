@@ -1,14 +1,14 @@
 let
   general = import ./general.nix;
   lsp = import ./lsp.nix;
-  mini-files = import ./mini-files.nix;
+  oil = import ./oil.nix;
   neogen = import ./neogen.nix;
   telescope = import ./telescope.nix;
   trouble = import ./trouble.nix;
 in {
   programs.nvf.settings.vim.keymaps =
     lsp
-    ++ mini-files
+    ++ oil
     ++ neogen
     ++ telescope
     ++ trouble
