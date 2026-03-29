@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     home-manager
     git
@@ -9,5 +9,6 @@
     wget
     mangohud # gaming performance
     protonup
+    inputs.neovim-config.packages.${pkgs.system}.default
   ];
 }
