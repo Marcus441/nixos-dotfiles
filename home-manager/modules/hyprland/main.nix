@@ -39,7 +39,7 @@ in {
       "$browser" = "uwsm app -- helium";
 
       exec-once = [
-        "uwsm app -- noctalia-shell"
+        "uwsm app -- waybar"
         "uwsm app -- wl-paste --type text --watch cliphist store"
         "uwsm app -- wl-paste --type image --watch cliphist store"
         "uwsm app -- ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
@@ -49,9 +49,9 @@ in {
         gaps_in = 2.5;
         gaps_out = 5;
 
-        border_size = 1;
+        border_size = 2;
 
-        "col.active_border" = "rgb(${config.lib.stylix.colors.base0D})";
+        "col.active_border" = "rgba(${config.lib.stylix.colors.base0D}aa)";
 
         resize_on_border = false;
 
@@ -60,7 +60,7 @@ in {
       };
 
       decoration = {
-        rounding = 12;
+        rounding = 0;
 
         active_opacity = 1.0;
         inactive_opacity = 1.0;
@@ -166,6 +166,18 @@ in {
         "float on, match:tag floating-window"
         "center on, match:tag floating-window"
         "size 1200 600, match:tag floating-window"
+
+        # Smart Gaps
+        "border_size 0, match:float 0, match:workspace w[tv1]"
+        "rounding 0, match:float 0, match:workspace w[tv1]"
+        "border_size 0, match:float 0, match:workspace f[1]"
+        "rounding 0, match:float 0, match:workspace f[1]"
+      ];
+
+      workspace = [
+        # Smart Gaps
+        "f[1], gapsout:0, gapsin:0"
+        "w[tv1], gapsout:0, gapsin:0"
       ];
 
       layerrule = [

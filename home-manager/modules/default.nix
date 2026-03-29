@@ -15,7 +15,6 @@
     ./hyprland
     ./lazydocker.nix
     ./lazygit.nix
-    ./noctalia.nix
     ./neovim.nix
     ./opencode
     ./services
@@ -23,6 +22,9 @@
     ./starship.nix
     ./stylix.nix
     ./tmux.nix
+    ./walker.nix
+    ./waybar
+    ./wlogout
     ./xdg-pwas.nix
     ./yazi
     ./zathura.nix
