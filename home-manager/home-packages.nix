@@ -24,6 +24,7 @@
     mediainfo
     nmap
     ntfs3g
+    pavucontrol
     playerctl
     ripgrep
     silicon
