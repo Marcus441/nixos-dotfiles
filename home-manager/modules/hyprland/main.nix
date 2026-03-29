@@ -1,22 +1,8 @@
 {
-  hostname,
   config,
+  monitors,
   ...
-}: let
-  hostMonitors = {
-    swift5 = [
-      "eDP-1,1920x1080@60,0x0,1"
-    ];
-    gpc = [
-      "DisplayPort-1,2560x1440@144,0x0,1"
-      "DisplayPort-2,1920x1080@60,2560x0,1"
-    ];
-    UM790pro = [
-      "HDMI-A-1,3840x2160@120,0x0,1.5"
-    ];
-  };
-  monitors = hostMonitors.${hostname} or [];
-in {
+}: {
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -31,7 +17,7 @@ in {
         "XDG_SCREENSHOTS_DIR,$HOME/Screenshots"
       ];
 
-      monitor = monitors;
+      monitor = (map (m: m.hyprland) monitors);
 
       "$mainMod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty --gtk-single-instance=true";
@@ -114,7 +100,7 @@ in {
 
       input = {
         touchpad = {
-          natural_scroll = false;
+          natural_scroll = true;
           scroll_factor = 0.6;
         };
         accel_profile = "flat";
@@ -123,7 +109,7 @@ in {
 
       gestures = {
         gesture = "3, horizontal, workspace";
-        workspace_swipe_invert = false;
+        workspace_swipe_invert = true;
         workspace_swipe_distance = 700;
       };
 

@@ -53,20 +53,26 @@
     makeSystem = {
       hostname,
       stateVersion,
-    }:
+    }: let
+      utils = import ./utilities;
+      monitors = import ./hosts/${hostname}/monitors.nix utils;
+    in
       nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs stateVersion hostname user;};
+        specialArgs = {inherit inputs stateVersion hostname user monitors;};
         modules = [
           {nixpkgs.hostPlatform = system;}
           ./hosts/${hostname}/configuration.nix
         ];
       };
 
-    mkHome = hostname:
+    mkHome = hostname: let
+      utils = import ./utilities;
+      monitors = import ./hosts/${hostname}/monitors.nix utils;
+    in
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs user hostname homeStateVersion;
+          inherit inputs user hostname homeStateVersion monitors;
         };
         modules = [
           ./home-manager/home.nix
