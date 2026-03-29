@@ -21,7 +21,7 @@
             return 1
         end
 
-        nix flake init --template "github:Marcus441/nix-templates/main#$argv[1]"
+        nix flake init --refresh --template "github:Marcus441/nix-templates/main#$argv[1]"
       '';
       # --- TMUX Title Functions for Clean Window Status ---
 
