@@ -2,29 +2,28 @@
   description = "My system configuration";
 
   inputs = {
+    elephant.url = "github:abenz1267/elephant";
     helium.url = "github:FKouhai/helium2nix/main";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
     neovim-config = {
       url = "github:Marcus441/neovim.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nur = {
       url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nvf = {
-      url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
     };
   };
 
@@ -56,9 +55,9 @@
       stateVersion,
     }:
       nixpkgs.lib.nixosSystem {
-        inherit system;
         specialArgs = {inherit inputs stateVersion hostname user;};
         modules = [
+          {nixpkgs.hostPlatform = system;}
           ./hosts/${hostname}/configuration.nix
         ];
       };
