@@ -59,8 +59,7 @@ in {
           set -g @nova-pane "#I#{?pane_in_mode,  #{pane_mode},}  #W"
 
           set -g @nova-segment-mode "#{?client_prefix,,}"
-          set -g @nova-segment-mode-colors "#{?client_prefix,${thm_red},${thm_blue}} #{?client_prefix,${thm_black},${thm_bg}}"
-          # set -g @nova-segment-mode-colors "${thm_blue} ${thm_bg}"
+          set -g @nova-segment-mode-colors "${thm_blue} ${thm_bg}"
 
           set -g @nova-segment-whoami "#(whoami)@#h"
           set -g @nova-segment-whoami-colors "${thm_blue} ${thm_bg}"

@@ -15,8 +15,8 @@
     ./hyprland
     ./lazydocker.nix
     ./lazygit.nix
-    ./neovim
     ./noctalia.nix
+    ./neovim.nix
     ./opencode
     ./services
     ./sesh.nix
