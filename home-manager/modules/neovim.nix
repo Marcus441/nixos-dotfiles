@@ -5,7 +5,7 @@
 }: {
   home = {
     packages = [
-      inputs.neovim-config.packages.${pkgs.system}.default
+      inputs.neovim-config.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
     sessionVariables = {

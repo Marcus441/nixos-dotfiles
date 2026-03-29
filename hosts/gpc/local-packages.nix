@@ -9,6 +9,5 @@
     wget
     mangohud # gaming performance
     protonup
-    inputs.neovim-config.packages.${pkgs.system}.default
   ];
 }
