@@ -21,6 +21,7 @@
     ./sesh.nix
     ./starship.nix
     ./stylix.nix
+    ./thunderbird.nix
     ./tmux.nix
     ./walker.nix
     ./waybar
