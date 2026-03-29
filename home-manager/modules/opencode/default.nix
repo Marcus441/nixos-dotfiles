@@ -1,8 +1,5 @@
 {
-  programs.opencode = let
-    shared = import ./shared.nix;
-    importAgent = path: import path shared;
-  in {
+  programs.opencode = {
     enable = true;
 
     settings = {
@@ -29,11 +26,11 @@
     '';
 
     agents = {
-      code-reviewer = importAgent ./code-reviewer.nix;
-      systems-programmer = importAgent ./systems-programmer.nix;
-      back-end-developer = importAgent ./back-end-developer.nix;
-      front-end-developer = importAgent ./front-end-developer.nix;
-      tutor = importAgent ./tutor.nix;
+      code-reviewer = builtins.readFile ./code-reviewer.md;
+      systems-programmer = builtins.readFile ./systems-programmer.md;
+      back-end-developer = builtins.readFile ./back-end-developer.md;
+      front-end-developer = builtins.readFile ./front-end-developer.md;
+      tutor = builtins.readFile ./tutor.md;
     };
 
     commands = {
