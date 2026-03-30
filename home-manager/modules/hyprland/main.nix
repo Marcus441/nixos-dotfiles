@@ -37,7 +37,7 @@
 
         border_size = 2;
 
-        "col.active_border" = "rgba(${config.lib.stylix.colors.base0D}aa)";
+        "col.active_border" = "rgb(${config.lib.stylix.colors.base0D})";
 
         resize_on_border = false;
 
