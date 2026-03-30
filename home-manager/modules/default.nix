@@ -2,7 +2,7 @@
   imports = [
     ./bat.nix
     ./btop.nix
-    ./chromium.nix
+    # ./chromium.nix
     ./discord.nix
     ./eza.nix
     ./fastfetch.nix
