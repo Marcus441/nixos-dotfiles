@@ -1,36 +1,23 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }: let
-  # Pick your theme
-  base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
-  # kanagawa-dragon = {
-  #   base00 = "#181616";
-  #   base01 = "#0d0c0c";
-  #   base02 = "#2d4f67";
-  #   base03 = "#a6a69c";
-  #   base04 = "#7fb4ca";
-  #   base05 = "#c5c9c5";
-  #   base06 = "#938aa9";
-  #   base07 = "#c5c9c5";
-  #   base08 = "#c4746e";
-  #   base09 = "#e46876";
-  #   base0A = "#c4b28a";
-  #   base0B = "#8a9a7b";
-  #   base0C = "#8ea4a2";
-  #   base0D = "#8ba4b0";
-  #   base0E = "#a292a3";
-  #   base0F = "#7aa89f";
-  # };
   image = pkgs.fetchurl {
     url = "https://w.wallhaven.cc/full/o3/wallhaven-o32do5.jpg";
     hash = "sha256-a6stwKasoy6V6XpfqgclWiP7NSw/kAVShHkI+gx3vIE=";
   };
+
+  base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
 in {
   imports = [inputs.stylix.homeModules.stylix];
 
   home.packages = with pkgs; [
+    qt6Packages.qtstyleplugin-kvantum
+    libsForQt5.qtstyleplugin-kvantum
+
+    # Fonts
     dejavu_fonts
     noto-fonts
     noto-fonts-lgc-plus
@@ -44,23 +31,23 @@ in {
 
   stylix = {
     enable = true;
-    polarity = "dark";
-
-    inherit image;
-    inherit base16Scheme;
     autoEnable = false;
+
+    inherit image base16Scheme;
+    polarity = "dark";
     targets = {
+      gtk.enable = false;
+      qt.enable = false;
+
       bat.enable = true;
       btop.enable = true;
       fish.enable = true;
       ghostty.enable = true;
-      gtk.enable = true;
       hyprlock.enable = true;
       hyprpaper.enable = true;
       lazygit.enable = true;
       mako.enable = true;
       opencode.enable = true;
-      qt.enable = true;
       yazi.enable = true;
       zathura.enable = true;
     };
@@ -76,7 +63,6 @@ in {
         name = "JetBrainsMono Nerd Font Mono";
         package = pkgs.nerd-fonts.jetbrains-mono;
       };
-
       sansSerif = {
         name = "Noto Sans";
         package = pkgs.noto-fonts;
@@ -85,12 +71,10 @@ in {
         name = "Noto Serif";
         package = pkgs.noto-fonts;
       };
-
       emoji = {
         name = "Noto Color Emoji";
         package = pkgs.noto-fonts-color-emoji;
       };
-
       sizes = {
         applications = 11;
       };
@@ -102,5 +86,59 @@ in {
       dark = "Papirus-Dark";
       light = "Papirus-Light";
     };
+  };
+
+  # Manual GTK Configuration
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Kanagawa-Dragon-master-Purple-Dark-Dragon";
+
+      package = pkgs.stdenv.mkDerivation {
+        pname = "Kanagawa-Dragon";
+        version = "master";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "Fausto-Korpsvart";
+          repo = "Kanagawa-GKT-Theme";
+          rev = "master";
+          hash = "sha256-UdMoMx2DoovcxSp/zBZ3PRv/Qpj+prd0uPm1gmdak2E=";
+        };
+
+        nativeBuildInputs = [
+          pkgs.sassc
+          pkgs.gtk3
+          pkgs.util-linux
+        ];
+
+        propagatedUserEnvPkgs = [
+          pkgs.gtk-engine-murrine
+        ];
+
+        postPatch = ''
+          patchShebangs themes/install.sh
+        '';
+
+        installPhase = ''
+          runHook preInstall
+
+          mkdir -p $out/share/themes
+
+          cd themes
+
+          ./install.sh -d $out/share/themes -t purple --tweaks dragon black
+
+          runHook postInstall
+        '';
+      };
+    };
+    gtk4.theme = config.gtk.theme;
+  };
+
+  # Manual Qt Configuration
+  qt = {
+    enable = true;
+    platformTheme.name = "kvantum";
+    style.name = "kvantum";
   };
 }
