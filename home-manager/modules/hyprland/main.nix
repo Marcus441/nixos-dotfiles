@@ -17,7 +17,7 @@
         "XDG_SCREENSHOTS_DIR,$HOME/Screenshots"
       ];
 
-      monitor = (map (m: m.hyprland) monitors);
+      monitor = map (m: m.hyprland) monitors;
 
       "$mainMod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty --gtk-single-instance=true";
