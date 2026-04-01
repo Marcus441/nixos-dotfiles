@@ -12,7 +12,6 @@
 
       # Font
       font-feature = "builtin_box_drawing";
-      theme = "Atom One Dark";
 
       app-notifications = "no-clipboard-copy";
       background-opacity = "1";
