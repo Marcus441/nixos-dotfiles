@@ -43,7 +43,7 @@ in {
         # theme
         plugin = pkgs.tmuxPlugins.tmux-nova;
         extraConfig = ''
-          set -g status-position top
+          set -g status-position bottom
           set -g @nova-nerdfonts true
           set -g @nova-nerdfonts-left 
           set -g @nova-nerdfonts-right 

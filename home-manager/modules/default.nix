@@ -15,6 +15,7 @@
     ./hyprland
     ./lazydocker.nix
     ./lazygit.nix
+    ./neovide.nix
     ./neovim.nix
     ./opencode
     ./services

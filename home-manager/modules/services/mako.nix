@@ -3,17 +3,18 @@
     enable = true;
 
     extraConfig = ''
-      default-timeout=10
+      [app-name=notify-send summary~="OCR*"]
+      default-timeout=3000
 
-      [mode=do-not-disturb]
-      invisible=true
+      [summary~="*Battery*"]
+      default-timeout=20000
 
-      [mode=do-not-disturb app-name=notify-send]
-      invisible=false
+      [summary~="*screenshot*"]
     '';
-
     settings = {
       anchor = "top-right";
+      default-timeout = 5000;
+      ignore-timeout = false;
       border-size = 2;
       padding = 10;
       max-icon-size = 32;

@@ -8,16 +8,10 @@
     url = "https://w.wallhaven.cc/full/o3/wallhaven-o32do5.jpg";
     hash = "sha256-a6stwKasoy6V6XpfqgclWiP7NSw/kAVShHkI+gx3vIE=";
   };
-
-  base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
 in {
   imports = [inputs.stylix.homeModules.stylix];
 
   home.packages = with pkgs; [
-    qt6Packages.qtstyleplugin-kvantum
-    libsForQt5.qtstyleplugin-kvantum
-
-    # Fonts
     dejavu_fonts
     noto-fonts
     noto-fonts-lgc-plus
@@ -33,11 +27,30 @@ in {
     enable = true;
     autoEnable = false;
 
-    inherit image base16Scheme;
+    inherit image;
+    base16Scheme = {
+      base00 = "#181616"; # Default Background
+      base01 = "#0d0c0c"; # Lighter Background (Status bars)
+      base02 = "#2d4f67"; # Selection Background (The blue-grey you like)
+      base03 = "#a6a69c"; # Comments, Invisibles
+      base04 = "#7fb4ca"; # Dark Foreground
+      base05 = "#c5c9c5"; # Default Foreground (Text)
+      base06 = "#938aa9"; # Light Foreground
+      base07 = "#c5c9c5"; # Lightest Foreground
+
+      base08 = "#c4746e"; # Red (Variables/Errors)
+      base09 = "#e46876"; # Orange (Constants)
+      base0A = "#c4b28a"; # Yellow (Classes)
+      base0B = "#8a9a7b"; # Green (Strings)
+      base0C = "#8ea4a2"; # Cyan (Regex)
+      base0D = "#8ba4b0"; # Blue (Functions)
+      base0E = "#a292a3"; # Purple (Keywords)
+      base0F = "#7aa89f"; # Brown (Deprecated)
+    };
     polarity = "dark";
     targets = {
-      gtk.enable = false;
-      qt.enable = false;
+      gtk.enable = true;
+      qt.enable = true;
 
       bat.enable = true;
       btop.enable = true;
@@ -87,58 +100,5 @@ in {
       light = "Papirus-Light";
     };
   };
-
-  # Manual GTK Configuration
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Kanagawa-Dragon-master-Purple-Dark-Dragon";
-
-      package = pkgs.stdenv.mkDerivation {
-        pname = "Kanagawa-Dragon";
-        version = "master";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "Fausto-Korpsvart";
-          repo = "Kanagawa-GKT-Theme";
-          rev = "master";
-          hash = "sha256-UdMoMx2DoovcxSp/zBZ3PRv/Qpj+prd0uPm1gmdak2E=";
-        };
-
-        nativeBuildInputs = [
-          pkgs.sassc
-          pkgs.gtk3
-          pkgs.util-linux
-        ];
-
-        propagatedUserEnvPkgs = [
-          pkgs.gtk-engine-murrine
-        ];
-
-        postPatch = ''
-          patchShebangs themes/install.sh
-        '';
-
-        installPhase = ''
-          runHook preInstall
-
-          mkdir -p $out/share/themes
-
-          cd themes
-
-          ./install.sh -d $out/share/themes -t purple --tweaks dragon black
-
-          runHook postInstall
-        '';
-      };
-    };
-    gtk4.theme = config.gtk.theme;
-  };
-
-  # Manual Qt Configuration
-  qt = {
-    enable = true;
-    platformTheme.name = "kvantum";
-    style.name = "kvantum";
-  };
+  gtk.gtk4.theme = config.gtk.theme;
 }

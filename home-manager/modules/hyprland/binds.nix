@@ -3,14 +3,15 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, walker"
+      "$mainMod,       Return, exec, $terminal"
+      "$mainMod SHIFT, Return, exec, neovide"
       "$mainMod,       V, exec, walker -m clipboard"
       "$mainMod,       E, exec, $fileManager"
-      "$mainMod,       Q, exec, $terminal"
-      "$mainMod,       D, exec, uwsm app -- vesktop --enable-blink-features=MiddleClickAutoscroll"
+      "$mainMod,       Q, killactive"
+      "$mainMod,       D, exec, walker"
       "$mainMod,       B, exec, $browser"
-      "$mainMod,       W, killactive,"
       "$mainMod,       F, togglefloating,"
+      "$mainMod,       C, exec, ocr-copy"
       "$mainMod SHIFT, C, exec, hyprpicker -an"
       "$mainMod,       S, togglesplit,"
       "$mainMod SHIFT, Z, exec, uwsm stop"

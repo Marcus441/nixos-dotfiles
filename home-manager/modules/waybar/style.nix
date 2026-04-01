@@ -50,14 +50,14 @@ in {
       min-width: 0;
       padding: 0 10px;
       margin: 0 2px;
-      color: #${base04};
+      color: #${base0D};
       border-bottom: 3px solid transparent;
       transition: all 0.3s ease;
     }
 
     #workspaces button.active {
-      color: #${base0D};
-      border-bottom: 3px solid #${base0D};
+      color: #${base04};
+      border-bottom: 3px solid #${base04};
     }
 
     #workspaces button:hover {
@@ -110,13 +110,13 @@ in {
 
     /* RIGHT SIDE - Rainbow Spectrum Underlines */
     #custom-kernel {
-      color: #${base08};
-      border-bottom-color: #${base08};
+      color: #${base09};
+      border-bottom-color: #${base09};
     }
 
     #cpu {
-      color: #${base09};
-      border-bottom-color: #${base09};
+      color: #${base08};
+      border-bottom-color: #${base08};
     }
 
     #memory {

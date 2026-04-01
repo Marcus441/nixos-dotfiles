@@ -8,6 +8,5 @@
     hide_borders = true;
     bg = "0x00181616";
     fg = "0x007FB4CA";
-    animation = "colormix";
   };
 }

@@ -18,6 +18,18 @@
     grimblast
     htop
     httpie
+    (writeShellScriptBin "ocr-copy" ''
+      export PATH=$PATH:${lib.makeBinPath [grimblast tesseract wl-clipboard libnotify]}
+
+      text=$(grimblast --freeze save area - | tesseract stdin stdout --psm 6)
+
+      if [ -n "$text" ]; then
+          echo "$text" | wl-copy
+          notify-send "OCR Successful" "Text copied to clipboard"
+      else
+          notify-send "OCR Failed" "No text detected"
+      fi
+    '')
     hyprpicker
     imagemagick
     jq
