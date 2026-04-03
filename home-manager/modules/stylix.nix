@@ -21,6 +21,7 @@ in {
     powerline-symbols
     nerd-fonts.symbols-only
     nerd-fonts.jetbrains-mono
+    source-code-pro
   ];
 
   stylix = {
@@ -49,18 +50,19 @@ in {
     };
     polarity = "dark";
     targets = {
-      gtk.enable = true;
-      qt.enable = true;
-
       bat.enable = true;
       btop.enable = true;
       fish.enable = true;
       ghostty.enable = true;
+      gtk.enable = true;
       hyprlock.enable = true;
       hyprpaper.enable = true;
       lazygit.enable = true;
       mako.enable = true;
+      neovide.fonts.enable = true;
       opencode.enable = true;
+      qt.enable = true;
+      waybar.fonts.enable = true;
       yazi.enable = true;
       zathura.enable = true;
     };
