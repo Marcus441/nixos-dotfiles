@@ -20,16 +20,21 @@
       copy-on-select = true;
       keybind = [
         # Create splits
-        "ctrl+alt+h=new_split:left"
-        "ctrl+alt+j=new_split:down"
-        "ctrl+alt+k=new_split:up"
-        "ctrl+alt+l=new_split:right"
+        "alt+left=new_split:left"
+        "alt+down=new_split:down"
+        "alt+up=new_split:up"
+        "alt+right=new_split:right"
 
-        # Split navigation like Vim
-        "unconsumed:ctrl+alt+h=goto_split:left"
-        "unconsumed:ctrl+alt+j=goto_split:down"
-        "unconsumed:ctrl+alt+k=goto_split:up"
-        "unconsumed:ctrl+alt+l=goto_split:right"
+        # Split navigation
+        "ctrl+left=goto_split:left"
+        "ctrl+down=goto_split:down"
+        "ctrl+up=goto_split:up"
+        "ctrl+right=goto_split:right"
+
+        "ctrl+shift+left=resize_split:left,10"
+        "ctrl+shift+down=resize_split:down,10"
+        "ctrl+shift+up=resize_split:up,10"
+        "ctrl+shift+right=resize_split:right,10"
 
         "alt+1=unbind"
         "alt+2=unbind"
