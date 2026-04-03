@@ -13,7 +13,7 @@
         height = 30;
 
         modules-left = [
-          "custom/logo"
+          "custom/launcher"
           "custom/spacer"
           "hyprland/workspaces"
           "custom/spacer"
@@ -32,7 +32,6 @@
           "network"
           "battery"
           "backlight"
-          "idle_inhibitor"
           "pulseaudio"
           "custom/power"
         ];
@@ -56,14 +55,6 @@
           };
         };
 
-        idle_inhibitor = {
-          format = "{icon}";
-          format-icons = {
-            activated = "󰈈";
-            deactivated = "󰈉";
-          };
-        };
-
         "custom/weather" = {
           format = "{}";
           return-type = "json";
@@ -72,8 +63,8 @@
         };
 
         clock = {
-          format = "⏱  {:%a, %b %d - %I:%M %p}";
-          format-alt = "  {:%a, %b %d %Y}";
+          format = "{:%a, %b %d - %I:%M %p}";
+          format-alt = "{:%a, %b %d %Y}";
           tooltip-format = "<tt>{calendar}</tt>";
         };
 
@@ -92,15 +83,20 @@
 
         network = {
           format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
-          format = "{icon}";
           format-wifi = "{icon}";
-          format-ethernet = "󰀂";
+          format-ethernet = "󱘖";
+
+          format-linked = "󰤮 {ifname} (No IP)";
+
           format-disconnected = "󰤮";
-          tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-          tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+
+          tooltip-format-wifi = "{essid} ({signalStrength}%) {frequency}GHz\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+          tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
+
           interval = 3;
-          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e nmtui\"";
+          spacing = 1;
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty --gtk-single-instance=true -e nmtui\"";
         };
 
         battery = {
@@ -138,20 +134,20 @@
 
         disk = {
           interval = 300;
-          format = "🖴 Disk: {percentage_used}%";
+          format = "󰋊 {percentage_used}%";
           path = "/";
         };
 
         cpu = {
           interval = 1;
-          format = " Cpu: {usage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e btop\"";
+          format = "󰘚 {usage}%";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
         };
 
         memory = {
           interval = 5;
-          format = " Mem: {percentage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 1000 ] ghostty --gtk-single-instance=true -e btop\"";
+          format = "󰍛 {percentage}%";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty --gtk-single-instance=true -e btop\"";
         };
 
         pulseaudio = {
@@ -168,8 +164,8 @@
           tooltip-format = "{icon} {volume}%";
         };
 
-        "custom/logo" = {
-          format = " 󰀻 ";
+        "custom/launcher" = {
+          format = "<span size='14000'>󱗼</span>";
           tooltip = false;
           on-click = "walker";
         };
@@ -179,9 +175,9 @@
         };
 
         "custom/kernel" = {
-          format = "❤ {}";
+          format = " {}";
           interval = 3600;
-          exec = "uname -r";
+          exec = "uname -r | cut -d '-' -f1";
         };
 
         "custom/power" = {
