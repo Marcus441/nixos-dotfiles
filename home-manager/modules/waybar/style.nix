@@ -1,5 +1,5 @@
 {config, ...}: let
-  inherit (config.lib.stylix.colors) base00 base01 base03 base05 base0D base0E base08;
+  inherit (config.lib.stylix.colors) base00 base01 base03 base05 base0C base0D base0E base08;
 in {
   programs.waybar.style = ''
     * {
@@ -23,7 +23,13 @@ in {
       padding: 0 4px;
       margin: 0 4px;
       color: #${base05};
-      transition: all 0.3s ease;
+    }
+
+    #workspaces button:hover {
+      background: none;
+      box-shadow: none;
+      text-shadow: none;
+      color: #${base0D};
     }
 
     #workspaces button.empty {
@@ -31,7 +37,7 @@ in {
     }
 
     #workspaces button.active {
-      color: #${base0D};
+      color: #${base0C};
     }
 
     #workspaces button.urgent {
