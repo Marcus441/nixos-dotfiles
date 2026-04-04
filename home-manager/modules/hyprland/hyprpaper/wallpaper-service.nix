@@ -20,7 +20,7 @@ in {
           if [ -n "$WALL" ]; then
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$WALL"
           fi
-          sleep 30
+          sleep 1800
         done
       ''}";
       Restart = "on-failure";
