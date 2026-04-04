@@ -71,9 +71,6 @@
 
     themes."custom" = {
       style = import ./style.nix {inherit config;};
-      layouts = {
-        "layout" = import ./layout.nix {};
-      };
     };
   };
 }
