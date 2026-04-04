@@ -1,13 +1,9 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
-  lwalpapers = pkgs.fetchFromGitHub {
-    owner = "whoisYoges";
-    repo = "lwalpapers";
-    rev = "35d131f28ca64b3526b7e85e11a2e45332113f70";
-    hash = "sha256-yOlGzctUlN+ymYNy9h1d+lnC2MsUrFSW8t2igmHIhy8=";
+{pkgs, ...}: let
+  walls = pkgs.fetchFromGitHub {
+    owner = "dharmx";
+    repo = "walls";
+    rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
+    hash = "sha256-M96jJy3L0a+VkJ+DcbtrRAquwDWaIG9hAUxenr/TcQU=";
   };
 in {
   xdg.configFile."elephant/menus/wallpapers.lua".text = ''
@@ -28,7 +24,14 @@ in {
 
     function GetEntries()
         local entries = {}
-        local wallpaper_dir = "${lwalpapers}"
+        local wallpaper_dir = "${walls}"
+
+        local function to_normal_case(str)
+            local s = str:gsub("[_%-]", " ")
+            return (s:gsub("(%a)([%w']*)", function(first, rest)
+                return first:upper() .. rest:lower()
+            end))
+        end
 
         table.insert(entries, {
             Text = "🎲 Random / Enable Rotator",
@@ -53,15 +56,17 @@ in {
         for _, line in ipairs(file_list) do
             local filename = line:match("([^/]+)$")
             if filename then
-                local parent_dir = line:match("([^/]+)/[^/]+$") or "Root"
-                local clean_name = filename:match("(.+)%.") or filename
-                local number_prefix = filename:match("(%d+%.)")
-                local display_name = number_prefix or clean_name
+                local parent_raw = line:match("([^/]+)/[^/]+$") or "Root"
+                local clean_raw = filename:match("(.+)%.") or filename
+
+                local display_parent = to_normal_case(parent_raw)
+                local display_name = to_normal_case(clean_raw)
 
                 table.insert(entries, {
-                    Text = parent_dir .. "  /  " .. display_name,
+                    -- Visually: "Abstract  /  Minimalist Waves"
+                    Text = display_parent .. "  /  " .. display_name,
                     Subtext = "Manual Selection (Stops Rotator)",
-                    Keywords = { parent_dir, clean_name },
+                    Keywords = { parent_raw, clean_raw, display_name },
                     Value = line,
                     Preview = line,
                     PreviewType = "file"

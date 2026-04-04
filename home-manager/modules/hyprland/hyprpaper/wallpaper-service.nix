@@ -1,9 +1,9 @@
 {pkgs, ...}: let
-  lwalpapers = pkgs.fetchFromGitHub {
-    owner = "whoisYoges";
-    repo = "lwalpapers";
-    rev = "35d131f28ca64b3526b7e85e11a2e45332113f70";
-    hash = "sha256-yOlGzctUlN+ymYNy9h1d+lnC2MsUrFSW8t2igmHIhy8=";
+  walls = pkgs.fetchFromGitHub {
+    owner = "dharmx";
+    repo = "walls";
+    rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
+    hash = "sha256-M96jJy3L0a+VkJ+DcbtrRAquwDWaIG9hAUxenr/TcQU=";
   };
 in {
   systemd.user.services.wallpaper-rotator = {
@@ -16,7 +16,7 @@ in {
       ExecStart = "${pkgs.writeShellScript "rotate" ''
         sleep 10
         while true; do
-          WALL=$(${pkgs.fd}/bin/fd . ${lwalpapers} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
+          WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp -E anime | ${pkgs.coreutils}/bin/shuf -n 1)
           if [ -n "$WALL" ]; then
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$WALL"
           fi
@@ -25,6 +25,5 @@ in {
       ''}";
       Restart = "on-failure";
     };
-    Install.WantedBy = ["graphical-session.target"];
   };
 }
