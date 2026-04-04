@@ -8,14 +8,10 @@
     inputs.stylix.homeModules.stylix
   ];
   home.packages = with pkgs; [
-    dejavu_fonts
     noto-fonts
     noto-fonts-lgc-plus
     noto-fonts-color-emoji
     font-awesome
-    powerline-fonts
-    powerline-symbols
-    nerd-fonts.symbols-only
     nerd-fonts.jetbrains-mono
     source-code-pro
   ];
