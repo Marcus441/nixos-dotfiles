@@ -16,7 +16,7 @@ in {
       ExecStart = "${pkgs.writeShellScript "rotate" ''
         sleep 10
         while true; do
-          WALL=$(${pkgs.fd}/bin/fd . ${lwalpapers} -e jpg -e png | ${pkgs.coreutils}/bin/shuf -n 1)
+          WALL=$(${pkgs.fd}/bin/fd . ${lwalpapers} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
           if [ -n "$WALL" ]; then
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$WALL"
           fi
