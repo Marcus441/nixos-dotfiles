@@ -3,32 +3,12 @@
   pkgs,
   ...
 }: let
-  inherit
-    (config.lib.stylix.colors)
-    base00
-    base01
-    base02
-    base03
-    base04
-    base05
-    base06
-    base07
-    base08
-    base09
-    base0A
-    base0B
-    base0C
-    base0D
-    base0E
-    base0F
-    ;
+  inherit (config.lib.stylix.colors) base00 base01 base02 base05 base07 base08 base09 base0A base0C base0D base0E;
   wlogoutPkg = config.programs.wlogout.package;
 
   coloredIcons = pkgs.runCommand "wlogout-colored-icons" {} ''
     mkdir -p $out
-
     cp ${wlogoutPkg}/share/wlogout/assets/*.svg $out/
-
     sed -i 's/<svg/<svg fill="#${base0D}"/g' $out/lock.svg
     sed -i 's/<svg/<svg fill="#${base0C}"/g' $out/logout.svg
     sed -i 's/<svg/<svg fill="#${base0A}"/g' $out/suspend.svg
@@ -54,7 +34,7 @@ in {
       color: #${base05};
       background-color: #${base01};
       outline-style: none;
-      border: 3px solid #${base02}; /* Constant border width to prevent shifting */
+      border: 2px solid #${base00};
       margin: 15px;
       padding: 40px;
       font-size: 24px;
@@ -66,54 +46,12 @@ in {
     button:focus,
     button:active,
     button:hover {
-      background-color: #${base01};
+      background-color: #${base02};
       color: #${base07};
+      border-color: #${base02};
     }
 
-    /* SPECIFIC MODULE BORDERS */
-    #lock {
-      border-bottom-color: #${base0D};
-    }
-    #lock:hover {
-      border-color: #${base0D};
-    }
-
-    #logout {
-      border-bottom-color: #${base0C};
-    }
-    #logout:hover {
-      border-color: #${base0C};
-    }
-
-    #suspend {
-      border-bottom-color: #${base0A};
-    }
-    #suspend:hover {
-      border-color: #${base0A};
-    }
-
-    #hibernate {
-      border-bottom-color: #${base09};
-    }
-    #hibernate:hover {
-      border-color: #${base09};
-    }
-
-    #shutdown {
-      border-bottom-color: #${base08};
-    }
-    #shutdown:hover {
-      border-color: #${base08};
-    }
-
-    #reboot {
-      border-bottom-color: #${base0E};
-    }
-    #reboot:hover {
-      border-color: #${base0E};
-    }
-
-    /* ICON MAPPING */
+    /* Icon Mapping - No more individual border overrides */
     #lock { background-image: url("${coloredIcons}/lock.svg"); }
     #logout { background-image: url("${coloredIcons}/logout.svg"); }
     #suspend { background-image: url("${coloredIcons}/suspend.svg"); }
