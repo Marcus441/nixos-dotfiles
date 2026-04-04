@@ -5,7 +5,10 @@
     profiles.default = {
       isDefault = true;
       settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "mail.spellcheck.inline" = true;
+        "network.protocol-handler.warn-external.http" = true;
+        "network.protocol-handler.warn-external.https" = true;
         "extensions.autoDisableScopes" = 0;
 
         "mailnews.default_view_flags" = 1;
@@ -22,10 +25,15 @@
           visibility: collapse !important;
         }
 
-        /* Make the interface font cleaner */
-        * {
-          font-family: "Inter", sans-serif !important;
-          font-size: 10pt !important;
+        /* Targeted UI Font Change */
+        :root,
+        #messengerWindow,
+        #mail-toolbox,
+        .tabmail-tab,
+        #folderPane,
+        #threadTree {
+            font-family: "Inter", sans-serif !important;
+            font-size: 13pt !important;
         }
       '';
     };
