@@ -24,7 +24,7 @@
     ./stylix.nix
     ./thunderbird.nix
     ./tmux.nix
-    ./walker.nix
+    ./walker
     ./waybar
     ./wlogout
     ./xdg-pwas.nix
