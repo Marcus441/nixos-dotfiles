@@ -5,7 +5,6 @@
     kdePackages.kdenlive
     mpv
     obs-studio
-    thunderbird-latest
 
     # CLI utils
     bc

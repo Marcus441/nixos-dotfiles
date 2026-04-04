@@ -159,8 +159,8 @@
       ];
 
       layerrule = [
-        # Updated to include the required match:namespace prop
         "no_anim on, match:namespace selection"
+        "no_anim on, match:namespace walker"
       ];
     };
   };
