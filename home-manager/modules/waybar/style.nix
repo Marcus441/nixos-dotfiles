@@ -6,9 +6,20 @@ in {
       border: none;
       border-radius: 0;
       min-height: 0;
+      font-family: "JetBrainsMono Nerd Font";
+      font-size: 13px;
+    }
+
+    #custom-launcher,
+    #workspaces button,
+    #cpu, #memory, #disk, #bluetooth, #network, #battery, #backlight, #pulseaudio,
+    #custom-power {
+      font-weight: 500;
     }
 
     window#waybar {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       background-color: #${base00};
       border-bottom: 1px solid #${base01};
     }
@@ -46,7 +57,7 @@ in {
 
     #clock {
       color: #${base05};
-      font-weight: bold;
+      font-weight: 800;
     }
 
     #cpu, #memory, #disk, #bluetooth, #network, #battery, #backlight, #pulseaudio {
