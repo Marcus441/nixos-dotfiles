@@ -6,6 +6,7 @@
       "$mainMod,       Return, exec, $terminal"
       "$mainMod SHIFT, Return, exec, neovide"
       "$mainMod,       V, exec, walker -m clipboard"
+      "$mainMod,       W, exec, walker -m menus:wallpapers"
       "$mainMod,       E, exec, $fileManager"
       "$mainMod,       Q, killactive"
       "$mainMod,       D, exec, walker"
