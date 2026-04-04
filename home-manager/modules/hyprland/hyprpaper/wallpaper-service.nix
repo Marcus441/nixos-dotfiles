@@ -14,10 +14,11 @@ in {
     };
     Service = {
       ExecStart = "${pkgs.writeShellScript "rotate" ''
-        sleep 10
         while true; do
-          WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp -E anime | ${pkgs.coreutils}/bin/shuf -n 1)
+          WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
           if [ -n "$WALL" ]; then
+            # Update symlink AND live wallpaper
+            ln -sf "$WALL" "$HOME/.cache/current_wallpaper.img"
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$WALL"
           fi
           sleep 1800

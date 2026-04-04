@@ -1,12 +1,6 @@
-{
-  pkgs,
-  lib,
-  ...
-}: let
-  image = pkgs.fetchurl {
-    url = "https://w.wallhaven.cc/full/o3/wallhaven-o32do5.jpg";
-    hash = "sha256-a6stwKasoy6V6XpfqgclWiP7NSw/kAVShHkI+gx3vIE=";
-  };
+{pkgs, ...}: let
+  walls = import ./wallpapers.nix {inherit pkgs;};
+  defaultImage = "${walls}/mountain/a_castle_on_a_hill_with_fog_with_Eltz_Castle_in_the_background.jpg";
 in {
   imports = [
     ./wallpaper-picker.nix
@@ -17,12 +11,23 @@ in {
     settings = {
       ipc = true;
       splash = false;
+      preload = [
+        "${defaultImage}"
+        "~/.cache/current_wallpaper.img"
+      ];
       wallpaper = [
         {
           monitor = "";
-          path = "${image}";
+          path = "~/.cache/current_wallpaper.img";
         }
       ];
     };
   };
+
+  home.activation.initWallpaper = ''
+    if [ ! -f "$HOME/.cache/current_wallpaper.img" ]; then
+      mkdir -p "$HOME/.cache"
+      ln -sf "${defaultImage}" "$HOME/.cache/current_wallpaper.img"
+    fi
+  '';
 }

@@ -1,10 +1,11 @@
 {pkgs, ...}: let
-  walls = pkgs.fetchFromGitHub {
-    owner = "dharmx";
-    repo = "walls";
-    rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
-    hash = "sha256-M96jJy3L0a+VkJ+DcbtrRAquwDWaIG9hAUxenr/TcQU=";
-  };
+  walls = import ./wallpapers.nix {inherit pkgs;};
+  update-wallpaper = pkgs.writeShellScript "update-wallpaper" ''
+    if [ -f "$1" ]; then
+      ln -sf "$1" "$HOME/.cache/current_wallpaper.img"
+      ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
+    fi
+  '';
 in {
   xdg.configFile."elephant/menus/wallpapers.lua".text = ''
     Name = "wallpapers"
@@ -16,9 +17,11 @@ in {
     Action = "${pkgs.writeShellScript "wp-logic" ''
       if [ "$1" = "ENABLE_ROTATOR" ]; then
         ${pkgs.systemd}/bin/systemctl --user restart wallpaper-rotator.service
+        ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
       else
         ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
-        ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
+        ${update-wallpaper} "$1"
+        ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper Rotator" "Manual mode: Rotation disabled"
       fi
     ''} \"%VALUE%\""
 
@@ -43,14 +46,10 @@ in {
         local file_list = {}
         local cmd = "${pkgs.fd}/bin/fd -t f -e jpg -e jpeg -e png -e webp . '" .. wallpaper_dir .. "' 2>/dev/null"
         local handle = io.popen(cmd)
-
         if handle then
-            for line in handle:lines() do
-                table.insert(file_list, line)
-            end
+            for line in handle:lines() do table.insert(file_list, line) end
             handle:close()
         end
-
         table.sort(file_list)
 
         for _, line in ipairs(file_list) do
@@ -58,14 +57,11 @@ in {
             if filename then
                 local parent_raw = line:match("([^/]+)/[^/]+$") or "Root"
                 local clean_raw = filename:match("(.+)%.") or filename
-
                 local display_parent = to_normal_case(parent_raw)
                 local display_name = to_normal_case(clean_raw)
 
                 table.insert(entries, {
-                    -- Visually: "Abstract  /  Minimalist Waves"
                     Text = display_parent .. "  /  " .. display_name,
-                    Subtext = "Manual Selection (Stops Rotator)",
                     Keywords = { parent_raw, clean_raw, display_name },
                     Value = line,
                     Preview = line,
@@ -73,7 +69,6 @@ in {
                 })
             end
         end
-
         return entries
     end
   '';
