@@ -32,11 +32,14 @@ in {
 
                 if filename then
                     local parent_dir = line:match("([^/]+)/[^/]+$") or "Root"
+                    local clean_name = filename:match("(.+)%.") or filename
+                    local number_prefix = filename:match("(%d+%.)")
+                    local display_name = number_prefix or clean_name
 
                     table.insert(entries, {
-                        Text = filename,
-                        Subtext = parent_dir,
-                        Keywords = { parent_dir },
+                        Text = parent_dir .. "  /  " .. display_name,
+                        Subtext = "Hyprpaper",
+                        Keywords = { parent_dir, clean_name },
                         Value = line,
                         Preview = line,
                         PreviewType = "file"
