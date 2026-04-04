@@ -1,8 +1,4 @@
-{
-  config,
-  monitors,
-  ...
-}: {
+{monitors, ...}: {
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -36,9 +32,6 @@
         gaps_out = 5;
 
         border_size = 2;
-
-        "col.active_border" = "rgb(${config.lib.stylix.colors.base0D})";
-
         resize_on_border = false;
 
         allow_tearing = false;
@@ -55,7 +48,6 @@
           enabled = false;
           range = 2;
           render_power = 3;
-          color = "rgba(1a1a1aee)";
         };
 
         blur = {
