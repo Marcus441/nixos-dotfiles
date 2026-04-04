@@ -31,7 +31,6 @@
         default = [
           "desktopapplications"
           "websearch"
-          "way-wall"
         ];
         prefixes = [
           {
@@ -57,6 +56,10 @@
           {
             prefix = "$";
             provider = "clipboard";
+          }
+          {
+            prefix = "+";
+            provider = "menus:wallpapers";
           }
         ];
       };
