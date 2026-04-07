@@ -2,7 +2,7 @@
   inherit (config.lib.stylix.colors) base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base0A base0B base0C base0D base0E base0F;
   
   cssVariables = ''
-    :root {
+    :root, :host {
       /* Base Colors */
       --base00: #${base00};
       --base01: #${base01};
@@ -12,16 +12,100 @@
       --base05: #${base05};
       --base06: #${base06};
       --base07: #${base07};
-      --base08: #${base08}; /* Red */
-      --base09: #${base09}; /* Orange */
-      --base0A: #${base0A}; /* Yellow */
-      --base0B: #${base0B}; /* Green */
-      --base0C: #${base0C}; /* Cyan */
-      --base0D: #${base0D}; /* Blue */
-      --base0E: #${base0E}; /* Purple */
-      --base0F: #${base0F}; /* Brown */
+      --base08: #${base08};
+      --base09: #${base09};
+      --base0A: #${base0A};
+      --base0B: #${base0B};
+      --base0C: #${base0C};
+      --base0D: #${base0D};
+      --base0E: #${base0E};
+      --base0F: #${base0F};
 
-      /* App-wide standard variables */
+      /* Override Mozilla Bolt Design System Variables */
+      
+      /* Surfaces */
+      --color-surface-base: var(--base00) !important;
+      --color-surface-subtle: var(--base01) !important;
+      --color-surface-border: var(--base02) !important;
+      --color-surface-border-intense: var(--base03) !important;
+      --color-surface-lower: var(--base00) !important;
+      --color-surface-deep: var(--base01) !important;
+      --color-surface-raised: var(--base01) !important;
+
+      /* Primary (Brand/Accent) */
+      --color-primary-soft: var(--base02) !important;
+      --color-primary-default: var(--base0D) !important;
+      --color-primary-hover: var(--base0C) !important;
+      --color-primary-pressed: var(--base0E) !important;
+
+      /* Secondary */
+      --color-secondary-soft: var(--base02) !important;
+      --color-secondary-default: var(--base0E) !important;
+      --color-secondary-hover: var(--base0D) !important;
+      --color-secondary-pressed: var(--base0C) !important;
+
+      /* Success */
+      --color-success-soft: var(--base02) !important;
+      --color-success-default: var(--base0B) !important;
+      --color-success-hover: var(--base0B) !important;
+      --color-success-pressed: var(--base0B) !important;
+
+      /* Warning */
+      --color-warning-soft: var(--base02) !important;
+      --color-warning-default: var(--base0A) !important;
+      --color-warning-hover: var(--base09) !important;
+      --color-warning-pressed: var(--base09) !important;
+
+      /* Critical */
+      --color-critical-soft: var(--base02) !important;
+      --color-critical-default: var(--base08) !important;
+      --color-critical-hover: var(--base08) !important;
+      --color-critical-pressed: var(--base08) !important;
+
+      /* Text */
+      --color-text-base: var(--base05) !important;
+      --color-text-secondary: var(--base04) !important;
+      --color-text-muted: var(--base03) !important;
+      --color-text-highlight: var(--base0D) !important;
+      --color-text-warning: var(--base0A) !important;
+      --color-text-critical: var(--base08) !important;
+      --color-text-success: var(--base0B) !important;
+
+      /* Accents */
+      --color-accent-teal: var(--base0C) !important;
+      --color-accent-blue: var(--base0D) !important;
+      --color-accent-purple: var(--base0E) !important;
+      --color-accent-orange: var(--base09) !important;
+      --color-accent-pink: var(--base0F) !important;
+      --color-accent-ink: var(--base04) !important;
+      
+      /* Dark variants explicit overrides just in case standard overrides miss context */
+      --color-surface-base-dark: var(--base00) !important;
+      --color-surface-raised-dark: var(--base01) !important;
+      --color-surface-subtle-dark: var(--base01) !important;
+      --color-surface-deep-dark: var(--base02) !important;
+      --color-surface-border-dark: var(--base02) !important;
+      --color-surface-border-intense-dark: var(--base03) !important;
+      --color-surface-lower-dark: var(--base00) !important;
+      --color-primary-default-dark: var(--base0D) !important;
+      --color-text-base-dark: var(--base05) !important;
+      --color-text-secondary-dark: var(--base04) !important;
+      --color-text-muted-dark: var(--base03) !important;
+
+      /* Light variants explicit overrides (if forced light in some frame) */
+      --color-surface-base-light: var(--base00) !important;
+      --color-surface-raised-light: var(--base01) !important;
+      --color-surface-subtle-light: var(--base01) !important;
+      --color-surface-deep-light: var(--base02) !important;
+      --color-surface-border-light: var(--base02) !important;
+      --color-surface-border-intense-light: var(--base03) !important;
+      --color-surface-lower-light: var(--base00) !important;
+      --color-primary-default-light: var(--base0D) !important;
+      --color-text-base-light: var(--base05) !important;
+      --color-text-secondary-light: var(--base04) !important;
+      --color-text-muted-light: var(--base03) !important;
+
+      /* Legacy / Specific variable overrides */
       --lwt-accent-color: var(--base00) !important;
       --lwt-text-color: var(--base05) !important;
       --toolbar-bgcolor: var(--base00) !important;
@@ -30,37 +114,17 @@
       --toolbar-field-color: var(--base05) !important;
       --toolbar-field-focus-background-color: var(--base02) !important;
       --toolbar-field-focus-border-color: var(--base0D) !important;
-      
       --sidebar-background-color: var(--base00) !important;
       --sidebar-text-color: var(--base05) !important;
       --sidebar-highlight-background-color: var(--base02) !important;
       --sidebar-highlight-text-color: var(--base05) !important;
-      
       --in-content-page-background: var(--base00) !important;
       --in-content-page-color: var(--base05) !important;
-      
-      --button-background-color: var(--base01) !important;
-      --button-hover-background-color: var(--base02) !important;
-      --button-active-background-color: var(--base03) !important;
-      
-      --input-background-color: var(--base01) !important;
-      --input-color: var(--base05) !important;
-      --input-border-color: var(--base03) !important;
-      
-      --listbox-background: var(--base00) !important;
-      --listbox-color: var(--base05) !important;
-
-      --chrome-background-color: var(--base00) !important;
-      --chrome-color: var(--base05) !important;
-
-      --lwt-tab-text: var(--base05) !important;
-      --lwt-selected-tab-background-color: var(--base01) !important;
     }
   '';
 in {
   programs.thunderbird.profiles.default.userChrome = ''
-    /* Base16 Theme for Thunderbird Supernova (115+) */
-    
+    /* Base16 Theme for Thunderbird using Bolt Variables */
     '' + cssVariables + ''
 
     /* Global Scrollbars */
@@ -69,259 +133,32 @@ in {
       scrollbar-width: thin !important;
     }
 
-    /* Window, Body and Dialogs */
+    /* Base Typography and explicit backgrounds for legacy frames */
     window, page, dialog, wizard, preferences, #messengerWindow {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
+      background-color: var(--color-surface-base) !important;
+      color: var(--color-text-base) !important;
       font-family: "Inter", sans-serif !important;
       font-size: 13pt !important;
     }
 
-    /* Toolbars & Spaces Toolbar */
-    toolbox, toolbar, .toolbar-primary, #mail-toolbox, #header-view-toolbox, #composeToolbox, #spacesToolbar, #spacesPinned, #unifiedToolbarContainer, #quick-filter-bar {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
-      border: none !important;
-      appearance: none !important;
-    }
-
-    /* Hide the tab bar as requested previously */
+    /* Hide the tab bar as requested */
     #tabs-toolbar {
       visibility: collapse !important;
     }
-
-    /* Spaces Toolbar specific buttons */
-    #spacesPinnedButton {
-      fill: var(--base05) !important;
-      color: var(--base05) !important;
-    }
     
-    .spaces-button {
-      background-color: transparent !important;
-      color: var(--base05) !important;
-    }
-    .spaces-button:hover {
-      background-color: var(--base01) !important;
-    }
-    .spaces-button[checked="true"] {
-      background-color: var(--base02) !important;
-      color: var(--base0D) !important;
-    }
-
-    /* --- FOLDER PANE (Left Sidebar) --- */
-    #folderPane, #folderTree {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
-      appearance: none !important;
+    /* Tree cols (some stubborn legacy elements) */
+    treecol {
+      background-color: var(--color-surface-subtle) !important;
+      color: var(--color-text-secondary) !important;
       border: none !important;
-    }
-
-    /* Folder pane items */
-    #folderTree li > .container {
-      background-color: transparent !important;
-      color: var(--base05) !important;
-    }
-
-    /* Hovered Folder */
-    #folderTree li:hover > .container {
-      background-color: var(--base01) !important;
-    }
-
-    /* Selected Folder */
-    #folderTree li.selected > .container {
-      background-color: var(--base02) !important;
-      color: var(--base05) !important;
-    }
-
-    /* Unread Folder */
-    #folderTree li.unread > .container > .name {
-      color: var(--base0D) !important;
-      font-weight: bold !important;
-    }
-
-    /* New Messages Folder */
-    #folderTree li.new-messages > .container > .name {
-      color: var(--base0B) !important;
-      font-weight: bold !important;
-    }
-
-    /* Today Pane (Calendar Sidebar) */
-    #today-pane-panel, #minimonth-pane, .minimonth {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
-      border-left: 1px solid var(--base02) !important;
-    }
-
-    /* --- MESSAGE LIST (Thread Pane) --- */
-    #threadTree, .tree-table, .tree-view {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
-      border: none !important;
-    }
-
-    /* Table headers in thread pane */
-    .tree-table-header, treecol {
-      background-color: var(--base01) !important;
-      color: var(--base04) !important;
-      border: none !important;
-      border-bottom: 1px solid var(--base02) !important;
-      border-right: 1px solid var(--base02) !important;
+      border-bottom: 1px solid var(--color-surface-border) !important;
+      border-right: 1px solid var(--color-surface-border) !important;
       appearance: none !important;
-    }
-    
-    treecol:hover {
-      background-color: var(--base02) !important;
-    }
-
-    /* Message Row Default */
-    tr[is="thread-row"] {
-      background-color: transparent !important;
-      color: var(--base05) !important;
-    }
-
-    /* Message Row Hover */
-    tr[is="thread-row"]:hover {
-      background-color: var(--base01) !important;
-    }
-
-    /* Message Row Selected */
-    tr[is="thread-row"].selected,
-    tr[is="thread-row"].selected:hover {
-      background-color: var(--base02) !important;
-      color: var(--base05) !important;
-    }
-
-    /* Unread Message Row */
-    tr[is="thread-row"][data-properties~="unread"] {
-      color: var(--base0D) !important;
-      font-weight: bold !important;
-    }
-    
-    tr[is="thread-row"][data-properties~="new"] {
-      color: var(--base0B) !important;
-    }
-
-    /* Message Tags */
-    tr[is="thread-row"] .tag-text {
-      color: var(--base0A) !important;
-    }
-
-    /* --- MESSAGE HEADER VIEW (Reading Pane Top) --- */
-    #msgHeaderView, .message-header-view {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border: none !important;
-      border-bottom: 1px solid var(--base02) !important;
-    }
-
-    #msgHeaderView .header-name {
-      color: var(--base0D) !important;
-    }
-
-    #msgHeaderView .header-value {
-      color: var(--base05) !important;
-    }
-
-    /* --- SEARCH BAR AND INPUTS --- */
-    input, textarea, menulist {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border: 1px solid var(--base02) !important;
-      border-radius: 4px !important;
-      appearance: none !important;
-    }
-    
-    input:focus, textarea:focus, menulist:focus {
-      border-color: var(--base0D) !important;
-    }
-
-    /* Checkboxes and Radios */
-    checkbox .checkbox-check, radio .radio-check {
-      appearance: none !important;
-      background-color: var(--base01) !important;
-      border: 1px solid var(--base02) !important;
-    }
-    checkbox[checked="true"] .checkbox-check, radio[selected="true"] .radio-check {
-      background-color: var(--base0D) !important;
-      border-color: var(--base0D) !important;
-    }
-
-    /* --- BUTTONS --- */
-    button, .button {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border: 1px solid var(--base02) !important;
-      border-radius: 4px !important;
-      appearance: none !important;
-    }
-
-    button:hover, .button:hover {
-      background-color: var(--base02) !important;
-    }
-
-    button.primary {
-      background-color: var(--base0D) !important;
-      color: var(--base00) !important;
-      border-color: var(--base0D) !important;
-    }
-
-    /* --- MENUS AND POPUPS --- */
-    menupopup, panel, popup {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
-      border: 1px solid var(--base02) !important;
-      appearance: none !important;
-    }
-
-    menuitem, menu {
-      color: var(--base05) !important;
-      appearance: none !important;
-    }
-
-    menuitem[_moz-menuactive="true"], menu[_moz-menuactive="true"],
-    menuitem:hover, menu:hover {
-      background-color: var(--base02) !important;
-      color: var(--base05) !important;
-    }
-
-    /* --- COMPOSER WINDOW --- */
-    #msgcomposeWindow {
-      background-color: var(--base00) !important;
-    }
-
-    #headers-box {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border-bottom: 1px solid var(--base02) !important;
-    }
-
-    /* Splitters */
-    splitter {
-      background-color: var(--base02) !important;
-      border: none !important;
-      width: 2px !important;
-    }
-    
-    /* Scrollbars (if supported using pseudo elements) */
-    scrollbar {
-      background-color: var(--base00) !important;
-      appearance: none !important;
-    }
-    slider {
-      background-color: var(--base00) !important;
-    }
-    thumb {
-      background-color: var(--base02) !important;
-      border-radius: 4px !important;
-    }
-    thumb:hover {
-      background-color: var(--base03) !important;
     }
   '';
 
   programs.thunderbird.profiles.default.userContent = ''
-    /* Base16 Theme for Internal Pages (Preferences, Add-ons, Message Body background) */
-    
+    /* Base16 Theme for Internal Pages using Bolt Variables */
     '' + cssVariables + ''
 
     /* Global Scrollbars */
@@ -332,71 +169,20 @@ in {
 
     /* Apply base background to message bodies and settings pages */
     body, html, .main-content, #dialogFrame {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
+      background-color: var(--color-surface-base) !important;
+      color: var(--color-text-base) !important;
       font-family: "Inter", sans-serif !important;
     }
 
-    /* Links */
-    a {
-      color: var(--base0D) !important;
-    }
-    
-    a:hover {
-      color: var(--base0C) !important;
-    }
-
-    /* Preferences page sections */
-    groupbox {
-      background-color: var(--base01) !important;
-      border: 1px solid var(--base02) !important;
-      border-radius: 6px !important;
-      padding: 10px !important;
-      margin-bottom: 15px !important;
-    }
-
-    /* Plain text emails (often viewed in a specific container) */
+    /* Plain text emails */
     .moz-text-plain, .moz-text-flowed {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
+      background-color: var(--color-surface-base) !important;
+      color: var(--color-text-base) !important;
     }
     
     blockquote {
-      border-left: 3px solid var(--base0D) !important;
-      color: var(--base04) !important;
-    }
-
-    /* Inputs, Buttons inside content pages */
-    input, textarea, select {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border: 1px solid var(--base02) !important;
-      border-radius: 4px !important;
-      padding: 4px !important;
-    }
-    
-    button {
-      background-color: var(--base01) !important;
-      color: var(--base05) !important;
-      border: 1px solid var(--base02) !important;
-      border-radius: 4px !important;
-      padding: 4px 8px !important;
-      cursor: pointer !important;
-    }
-    
-    button:hover {
-      background-color: var(--base02) !important;
-    }
-    
-    button.primary {
-      background-color: var(--base0D) !important;
-      color: var(--base00) !important;
-    }
-
-    /* Empty state messages */
-    .empty-folder-image, #accountCentral {
-      background-color: var(--base00) !important;
-      color: var(--base05) !important;
+      border-left: 3px solid var(--color-primary-default) !important;
+      color: var(--color-text-secondary) !important;
     }
   '';
 }
