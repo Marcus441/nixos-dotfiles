@@ -8,48 +8,41 @@
   helium-raw = inputs.helium.defaultPackage.${system};
 
   enableFeatures = [
-    "AcceleratedVideoDecode"
+    "SmoothScrolling"
+    "ThreadedScrolling"
     "CanvasOopRasterization"
-    "FastUnload"
+
     "LazyFrameLoading"
     "LazyImageLoading"
-    "OverlayStrategies"
-    "Prerender2"
-    "SmoothScrolling"
     "TabDiscarding"
     "TabFreeze"
-    "ThreadedScrolling"
-    "UseOzonePlatform"
+    "FastUnload"
+
     "VaapiVideoDecoder"
-    "WebContentsOcclusion"
+
+    "UseOzonePlatform"
+    "WaylandFractionalScaleV1"
   ];
 
   disableFeatures = [
-    "AutofillServerCommunication"
-    "BlinkGenPropertyTrees"
     "ChromeWhatsNewUI"
     "TranslateUI"
-    "UseSkiaRenderer"
+    "OptimizationHints"
   ];
 
   allFlags = [
-    "--disable-background-networking"
-    "--disable-background-timer-throttling"
-    "--disable-client-side-phishing-detection"
-    "--disable-component-update"
-    "--disable-default-apps"
-    "--disable-software-rasterizer"
-    "--disable-sync"
-    "--enable-async-dns"
-    "--enable-gpu-compositing"
-    "--enable-gpu-rasterization"
-    "--enable-native-gpu-memory-buffers"
-    "--enable-prefetch"
-    "--enable-zero-copy"
-    "--force-color-profile=srgb"
-    "--ignore-gpu-blocklist"
     "--ozone-platform=wayland"
-    "--safebrowsing-disable-auto-update"
+
+    "--enable-gpu-compositing"
+    "--enable-oop-rasterization"
+
+    "--enable-async-dns"
+    "--enable-quic"
+
+    "--disable-breakpad"
+    "--disable-crash-reporter"
+    "--disable-sync"
+
     "--enable-features=${lib.concatStringsSep "," enableFeatures}"
     "--disable-features=${lib.concatStringsSep "," disableFeatures}"
   ];

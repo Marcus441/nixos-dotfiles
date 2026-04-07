@@ -22,7 +22,7 @@
     ./sesh.nix
     ./starship.nix
     ./stylix.nix
-    ./thunderbird.nix
+    ./thunderbird
     ./tmux.nix
     ./walker
     ./waybar
