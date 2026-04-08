@@ -14,43 +14,14 @@
         mkdir -p $argv[1]
         cd $argv[1]
       '';
-
-      nt = ''
-        if test (count $argv) -lt 1
-            echo "Usage: nt <template-name>"
-            return 1
-        end
-
-        nix flake init --refresh --template "github:Marcus441/nix-templates/main#$argv[1]"
-      '';
-      # --- TMUX Title Functions for Clean Window Status ---
-
-      fish_preexec = ''
-        if test -n "$TMUX"
-          # Set the pane title to the command being run
-          tmux select-pane -T "$argv"
-        end
-      '';
-
-      fish_postexec = ''
-        if test -n "$TMUX"
-          # Reset the pane title to the current directory basename
-          # This keeps the window name clean when waiting for input
-          tmux select-pane -T (basename (pwd))
-        end
-      '';
     };
 
     interactiveShellInit = ''
       set -g fish_greeting
       fish_vi_key_bindings
 
-      if test -n "$TMUX"
-        tmux select-pane -T (basename (pwd))
-      end
-
       if status is-interactive
-        if test "$SHLVL" = 1; and not set -q TMUX
+        if test "$SHLVL" = 1
           fastfetch
         end
       end
@@ -75,7 +46,6 @@
     ];
 
     shellAbbrs = {
-      lsa = "ls -lah";
       ta = "tmux attach";
 
       ost = "nh os test";
@@ -87,14 +57,17 @@
 
       pkgs = "nvim ~/flake/home-manager/home-packages.nix";
 
-      vim = "nvim";
-
       # GIT
       gs = "git status";
       gc = "git checkout";
-      gl = "git log --oneline --graph --decorate | bat";
+
+      # templates
+      nt = "nix flake init --refresh --template github:Marcus441/nix-templates/main#";
+      nf = "nix flake init --template templates#";
     };
 
-    shellAliases = {};
+    shellAliases = {
+      vim = "nvim";
+    };
   };
 }
