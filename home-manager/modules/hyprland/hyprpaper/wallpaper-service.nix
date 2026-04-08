@@ -1,26 +1,35 @@
 {pkgs, ...}: let
-  walls = pkgs.fetchFromGitHub {
-    owner = "dharmx";
-    repo = "walls";
-    rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
-    hash = "sha256-M96jJy3L0a+VkJ+DcbtrRAquwDWaIG9hAUxenr/TcQU=";
-  };
+  walls = import ./wallpapers.nix {inherit pkgs;};
 in {
   systemd.user.services.wallpaper-rotator = {
     Unit = {
       Description = "Background wallpaper rotator for Hyprpaper";
       After = ["graphical-session.target"];
       PartOf = ["graphical-session.target"];
+      # Systemd will silently skip starting this service if the file doesn't exist
+      ConditionPathExists = "%h/.cache/wallpaper_rotator_enabled";
     };
+
+    # Add this so it hooks into your login process
+    Install = {
+      WantedBy = ["graphical-session.target"];
+    };
+
     Service = {
       ExecStart = "${pkgs.writeShellScript "rotate" ''
+        CACHE_FILE="$HOME/.cache/current_wallpaper.img"
+
+        # Continuous random rotation loop
         while true; do
           WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
+
           if [ -n "$WALL" ]; then
-            # Update symlink AND live wallpaper
-            ln -sf "$WALL" "$HOME/.cache/current_wallpaper.img"
+            ln -sf "$WALL" "$CACHE_FILE"
+            ${pkgs.hyprland}/bin/hyprctl hyprpaper preload "$WALL"
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$WALL"
+            ${pkgs.hyprland}/bin/hyprctl hyprpaper unload unused
           fi
+
           sleep 1800
         done
       ''}";

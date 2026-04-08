@@ -1,7 +1,11 @@
 {pkgs}:
 pkgs.fetchFromGitHub {
-  owner = "dharmx";
+  owner = "Marcus441";
   repo = "walls";
-  rev = "6bf4d733ebf2b484a37c17d742eb47e5139e6a14";
-  hash = "sha256-M96jJy3L0a+VkJ+DcbtrRAquwDWaIG9hAUxenr/TcQU=";
+  rev = "b11022653952ac634b0c9af6966c560bb0ef0876";
+  hash = "sha256-j10orWJweGnIbG8ZBzukYp82FNDPVne7eoEz2qKQeMM=";
+
+  sparseCheckout = [
+    "walled_tiers/4k"
+  ];
 }

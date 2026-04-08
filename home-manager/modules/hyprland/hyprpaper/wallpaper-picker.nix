@@ -15,15 +15,22 @@ in {
     FixedOrder = true
 
     Action = "${pkgs.writeShellScript "wp-logic" ''
+      STATE_FILE="$HOME/.cache/wallpaper_rotator_enabled"
+
       if [ "$1" = "ENABLE_ROTATOR" ]; then
-        ${pkgs.systemd}/bin/systemctl --user restart wallpaper-rotator.service
+        # Create state file and start service
+        touch "$STATE_FILE"
+        ${pkgs.systemd}/bin/systemctl --user start wallpaper-rotator.service
         ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
       else
+        # Remove state file and stop service
+        rm -f "$STATE_FILE"
         ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
         ${update-wallpaper} "$1"
         ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper Rotator" "Manual mode: Rotation disabled"
       fi
     ''} \"%VALUE%\""
+
 
     function GetEntries()
         local entries = {}
@@ -61,7 +68,7 @@ in {
                 local display_name = to_normal_case(clean_raw)
 
                 table.insert(entries, {
-                    Text = display_parent .. "  /  " .. display_name,
+                    Text = display_parent .. " / " .. display_name,
                     Keywords = { parent_raw, clean_raw, display_name },
                     Value = line,
                     Preview = line,
