@@ -2,6 +2,7 @@
   programs.ghostty = {
     enable = true;
     settings = {
+      theme = "Kanagawa Dragon";
       # Window padding
       window-padding-x = 10;
       window-padding-y = 10;
@@ -9,19 +10,32 @@
 
       resize-overlay = "never";
       unfocused-split-opacity = 0.8;
+
+      mouse-hide-while-typing = true;
       focus-follows-mouse = false;
 
       confirm-close-surface = false;
       custom-shader = "/home/marcus/flake/home-manager/modules/ghostty/cursor_smear.glsl";
-      scrollback-limit = 100;
+      scrollback-limit = 10000;
+
       # Font
       font-feature = "builtin_box_drawing";
 
       app-notifications = "no-clipboard-copy";
-      background-opacity = "1";
+
       # Cursor
       cursor-style = "block";
       copy-on-select = true;
+
+      working-directory = "home";
+      window-inherit-working-directory = true;
+      tab-inherit-working-directory = true;
+      split-inherit-working-directory = true;
+      window-inherit-font-size = true;
+
+      quit-after-last-window-closed = true;
+      quit-after-last-window-closed-delay = "10m";
+
       keybind = [
         # Create splits
         "alt+left=new_split:left"
@@ -54,7 +68,8 @@
 
         # Standard Tab controls
         "ctrl+t=new_tab"
-        "ctrl+w=close_surface"
+        "ctrl+w=close_tab:this"
+        "ctrl+o=toggle_tab_overview"
       ];
     };
   };

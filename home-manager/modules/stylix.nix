@@ -43,7 +43,6 @@
       bat.enable = true;
       btop.enable = true;
       fish.enable = true;
-      ghostty.enable = true;
       gtk.enable = true;
       hyprland.enable = true;
       hyprlock.enable = true;
