@@ -1,13 +1,13 @@
 {pkgs, ...}: let
   apps = [
     {
-      id = "chatgpt";
-      name = "ChatGPT";
-      url = "https://chatgpt.com/";
-      iconUrl = "https://img.icons8.com/?size=100&id=FBO05Dys9QCg&format=png&color=FFFFFF";
-      iconSha = "sha256-/5movXxtZ/lhkfgxwQTHZYHYMtZjIW9LgXpsR4TCCP0=";
+      id = "claude";
+      name = "Claude";
+      url = "https://claude.ai/";
+      iconUrl = "https://img.icons8.com/?size=100&id=zQjzFjPpT2Ek&format=png&color=000000";
+      iconSha = "sha256-aPWuiB7uaXLBLNEdv42g/tVilPmWLKP88jAbTaOeTWM=";
       categories = ["Network" "Chat"];
-      wmClass = "ChatGPT";
+      wmClass = "Claude";
     }
   ];
 in {
