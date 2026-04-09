@@ -3,6 +3,7 @@
     ./bat.nix
     ./btop.nix
     # ./chromium.nix
+    ./direnv.nix
     ./discord.nix
     ./eza.nix
     ./fastfetch.nix
