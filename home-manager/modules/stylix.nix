@@ -41,7 +41,6 @@
     polarity = "dark";
     targets = {
       bat.enable = true;
-      btop.enable = true;
       fish.enable = true;
       gtk.enable = true;
       hyprland.enable = true;
