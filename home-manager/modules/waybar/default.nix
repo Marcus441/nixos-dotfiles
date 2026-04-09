@@ -78,7 +78,7 @@
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
           tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
-          on-click = "blueman-manager";
+          on-click = "uwsm app -- blueman-manager";
         };
 
         network = {
@@ -96,7 +96,7 @@
 
           interval = 3;
           spacing = 1;
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty --gtk-single-instance=true -e nmtui\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e nmtui\"";
         };
 
         battery = {
@@ -141,13 +141,13 @@
         cpu = {
           interval = 1;
           format = "󰘚 {usage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e btop\"";
         };
 
         memory = {
           interval = 5;
           format = "󰍛 {percentage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty --gtk-single-instance=true -e btop\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e btop\"";
         };
 
         pulseaudio = {
@@ -160,7 +160,7 @@
           };
           justify = "center";
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          on-click = "pavucontrol";
+          on-click = "uwsm app -- pavucontrol";
           tooltip-format = "{icon} {volume}%";
         };
 
@@ -184,7 +184,7 @@
           format = "󰤆";
           tooltip = false;
           on-click = "hyprlock";
-          on-click-right = "wlogout";
+          on-click-right = "uwsm app -- wlogout";
         };
 
         tray = {

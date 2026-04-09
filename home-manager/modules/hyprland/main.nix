@@ -16,7 +16,7 @@
       monitor = map (m: m.hyprland) monitors;
 
       "$mainMod" = "SUPER";
-      "$terminal" = "uwsm app -- ghostty --gtk-single-instance=true";
+      "$terminal" = "uwsm app -- ghostty";
       "$fileManager" = "uwsm app -- thunar";
       "$browser" = "uwsm app -- helium";
 
@@ -24,7 +24,7 @@
         "uwsm app -- waybar"
         "uwsm app -- wl-paste --type text --watch cliphist store"
         "uwsm app -- wl-paste --type image --watch cliphist store"
-        "uwsm app -- ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
+        "uwsm app -- ghostty  --initial-window=false"
       ];
 
       general = {

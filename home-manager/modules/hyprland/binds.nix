@@ -3,8 +3,8 @@
 
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,       Return, exec, $terminal"
-      "$mainMod SHIFT, Return, exec, neovide"
+      "$mainMod,        Return, exec, $terminal"
+      "$mainMod SHIFT,  Return, exec, uwsm app -- neovide"
       "$mainMod,       V, exec, walker -m clipboard"
       "$mainMod,       W, exec, walker -m menus:wallpapers"
       "$mainMod,       E, exec, $fileManager"
