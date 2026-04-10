@@ -1,7 +1,6 @@
 {
   imports = [
     ./bat.nix
-    ./xdg-mimeApps.nix
     ./btop.nix
     ./direnv.nix
     ./discord.nix
@@ -32,6 +31,7 @@
     ./walker
     ./waybar
     ./wlogout
+    ./xdg-mimeApps.nix
     ./xdg-portal.nix
     ./xdg-pwas.nix
     ./yazi.nix

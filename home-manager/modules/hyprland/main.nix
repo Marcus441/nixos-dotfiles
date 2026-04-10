@@ -1,16 +1,16 @@
-{monitors, ...}: {
+{
+  monitors,
+  user,
+  ...
+}: {
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = false;
     settings = {
       env = [
-        # Hint Electron apps to use Wayland
         "NIXOS_OZONE_WL,1"
-        "XDG_CURRENT_DESKTOP,Hyprland"
-        "XDG_SESSION_TYPE,wayland"
-        "XDG_SESSION_DESKTOP,Hyprland"
         "QT_QPA_PLATFORM,wayland"
-        "XDG_SCREENSHOTS_DIR,$HOME/Screenshots"
+        "XDG_SCREENSHOTS_DIR,/home/${user}/Screenshots"
       ];
 
       monitor = map (m: m.hyprland) monitors;
@@ -24,46 +24,26 @@
         "uwsm app -- waybar"
         "uwsm app -- wl-paste --type text --watch cliphist store"
         "uwsm app -- wl-paste --type image --watch cliphist store"
-        "uwsm app -- ghostty  --initial-window=false"
+        "uwsm app -- ghostty --initial-window=false"
       ];
 
       general = {
         gaps_in = 2.5;
         gaps_out = 5;
-
         border_size = 2;
         resize_on_border = false;
-
         allow_tearing = false;
         layout = "dwindle";
       };
 
       decoration = {
         rounding = 0;
-
-        active_opacity = 1.0;
-        inactive_opacity = 1.0;
-
-        shadow = {
-          enabled = false;
-          range = 2;
-          render_power = 3;
-        };
-
-        blur = {
-          enabled = false;
-          new_optimizations = true;
-          size = 2;
-          passes = 2;
-          special = true;
-          brightness = 0.60;
-          contrast = 0.75;
-        };
+        shadow.enabled = false;
+        blur.enabled = false;
       };
 
       animations = {
         enabled = true;
-
         bezier = [
           "easeOutQuint,0.23,1,0.32,1"
           "easeInOutCubic,0.65,0.05,0.36,1"
@@ -71,7 +51,6 @@
           "almostLinear,0.5,0.5,0.75,1.0"
           "quick,0.15,0,0.1,1"
         ];
-
         animation = [
           "global, 1, 10, default"
           "border, 1, 5.39, easeOutQuint"
@@ -110,12 +89,6 @@
         preserve_split = true;
       };
 
-      master = {
-        new_status = "master";
-        new_on_top = true;
-        mfact = 0.5;
-      };
-
       misc = {
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
@@ -124,11 +97,11 @@
       };
 
       windowrule = [
-        # Windows that should not be focused / maximize suppression
+        # Maximize suppression
         "suppress_event maximize, match:class .*"
         "no_focus on, match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false"
 
-        # Xwaylandvideobridge rules
+        # Xwaylandvideobridge
         "opacity 0.0 override, match:class ^(xwaylandvideobridge)$"
         "no_anim on, match:class ^(xwaylandvideobridge)$"
         "no_initial_focus on, match:class ^(xwaylandvideobridge)$"
@@ -136,16 +109,14 @@
         "no_blur on, match:class ^(xwaylandvideobridge)$"
         "no_focus on, match:class ^(xwaylandvideobridge)$"
 
-        # Windows that should be floating (Tagging)
+        # Floating windows (tagging)
         "tag +floating-window, match:class ^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$"
         "tag +floating-window, match:title ^(ghostty-float)$"
-
-        # Applying effects to the tag
         "float on, match:tag floating-window"
         "center on, match:tag floating-window"
         "size 1200 600, match:tag floating-window"
 
-        # Smart Gaps
+        # Smart gaps
         "border_size 0, match:float 0, match:workspace w[tv1]"
         "rounding 0, match:float 0, match:workspace w[tv1]"
         "border_size 0, match:float 0, match:workspace f[1]"
@@ -153,7 +124,6 @@
       ];
 
       workspace = [
-        # Smart Gaps
         "f[1], gapsout:0, gapsin:0"
         "w[tv1], gapsout:0, gapsin:0"
       ];

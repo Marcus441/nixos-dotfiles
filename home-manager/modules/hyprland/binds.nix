@@ -1,23 +1,23 @@
 {
-  home.packages = [];
-
   wayland.windowManager.hyprland.settings = {
     bind = [
-      "$mainMod,        Return, exec, $terminal"
-      "$mainMod SHIFT,  Return, exec, uwsm app -- neovide"
-      "$mainMod,       V, exec, walker -m clipboard"
-      "$mainMod,       W, exec, walker -m menus:wallpapers"
-      "$mainMod,       E, exec, $fileManager"
-      "$mainMod,       Q, killactive"
-      "$mainMod,       D, exec, walker"
-      "$mainMod,       B, exec, $browser"
-      "$mainMod,       F, togglefloating,"
-      "$mainMod,       C, exec, ocr-copy"
-      "$mainMod SHIFT, C, exec, hyprpicker -an"
-      "$mainMod,       S, togglesplit,"
-      "$mainMod SHIFT, Z, exec, uwsm stop"
-      "$mainMod,       Z, exec, loginctl lock-session"
-      ",               Print, exec, grimblast --notify --freeze copysave area"
+      "$mainMod SHIFT, C,      exec, uwsm app -- hyprpicker -an"
+      "$mainMod SHIFT, Return, exec, uwsm app -- neovide"
+      "$mainMod SHIFT, S,      exec, uwsm app -- grimblast --notify --freeze copysave screen"
+      "$mainMod SHIFT, Z,      exec, uwsm stop"
+      "$mainMod,       B,      exec, $browser"
+      "$mainMod,       C,      exec, uwsm app -- ocr-copy"
+      "$mainMod,       D,      exec, walker"
+      "$mainMod,       E,      exec, $fileManager"
+      "$mainMod,       F,      togglefloating"
+      "$mainMod,       Q,      killactive"
+      "$mainMod,       Return, exec, $terminal"
+      "$mainMod,       S,      togglesplit"
+      "$mainMod,       Tab,    exec, walker -m windows"
+      "$mainMod,       V,      exec, walker -m clipboard"
+      "$mainMod,       W,      exec, walker -m menus:wallpapers"
+      "$mainMod,       Z,      exec, loginctl lock-session"
+      ",               Print,  exec, uwsm app -- grimblast --notify --freeze copysave area"
 
       # Moving focus
       "$mainMod, H, movefocus, l"

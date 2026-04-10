@@ -1,4 +1,4 @@
-{
+{user, ...}: {
   programs.ghostty = {
     enable = true;
     settings = {
@@ -14,7 +14,7 @@
       focus-follows-mouse = false;
 
       confirm-close-surface = false;
-      custom-shader = "/home/marcus/flake/home-manager/modules/ghostty/cursor_smear.glsl";
+      custom-shader = "/home/${user}/flake/home-manager/modules/ghostty/cursor_smear.glsl";
       scrollback-limit = 10000;
 
       # Font

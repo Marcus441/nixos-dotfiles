@@ -106,27 +106,13 @@ in {
       bind -n M-9 select-window -t 9
 
       bind -n M-v split-window -v -c "#{pane_current_path}"
-      bind -n M-c split-window -h -c "#{pane_current_path}"
+      bind -n M-h split-window -h -c "#{pane_current_path}"
 
-      bind -n M-s run-shell 'tmux list-windows -a -F "#{session_name}:#{window_index} #{window_name}" | \
-        fzf-tmux -p 60%,40% --prompt="switch  " --border rounded | \
-        awk "{print \$1}" | \
-        xargs -I{} tmux switch-client -t {}'
+      bind -n M-s run-shell tmux-switch
+      bind -n M-k run-shell tmux-kill
 
-      bind -n M-k run-shell 'echo -e "pane\nwindow\nsession" | \
-        fzf-tmux -p 40%,30% --prompt="kill  " --border rounded | \
-        xargs -I{} sh -c \
-          "case {} in \
-            pane)    tmux list-panes -a -F \"#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}\" | fzf-tmux -p 60%,40% --prompt=\"kill pane  \" | awk \"{print \\\$1}\" | xargs tmux kill-pane -t ;; \
-            window)  tmux list-windows -a -F \"#{session_name}:#{window_index} #{window_name}\" | fzf-tmux -p 60%,40% --prompt=\"kill window  \" | awk \"{print \\\$1}\" | xargs tmux kill-window -t ;; \
-            session) tmux list-sessions -F \"#{session_name}\" | fzf-tmux -p 50%,35% --prompt=\"kill session  \" | xargs tmux kill-session -t ;; \
-          esac"'
-
-      bind -n M-T new-window -c "$HOME" "nvim --cmd todolist.md"
       bind -n M-Enter new-window
-      bind -n M-d kill-pane
-      bind -n M-x kill-window
-      bind -n M-X kill-session
+      bind -n M-c kill-pane
 
       # tmuxplugin-continuum
       # ---------------------
