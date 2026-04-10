@@ -4,8 +4,5 @@
     colors = "always";
     git = true;
     icons = "always";
-    extraOptions = [
-      "--header"
-    ];
   };
 }

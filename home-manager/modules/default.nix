@@ -19,7 +19,6 @@
     ./neovim.nix
     ./opencode
     ./services
-    ./sesh.nix
     ./starship.nix
     ./stylix.nix
     ./thunderbird
@@ -28,7 +27,6 @@
     ./waybar
     ./wlogout
     ./xdg-pwas.nix
-    ./zathura.nix
     ./zoxide.nix
   ];
 }
