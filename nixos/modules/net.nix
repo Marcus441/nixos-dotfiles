@@ -1,7 +1,6 @@
 {
   # Faster boot time, does not wait to connect to internet on boot
   systemd.services.NetworkManager-wait-online.enable = false;
-
   networking = {
     networkmanager = {
       enable = true;
@@ -12,12 +11,10 @@
     };
     wireless.iwd = {
       settings = {
-        Settings = {
-          AutoConnect = true;
-        };
-        AddressRandomization = {
-          Enable = true;
-          Persistent = true;
+        Settings.AutoConnect = true;
+        Network = {
+          AddressRandomization = "network";
+          AddressRandomizationRange = "full";
         };
       };
     };

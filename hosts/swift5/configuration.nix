@@ -13,4 +13,6 @@
   networking.hostName = hostname;
 
   system.stateVersion = stateVersion;
+
+  networking.networkmanager.wifi.powersave = true;
 }
