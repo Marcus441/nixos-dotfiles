@@ -20,6 +20,7 @@
     ./thunar.nix
     ./timezone.nix
     ./user.nix
+    ./virt-manager.nix
     ./zram.nix
   ];
 }
