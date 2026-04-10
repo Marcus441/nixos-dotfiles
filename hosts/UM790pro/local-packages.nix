@@ -1,11 +1,12 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    home-manager
-    git
     gcc
     gh
-    vim
+    git
+    home-manager
     htop
+    iw
+    vim
     wget
   ];
 }

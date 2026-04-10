@@ -1,10 +1,10 @@
 {
   imports = [
     ./audio.nix
-    ./power.nix
     ./binfmt.nix
     ./bluetooth.nix
     ./boot.nix
+    ./ccache.nix
     ./docker.nix
     ./env.nix
     ./home-manager.nix
@@ -15,6 +15,7 @@
     ./net.nix
     ./nh.nix
     ./nix.nix
+    ./power.nix
     ./qemu.nix
     ./thunar.nix
     ./timezone.nix

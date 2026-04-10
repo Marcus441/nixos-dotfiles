@@ -4,7 +4,8 @@
     flake = "/home/${user}/flake";
     clean = {
       enable = true;
-      extraArgs = "--keep-since 4d --keep 3";
+      dates = "weekly";
+      extraArgs = "--keep-since 14d --keep 5";
     };
   };
 }

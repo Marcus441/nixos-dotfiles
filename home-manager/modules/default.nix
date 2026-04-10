@@ -4,6 +4,7 @@
     ./btop.nix
     ./direnv.nix
     ./discord.nix
+    ./ccache.nix
     ./eza.nix
     ./fastfetch.nix
     ./fd.nix
