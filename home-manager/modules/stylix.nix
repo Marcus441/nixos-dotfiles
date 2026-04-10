@@ -48,7 +48,7 @@
       lazygit.enable = true;
       mako.enable = true;
       neovide.fonts.enable = true;
-      opencode.enable = true;
+      # opencode.enable = true;
       qt.enable = true;
       yazi.enable = true;
       zathura.enable = true;
