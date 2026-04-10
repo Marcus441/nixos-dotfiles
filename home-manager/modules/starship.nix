@@ -40,8 +40,6 @@
         renamed = "✗";
         deleted = "✗";
         stashed = "✗";
-        ahead = "";
-        behind = "";
       };
     };
   };
