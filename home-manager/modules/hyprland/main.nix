@@ -21,7 +21,6 @@
       "$browser" = "uwsm app -- helium";
 
       exec-once = [
-        "uwsm app -- waybar"
         "uwsm app -- wl-paste --type text --watch cliphist store"
         "uwsm app -- wl-paste --type image --watch cliphist store"
         "uwsm app -- ghostty --initial-window=false"
