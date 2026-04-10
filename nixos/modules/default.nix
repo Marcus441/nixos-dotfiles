@@ -4,7 +4,6 @@
     ./binfmt.nix
     ./bluetooth.nix
     ./boot.nix
-    ./ccache.nix
     ./docker.nix
     ./env.nix
     ./home-manager.nix
