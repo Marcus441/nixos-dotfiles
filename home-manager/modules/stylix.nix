@@ -40,7 +40,6 @@
     };
     polarity = "dark";
     targets = {
-      bat.enable = true;
       fish.enable = true;
       gtk.enable = true;
       hyprland.enable = true;
@@ -48,7 +47,6 @@
       lazygit.enable = true;
       mako.enable = true;
       neovide.fonts.enable = true;
-      # opencode.enable = true;
       qt.enable = true;
       yazi.enable = true;
       zathura.enable = true;
