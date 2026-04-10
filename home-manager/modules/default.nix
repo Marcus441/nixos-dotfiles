@@ -1,8 +1,7 @@
 {
   imports = [
-    ./bat.nix
-    ./btop.nix
     # ./chromium.nix
+    ./btop.nix
     ./direnv.nix
     ./discord.nix
     ./eza.nix
@@ -29,7 +28,6 @@
     ./waybar
     ./wlogout
     ./xdg-pwas.nix
-    ./yazi
     ./zathura.nix
     ./zoxide.nix
   ];
