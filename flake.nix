@@ -12,6 +12,10 @@
       url = "github:Marcus441/neovim.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stylix = {
       url = "github:danth/stylix";
@@ -71,6 +75,9 @@
           inherit inputs user hostname homeStateVersion monitors;
         };
         modules = [
+          inputs.nix-index-database.homeModules.default
+          inputs.stylix.homeModules.stylix
+          inputs.walker.homeManagerModules.default
           ./home-manager/home.nix
         ];
       };

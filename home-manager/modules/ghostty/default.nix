@@ -2,7 +2,6 @@
   programs.ghostty = {
     enable = true;
     settings = {
-      theme = "Kanagawa Dragon";
       # Window padding
       window-padding-x = 10;
       window-padding-y = 10;
@@ -67,7 +66,7 @@
         "ctrl+0=goto_tab:10"
 
         # Standard Tab controls
-        "ctrl+t=new_tab"
+        "ctrl+shift+t=new_tab"
         "ctrl+w=close_tab:this"
         "ctrl+shift+o=toggle_tab_overview"
       ];

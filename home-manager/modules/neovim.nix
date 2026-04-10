@@ -18,15 +18,4 @@
       vim = "nvim";
     };
   };
-  xdg.desktopEntries = {
-    nvim = {
-      name = "Neovim";
-      genericName = "Text Editor";
-      exec = "nvim %F";
-      terminal = true;
-      categories = ["Utility" "TextEditor" "Development"];
-      mimeType = ["text/plain" "text/markdown" "text/x-csrc" "text/x-chdr" "text/x-python" "application/x-ruby"];
-      icon = "nvim";
-    };
-  };
 }

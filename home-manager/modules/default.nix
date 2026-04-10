@@ -1,24 +1,30 @@
 {
   imports = [
-    # ./chromium.nix
+    ./bat.nix
+    ./xdg-mimeApps.nix
     ./btop.nix
     ./direnv.nix
     ./discord.nix
     ./eza.nix
     ./fastfetch.nix
+    ./fd.nix
     ./fish.nix
     ./fzf.nix
-    ./gh-dash.nix
     ./ghostty
     ./git.nix
     ./helium.nix
     ./hyprland
-    ./lazydocker.nix
+    ./jq.nix
     ./lazygit.nix
+    ./mpv.nix
     ./neovide.nix
     ./neovim.nix
+    ./nix-index.nix
+    ./obs-studio.nix
     ./opencode
+    ./ripgrep.nix
     ./services
+    ./ssh.nix
     ./starship.nix
     ./stylix.nix
     ./thunderbird
@@ -26,7 +32,9 @@
     ./walker
     ./waybar
     ./wlogout
+    ./xdg-portal.nix
     ./xdg-pwas.nix
+    ./yazi.nix
     ./zoxide.nix
   ];
 }

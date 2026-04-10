@@ -1,5 +1,5 @@
 {
-  programs.gh-dash = {
+  programs.jq = {
     enable = true;
   };
 }

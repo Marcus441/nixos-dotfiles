@@ -1,7 +1,10 @@
 {
   programs.ssh = {
     enable = true;
-    addKeysToAgent = true;
     enableDefaultConfig = false;
+    matchBlocks."*" = {
+      addKeysToAgent = "yes";
+      extraOptions.SetEnv = "TERM=xterm-256color";
+    };
   };
 }

@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   programs.fish = {
     enable = true;
+    preferAbbrs = true;
     binds = {
       "alt-s" = {
         erase = true;
@@ -9,21 +10,22 @@
       };
     };
 
-    functions = {
-      mkcd = ''
+    functions.mkcd = {
+      body = ''
         mkdir -p $argv[1]
         cd $argv[1]
       '';
+      description = "Create a directory and cd into it";
+      argumentNames = "dir";
     };
 
     interactiveShellInit = ''
       set -g fish_greeting
       fish_vi_key_bindings
-
-      if status is-interactive
-        if test "$SHLVL" = 1
-          fastfetch
-        end
+    '';
+    shellInitLast = ''
+      if test "$SHLVL" = 1
+        fastfetch
       end
     '';
 
@@ -68,6 +70,7 @@
 
     shellAliases = {
       vim = "nvim";
+      gg = "git-graph --style round";
     };
   };
 }

@@ -4,15 +4,12 @@
   config,
   ...
 }: {
-  imports = [
-    inputs.stylix.homeModules.stylix
-  ];
   home.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-lgc-plus
-    noto-fonts-color-emoji
     font-awesome
     nerd-fonts.jetbrains-mono
+    noto-fonts
+    noto-fonts-color-emoji
+    noto-fonts-lgc-plus
     source-code-pro
   ];
 
@@ -40,7 +37,10 @@
     };
     polarity = "dark";
     targets = {
+      bat.enable = true;
       fish.enable = true;
+      fzf.enable = true;
+      ghostty.enable = true;
       gtk.enable = true;
       hyprland.enable = true;
       hyprlock.enable = true;
@@ -48,6 +48,7 @@
       mako.enable = true;
       neovide.fonts.enable = true;
       qt.enable = true;
+      tmux.enable = true;
       yazi.enable = true;
       zathura.enable = true;
     };
