@@ -6,6 +6,10 @@
     mpv
     obs-studio
 
+    # Document & Image Rendering (For Neovim/Snacks)
+    ghostscript
+    tectonic
+
     # CLI utils
     bc
     brightnessctl
