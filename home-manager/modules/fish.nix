@@ -48,7 +48,8 @@
       ost = "nh os test";
       osw = "nh os switch";
       hms = "nh home switch";
-      upd = "nh os switch --update";
+      hmu = "nh home switch --update";
+      osu = "nh os switch --update";
       nd = "nix develop -c $SHELL";
       ndi = "nix develop --impure -c $SHELL";
 

@@ -98,12 +98,12 @@ To get started with this NixOS setup, follow these steps:
    the root of your cloned repository and rebuild your NixOS system.
 
    ```bash
-   # Ensure you are in the root of cloned 'nixos-dotfiles' directory (now /home/<user>/flake) 
+   # Ensure you are in the root of cloned 'nixos-dotfiles' directory (now /home/<user>/flake)
    # Example: cd ~/flake
 
    git add . # Stage your changes
    sudo nixos-rebuild switch --flake .#<hostname> # Use '.' for the current directory
-   # OR: sudo nixos-install --flake .#<hostname> # for a fresh install 
+   # OR: sudo nixos-install --flake .#<hostname> # for a fresh install
 
    home-manager switch --flake .#<user>@<hostname> #eg alice@nixos
    ```

@@ -94,6 +94,11 @@
         focus_on_activate = true;
       };
 
+      cursor = {
+        hide_on_key_press = true;
+        warp_on_change_workspace = 1;
+      };
+
       windowrule = [
         # Maximize suppression
         "suppress_event maximize, match:class .*"
