@@ -335,11 +335,11 @@
         "nvf": "nvf"
       },
       "locked": {
-        "lastModified": 1775893437,
-        "narHash": "sha256-Qz1/xYObqPwGYVif1BBidU3AWUvI3LVHU6ClQxvb824=",
+        "lastModified": 1775971424,
+        "narHash": "sha256-DnKeKbuu9SGX9GgShf7joykfxrmESAlPZH/+Farhtok=",
         "owner": "Marcus441",
         "repo": "neovim.nix",
-        "rev": "3aa991bdf26fb48e1c3892e2d24fe19c67098302",
+        "rev": "5ee57699fcda0c00e2d459e0bd150f86a65d7142",
         "type": "github"
       },
       "original": {
@@ -355,11 +355,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775365369,
-        "narHash": "sha256-DgH5mveLoau20CuTnaU5RXZWgFQWn56onQ4Du2CqYoI=",
+        "lastModified": 1775970782,
+        "narHash": "sha256-7jt9Vpm48Yy5yAWigYpde+HxtYEpEuyzIQJF4VYehhk=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "cef5cf82671e749ac87d69aadecbb75967e6f6c3",
+        "rev": "bedba5989b04614fc598af9633033b95a937933f",
         "type": "github"
       },
       "original": {
