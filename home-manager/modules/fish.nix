@@ -23,11 +23,6 @@
       set -g fish_greeting
       fish_vi_key_bindings
     '';
-    shellInitLast = ''
-      if test "$SHLVL" = 1
-        fastfetch
-      end
-    '';
 
     loginShellInit = ''
       # Start workspace manager once per login

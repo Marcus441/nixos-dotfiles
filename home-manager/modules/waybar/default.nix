@@ -1,4 +1,4 @@
-{config, ...}: {
+{
   imports = [
     ./scripts.nix
     ./style.nix
@@ -100,7 +100,7 @@
 
           interval = 3;
           spacing = 1;
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e nmtui\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty +new-window -e nmtui\"";
         };
 
         battery = {
@@ -145,13 +145,13 @@
         cpu = {
           interval = 1;
           format = "󰘚 {usage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e btop\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty +new-window -e btop\"";
         };
 
         memory = {
           interval = 5;
           format = "󰍛 {percentage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] uwsm app -- ghostty -e btop\"";
+          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty +new-window -e btop\"";
         };
 
         pulseaudio = {

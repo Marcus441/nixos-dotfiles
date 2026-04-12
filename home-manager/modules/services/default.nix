@@ -1,6 +1,6 @@
 {
   imports = [
+    ./thunar.nix
     ./tmuxd.nix
-    ./mako.nix
   ];
 }

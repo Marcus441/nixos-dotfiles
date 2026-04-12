@@ -5,96 +5,84 @@
 }: let
   c = config.lib.stylix.colors;
   thm_bg = "#${c.base00}";
-  thm_fg = "#${c.base05}";
   thm_gray = "#${c.base03}";
-  thm_red = "#${c.base08}";
   thm_blue = "#${c.base0D}";
-  thm_black = "#${c.base01}";
 in {
   programs.tmux = {
     enable = true;
-    prefix = "C-b";
+    prefix = "C-Space";
     baseIndex = 1;
     mouse = true;
     escapeTime = 0;
     keyMode = "vi";
-    terminal = "xterm-ghostty";
+    terminal = "xterm-256color";
     plugins = [
       {
         plugin = pkgs.tmuxPlugins.resurrect;
         extraConfig = ''
-
           set -g @resurrect-strategy-nvim 'session'
           set -g @resurrect-strategy-vim 'session'
-
           set -g @resurrect-capture-pane-contents 'on'
-
-          # Thanks to
-          # https://discourse.nixos.org/t/how-to-get-tmux-resurrect-to-restore-neovim-sessions/30819/10
           set -g @resurrect-dir "$HOME/.tmux/resurrect"
           set -g @resurrect-hook-post-save-all "sed -i -E 's|:/nix/store/[^ ]+/bin/nvim.*|:nvim|g; s|/home/[^/]+/.nix-profile/bin/||g; s|--cmd.*||g' $HOME/.tmux/resurrect/last"
           set -g @resurrect-processes '"~nvim"'
         '';
       }
-      {
-        plugin = pkgs.tmuxPlugins.vim-tmux-navigator;
-      }
-      {
-        # theme
-        plugin = pkgs.tmuxPlugins.tmux-nova;
-        extraConfig = ''
-          set -g status-position top
-          set -g @nova-nerdfonts true
-          set -g @nova-nerdfonts-left 
-          set -g @nova-nerdfonts-right 
-
-          set -g @nova-pane-active-border-style "${thm_blue}"
-          set -g @nova-pane-border-style "${thm_gray}"
-          set -g @nova-status-style-bg "${thm_bg}"
-          set -g @nova-status-style-fg "${thm_fg}"
-          set -g @nova-status-style-active-bg "${thm_blue}"
-          set -g @nova-status-style-active-fg "${thm_bg}"
-          set -g @nova-status-style-double-bg "${thm_bg}"
-
-          set -g @nova-pane "#I#{?pane_in_mode,  #{pane_mode},}  #W"
-
-          set -g @nova-segment-mode "#{?client_prefix,,}"
-          set -g @nova-segment-mode-colors "${thm_blue} ${thm_bg}"
-
-          set -g @nova-segment-whoami "#(whoami)@#h"
-          set -g @nova-segment-whoami-colors "${thm_blue} ${thm_bg}"
-
-          set -g @nova-rows 0
-          set -g @nova-segments-0-left "mode"
-          set -g @nova-segments-0-right "whoami"
-        '';
-      }
-      {
-        plugin = pkgs.tmuxPlugins.continuum;
-      }
+      {plugin = pkgs.tmuxPlugins.vim-tmux-navigator;}
+      {plugin = pkgs.tmuxPlugins.continuum;}
     ];
     extraConfig = ''
+      # Prefix
+      set -g prefix2 C-b
+      bind C-Space send-prefix
+
+      # General
       set -g allow-passthrough on
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
-
-
+      set -ag terminal-overrides ",*:RGB"
       set -g renumber-windows on
-      set-option -g detach-on-destroy off
+      set -g history-limit 50000
+      set -g focus-events on
+      set -g set-clipboard on
+      set -g detach-on-destroy off
 
-      bind-key r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+      # Reload config
+      bind q source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
 
-      bind-key -T copy-mode-vi v send-keys -X begin-selection
-      bind-key -T copy-mode-vi V send-keys -X select-line
-      bind-key -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
-      bind-key -T copy-mode-vi y \
+      # Vi copy mode
+      bind -T copy-mode-vi v send -X begin-selection
+      bind -T copy-mode-vi V send -X select-line
+      bind -T copy-mode-vi C-v run-shell 'tmux send-keys -X rectangle-toggle; tmux send-keys -X begin-selection'
+      bind -T copy-mode-vi y \
         send-keys -X copy-selection-and-cancel \;\
         run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
-      bind-key -T copy-mode-vi MouseDragEnd1Pane \
+      bind -T copy-mode-vi MouseDragEnd1Pane \
         send-keys -X copy-selection-and-cancel \;\
         run-shell -b "tmux save-buffer - | wl-copy --primary --no-newline >/dev/null 2>&1 || true" \;\
         run-shell -b "tmux save-buffer - | wl-copy --no-newline >/dev/null 2>&1 || true"
 
+      # Pane controls
+      bind h split-window -v -c "#{pane_current_path}"
+      bind v split-window -h -c "#{pane_current_path}"
+      bind x kill-pane
+      bind -n M-v split-window -v -c "#{pane_current_path}"
+      bind -n M-h split-window -h -c "#{pane_current_path}"
+      bind -n M-c kill-pane
+      bind -n C-M-Left select-pane -L
+      bind -n C-M-Right select-pane -R
+      bind -n C-M-Up select-pane -U
+      bind -n C-M-Down select-pane -D
+      bind -n C-M-S-Left resize-pane -L 5
+      bind -n C-M-S-Down resize-pane -D 5
+      bind -n C-M-S-Up resize-pane -U 5
+      bind -n C-M-S-Right resize-pane -R 5
+
+      # Window navigation
+      bind r command-prompt -I "#W" "rename-window -- '%%'"
+      bind c new-window -c "#{pane_current_path}"
+      bind k kill-window
+      bind -n M-Enter new-window -c "#{pane_current_path}"
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
       bind -n M-3 select-window -t 3
@@ -104,20 +92,45 @@ in {
       bind -n M-7 select-window -t 7
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
+      bind -n M-Left swap-window -t -1 \; select-window -t -1
+      bind -n M-Right swap-window -t +1 \; select-window -t +1
 
-      bind -n M-v split-window -v -c "#{pane_current_path}"
-      bind -n M-h split-window -h -c "#{pane_current_path}"
-
+      # Session controls
+      bind R command-prompt -I "#S" "rename-session -- '%%'"
+      bind C new-session -c "#{pane_current_path}"
+      bind K kill-session
+      bind P switch-client -p
+      bind N switch-client -n
+      bind -n M-Up switch-client -p
+      bind -n M-Down switch-client -n
       bind -n M-s run-shell tmux-switch
       bind -n M-k run-shell tmux-kill
 
-      bind -n M-Enter new-window
-      bind -n M-c kill-pane
+      # Status bar
+      set -g status-position top
+      set -g status-interval 5
+      set -g status-left-length 30
+      set -g status-right-length 50
+      set -g window-status-separator ""
+      set -gw automatic-rename on
+      set -gw automatic-rename-format '#{b:pane_current_path}'
 
-      # tmuxplugin-continuum
-      # ---------------------
+      # Theme
+      set -g status-style "bg=default,fg=default"
+      set -g status-left "#[fg=${thm_bg},bg=${thm_blue},bold] #S #[bg=default] "
+      set -g status-right "#[fg=${thm_blue}]#{?pane_in_mode,COPY ,}#{?client_prefix,PREFIX ,}#{?window_zoomed_flag,ZOOM ,}#[fg=${thm_gray}]#h "
+      set -g window-status-format "#[fg=${thm_gray}] #I:#W "
+      set -g window-status-current-format "#[fg=${thm_blue},bold] #I:#W "
+      set -g pane-border-style "fg=${thm_gray}"
+      set -g pane-active-border-style "fg=${thm_blue}"
+      set -g message-style "bg=default,fg=${thm_blue}"
+      set -g message-command-style "bg=default,fg=${thm_blue}"
+      set -g mode-style "bg=${thm_blue},fg=${thm_bg}"
+      setw -g clock-mode-colour "${thm_blue}"
+
+      # Continuum
       set-option -g @continuum-restore 'on'
-      set-option -g @continuum-save-interval '5' # minutes
+      set-option -g @continuum-save-interval '5'
       run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
     '';
   };

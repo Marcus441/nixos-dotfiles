@@ -8,44 +8,58 @@
   helium-raw = inputs.helium.defaultPackage.${system};
 
   enableFeatures = [
-    "SmoothScrolling"
-    "ThreadedScrolling"
-    "CanvasOopRasterization"
-
-    "LazyFrameLoading"
-    "LazyImageLoading"
-    "TabDiscarding"
-    "TabFreeze"
-    "FastUnload"
-
+    "WaylandWindowDecorations"
     "VaapiVideoDecoder"
-
-    "UseOzonePlatform"
-    "WaylandFractionalScaleV1"
+    "VaapiVideoEncoder"
+    "HeliumNoise"
+    "HeliumNoiseCanvas"
+    "HeliumNoiseAudio"
+    "HeliumNoiseCpuCores"
+    "HeliumMiddleClickAutoscroll"
+    "HeliumZenMode"
+    "HeliumCompactLocationWidth"
   ];
 
   disableFeatures = [
-    "ChromeWhatsNewUI"
-    "TranslateUI"
-    "OptimizationHints"
+    "UseChromeOSDirectVideoDecoder"
   ];
 
-  allFlags = [
+  extraFlags = [
+    # Wayland / Hyprland
     "--ozone-platform=wayland"
+    "--gtk-version=4"
+    "--enable-wayland-ime"
 
-    "--enable-gpu-compositing"
-    "--enable-oop-rasterization"
+    # Performance
+    "--use-gl=angle"
+    "--enable-gpu-rasterization"
+    "--enable-zero-copy"
+    "--disk-cache-size=52428800"
+    "--renderer-process-limit=4"
 
-    "--enable-async-dns"
-    "--enable-quic"
+    # Helium update channel (stable)
+    "--helium-update-channel=stable"
 
-    "--disable-breakpad"
-    "--disable-crash-reporter"
-    "--disable-sync"
+    # Privacy (ungoogled-chromium flags, still valid)
+    "--disable-search-engine-collection"
+    "--no-pings"
+    "--fingerprinting-canvas-image-data-noise"
+    "--fingerprinting-client-rects-noise"
+    "--fingerprinting-canvas-measuretext-noise"
 
-    "--enable-features=${lib.concatStringsSep "," enableFeatures}"
-    "--disable-features=${lib.concatStringsSep "," disableFeatures}"
+    # UI cleanup
+    "--hide-extensions-menu"
+    "--remove-tabsearch-button"
+    "--remove-grab-handle"
+    "--close-window-with-last-tab=never"
   ];
+
+  allFlags =
+    [
+      "--enable-features=${lib.concatStringsSep "," enableFeatures}"
+      "--disable-features=${lib.concatStringsSep "," disableFeatures}"
+    ]
+    ++ extraFlags;
 in {
   home.packages = [
     (pkgs.symlinkJoin {
@@ -58,8 +72,4 @@ in {
       '';
     })
   ];
-
-  # Note: Extensions for Helium (as an AppImage/Flake) are best installed
-  # manually via the web store to ensure they persist correctly in the
-  # AppImage's user data directory.
 }

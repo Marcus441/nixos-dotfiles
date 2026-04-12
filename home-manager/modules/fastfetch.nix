@@ -24,20 +24,24 @@
                   $1██████      $2███
                   $1██  ███      $2██ '';
         type = "data";
+        padding = {
+          top = 1;
+          right = 6;
+          left = 2;
+        };
       };
 
       display = {
         separator = "  ";
-        key = {
-          width = 12;
-        };
+        key.width = 22;
       };
 
       modules = [
+        "break"
         "title"
         {
           type = "custom";
-          format = "──────────────────────────────";
+          format = "────────────────────────────────────────────────";
           outputColor = "white";
         }
 
@@ -83,27 +87,26 @@
 
         "break"
 
-        # --- Hardware (Yellow/Green) ---
+        # --- Hardware (Green) ---
         {
           type = "cpu";
           key = " CPU";
-          keyColor = "yellow";
+          keyColor = "green";
         }
         {
           type = "gpu";
           key = "󰢮 GPU";
-          keyColor = "yellow";
+          keyColor = "green";
         }
         {
           type = "memory";
           key = " Memory";
-          keyColor = "yellow";
+          keyColor = "green";
         }
 
         "break"
         {
           type = "colors";
-          symbol = "circle";
         }
       ];
     };

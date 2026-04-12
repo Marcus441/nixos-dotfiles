@@ -1,6 +1,7 @@
 {
   pkgs,
   user,
+  lib,
   ...
 }: {
   virtualisation = {
@@ -17,4 +18,7 @@
   programs.virt-manager.enable = true;
   networking.firewall.trustedInterfaces = ["virbr0"];
   users.users.${user}.extraGroups = ["libvirtd" "kvm"];
+
+  systemd.services.libvirtd.wantedBy = lib.mkForce [];
+  systemd.services.libvirt-guests.wantedBy = lib.mkForce [];
 }

@@ -16,14 +16,13 @@
       monitor = map (m: m.hyprland) monitors;
 
       "$mainMod" = "SUPER";
-      "$terminal" = "uwsm app -- ghostty";
-      "$fileManager" = "uwsm app -- thunar";
+      "$terminal" = "ghostty +new-window -e fish -c \"fastfetch; exec fish\"";
+      "$fileManager" = "thunar";
       "$browser" = "uwsm app -- helium";
 
       exec-once = [
         "uwsm app -- wl-paste --type text --watch cliphist store"
         "uwsm app -- wl-paste --type image --watch cliphist store"
-        "uwsm app -- ghostty --initial-window=false"
       ];
 
       general = {

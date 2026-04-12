@@ -1,39 +1,46 @@
 {user, ...}: {
   programs.ghostty = {
     enable = true;
+    systemd.enable = true;
     settings = {
-      # Window padding
+      # Window
       window-padding-x = 10;
       window-padding-y = 10;
-      font-size = 14;
-
+      window-inherit-working-directory = true;
+      window-inherit-font-size = true;
+      working-directory = "home";
+      quit-after-last-window-closed = true;
+      quit-after-last-window-closed-delay = "10m";
+      gtk-toolbar-style = "flat";
       resize-overlay = "never";
-      unfocused-split-opacity = 0.8;
-
-      mouse-hide-while-typing = true;
-      focus-follows-mouse = false;
-
-      confirm-close-surface = false;
-      custom-shader = "/home/${user}/flake/home-manager/modules/ghostty/cursor_smear.glsl";
-      scrollback-limit = 10000;
 
       # Font
-      font-feature = "builtin_box_drawing";
-
-      app-notifications = "no-clipboard-copy";
+      font-size = 14;
 
       # Cursor
       cursor-style = "block";
+      cursor-style-blink = false;
+      custom-shader = "/home/${user}/flake/home-manager/modules/ghostty/cursor_smear.glsl";
+
+      # Splits & Tabs
+      unfocused-split-opacity = 0.8;
+      split-inherit-working-directory = true;
+      tab-inherit-working-directory = true;
+
+      # Mouse
+      mouse-hide-while-typing = true;
+      mouse-scroll-multiplier = 0.95;
+      focus-follows-mouse = false;
       copy-on-select = true;
 
-      working-directory = "home";
-      window-inherit-working-directory = true;
-      tab-inherit-working-directory = true;
-      split-inherit-working-directory = true;
-      window-inherit-font-size = true;
+      # Shell & Input
+      shell-integration-features = "no-cursor,ssh-env,ssh-terminfo,sudo,title";
+      async-backend = "epoll";
 
-      quit-after-last-window-closed = true;
-      quit-after-last-window-closed-delay = "10m";
+      # Misc
+      scrollback-limit = 50000;
+      confirm-close-surface = false;
+      app-notifications = "no-clipboard-copy";
 
       keybind = [
         # Create splits
