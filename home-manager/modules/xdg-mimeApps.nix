@@ -35,16 +35,20 @@
       # Images
       "image/png" = "imv.desktop";
       "image/jpeg" = "imv.desktop";
-      "image/gif" = "imv.desktop";
+      "image/gif" = "mpv.desktop";
       "image/webp" = "imv.desktop";
       "image/svg+xml" = "imv.desktop";
       "image/tiff" = "imv.desktop";
 
       # Video
       "video/mp4" = "mpv.desktop";
-      "video/mkv" = "mpv.desktop";
       "video/webm" = "mpv.desktop";
       "video/x-matroska" = "mpv.desktop";
+      "video/matroska" = "mpv.desktop";
+      "video/matroska-3d" = "mpv.desktop";
+      "audio/matroska" = "mpv.desktop";
+      "audio/x-matroska" = "mpv.desktop";
+      "application/x-matroska" = "mpv.desktop";
       "video/avi" = "mpv.desktop";
       "video/quicktime" = "mpv.desktop";
 
