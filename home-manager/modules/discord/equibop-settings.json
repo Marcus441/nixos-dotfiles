@@ -1,0 +1,17 @@
+{
+    "discordBranch": "stable",
+    "tray": true,
+    "minimizeToTray": true,
+    "arRPC": true,
+    "trayColor": "",
+    "trayMainOverride": false,
+    "splashColor": "rgb(239, 239, 241)",
+    "hardwareVideoAcceleration": true,
+    "enableSplashScreen": false,
+    "splashTheming": true,
+    "trayAutoFill": "white",
+    "arguments": "--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true",
+    "splashProgress": true,
+    "splashBackground": "rgb(18, 18, 20)",
+    "middleClickAutoscroll": true
+}

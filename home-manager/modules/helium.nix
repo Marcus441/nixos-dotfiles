@@ -22,6 +22,7 @@
 
   disableFeatures = [
     "UseChromeOSDirectVideoDecoder"
+    # "MiddleClickPasteEnabled"
   ];
 
   extraFlags = [
