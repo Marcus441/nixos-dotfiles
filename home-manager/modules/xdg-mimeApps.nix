@@ -17,7 +17,12 @@
       "application/x-extension-xht" = "helium.desktop";
 
       # PDF
-      "application/pdf" = "helium.desktop";
+      "application/pdf" = "zathura.desktop";
+      "application/x-pdf" = "zathura.desktop";
+      "application/acrobat" = "zathura.desktop";
+      "application/vnd.pdf" = "zathura.desktop";
+      "text/pdf" = "zathura.desktop";
+      "text/x-pdf" = "zathura.desktop";
 
       # Email
       "x-scheme-handler/mailto" = "thunderbird.desktop";

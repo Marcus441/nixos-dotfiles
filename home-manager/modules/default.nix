@@ -38,5 +38,6 @@
     ./xdg-pwas.nix
     ./yazi.nix
     ./zoxide.nix
+    ./zathura.nix
   ];
 }
