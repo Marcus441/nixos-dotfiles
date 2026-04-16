@@ -1,6 +1,7 @@
 {
   monitors,
   user,
+  sensitivity,
   ...
 }: {
   wayland.windowManager.hyprland = {
@@ -73,7 +74,7 @@
           scroll_factor = 0.6;
         };
         accel_profile = "flat";
-        force_no_accel = true;
+        inherit sensitivity;
       };
 
       gestures = {

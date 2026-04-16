@@ -67,12 +67,14 @@
 
     mkHome = hostname: let
       utils = import ./utilities;
-      monitors = import ./hosts/${hostname}/monitors.nix utils;
+      monitorConfig = import ./hosts/${hostname}/monitors.nix utils;
+      inherit (monitorConfig) monitors;
+      inherit (monitorConfig) sensitivity;
     in
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs user hostname homeStateVersion monitors;
+          inherit inputs user hostname homeStateVersion monitors sensitivity;
         };
         modules = [
           inputs.nix-index-database.homeModules.default
