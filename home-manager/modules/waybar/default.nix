@@ -12,15 +12,13 @@
     settings = {
       mainBar = {
         layer = "top";
-        spacing = 4;
+        spacing = 0;
         position = "top";
-        height = 30;
+        height = 26;
 
         modules-left = [
           "custom/launcher"
-          "custom/spacer"
           "hyprland/workspaces"
-          "custom/spacer"
           "custom/weather"
         ];
         modules-center = [
@@ -28,15 +26,13 @@
         ];
         modules-right = [
           "tray"
-          "custom/kernel"
-          "cpu"
-          "memory"
-          "disk"
           "bluetooth"
           "network"
+          "pulseaudio"
+          "cpu"
+          "disk"
           "battery"
           "backlight"
-          "pulseaudio"
           "custom/power"
         ];
 
@@ -45,17 +41,22 @@
           disable-scroll = true;
           all-outputs = true;
           warp-on-scroll = false;
-          format = "{name}: {icon}";
+          format = "{icon}";
           format-icons = {
-            "1" = "";
-            "2" = "󰇮";
-            "3" = "";
-            "4" = "";
-            "5" = "󰭹";
-            "default" = "";
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "active" = "󱓻";
+            "default" = "";
           };
           persistent-workspaces = {
-            "*" = [1 2 3 4 5];
+            "1" = [];
+            "2" = [];
+            "3" = [];
+            "4" = [];
+            "5" = [];
           };
         };
 
@@ -67,17 +68,17 @@
         };
 
         clock = {
-          format = "{:%a, %b %d - %I:%M %p}";
-          format-alt = "{:%a, %b %d %Y}";
-          tooltip-format = "<tt>{calendar}</tt>";
+          format = "{:%A %H:%M}";
+          format-alt = "{:%d %B W%V %Y}";
+          tooltip = false;
         };
 
         bluetooth = {
-          format-on = "󰂯";
-          format-off = "󰂯";
+          format = "";
+          format-off = "󰂲";
           format-disabled = "󰂲";
           format-connected = "󰂱";
-          format-connected-battery = "{device_battery_percentage}% 󰂴";
+          format-no-controller = "";
           tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
@@ -87,50 +88,42 @@
 
         network = {
           format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+          format = "{icon}";
           format-wifi = "{icon}";
           format-ethernet = "󱘖";
-
-          format-linked = "󰤮 {ifname} (No IP)";
-
+          format-linked = "󰤮";
           format-disconnected = "󰤮";
-
           tooltip-format-wifi = "{essid} ({signalStrength}%) {frequency}GHz\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
-
           interval = 3;
           spacing = 1;
           on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e nmtui\"";
         };
 
         battery = {
-          interval = 1;
+          interval = 5;
           states = {
-            warning = 30;
-            critical = 20;
+            warning = 20;
+            critical = 10;
           };
-          format = "{capacity}% {icon}";
-          format-charging = "{capacity}% 󰂄";
-          format-plugged = "{capacity}% 󰂄 ";
-          format-alt = "{time} {icon}";
-          format-icons = [
-            "󰁺"
-            "󰁻"
-            "󰁼"
-            "󰁽"
-            "󰁾"
-            "󰁿"
-            "󰂀"
-            "󰂁"
-            "󰂂"
-            "󰁹"
-          ];
+          format = "{icon}";
+          format-discharging = "{icon}";
+          format-charging = "{icon}";
+          format-plugged = "";
+          format-full = "󰂅";
+          format-icons = {
+            charging = ["󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅"];
+            default = ["󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
+          };
+          tooltip-format-discharging = "{power:>1.0f}W↓ {capacity}%";
+          tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
         };
 
         backlight = {
           device = "intel_backlight";
           format = "{icon}";
-          format-icons = ["" "" "" "" "" "" "" "" "" ""];
+          format-icons = ["" "" "" "" "" "" "" "" "" ""];
           on-scroll-down = "light -A 10";
           on-scroll-up = "light -U 10";
           smooth-scrolling-threshold = 1;
@@ -138,50 +131,37 @@
 
         disk = {
           interval = 300;
-          format = "󰋊 {percentage_used}%";
+          format = "󰋊";
+          tooltip-format = "{percentage_used}% used";
           path = "/";
         };
 
         cpu = {
-          interval = 1;
-          format = "󰘚 {usage}%";
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
-        };
-
-        memory = {
           interval = 5;
-          format = "󰍛 {percentage}%";
+          format = "󰍛";
+          tooltip-format = "{usage}%";
           on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
         };
 
         pulseaudio = {
           format = "{icon}";
           format-bluetooth = "󰂰";
-          format-muted = "󰝟";
+          format-muted = "";
           format-icons = {
-            headset = "󱡬";
-            default = ["󰖀" "󰕾" ""];
+            headphone = "";
+            headset = "";
+            default = ["" "" ""];
           };
-          justify = "center";
-          on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           on-click = "uwsm app -- pavucontrol";
-          tooltip-format = "{icon} {volume}%";
+          on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          tooltip-format = "Playing at {volume}%";
+          scroll-step = 5;
         };
 
         "custom/launcher" = {
           format = "<span size='14000'>󱗼</span>";
           tooltip = false;
           on-click = "walker";
-        };
-
-        "custom/spacer" = {
-          format = "  ";
-        };
-
-        "custom/kernel" = {
-          format = " {}";
-          interval = 3600;
-          exec = "uname -r | cut -d '-' -f1";
         };
 
         "custom/power" = {
@@ -192,8 +172,8 @@
         };
 
         tray = {
-          icon-size = 14;
-          spacing = 10;
+          icon-size = 12;
+          spacing = 17;
         };
       };
     };
