@@ -26,7 +26,7 @@
 
     enableMcpIntegration = false;
 
-    rules = ''
+    context = ''
       # General Development Rules
 
       ## Environment & Context
