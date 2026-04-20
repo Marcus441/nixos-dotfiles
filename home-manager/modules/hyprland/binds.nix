@@ -12,7 +12,7 @@
       "$mainMod,       F,      togglefloating"
       "$mainMod,       Q,      killactive"
       "$mainMod,       Return, exec, $terminal"
-      "$mainMod,       S,      togglesplit"
+      "$mainMod,       S,      layoutmsg, togglesplit"
       "$mainMod,       Tab,    exec, walker -m windows"
       "$mainMod,       V,      exec, walker -m clipboard"
       "$mainMod,       W,      exec, walker -m menus:wallpapers"

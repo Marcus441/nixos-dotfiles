@@ -2,6 +2,8 @@
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
+      # File Browser
+      "inode/directory" = "thunar.desktop";
       # Browser
       "text/html" = "helium.desktop";
       "x-scheme-handler/http" = "helium.desktop";

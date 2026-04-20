@@ -34,9 +34,8 @@
     ./waybar
     ./wlogout
     ./xdg-mimeApps.nix
-    ./xdg-portal.nix
     ./xdg-pwas.nix
-    ./yazi.nix
+    ./yazi
     ./zoxide.nix
     ./zathura.nix
   ];
