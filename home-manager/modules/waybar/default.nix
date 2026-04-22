@@ -29,10 +29,12 @@
           "bluetooth"
           "network"
           "pulseaudio"
+          "custom/sep"
           "cpu"
-          "disk"
+          "memory"
+          "custom/sep"
           "battery"
-          "backlight"
+          "custom/sep"
           "custom/power"
         ];
 
@@ -59,7 +61,10 @@
             "5" = [];
           };
         };
-
+        "custom/sep" = {
+          format = "|";
+          tooltip = false;
+        };
         "custom/weather" = {
           format = "{}";
           return-type = "json";
@@ -69,12 +74,12 @@
 
         clock = {
           format = "{:%A %H:%M}";
-          format-alt = "{:%d %B W%V %Y}";
+          format-alt = "{:%d/%m/%Y}";
           tooltip = false;
         };
 
         bluetooth = {
-          format = "";
+          format = "󰂯";
           format-off = "󰂲";
           format-disabled = "󰂲";
           format-connected = "󰂱";
@@ -97,7 +102,6 @@
           tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
           interval = 3;
-          spacing = 1;
           on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e nmtui\"";
         };
 
@@ -120,37 +124,35 @@
           tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
         };
 
-        backlight = {
-          device = "intel_backlight";
-          format = "{icon}";
-          format-icons = ["" "" "" "" "" "" "" "" "" ""];
-          on-scroll-down = "light -A 10";
-          on-scroll-up = "light -U 10";
-          smooth-scrolling-threshold = 1;
-        };
-
-        disk = {
-          interval = 300;
-          format = "󰋊";
-          tooltip-format = "{percentage_used}% used";
-          path = "/";
-        };
-
         cpu = {
           interval = 5;
-          format = "󰍛";
+          format = " {usage}%";
           tooltip-format = "{usage}%";
+          states = {
+            warning = 70;
+            critical = 90;
+          };
           on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
+        };
+
+        memory = {
+          interval = 5;
+          format = " {percentage}%";
+          tooltip-format = "{used:0.1f}GB / {total:0.1f}GB";
+          states = {
+            warning = 70;
+            critical = 90;
+          };
         };
 
         pulseaudio = {
           format = "{icon}";
           format-bluetooth = "󰂰";
-          format-muted = "";
+          format-muted = "";
           format-icons = {
-            headphone = "";
-            headset = "";
-            default = ["" "" ""];
+            headphone = "";
+            headset = "";
+            default = ["" "" ""];
           };
           on-click = "uwsm app -- pavucontrol";
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
@@ -159,7 +161,7 @@
         };
 
         "custom/launcher" = {
-          format = "<span size='14000'>󱗼</span>";
+          format = "󱗼";
           tooltip = false;
           on-click = "walker";
         };
@@ -167,8 +169,8 @@
         "custom/power" = {
           format = "󰤆";
           tooltip = false;
-          on-click = "hyprlock";
-          on-click-right = "uwsm app -- wlogout";
+          on-click = "uwsm app -- wlogout";
+          on-click-right = "hyprlock";
         };
 
         tray = {

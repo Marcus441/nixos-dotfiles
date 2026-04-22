@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     font-awesome
     nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
     noto-fonts
     noto-fonts-color-emoji
     noto-fonts-lgc-plus

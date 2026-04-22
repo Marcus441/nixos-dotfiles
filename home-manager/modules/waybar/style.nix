@@ -8,127 +8,105 @@
     base05
     base08
     base0A
-    base0E
+    base0B
+    base0C
+    base0D
     ;
 in {
   programs.waybar.style = ''
     * {
+      font-family: 'Inter', 'Symbols Nerd Font Mono';
+      font-size: 12px;
+      min-height: 0;
+    }
+    label.module {
+      padding: 0;
+    }
+    window#waybar {
       background-color: #${base00};
       color: #${base05};
-      border: none;
-      border-radius: 0;
-      min-height: 0;
-      font-family: 'JetBrainsMono Nerd Font';
-      font-size: 12px;
-    }
-
-    window#waybar {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background-color: #${base00};
       border-bottom: 1px solid #${base01};
     }
-
-    .modules-left {
-      margin-left: 8px;
+    .modules-left  { margin-left:  8px; }
+    .modules-right { margin-right: 8px; }
+    #bluetooth,
+    #network,
+    #pulseaudio,
+    #battery,
+    #custom-launcher,
+    #custom-power {
+      font-family: 'Symbols Nerd Font Mono', 'Inter';
     }
-
-    .modules-right {
-      margin-right: 8px;
-    }
-
-    /* Launcher */
     #custom-launcher {
-      color: #${base0E};
-      margin-left: 12px;
-      margin-right: 5px;
+      font-size: 14px;
+      color: #${base0D};
+      margin: 0 8px 0 12px;
     }
-
-    /* Workspaces */
+    #custom-sep {
+      color: #${base01};
+      margin: 0 4px;
+    }
     #workspaces button {
       all: initial;
       font-family: 'JetBrainsMono Nerd Font';
       font-size: 12px;
-      color: #${base05};
+      color: #${base03};
       background-color: transparent;
       padding: 0 6px;
       margin: 0 1.5px;
       min-width: 9px;
+      transition: color 0.15s ease;
     }
-    #workspaces button.empty {
-      opacity: 0.4;
-    }
-    #workspaces button.active {
-      opacity: 1;
-      font-weight: 700;
-    }
-    #workspaces button.urgent {
-      color: #${base08};
-    }
-
-    /* Spacer */
-    #custom-spacer {
-      opacity: 0;
-      min-width: 4px;
-    }
-
-    /* Weather */
+    #workspaces button.empty   { opacity: 0.35; }
+    #workspaces button.active  { color: #${base05}; font-weight: 700; }
+    #workspaces button.urgent  { color: #${base08}; }
     #custom-weather {
-      margin: 0 7.5px;
+      color: #${base03};
+      margin: 0 8px;
     }
-
-    /* Clock */
     #clock {
+      color: #${base05};
       font-weight: 700;
-      margin-left: 8.75px;
     }
-
-    /* Tray */
-    #tray {
-      margin-right: 16px;
-    }
-    #tray > .passive {
-      -gtk-icon-effect: dim;
-    }
+    #tray                    { margin-right: 12px; }
+    #tray > .passive         { -gtk-icon-effect: dim; }
     #tray > .needs-attention {
       -gtk-icon-effect: highlight;
-    }
-
-    /* Status modules */
-    #cpu,
-    #disk,
-    #backlight,
-    #pulseaudio {
-      margin: 0 7.5px;
-    }
-
-    #network {
-      margin-right: 13px;
-    }
-
-    #bluetooth {
-      margin-right: 17px;
-    }
-
-    /* Battery */
-    #battery {
-      margin: 0 7.5px;
-    }
-    #battery.warning:not(.charging) {
       color: #${base0A};
     }
-    #battery.critical:not(.charging) {
-      color: #${base08};
+    #bluetooth,
+    #network,
+    #pulseaudio,
+    #cpu,
+    #memory,
+    #battery {
+      color: #${base03};
+      margin: 0 4px;
+      transition: color 0.15s ease;
     }
-
-    /* Power */
+    #bluetooth           { margin: 0 4px 0 6px; }
+    #bluetooth.connected { color: #${base0D}; }
+    #network.disconnected,
+    #network.linked      { color: #${base08}; }
+    #pulseaudio.muted    { color: #${base08}; }
+    #cpu,
+    #memory {
+      font-family: 'JetBrainsMono Nerd Font';
+      margin: 0 3px;
+    }
+    #cpu.warning               { color: #${base0A}; }
+    #cpu.critical              { color: #${base08}; }
+    #memory.warning            { color: #${base0A}; }
+    #memory.critical           { color: #${base08}; }
+    #battery.warning:not(.charging)  { color: #${base0A}; }
+    #battery.critical:not(.charging) { color: #${base08}; }
+    #battery.charging                { color: #${base0B}; }
+    #battery.full,
+    #battery.plugged                 { color: #${base0C}; }
     #custom-power {
-      margin-left: 5px;
-      margin-right: 8px;
       color: #${base08};
+      margin: 0 8px 0 6px;
     }
-
-    /* Tooltips */
     tooltip {
       background-color: #${base00};
       border: 1px solid #${base02};
