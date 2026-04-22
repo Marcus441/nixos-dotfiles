@@ -169,7 +169,7 @@
         "custom/power" = {
           format = "󰤆";
           tooltip = false;
-          on-click = "uwsm app -- wlogout";
+          on-click = "uwsm app -- wleave";
           on-click-right = "hyprlock";
         };
 
