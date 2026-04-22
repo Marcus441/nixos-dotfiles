@@ -32,7 +32,7 @@
     ./tmux.nix
     ./walker
     ./waybar
-    ./wlogout
+    ./wleave.nix
     ./xdg-mimeApps.nix
     ./xdg-pwas.nix
     ./yazi
