@@ -4,13 +4,14 @@
   inputs,
   ...
 }: let
-  inherit (pkgs.stdenv.hostPlatform) system;
-  helium-raw = inputs.helium.defaultPackage.${system};
+  helium-raw =
+    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   enableFeatures = [
     "WaylandWindowDecorations"
     "VaapiVideoDecoder"
     "VaapiVideoEncoder"
+    "TouchpadOverscrollHistoryNavigation"
     "HeliumNoise"
     "HeliumNoiseCanvas"
     "HeliumNoiseAudio"
@@ -21,8 +22,6 @@
   ];
 
   disableFeatures = [
-    "UseChromeOSDirectVideoDecoder"
-    # "MiddleClickPasteEnabled"
   ];
 
   extraFlags = [
@@ -32,11 +31,8 @@
     "--enable-wayland-ime"
 
     # Performance
-    "--use-gl=angle"
     "--enable-gpu-rasterization"
-    "--enable-zero-copy"
     "--disk-cache-size=52428800"
-    "--renderer-process-limit=4"
 
     # Helium update channel (stable)
     "--helium-update-channel=stable"
