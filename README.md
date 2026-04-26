@@ -17,11 +17,9 @@ original project's licensing. You can find a copy of the license in the
 
 ## Features
 
-![render_local_images](image.png)
-
 - **Kanagawa Dragon Theme:** A consistent and eye-pleasing muted yet saturated
   theme
-- **Hyprland + Noctalia-Shell:** Minimal Hyprland setup with muted Kanagawa
+- **Hyprland:** Minimal Hyprland setup with muted Kanagawa
   Dragon themed colors
 - **Tmux + Neovim Setup (via NVF):** A powerful terminal multiplexer combined
   with a highly customized Neovim environment.
@@ -110,6 +108,5 @@ To get started with this NixOS setup, follow these steps:
 
 ## Contributions
 
-Contributions are welcome! Feel free to open pull requests or issues if you have
-suggestions, improvements, or encounter problems. Please ensure any
-contributions align with the project's GPL-3.0 license.
+You can make a pr if you really want, but I'll probably just ignore it because
+these are my personal configs.
