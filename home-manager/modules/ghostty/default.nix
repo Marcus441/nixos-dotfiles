@@ -20,7 +20,7 @@
       # Cursor
       cursor-style = "block";
       cursor-style-blink = false;
-      custom-shader = "/home/${user}/flake/home-manager/modules/ghostty/cursor_smear.glsl";
+      # custom-shader = "/home/${user}/dotfiles/flake/home-manager/modules/ghostty/cursor_smear.glsl";
 
       # Splits & Tabs
       unfocused-split-opacity = 0.8;

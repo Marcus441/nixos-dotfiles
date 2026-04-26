@@ -36,7 +36,7 @@
     ./xdg-mimeApps.nix
     ./xdg-pwas.nix
     ./yazi
-    ./zoxide.nix
     ./zathura.nix
+    ./zoxide.nix
   ];
 }
