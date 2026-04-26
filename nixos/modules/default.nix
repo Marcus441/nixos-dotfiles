@@ -1,5 +1,6 @@
 {
   imports = [
+    ./common-packages.nix
     ./audio.nix
     ./binfmt.nix
     ./bluetooth.nix
