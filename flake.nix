@@ -3,7 +3,10 @@
 
   inputs = {
     elephant.url = "github:abenz1267/elephant";
-    helium.url = "github:FKouhai/helium2nix/main";
+    helium = {
+      url = "github:AlvaroParker/helium-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
