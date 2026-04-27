@@ -1,6 +1,7 @@
 {
   programs.fzf = {
     enable = true;
+    enableFishIntegration = false;
 
     defaultCommand = "fd --type f";
     changeDirWidgetCommand = "fd --type d";
@@ -16,7 +17,7 @@
     ];
 
     changeDirWidgetOptions = [
-      "--preview 'tree -C {} | head -100'" #
+      "--preview 'tree -C {} | head -100'"
     ];
   };
 }

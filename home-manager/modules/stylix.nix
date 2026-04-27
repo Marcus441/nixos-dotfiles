@@ -39,7 +39,6 @@
     targets = {
       bat.enable = true;
       fish.enable = true;
-      fzf.enable = true;
       ghostty.enable = true;
       gtk.enable = true;
       hyprland.enable = true;
