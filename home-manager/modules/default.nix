@@ -18,7 +18,6 @@
     ./lazygit.nix
     ./mako.nix
     ./mpv.nix
-    ./neovide.nix
     ./neovim.nix
     ./nix-index.nix
     ./obs-studio.nix
