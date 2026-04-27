@@ -103,8 +103,8 @@ in {
       bind N switch-client -n
       bind -n M-Up switch-client -p
       bind -n M-Down switch-client -n
-      bind -n M-s run-shell tmux-switch
-      bind -n M-k run-shell tmux-kill
+      bind -n M-s run-shell "fish -c tmux-switch"
+      bind -n M-k run-shell "fish -c tmux-kill"
 
       # Status bar
       set -g status-position top

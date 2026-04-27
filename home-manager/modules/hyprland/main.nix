@@ -17,7 +17,7 @@
       monitor = map (m: m.hyprland) monitors;
 
       "$mainMod" = "SUPER";
-      "$terminal" = "ghostty +new-window -e fish -c \"fastfetch; exec fish\"";
+      "$terminal" = "ghostty +new-window ";
       "$fileManager" = "thunar";
       "$browser" = "uwsm app -- helium";
 
