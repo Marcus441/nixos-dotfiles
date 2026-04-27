@@ -2,7 +2,6 @@
   wayland.windowManager.hyprland.settings = {
     bind = [
       "$mainMod SHIFT, C,      exec, uwsm app -- hyprpicker -an"
-      "$mainMod SHIFT, Return, exec, uwsm app -- neovide"
       "$mainMod SHIFT, S,      exec, uwsm app -- grimblast --notify --freeze copysave screen"
       "$mainMod SHIFT, Z,      exec, uwsm stop"
       "$mainMod,       B,      exec, $browser"

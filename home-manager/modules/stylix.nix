@@ -45,7 +45,6 @@
       hyprlock.enable = true;
       lazygit.enable = true;
       mako.enable = true;
-      neovide.fonts.enable = true;
       qt.enable = true;
       tmux.enable = true;
       yazi.enable = true;

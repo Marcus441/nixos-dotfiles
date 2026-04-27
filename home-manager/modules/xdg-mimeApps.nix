@@ -71,15 +71,15 @@
       "audio/x-m4a" = "mpv.desktop";
 
       # Code/Text
-      "application/json" = "neovide.desktop";
-      "application/toml" = "neovide.desktop";
-      "application/x-shellscript" = "neovide.desktop";
-      "application/x-yaml" = "neovide.desktop";
-      "application/x-zerosize" = "neovide.desktop";
-      "text/plain" = "neovide.desktop";
-      "text/x-python" = "neovide.desktop";
-      "text/x-script.python" = "neovide.desktop";
-      "text/x-shellscript" = "neovide.desktop";
+      "application/json" = "neovim.desktop";
+      "application/toml" = "neovim.desktop";
+      "application/x-shellscript" = "neovim.desktop";
+      "application/x-yaml" = "neovim.desktop";
+      "application/x-zerosize" = "neovim.desktop";
+      "text/plain" = "neovim.desktop";
+      "text/x-python" = "neovim.desktop";
+      "text/x-script.python" = "neovim.desktop";
+      "text/x-shellscript" = "neovim.desktop";
 
       # Terminal
       "x-scheme-handler/terminal" = "ghostty.desktop";
