@@ -1,5 +1,0 @@
-{
-  imports = [
-    ./tmuxd.nix
-  ];
-}

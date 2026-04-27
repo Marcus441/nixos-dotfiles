@@ -23,7 +23,6 @@
     ./obs-studio.nix
     ./opencode
     ./ripgrep.nix
-    ./services
     ./ssh.nix
     ./starship.nix
     ./stylix.nix
