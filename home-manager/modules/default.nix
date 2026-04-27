@@ -8,11 +8,11 @@
     ./eza.nix
     ./fastfetch.nix
     ./fd.nix
+    ./firefox.nix
     ./fish.nix
     ./fzf.nix
     ./ghostty
     ./git.nix
-    ./helium.nix
     ./hyprland
     ./jq.nix
     ./lazygit.nix
@@ -32,7 +32,6 @@
     ./waybar
     ./wleave.nix
     ./xdg-mimeApps.nix
-    ./xdg-pwas.nix
     ./yazi
     ./zathura.nix
     ./zoxide.nix

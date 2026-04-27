@@ -19,7 +19,7 @@
       "$mainMod" = "SUPER";
       "$terminal" = "ghostty +new-window ";
       "$fileManager" = "thunar";
-      "$browser" = "uwsm app -- helium";
+      "$browser" = "uwsm app -- firefox";
 
       exec-once = [
         "uwsm app -- wl-paste --type text --watch cliphist store"

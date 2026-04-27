@@ -1,30 +1,23 @@
 {
   xdg.mimeApps = {
     enable = true;
-    associations.removed = {
-      "application/pdf" = "helium.desktop";
-      "application/vnd.pdf" = "helium.desktop";
-      "application/x-pdf" = "helium.desktop";
-      "text/pdf" = "helium.desktop";
-      "text/x-pdf" = "helium.desktop";
-    };
     defaultApplications = {
       # File Browser
       "inode/directory" = "thunar.desktop";
 
       # Browser
-      "application/x-extension-htm" = "helium.desktop";
-      "application/x-extension-html" = "helium.desktop";
-      "application/x-extension-shtml" = "helium.desktop";
-      "application/x-extension-xht" = "helium.desktop";
-      "application/x-extension-xhtml" = "helium.desktop";
-      "application/xhtml+xml" = "helium.desktop";
-      "text/html" = "helium.desktop";
-      "x-scheme-handler/about" = "helium.desktop";
-      "x-scheme-handler/http" = "helium.desktop";
-      "x-scheme-handler/https" = "helium.desktop";
-      "x-scheme-handler/unknown" = "helium.desktop";
-      "x-scheme-handler/webcal" = "helium.desktop";
+      "application/x-extension-htm" = "firefox.desktop";
+      "application/x-extension-html" = "firefox.desktop";
+      "application/x-extension-shtml" = "firefox.desktop";
+      "application/x-extension-xht" = "firefox.desktop";
+      "application/x-extension-xhtml" = "firefox.desktop";
+      "application/xhtml+xml" = "firefox.desktop";
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
+      "x-scheme-handler/webcal" = "firefox.desktop";
 
       # PDF
       "application/acrobat" = "zathura.desktop";

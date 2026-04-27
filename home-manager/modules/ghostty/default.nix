@@ -74,7 +74,6 @@
 
         # Standard Tab controls
         "ctrl+shift+t=new_tab"
-        "ctrl+w=close_tab:this"
         "ctrl+shift+o=toggle_tab_overview"
       ];
     };
