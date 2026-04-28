@@ -5,12 +5,12 @@
 }: {
   home.packages = with pkgs; [
     font-awesome
+    nerd-fonts.iosevka-term
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
     noto-fonts
     noto-fonts-color-emoji
     noto-fonts-lgc-plus
-    source-code-pro
   ];
 
   stylix = {
@@ -59,8 +59,8 @@
 
     fonts = {
       monospace = {
-        name = "JetBrainsMono Nerd Font";
-        package = pkgs.nerd-fonts.jetbrains-mono;
+        name = "IosevkaTerm Nerd Font Mono";
+        package = pkgs.nerd-fonts.iosevka-term;
       };
       sansSerif = {
         name = "Inter";
@@ -73,12 +73,6 @@
       emoji = {
         name = "Noto Color Emoji";
         package = pkgs.noto-fonts-color-emoji;
-      };
-      sizes = {
-        applications = 13;
-        terminal = 14;
-        desktop = 12;
-        popups = 12;
       };
     };
 

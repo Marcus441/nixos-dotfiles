@@ -4,8 +4,8 @@
     systemd.enable = true;
     settings = {
       # Window
-      window-padding-x = 10;
-      window-padding-y = 10;
+      window-padding-x = 8;
+      window-padding-y = 8;
       window-inherit-working-directory = true;
       window-inherit-font-size = true;
       working-directory = "home";
@@ -15,7 +15,7 @@
       resize-overlay = "never";
 
       # Font
-      font-size = 14;
+      font-size = 20;
 
       # Cursor
       cursor-style = "block";
