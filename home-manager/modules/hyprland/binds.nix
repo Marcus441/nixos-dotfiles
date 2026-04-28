@@ -4,7 +4,7 @@
       "$mainMod SHIFT, C,      exec, uwsm app -- hyprpicker -an"
       "$mainMod SHIFT, S,      exec, uwsm app -- grimblast --notify --freeze copysave screen"
       "$mainMod SHIFT, Z,      exec, uwsm stop"
-      "$mainMod,       B,      exec, $browser"
+      "$mainMod,       B,      exec, systemctl --user is-active --quiet waybar && systemctl --user stop waybar || systemctl --user start waybar"
       "$mainMod,       C,      exec, uwsm app -- ocr-copy"
       "$mainMod,       D,      exec, walker"
       "$mainMod,       E,      exec, $fileManager"
