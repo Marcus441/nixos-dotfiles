@@ -39,6 +39,10 @@
     targets = {
       bat.enable = true;
       fish.enable = true;
+      firefox = {
+        enable = true;
+        profileNames = ["default"];
+      };
       ghostty.enable = true;
       gtk.enable = true;
       hyprland.enable = true;

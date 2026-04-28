@@ -6,6 +6,12 @@
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
+      AIControls = {
+        Default = {
+          Value = "blocked";
+          Locked = true;
+        };
+      };
       DisablePocket = true;
       DisableFormHistory = true;
       NoDefaultBookmarks = true;
@@ -106,6 +112,11 @@
             name = "Kagi";
             urls = [{template = "https://kagi.com/search?q={searchTerms}";}];
             definedAliases = ["@k"];
+          };
+          "claude" = {
+            name = "Claude";
+            urls = [{template = "https://claude.ai/new?q={searchTerms}";}];
+            definedAliases = ["@claude"];
           };
           "nix-packages" = {
             name = "Nix Packages";
