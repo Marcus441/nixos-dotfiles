@@ -43,6 +43,9 @@
     dnsutils
     httpie
     nmap
+    cppman
+    man-pages
+    man-pages-posix
 
     # Archive
     unzip
