@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       user.name = "Marcus441";
-      user.email = "psminchia4153@hotmail.com";
+      user.email = "88486170+Marcus441@users.noreply.github.com";
       url."git@github.com:".insteadOf = "https://github.com/";
       submodule.recurse = true;
     };

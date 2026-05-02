@@ -44,21 +44,16 @@
 
       keybind = [
         # Create splits
-        "alt+left=new_split:left"
-        "alt+down=new_split:down"
-        "alt+up=new_split:up"
-        "alt+right=new_split:right"
+        "ctrl+shift+left=new_split:left"
+        "ctrl+shift+down=new_split:down"
+        "ctrl+shift+up=new_split:up"
+        "ctrl+shift+right=new_split:right"
 
         # Split navigation
         "ctrl+left=goto_split:left"
         "ctrl+down=goto_split:down"
         "ctrl+up=goto_split:up"
         "ctrl+right=goto_split:right"
-
-        "ctrl+shift+left=resize_split:left,10"
-        "ctrl+shift+down=resize_split:down,10"
-        "ctrl+shift+up=resize_split:up,10"
-        "ctrl+shift+right=resize_split:right,10"
 
         # Tab Navigation
         "ctrl+1=goto_tab:1"
