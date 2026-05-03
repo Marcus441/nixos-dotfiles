@@ -109,6 +109,7 @@
   .item-box {
     padding: 6px 14px;
     border-radius: 0;
+    min-height: 44px;
   }
 
   child:selected .item-box,
