@@ -6,11 +6,9 @@ in {
       Description = "Background wallpaper rotator for Hyprpaper";
       After = ["graphical-session.target"];
       PartOf = ["graphical-session.target"];
-      # Systemd will silently skip starting this service if the file doesn't exist
       ConditionPathExists = "%h/.cache/wallpaper_rotator_enabled";
     };
 
-    # Add this so it hooks into your login process
     Install = {
       WantedBy = ["graphical-session.target"];
     };

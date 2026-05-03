@@ -37,12 +37,11 @@ in {
       font-family: 'Symbols Nerd Font Mono', 'Inter';
     }
     #custom-sep {
-      color: #${base01};
       margin: 0 4px;
     }
     #workspaces button {
       all: initial;
-      font-family: 'JetBrainsMono Nerd Font';
+      font-family: 'Symbols Nerd Font Mono', 'Inter';
       font-size: 12px;
       color: #${base03};
       background-color: transparent;

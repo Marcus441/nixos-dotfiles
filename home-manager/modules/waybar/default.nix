@@ -25,14 +25,13 @@
         ];
         modules-right = [
           "tray"
+          "battery"
           "bluetooth"
           "network"
           "pulseaudio"
           "custom/sep"
           "cpu"
           "memory"
-          "custom/sep"
-          "battery"
           "custom/sep"
           "custom/power"
         ];
@@ -44,13 +43,8 @@
           warp-on-scroll = false;
           format = "{icon}";
           format-icons = {
-            "1" = "1";
-            "2" = "2";
-            "3" = "3";
-            "4" = "4";
-            "5" = "5";
-            "active" = "󱓻";
-            "default" = "";
+            "active" = "";
+            "default" = "";
           };
           persistent-workspaces = {
             "1" = [];
@@ -61,7 +55,7 @@
           };
         };
         "custom/sep" = {
-          format = "|";
+          format = " ";
           tooltip = false;
         };
         "custom/weather" = {

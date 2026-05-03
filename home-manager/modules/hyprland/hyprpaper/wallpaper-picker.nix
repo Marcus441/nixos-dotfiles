@@ -44,7 +44,7 @@ in {
         end
 
         table.insert(entries, {
-            Text = "🎲 Random / Enable Rotator",
+            Text = " Random / Enable Rotator",
             Subtext = "Starts the automatic wallpaper-rotator service",
             Value = "ENABLE_ROTATOR",
             Icon = "media-playlist-shuffle"
