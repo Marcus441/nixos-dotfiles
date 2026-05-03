@@ -1,10 +1,10 @@
 {
   imports = [
-    ./common-packages.nix
     ./audio.nix
     ./binfmt.nix
     ./bluetooth.nix
     ./boot.nix
+    ./common-packages.nix
     ./docker.nix
     ./env.nix
     ./home-manager.nix

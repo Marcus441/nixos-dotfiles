@@ -43,8 +43,9 @@
           warp-on-scroll = false;
           format = "{icon}";
           format-icons = {
-            "active" = "";
-            "default" = "";
+            "active" = "●";
+            "empty" = "○";
+            "default" = "●";
           };
           persistent-workspaces = {
             "1" = [];

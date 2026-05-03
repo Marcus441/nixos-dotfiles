@@ -194,7 +194,7 @@
       settings = {
         "general.autoScroll" = true;
         # Wayland / Hyprland
-        "widget.use-xdg-desktop-portal.file-picker" = 1;
+        "widget.use-xdg-desktop-portal.file-picker" = 2;
         "widget.use-xdg-desktop-portal.mime-handler" = 1;
 
         # GPU / Rendering

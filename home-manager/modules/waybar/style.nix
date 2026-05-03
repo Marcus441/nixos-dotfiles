@@ -41,17 +41,17 @@ in {
     }
     #workspaces button {
       all: initial;
-      font-family: 'Symbols Nerd Font Mono', 'Inter';
-      font-size: 12px;
+      font-family: 'Symbols Nerd Font Mono';
+      font-size: 10px;
       color: #${base03};
       background-color: transparent;
-      padding: 0 6px;
-      margin: 0 1.5px;
-      min-width: 9px;
-      transition: color 0.15s ease;
+      padding: 0 3px;
+      margin: 0 1px;
+      min-width: 0;
+      transition: color 0.15s ease, font-size 0.15s ease;
     }
-    #workspaces button.empty   { opacity: 0.35; }
-    #workspaces button.active  { color: #${base05}; font-weight: 700; }
+    #workspaces button.empty   { color: #${base02}; font-size: 8px; }
+    #workspaces button.active  { color: #${base05}; font-size: 14px; }
     #workspaces button.urgent  { color: #${base08}; }
     #custom-weather {
       font-weight: 700;
@@ -85,7 +85,7 @@ in {
     #pulseaudio.muted    { color: #${base08}; }
     #cpu,
     #memory {
-      font-family: 'JetBrainsMono Nerd Font';
+      font-family: 'Symbols Nerd Font Mono';
       margin: 0 3px;
     }
     #cpu.warning               { color: #${base0A}; }

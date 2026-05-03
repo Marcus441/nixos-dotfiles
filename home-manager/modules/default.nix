@@ -17,6 +17,7 @@
     ./jq.nix
     ./lazygit.nix
     ./mako.nix
+    ./mime.nix
     ./mpv.nix
     ./neovim.nix
     ./nix-index.nix
@@ -31,7 +32,6 @@
     ./walker
     ./waybar
     ./wleave.nix
-    ./xdg-mimeApps.nix
     ./yazi
     ./zathura.nix
     ./zoxide.nix

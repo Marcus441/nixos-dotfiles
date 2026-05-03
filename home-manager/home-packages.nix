@@ -55,5 +55,6 @@
     bemoji
     nix-prefetch-scripts
     silicon
+    xdg-desktop-portal-gtk
   ];
 }
