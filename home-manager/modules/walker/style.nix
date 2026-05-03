@@ -1,17 +1,26 @@
 {config}: ''
   @define-color base00 #${config.lib.stylix.colors.base00};
-  @define-color base0D #${config.lib.stylix.colors.base0D};
+  @define-color base01 #${config.lib.stylix.colors.base01};
+  @define-color base02 #${config.lib.stylix.colors.base02};
+  @define-color base03 #${config.lib.stylix.colors.base03};
   @define-color base05 #${config.lib.stylix.colors.base05};
+  @define-color base0D #${config.lib.stylix.colors.base0D};
   @define-color base08 #${config.lib.stylix.colors.base08};
 
   /* =========================================
-     1. GLOBAL STYLES
+     RESET
      ========================================= */
   * {
     all: unset;
-    font-family: "JetBrainsMono Nerd Font";
+    font-family: 'Inter', 'Symbols Nerd Font Mono', sans-serif;
     font-size: 18px;
     color: @base05;
+  }
+
+  popover {
+    background: alpha(@base01, 0.95);
+    border: 1px solid @base0D;
+    padding: 8px;
   }
 
   scrollbar { opacity: 0; }
@@ -19,136 +28,250 @@
   .large-icons { -gtk-icon-size: 32px; }
 
   /* =========================================
-     2. MAIN WINDOW & LAYOUT
+     OUTER WRAPPER — sharp box, no radius
      ========================================= */
   .box-wrapper {
-    background: alpha(@base00, 0.95);
-    padding: 20px;
+    background: alpha(@base00, 0.92);
     border: 2px solid @base0D;
-    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3);
+    border-radius: 0;
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30);
+    padding: 0;
+    overflow: hidden;
   }
 
+  /* =========================================
+     SEARCH BAR — prominent top row
+     ========================================= */
   .search-container {
-    background: @base00;
-    padding: 10px;
+    background: transparent;
+    padding: 14px 18px;
+    border-bottom: 2px solid alpha(@base0D, 0.25);
+  }
+
+  .search-icon {
+    color: @base0D;
+    -gtk-icon-size: 22px;
+    opacity: 0.85;
   }
 
   .input {
-    caret-color: @base05;
-    padding: 10px;
+    font-size: 28px;
+    caret-color: @base0D;
+    background: transparent;
+    color: @base05;
+    padding: 2px 0;
   }
 
-  .input placeholder { opacity: 0.5; }
+  .input placeholder {
+    opacity: 0.35;
+    color: @base05;
+  }
 
-  .placeholder {
+  .input selection {
+    background: alpha(@base0D, 0.3);
+  }
+
+  .input:focus,
+  .input:active {
+  }
+
+  /* =========================================
+     CONTENT AREA
+     ========================================= */
+  .content-container {
+  }
+
+  /* =========================================
+     LEFT LIST PANE — fixed width
+     ========================================= */
+  .scroll {
+  }
+
+  .list {
+    color: @base05;
+    padding: 4px 0;
+  }
+
+  .placeholder,
+  .elephant-hint {
+    color: @base05;
+    font-size: 13px;
+    opacity: 0.35;
+    padding: 20px;
+  }
+
+  /* =========================================
+     LIST ITEMS — compact icon + name
+     ========================================= */
+  child {
+  }
+
+  .item-box {
+    padding: 6px 14px;
+    border-radius: 0;
+  }
+
+  child:selected .item-box,
+  row:selected .item-box {
+    background: alpha(@base0D, 0.2);
+  }
+
+  .item-text-box {
+  }
+
+  .item-text {
     font-size: 18px;
-    opacity: 0.5;
-    margin-top: 20px;
   }
 
+  .item-subtext {
+    font-size: 14px;
+    opacity: 0.45;
+  }
+
+  .item-image-text {
+    font-size: 28px;
+  }
+
+  .item-quick-activation {
+    background: alpha(@base02, 0.4);
+    border-radius: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    opacity: 0.5;
+  }
+
+  /* =========================================
+     RIGHT PREVIEW PANE
+     ========================================= */
+  .preview {
+    color: @base05;
+    border: none;
+    border-radius: 0;
+  }
+
+  .preview-box {
+    color: @base05;
+  }
+
+  .preview .large-icons {
+    -gtk-icon-size: 64px;
+  }
+
+  /* =========================================
+     CALCULATOR — large result, muted expr
+     ========================================= */
+  .calc .item-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: @base0D;
+  }
+
+  .calc .item-subtext {
+    font-size: 13px;
+    opacity: 0.4;
+    color: @base05;
+  }
+
+  /* =========================================
+     SYMBOLS
+     ========================================= */
+  .symbols .item-image {
+    font-size: 24px;
+  }
+
+  /* =========================================
+     TODO
+     ========================================= */
+  .todo.done .item-text-box {
+    opacity: 0.25;
+  }
+
+  .todo.urgent {
+    font-size: 24px;
+  }
+
+  .todo.active {
+    font-weight: bold;
+  }
+
+  /* =========================================
+     BLUETOOTH
+     ========================================= */
+  .bluetooth.disconnected {
+    opacity: 0.5;
+  }
+
+  /* =========================================
+     PROVIDER LIST
+     ========================================= */
+  .providerlist .item-subtext {
+    font-size: unset;
+    opacity: 0.75;
+  }
+
+  /* =========================================
+     KEYBINDS — hidden
+     ========================================= */
+  .keybinds {
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+    opacity: 0;
+  }
+
+  .global-keybinds,
+  .item-keybinds,
+  .keybind,
+  .keybind-button,
+  .keybind-bind,
+  .keybind-label {
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  :not(.calc).current {
+    font-style: italic;
+  }
+
+  /* =========================================
+     ERROR BAR
+     ========================================= */
   .error {
-    padding: 10px;
+    padding: 10px 14px;
     background: @base08;
     color: @base05;
   }
 
   /* =========================================
-     3. DEFAULT LIST ITEMS
+     WALLPAPER ITEMS
      ========================================= */
-  .item-box { padding: 15px 14px; }
-  .item-text-box { all: unset; padding: 14px 0; }
-
-  child:selected .item-box {
-    background: alpha(@base0D, 0.25);
-  }
-  child:selected .item-box * {
-    color: @base05;
+  .wallpaper-item {
+    padding: 8px;
+    border-radius: 0;
   }
 
-  .item-subtext {
-    font-size: 0px;
-    min-height: 0px;
-    margin: 0px;
-    padding: 0px;
+  .wallpaper-preview {
+    min-height: 120px;
+    min-width: 180px;
+    border: 1px solid alpha(@base0D, 0.15);
   }
 
-  .item-image {
-    margin-right: 14px;
-    -gtk-icon-transform: scale(0.9);
-  }
-
-  /* =========================================
-     4. CALCULATOR SPECIFIC ITEMS
-     ========================================= */
-  .calc-box {
-    background: alpha(@base0D, 0.1);
-    border-radius: 8px;
-    margin: 5px 0;
-  }
-
-  .calc-text {
-    font-size: 32px;
-    font-weight: bold;
-    color: @base0D;
-  }
-
-  .calc-subtext {
-    font-size: 16px;
-    opacity: 0.5;
-  }
-
-  /* =========================================
-     5. PREVIEW PANE & INNER CONTENT
-     ========================================= */
-  .preview-window {
-    background: alpha(@base00, 0.5);
-    border-left: 2px solid alpha(@base0D, 0.3);
-    padding: 15px;
-    min-width: 400px; /* Forces window to expand */
-  }
-
-  .preview-image {
-    -gtk-icon-transform: scale(1.5);
-    margin-bottom: 15px;
-  }
-
-  .preview-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: @base05;
-  }
-
-  .preview-subtext {
-    font-size: 14px;
-    opacity: 0.7;
-    margin-top: 10px;
-  }
-
-  /* =========================================
-     6. KEYBINDS HINT BAR
-     ========================================= */
-  #Keybinds {
-    border-top: 1px solid alpha(@base0D, 0.2);
-    padding-top: 8px;
-  }
-
-  #Keybinds label {
+  .wallpaper-label {
     font-size: 12px;
-    color: @base05;
-    opacity: 0.6;
+    opacity: 0.75;
+    padding-top: 6px;
   }
 
-  .keybind-key {
-    font-weight: bold;
-    color: @base0D;
-    margin-right: 4px;
+  child:selected .wallpaper-item {
+    background: alpha(@base0D, 0.2);
   }
 
-  .item-quick-activation {
-    font-size: 10px;
-    padding: 2px 4px;
-    background: alpha(@base0D, 0.1);
-    border-radius: 3px;
-    margin-left: 10px;
+  /* =========================================
+     PACKAGE PREVIEW
+     ========================================= */
+  .preview-content.archlinuxpkgs,
+  .preview-content.dnfpackages {
+    font-family: monospace;
   }
 ''

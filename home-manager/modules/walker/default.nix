@@ -1,8 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-}: {
+{config, ...}: {
   programs.walker = {
     enable = true;
     runAsService = true;
@@ -19,16 +15,20 @@
 
       placeholders = {
         "default" = {
-          input = " Search...";
+          input = "Search...";
           list = "No Results";
         };
       };
 
       providers = {
         max_results = 256;
+        ignore_preview = [
+          "desktopapplications"
+          "windows"
+        ];
         default = [
           "desktopapplications"
-          "websearch"
+          "windows"
         ];
         prefixes = [
           {
@@ -72,6 +72,11 @@
 
     themes."custom" = {
       style = import ./style.nix {inherit config;};
+      layouts = {
+        "layout" = import ./layout.nix;
+        "item_calc" = import ./item_calc.nix;
+        "item_menus-wallpapers" = import ./item_menus_wallpapers.nix;
+      };
     };
   };
 }
