@@ -33,14 +33,8 @@ in {
     #network,
     #pulseaudio,
     #battery,
-    #custom-launcher,
     #custom-power {
       font-family: 'Symbols Nerd Font Mono', 'Inter';
-    }
-    #custom-launcher {
-      font-size: 14px;
-      color: #${base0D};
-      margin: 0 8px 0 12px;
     }
     #custom-sep {
       color: #${base01};
@@ -61,7 +55,8 @@ in {
     #workspaces button.active  { color: #${base05}; font-weight: 700; }
     #workspaces button.urgent  { color: #${base08}; }
     #custom-weather {
-      color: #${base03};
+      font-weight: 700;
+      color: #${base05};
       margin: 0 8px;
     }
     #clock {

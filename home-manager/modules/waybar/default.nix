@@ -17,11 +17,10 @@
         height = 26;
 
         modules-left = [
-          "custom/launcher"
           "hyprland/workspaces"
-          "custom/weather"
         ];
         modules-center = [
+          "custom/weather"
           "clock"
         ];
         modules-right = [
@@ -158,12 +157,6 @@
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           tooltip-format = "Playing at {volume}%";
           scroll-step = 5;
-        };
-
-        "custom/launcher" = {
-          format = "󱗼";
-          tooltip = false;
-          on-click = "walker";
         };
 
         "custom/power" = {
