@@ -71,8 +71,6 @@ in {
     #bluetooth,
     #network,
     #pulseaudio,
-    #cpu,
-    #memory,
     #battery {
       color: #${base03};
       margin: 0 4px;
@@ -83,15 +81,6 @@ in {
     #network.disconnected,
     #network.linked      { color: #${base08}; }
     #pulseaudio.muted    { color: #${base08}; }
-    #cpu,
-    #memory {
-      font-family: 'Symbols Nerd Font Mono';
-      margin: 0 3px;
-    }
-    #cpu.warning               { color: #${base0A}; }
-    #cpu.critical              { color: #${base08}; }
-    #memory.warning            { color: #${base0A}; }
-    #memory.critical           { color: #${base08}; }
     #battery.warning:not(.charging)  { color: #${base0A}; }
     #battery.critical:not(.charging) { color: #${base08}; }
     #battery.charging                { color: #${base0B}; }

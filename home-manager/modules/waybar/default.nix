@@ -30,9 +30,6 @@
           "network"
           "pulseaudio"
           "custom/sep"
-          "cpu"
-          "memory"
-          "custom/sep"
           "custom/power"
         ];
 
@@ -116,27 +113,6 @@
           };
           tooltip-format-discharging = "{power:>1.0f}W↓ {capacity}%";
           tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
-        };
-
-        cpu = {
-          interval = 5;
-          format = " {usage}%";
-          tooltip-format = "{usage}%";
-          states = {
-            warning = 70;
-            critical = 90;
-          };
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e btop\"";
-        };
-
-        memory = {
-          interval = 5;
-          format = " {percentage}%";
-          tooltip-format = "{used:0.1f}GB / {total:0.1f}GB";
-          states = {
-            warning = 70;
-            critical = 90;
-          };
         };
 
         pulseaudio = {
