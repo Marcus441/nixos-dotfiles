@@ -15,7 +15,7 @@
       "$mainMod,       Tab,    exec, walker -m windows"
       "$mainMod,       V,      exec, walker -m clipboard"
       "$mainMod,       W,      exec, walker -m menus:wallpapers"
-      "$mainMod,       Z,      exec, loginctl lock-session"
+      "$mainMod,       Z,      exec, uwsm app -- wleave"
       ",               Print,  exec, uwsm app -- grimblast --notify --freeze copysave area"
 
       # Moving focus
