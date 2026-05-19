@@ -18,8 +18,9 @@
   }
 
   popover {
-    background: alpha(@base01, 0.95);
-    border: 1px solid @base0D;
+    background: alpha(@base01, 0.7);
+    border: 1px solid alpha(@base0D, 0.15);
+    border-radius: 12px;
     padding: 8px;
   }
 
@@ -28,13 +29,13 @@
   .large-icons { -gtk-icon-size: 32px; }
 
   /* =========================================
-     OUTER WRAPPER — sharp box, no radius
+     OUTER WRAPPER — rounded
      ========================================= */
   .box-wrapper {
-    background: alpha(@base00, 0.92);
-    border: 2px solid @base0D;
-    border-radius: 0;
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30);
+    background: alpha(@base00, 0.55);
+    border: 1px solid alpha(@base0D, 0.15);
+    border-radius: 16px;
+    box-shadow: none;
     padding: 0;
     overflow: hidden;
   }
@@ -45,7 +46,7 @@
   .search-container {
     background: transparent;
     padding: 14px 18px;
-    border-bottom: 2px solid alpha(@base0D, 0.25);
+    border-bottom: 1px solid alpha(@base0D, 0.1);
   }
 
   .search-icon {
@@ -108,13 +109,14 @@
 
   .item-box {
     padding: 6px 14px;
-    border-radius: 0;
+    border-radius: 8px;
     min-height: 44px;
   }
 
   child:selected .item-box,
   row:selected .item-box {
-    background: alpha(@base0D, 0.2);
+    background: alpha(@base0D, 0.12);
+    border-radius: 8px;
   }
 
   .item-text-box {

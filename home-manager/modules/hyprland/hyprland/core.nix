@@ -28,7 +28,12 @@ in {
           render_power = 3;
           color = "0x66${c.base00}";
         };
-        blur.enabled = false;
+        blur = {
+          enabled = true;
+          size = 8;
+          passes = 2;
+          new_optimizations = true;
+        };
       };
 
       input = {

@@ -103,6 +103,12 @@
         match = {namespace = "walker";};
         no_anim = true;
       }
+      {
+        name = "blur-walker";
+        match = {namespace = "walker";};
+        blur = true;
+        ignore_alpha = 0.3;
+      }
     ];
   };
 }
