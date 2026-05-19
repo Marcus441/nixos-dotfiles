@@ -73,6 +73,12 @@ in {
     }
     {
       _args = [
+        "${mainMod} + P"
+        (lib.generators.mkLuaInline "hl.dsp.window.pseudo()")
+      ];
+    }
+    {
+      _args = [
         "${mainMod} + Tab"
         (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m windows\")")
       ];
