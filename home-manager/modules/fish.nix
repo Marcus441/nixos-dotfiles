@@ -22,7 +22,7 @@
       proj = {
         description = "Fuzzy switch to a project and open neovim";
         body = ''
-          set roots $HOME/projects $HOME/oss
+          set roots $HOME/Projects $HOME/oss
           set target (fd --type d --max-depth 1 . $roots \
               | fzf --prompt="project  " --height=50% --layout=reverse --border \
                     --preview 'ls -la {}' --preview-window=right:40%)
