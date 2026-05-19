@@ -1,102 +1,98 @@
-{lib, ...}: {
+{lib, ...}: let
+  mainMod = "SUPER";
+  terminal = "uwsm app -- ghostty";
+  fileManager = "uwsm app -- thunar";
+in {
   wayland.windowManager.hyprland.settings = {
-    # Define the mod key as a Lua variable
-    mainMod = {
-      _var = "SUPER";
-    };
-
     bind = [
       # --- General ---
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + C\"")
+          "${mainMod} + SHIFT + C"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- hyprpicker -an\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + S\"")
+          "${mainMod} + SHIFT + S"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- grimblast --notify --freeze copysave screen\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + Z\"")
+          "${mainMod} + SHIFT + Z"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm stop\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + B\"")
+          "${mainMod} + B"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"systemctl --user is-active --quiet waybar && systemctl --user stop waybar || systemctl --user start waybar\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + C\"")
+          "${mainMod} + C"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ocr-copy\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + D\"")
+          "${mainMod} + D"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker\")")
         ];
       }
       {
-        # Assumes fileManager is defined as a Lua variable elsewhere via _var
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + E\"")
-          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(fileManager)")
+          "${mainMod} + E"
+          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${fileManager}\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + F\"")
+          "${mainMod} + F"
           (lib.generators.mkLuaInline "hl.dsp.window.float({ action = \"toggle\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + Q\"")
+          "${mainMod} + Q"
           (lib.generators.mkLuaInline "hl.dsp.window.close()")
         ];
       }
       {
-        # Assumes terminal is defined as a Lua variable elsewhere via _var
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + Return\"")
-          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(terminal)")
+          "${mainMod} + Return"
+          (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${terminal}\")")
         ];
       }
-      # layoutmsg / togglesplit
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + S\"")
+          "${mainMod} + S"
           (lib.generators.mkLuaInline "hl.dsp.layout(\"togglesplit\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + Tab\"")
+          "${mainMod} + Tab"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m windows\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + V\"")
+          "${mainMod} + V"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m clipboard\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + W\"")
+          "${mainMod} + W"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m menus:wallpapers\")")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + Z\"")
+          "${mainMod} + Z"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- wleave\")")
         ];
       }
@@ -110,25 +106,25 @@
       # --- Focus movement ---
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + H\"")
+          "${mainMod} + H"
           (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"l\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + L\"")
+          "${mainMod} + L"
           (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"r\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + K\"")
+          "${mainMod} + K"
           (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"u\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + J\"")
+          "${mainMod} + J"
           (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"d\" })")
         ];
       }
@@ -136,86 +132,82 @@
       # --- Window swapping ---
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + H\"")
+          "${mainMod} + SHIFT + H"
           (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"l\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + L\"")
+          "${mainMod} + SHIFT + L"
           (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"r\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + K\"")
+          "${mainMod} + SHIFT + K"
           (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"u\" })")
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + J\"")
+          "${mainMod} + SHIFT + J"
           (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"d\" })")
         ];
       }
 
-      # --- Workspace switching ---
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 1\"") (lib.generators.mkLuaInline "hl.workspace(1)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 2\"") (lib.generators.mkLuaInline "hl.workspace(2)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 3\"") (lib.generators.mkLuaInline "hl.workspace(3)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 4\"") (lib.generators.mkLuaInline "hl.workspace(4)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 5\"") (lib.generators.mkLuaInline "hl.workspace(5)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 6\"") (lib.generators.mkLuaInline "hl.workspace(6)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 7\"") (lib.generators.mkLuaInline "hl.workspace(7)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 8\"") (lib.generators.mkLuaInline "hl.workspace(8)")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + 9\"") (lib.generators.mkLuaInline "hl.workspace(9)")];}
+      # --- Workspace switching (Refactored to hl.dsp.focus) ---
+      {_args = ["${mainMod} + 1" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 1 })")];}
+      {_args = ["${mainMod} + 2" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 2 })")];}
+      {_args = ["${mainMod} + 3" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 3 })")];}
+      {_args = ["${mainMod} + 4" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 4 })")];}
+      {_args = ["${mainMod} + 5" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 5 })")];}
+      {_args = ["${mainMod} + 6" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 6 })")];}
+      {_args = ["${mainMod} + 7" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 7 })")];}
+      {_args = ["${mainMod} + 8" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 8 })")];}
+      {_args = ["${mainMod} + 9" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 9 })")];}
 
-      # --- Move windows to workspaces (silent) ---
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 1\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 1, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 2\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 2, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 3\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 3, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 4\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 4, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 5\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 5, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 6\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 6, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 7\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 7, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 8\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 8, follow = false })")];}
-      {_args = [(lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 9\"") (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 9, follow = false })")];}
+      # --- Move windows to workspaces (Refactored to hl.dsp.window.move) ---
+      {_args = ["${mainMod} + SHIFT + 1" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 1 })")];}
+      {_args = ["${mainMod} + SHIFT + 2" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 2 })")];}
+      {_args = ["${mainMod} + SHIFT + 3" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 3 })")];}
+      {_args = ["${mainMod} + SHIFT + 4" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 4 })")];}
+      {_args = ["${mainMod} + SHIFT + 5" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 5 })")];}
+      {_args = ["${mainMod} + SHIFT + 6" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 6 })")];}
+      {_args = ["${mainMod} + SHIFT + 7" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 7 })")];}
+      {_args = ["${mainMod} + SHIFT + 8" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 8 })")];}
+      {_args = ["${mainMod} + SHIFT + 9" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 9 })")];}
 
       # --- Scratchpad ---
-      # Scratchpad toggle
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + 0\"")
+          "${mainMod} + 0"
           (lib.generators.mkLuaInline "hl.dsp.workspace.toggle_special(\"magic\")")
         ];
       }
-
-      # Scratchpad send (silent = follow = false)
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + SHIFT + 0\"")
+          "${mainMod} + SHIFT + 0"
           (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = \"special:magic\" })")
         ];
       }
 
-      # --- Mouse binds (was bindm) ---
-      # drag() = movewindow, resize() = resizewindow — confirmed in docs
+      # --- Mouse binds ---
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + mouse:272\"")
+          "${mainMod} + mouse:272"
           (lib.generators.mkLuaInline "hl.dsp.window.drag()")
           {mouse = true;}
         ];
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + mouse:273\"")
+          "${mainMod} + mouse:273"
           (lib.generators.mkLuaInline "hl.dsp.window.resize()")
           {mouse = true;}
         ];
       }
 
-      # --- Volume / brightness (was bindel: repeating + locked) ---
+      # --- Volume / brightness ---
       {
         _args = [
           "XF86AudioRaiseVolume"
@@ -258,7 +250,7 @@
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + bracketright\"")
+          "${mainMod} + bracketright"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl s 10%+\")")
           {
             repeating = true;
@@ -268,7 +260,7 @@
       }
       {
         _args = [
-          (lib.generators.mkLuaInline "mainMod .. \" + bracketleft\"")
+          "${mainMod} + bracketleft"
           (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl s 10%-\")")
           {
             repeating = true;
@@ -277,7 +269,7 @@
         ];
       }
 
-      # --- Audio playback (was bindl: locked only) ---
+      # --- Audio playback ---
       {
         _args = [
           "XF86AudioNext"
