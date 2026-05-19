@@ -32,6 +32,7 @@
     ./walker
     ./waybar
     ./wleave.nix
+    ./xdg.nix
     ./yazi
     ./zathura.nix
     ./zoxide.nix

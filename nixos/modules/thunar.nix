@@ -13,8 +13,4 @@
     gvfs.enable = true;
     tumbler.enable = true;
   };
-  # systemd.user.services.thunar = {
-  #   wantedBy = ["graphical-session.target"];
-  #   unitConfig.After = "graphical-session.target";
-  # };
 }

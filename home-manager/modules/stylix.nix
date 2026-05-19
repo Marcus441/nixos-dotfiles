@@ -40,7 +40,6 @@
       fish.enable = true;
       ghostty.enable = true;
       gtk.enable = true;
-      hyprland.enable = true;
       hyprlock.enable = true;
       lazygit.enable = true;
       mako.enable = true;
@@ -83,5 +82,15 @@
     };
   };
 
-  gtk.gtk4.theme = config.gtk.theme;
+  gtk = {
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+    gtk4 = {
+      theme = null;
+      extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+      };
+    };
+  };
 }
