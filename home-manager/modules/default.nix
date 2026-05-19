@@ -5,7 +5,6 @@
     ./ccache.nix
     ./direnv.nix
     ./discord
-    ./uwsm.nix
     ./eza.nix
     ./fastfetch.nix
     ./fd.nix
@@ -33,6 +32,7 @@
     ./walker
     ./waybar
     ./wleave.nix
+    ./xdg.nix
     ./yazi
     ./zathura.nix
     ./zoxide.nix
