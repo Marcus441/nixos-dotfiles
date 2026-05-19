@@ -6,6 +6,7 @@
     base02
     base03
     base05
+    base06
     base08
     base0A
     base0B
@@ -47,19 +48,23 @@ in {
       min-height: 6px;
       margin: 6px 3px;
       border-radius: 9999px;
-      background-color: #${base03};
+      border: 1.5px solid transparent;
+      background-color: #${base06};
       padding: 0;
       font-size: 0;
       color: transparent;
       transition: min-width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  background-color 0.2s ease;
+                  background-color 0.2s ease,
+                  border-color 0.2s ease;
     }
     #workspaces button.empty {
-      background-color: #${base02};
+      background-color: transparent;
+      border-color: #${base06};
     }
     #workspaces button.active {
       min-width: 26px;
-      background-color: #${base05};
+      background-color: #${base06};
+      border-color: transparent;
     }
     #workspaces button.urgent {
       background-color: #${base08};
