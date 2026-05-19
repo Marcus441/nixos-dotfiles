@@ -17,11 +17,11 @@
         height = 26;
 
         modules-left = [
-          "hyprland/workspaces"
+          "custom/weather"
+          "hyprland/window"
         ];
         modules-center = [
-          "custom/weather"
-          "clock"
+          "hyprland/workspaces"
         ];
         modules-right = [
           "tray"
@@ -29,10 +29,15 @@
           "bluetooth"
           "network"
           "pulseaudio"
-          "custom/sep"
+          "clock"
           "custom/power"
         ];
 
+        "hyprland/window" = {
+          format = "{title}";
+          max-length = 30;
+          separate-outputs = true;
+        };
         "hyprland/workspaces" = {
           on-click = "activate";
           disable-scroll = true;
@@ -51,10 +56,6 @@
             "4" = [];
             "5" = [];
           };
-        };
-        "custom/sep" = {
-          format = " ";
-          tooltip = false;
         };
         "custom/weather" = {
           format = "{}";
@@ -93,7 +94,7 @@
           tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
           tooltip-format-disconnected = "Disconnected";
           interval = 3;
-          on-click = "hyprctl dispatch exec \"[float; size 1200 800] ghostty -e nmtui\"";
+          on-click = "hyprctl dispatch exec_cmd \"[float; size 1200 800] ghostty -e nmtui\"";
         };
 
         battery = {

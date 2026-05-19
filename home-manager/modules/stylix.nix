@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     font-awesome
     nerd-fonts.iosevka-term

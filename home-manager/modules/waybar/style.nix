@@ -26,6 +26,7 @@ in {
       background-color: #${base00};
       color: #${base05};
       border-bottom: 1px solid #${base01};
+      min-height: 0;
     }
     .modules-left  { margin-left:  8px; }
     .modules-right { margin-right: 8px; }
@@ -36,31 +37,42 @@ in {
     #custom-power {
       font-family: 'Symbols Nerd Font Mono', 'Inter';
     }
-    #custom-sep {
-      margin: 0 4px;
+    #window {
+      color: #${base03};
+      font-weight: 400;
     }
     #workspaces button {
-      all: initial;
-      font-family: 'Symbols Nerd Font Mono';
-      font-size: 10px;
-      color: #${base03};
-      background-color: transparent;
-      padding: 0 3px;
-      margin: 0 1px;
-      min-width: 0;
-      transition: color 0.15s ease, font-size 0.15s ease;
+      all: unset;
+      min-width: 16px;
+      min-height: 6px;
+      margin: 6px 3px;
+      border-radius: 9999px;
+      background-color: #${base03};
+      padding: 0;
+      font-size: 0;
+      color: transparent;
+      transition: min-width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background-color 0.2s ease;
     }
-    #workspaces button.empty   { color: #${base02}; font-size: 8px; }
-    #workspaces button.active  { color: #${base05}; font-size: 14px; }
-    #workspaces button.urgent  { color: #${base08}; }
+    #workspaces button.empty {
+      background-color: #${base02};
+    }
+    #workspaces button.active {
+      min-width: 26px;
+      background-color: #${base05};
+    }
+    #workspaces button.urgent {
+      background-color: #${base08};
+    }
     #custom-weather {
-      font-weight: 700;
+      font-weight: 400;
       color: #${base05};
       margin: 0 8px;
     }
     #clock {
       color: #${base05};
-      font-weight: 700;
+      font-weight: 400;
+      margin: 0 4px;
     }
     #tray                    { margin-right: 12px; }
     #tray > .passive         { -gtk-icon-effect: dim; }
