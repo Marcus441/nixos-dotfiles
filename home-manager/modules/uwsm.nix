@@ -1,6 +1,3 @@
-{
-  xdg.configFile."uwsm/env".text = ''
-    export NIXOS_OZONE_WL=1
-    export QT_QPA_PLATFORM=wayland
-  '';
+{config, ...}: {
+  xdg.configFile."uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
 }
