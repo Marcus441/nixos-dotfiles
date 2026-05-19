@@ -5,6 +5,7 @@
     ./ccache.nix
     ./direnv.nix
     ./discord
+    ./uwsm.nix
     ./eza.nix
     ./fastfetch.nix
     ./fd.nix
