@@ -1,4 +1,10 @@
-{sensitivity, ...}: {
+{
+  sensitivity,
+  config,
+  ...
+}: let
+  c = config.lib.stylix.colors;
+in {
   wayland.windowManager.hyprland.settings = {
     config = {
       general = {
@@ -8,11 +14,20 @@
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
+        col = {
+          active_border = "0xff${c.base0D}";
+          inactive_border = "0xff${c.base03}";
+        };
       };
 
       decoration = {
         rounding = 0;
-        shadow.enabled = false;
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
+          color = "0x66${c.base00}";
+        };
         blur.enabled = false;
       };
 
