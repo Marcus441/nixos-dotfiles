@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+in {
   home.packages = with pkgs; [
     font-awesome
     nerd-fonts.iosevka-term
@@ -12,24 +14,7 @@
     enable = true;
     autoEnable = false;
 
-    base16Scheme = {
-      base00 = "#181616"; # bg
-      base01 = "#0d0c0c"; # bg_alt
-      base02 = "#2d4f67"; # base2
-      base03 = "#a6a69c"; # grey
-      base04 = "#7fb4ca"; # fg_alt
-      base05 = "#c5c9c5"; # fg
-      base06 = "#938aa9"; # base7
-      base07 = "#c5c9c5"; # base8
-      base08 = "#c4746e"; # red
-      base09 = "#e46876"; # orange
-      base0A = "#c4b28a"; # yellow
-      base0B = "#8a9a7b"; # green
-      base0C = "#8ea4a2"; # teal
-      base0D = "#8ba4b0"; # blue
-      base0E = "#a292a3"; # magenta
-      base0F = "#7aa89f"; # violet
-    };
+    base16Scheme = theme;
     polarity = "dark";
     targets = {
       bat.enable = true;
