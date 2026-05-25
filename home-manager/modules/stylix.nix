@@ -62,7 +62,10 @@ in {
       light = "Papirus-Light";
     };
   };
-
+  dconf = {
+    enable = true;
+    settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+  };
   gtk = {
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = true;
