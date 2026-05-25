@@ -3,7 +3,7 @@ pkgs.fetchFromGitHub {
   owner = "Marcus441";
   repo = "walls";
   rev = "b11022653952ac634b0c9af6966c560bb0ef0876";
-  hash = "sha256-N1bizQeNXzr8ZYBq6T55mbnSec0cUkZVXBDd08yulqI=";
+  hash = "sha256-ZOCcVdV1fvNC+ClrIOwDmMlCX7dqrwCLdk2s49xGta4=";
 
   sparseCheckout = [
     "walled_tiers/4k/abstract"
