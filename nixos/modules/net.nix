@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   # Faster boot time, does not wait to connect to internet on boot
   systemd.services.NetworkManager-wait-online.enable = false;
   networking = {
@@ -8,7 +8,7 @@
     networkmanager = {
       enable = true;
       wifi = {
-        powersave = false;
+        powersave = lib.mkDefault false;
         backend = "iwd";
       };
     };
