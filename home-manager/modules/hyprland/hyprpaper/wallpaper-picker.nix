@@ -18,12 +18,10 @@ in {
       STATE_FILE="$HOME/.cache/wallpaper_rotator_enabled"
 
       if [ "$1" = "ENABLE_ROTATOR" ]; then
-        # Create state file and start service
         touch "$STATE_FILE"
         ${pkgs.systemd}/bin/systemctl --user start wallpaper-rotator.service
         ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
       else
-        # Remove state file and stop service
         rm -f "$STATE_FILE"
         ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
         ${update-wallpaper} "$1"

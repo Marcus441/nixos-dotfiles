@@ -1,6 +1,12 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  config,
+  ...
+}: let
   walls = import ./wallpapers.nix {inherit pkgs;};
-  defaultImage = "${walls}/mountain/a_castle_on_a_hill_with_fog_with_Eltz_Castle_in_the_background.jpg";
+  wallDir = "${walls}/walled_tiers/4k/";
+  defaultImage = "${wallDir}/mountain/a_castle_on_a_hill_with_fog_with_Eltz_Castle_in_the_background.jpg";
+  currentWallpaper = "${config.home.homeDirectory}/.cache/current_wallpaper.img";
 in {
   imports = [
     ./wallpaper-picker.nix
@@ -11,21 +17,18 @@ in {
     settings = {
       ipc = true;
       splash = false;
-      preload = [
-        "${defaultImage}"
-        "~/.cache/current_wallpaper.img"
-      ];
       wallpaper = [
         {
           monitor = "";
-          path = "~/.cache/current_wallpaper.img";
+          path = currentWallpaper;
+          fit_mode = "cover";
         }
       ];
     };
   };
 
   home.activation.initWallpaper = ''
-    if [ ! -f "$HOME/.cache/current_wallpaper.img" ]; then
+    if [ ! -e "$HOME/.cache/current_wallpaper.img" ]; then
       mkdir -p "$HOME/.cache"
       ln -sf "${defaultImage}" "$HOME/.cache/current_wallpaper.img"
     fi
