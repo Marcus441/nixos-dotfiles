@@ -6,21 +6,71 @@
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
+      DisablePocket = true;
+      DisableFormHistory = true;
+
       AIControls = {
         Default = {
           Value = "blocked";
           Locked = true;
         };
       };
-      DisablePocket = true;
-      DisableFormHistory = true;
-      NoDefaultBookmarks = true;
+
       PasswordManagerEnabled = false;
       OfferToSaveLogins = false;
+
+      NoDefaultBookmarks = true;
       OverrideFirstRunPage = "";
       OverridePostUpdatePage = "";
+      DontCheckDefaultBrowser = true;
+      DisableFeedbackCommands = true;
+
+      FirefoxHome = {
+        Search = true;
+        TopSites = false;
+        SponsoredTopSites = false;
+        Highlights = false;
+        Pocket = false;
+        SponsoredPocket = false;
+        Snippets = false;
+        Locked = true;
+      };
+
+      UserMessaging = {
+        ExtensionRecommendations = false;
+        FeatureRecommendations = false;
+        UrlbarInterventions = false;
+        MoreFromMozilla = false;
+        SkipOnboarding = true;
+        Locked = true;
+      };
+
+      Permissions = {
+        Notifications = {
+          BlockNewRequests = true;
+          Locked = false;
+        };
+      };
+
+      # ── DNS-over-HTTPS ───────────────────────────────────────
+      # Left OFF by default: on NixOS you very likely run a local or
+      # split-horizon resolver (systemd-resolved, dnscrypt, .local mDNS,
+      # VPN DNS), and forcing DoH here would bypass it. If you DON'T,
+      # uncomment to encrypt DNS against your ISP. Mullvad = no logs.
+      #
+      # DNSOverHTTPS = {
+      #   Enabled = true;
+      #   ProviderURL = "https://dns.mullvad.net/dns-query";
+      #   Fallback = true;      # fall back to system DNS if DoH fails
+      #   Locked = false;
+      # };
 
       ExtensionSettings = {
+        # Australian English Dictionary
+        "AussieDic@dictionaries.addons.mozilla.org" = {
+          installation_mode = "force_installed";
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/australian-english-dictionary/latest.xpi";
+        };
         # uBlock Origin
         "uBlock0@raymondhill.net" = {
           installation_mode = "force_installed";
@@ -190,28 +240,83 @@
         };
       };
 
-      # ── Settings ─────────────────────────────────────────────
       settings = {
-        "general.autoScroll" = true;
-        # Wayland / Hyprland
+        "intl.accept_languages" = "en-AU, en";
+        "spellchecker.dictionary" = "en-AU";
+
+        "browser.contentblocking.category" = "strict";
+
+        "privacy.fingerprintingProtection" = true;
+
+        "privacy.query_stripping.enabled" = true;
+        "privacy.query_stripping.enabled.pbmode" = true;
+
+        "network.http.referer.XOriginTrimmingPolicy" = 2;
+
+        "dom.security.https_only_mode" = true;
+        "dom.security.https_only_mode_ever_enabled" = true;
+
+        "media.peerconnection.ice.default_address_only" = true;
+
+        "browser.safebrowsing.downloads.remote.enabled" = false;
+
+        "browser.send_pings" = false;
+        "beacon.enabled" = false;
+
+        "network.IDN_show_punycode" = true;
+
+        "extensions.formautofill.addresses.enabled" = false;
+        "extensions.formautofill.creditCards.enabled" = false;
+
+        "privacy.userContext.enabled" = true;
+        "privacy.userContext.ui.enabled" = true;
+
+        "network.prefetch-next" = false;
+        "network.dns.disablePrefetch" = true;
+        "network.predictor.enabled" = false;
+        "network.predictor.enable-prefetch" = false;
+        "network.http.speculative-parallel-limit" = 0;
+        "browser.urlbar.speculativeConnect.enabled" = false;
+
+        "browser.urlbar.trending.featureGate" = false;
+        "browser.urlbar.suggest.trending" = false;
+        "browser.urlbar.quicksuggest.enabled" = false;
+        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+        "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
+
+        "network.captive-portal-service.enabled" = false;
+        "network.connectivity-service.enabled" = false;
+
+        "browser.region.update.enabled" = false;
+        "browser.region.network.url" = "";
+
+        "app.normandy.enabled" = false;
+        "app.normandy.api_url" = "";
+        "app.shield.optoutstudies.enabled" = false;
+
+        "browser.newtabpage.activity-stream.telemetry" = false;
+        "browser.ping-centre.telemetry" = false;
+        "browser.discovery.enabled" = false;
+        "extensions.htmlaboutaddons.recommendations.enabled" = false;
+
+        "breakpad.reportURL" = "";
+        "browser.tabs.crashReporting.sendReport" = false;
+
         "widget.use-xdg-desktop-portal.file-picker" = 2;
         "widget.use-xdg-desktop-portal.mime-handler" = 1;
 
-        # GPU / Rendering
         "gfx.webrender.all" = true;
         "gfx.webrender.compositor" = true;
-        "layers.acceleration.force-enabled" = true;
         "media.hardware-video-decoding.force-enabled" = true;
         "media.ffmpeg.vaapi.enabled" = true;
         "media.rdd-ffmpeg.enabled" = true;
         "media.av1.enabled" = true;
 
-        # Font rendering
         "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
         "gfx.font_rendering.opentype_svg.enabled" = false;
         "font.name-list.emoji" = "emoji";
 
-        # Smooth scrolling — MSD physics (Chromium-like feel)
+        "general.autoScroll" = true;
         "general.smoothScroll" = true;
         "general.smoothScroll.msdPhysics.enabled" = true;
         "general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS" = 12;
@@ -220,30 +325,16 @@
         "general.smoothScroll.msdPhysics.slowdownMinDeltaMS" = 12;
         "general.smoothScroll.msdPhysics.slowdownMinDeltaRatio" = 1.3;
         "general.smoothScroll.msdPhysics.slowdownSpringConstant" = 250;
-        "mousewheel.default.delta_multiplier_y" = 100;
         "apz.gtk.kinetic_scroll.enabled" = false;
 
-        # Memory / Cache
-        "browser.cache.memory.capacity" = 524288; # 512 MB
+        "browser.cache.memory.capacity" = -1;
         "browser.cache.memory.enable" = true;
         "browser.cache.disk.enable" = true;
-        "dom.ipc.processCount" = 8; # lower to 4 on 8 GB RAM
-        "dom.ipc.processCount.webIsolated" = 4;
 
-        # Network performance
-        "network.http.max-connections" = 1800;
         "network.http.max-persistent-connections-per-server" = 10;
         "network.http.max-urgent-start-excessive-connections-per-host" = 5;
-        "network.http.pipelining" = true;
-        "network.http.pipelining.maxrequests" = 8;
         "network.http.http3.enabled" = true;
-        "network.http.speculative-parallel-limit" = 10;
-        "network.predictor.enabled" = true;
-        "network.predictor.enable-prefetch" = true;
-        "network.prefetch-next" = true;
-        "network.dns.disablePrefetch" = false;
 
-        # Startup / UI
         "browser.startup.page" = 3;
         "browser.startup.homepage" = "about:blank";
         "browser.newtabpage.enabled" = false;
@@ -254,16 +345,12 @@
         "browser.startup.preXulSkeletonUI" = false;
         "ui.prefersReducedMotion" = 0;
 
-        # Auto-enable extensions without approval prompt
         "extensions.autoDisableScopes" = 0;
 
-        # Misc
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "browser.download.useDownloadDir" = false;
         "browser.tabs.closeWindowWithLastTab" = false;
         "full-screen-api.warning.timeout" = 0;
-        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
-        "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
       };
     };
   };
