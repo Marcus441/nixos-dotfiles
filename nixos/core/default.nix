@@ -8,7 +8,6 @@
     ./docker.nix
     ./env.nix
     ./home-manager.nix
-    ./hyprland.nix
     ./kernel.nix
     ./ly.nix
     ./net.nix
@@ -16,7 +15,6 @@
     ./nix.nix
     ./power.nix
     ./qemu.nix
-    ./thunar.nix
     ./timezone.nix
     ./user.nix
     ./virt-manager.nix

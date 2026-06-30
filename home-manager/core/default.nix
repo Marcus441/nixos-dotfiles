@@ -4,34 +4,21 @@
     ./btop.nix
     ./ccache.nix
     ./direnv.nix
-    ./discord
     ./eza.nix
     ./fastfetch.nix
     ./fd.nix
-    ./firefox.nix
-    ./fish.nix
     ./fzf.nix
-    ./ghostty
     ./git.nix
-    ./hyprland
     ./jq.nix
     ./lazygit.nix
-    ./mako.nix
     ./mime.nix
     ./mpv.nix
     ./neovim.nix
     ./nix-index.nix
-    ./obs-studio.nix
     ./opencode
     ./ripgrep.nix
     ./ssh.nix
-    ./starship.nix
     ./stylix.nix
-    ./thunderbird
-    ./tmux.nix
-    ./walker
-    ./waybar
-    ./wleave.nix
     ./xdg.nix
     ./yazi
     ./zathura.nix

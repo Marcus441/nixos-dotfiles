@@ -38,33 +38,41 @@
       {
         hostname = "swift5";
         stateVersion = "25.11";
+        profile = "maximal";
       }
       {
         hostname = "gpc";
         stateVersion = "25.11";
+        profile = "maximal";
       }
       {
         hostname = "UM790pro";
         stateVersion = "25.11";
+        profile = "maximal";
       }
     ];
 
     makeSystem = {
       hostname,
       stateVersion,
+      profile,
     }: let
       utils = import ./utilities;
       monitors = import ./hosts/${hostname}/monitors.nix utils;
     in
       nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs stateVersion hostname user monitors;};
+        specialArgs = {inherit inputs stateVersion hostname user monitors profile;};
         modules = [
           {nixpkgs.hostPlatform = system;}
           ./hosts/${hostname}/configuration.nix
         ];
       };
 
-    mkHome = hostname: let
+    mkHome = {
+      hostname,
+      profile,
+      ...
+    }: let
       utils = import ./utilities;
       monitorConfig = import ./hosts/${hostname}/monitors.nix utils;
       inherit (monitorConfig) monitors;
@@ -73,7 +81,7 @@
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs user hostname homeStateVersion monitors sensitivity;
+          inherit inputs user hostname homeStateVersion monitors sensitivity profile;
         };
         modules = [
           inputs.nix-index-database.homeModules.default
@@ -85,7 +93,7 @@
 
     homeConfigs = builtins.listToAttrs (map (host: {
         name = "${user}@${host.hostname}";
-        value = mkHome host.hostname;
+        value = mkHome host;
       })
       hosts);
   in {
