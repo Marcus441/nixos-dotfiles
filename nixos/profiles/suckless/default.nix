@@ -1,19 +1,26 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  lib,
+  user,
+  ...
+}: let
   # dwl is compiled-and-configured in the suckless *home* profile (its config
   # is compile-time), so the session launches the user's ~/.nix-profile copy.
   # Running `home-manager switch` for the suckless profile is therefore a
   # prerequisite -- which you need anyway to get bash/foot/fonts/dwl-monitors.
   dwl-session = pkgs.writeShellScript "dwl-session" ''
-    # Make the home-manager profile (dwl, foot, wmenu, dwl-monitors) visible.
-    export PATH="$HOME/.nix-profile/bin:$HOME/.local/state/nix/profile/bin:$PATH"
+    # Load the home-manager session environment (PATH, XDG_DATA_DIRS so that
+    # wmenu finds .desktop files and dbus finds the mako service, etc.).
+    hm_vars="$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    [ -f "$hm_vars" ] && . "$hm_vars"
+    export PATH="$HOME/.nix-profile/bin:$PATH"
     export XDG_CURRENT_DESKTOP=dwl
     export XDG_SESSION_TYPE=wayland
 
-    # Apply the host monitor layout (compositor-agnostic, from the home profile).
-    command -v dwl-monitors >/dev/null 2>&1 && dwl-monitors &
-
+    # dwl's -s autostart runs once the compositor is up (so WAYLAND_DISPLAY is
+    # set): apply the host monitor layout, then start the notification daemon.
     # dwl reads its bar status from stdin; feed a minimal clock.
-    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl
+    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; mako &'
   '';
 
   dwl-desktop = pkgs.writeTextFile {
@@ -29,6 +36,11 @@
     passthru.providedSessions = ["dwl"];
   };
 in {
+  # Override core's fish login shell -- the suckless branch is bash (its
+  # configured shell lives in the suckless home profile). fish stays installed
+  # system-wide via core, this just changes ${user}'s login shell.
+  users.users.${user}.shell = lib.mkForce pkgs.bashInteractive;
+
   # Register the dwl session with the display manager (ly, from ../../core/ly.nix).
   services.displayManager.sessionPackages = [dwl-desktop];
 

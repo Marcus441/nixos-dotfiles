@@ -8,6 +8,7 @@
     ./dwl.nix
     ./font.nix
     ./foot.nix
+    ./mako.nix
     ./monitors.nix
   ];
 }
