@@ -126,6 +126,7 @@
 
     shellAliases = {
       gg = "git-graph --style round";
+      man = "batman";
     };
   };
 }

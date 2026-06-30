@@ -4,13 +4,13 @@ in {
   systemd.user.services.wallpaper-rotator = {
     Unit = {
       Description = "Background wallpaper rotator for Hyprpaper";
-      After = ["graphical-session.target"];
-      PartOf = ["graphical-session.target"];
+      After = ["wayland-session@hyprland.desktop.target"];
+      PartOf = ["wayland-session@hyprland.desktop.target"];
       ConditionPathExists = "%h/.cache/wallpaper_rotator_enabled";
     };
 
     Install = {
-      WantedBy = ["graphical-session.target"];
+      WantedBy = ["wayland-session@hyprland.desktop.target"];
     };
 
     Service = {

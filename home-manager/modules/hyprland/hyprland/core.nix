@@ -30,8 +30,9 @@ in {
         };
         blur = {
           enabled = true;
-          size = 8;
+          size = 4;
           passes = 2;
+          xray = true;
           new_optimizations = true;
         };
       };
@@ -64,6 +65,7 @@ in {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         focus_on_activate = true;
+        vrr = 2;
       };
 
       cursor = {
