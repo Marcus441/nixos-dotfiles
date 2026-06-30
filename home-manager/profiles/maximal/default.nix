@@ -1,17 +1,24 @@
 {
   imports = [
+    ./bat.nix
     ./discord
-    ./firefox.nix
+    ./eza.nix
+    ./fastfetch.nix
     ./fish.nix
     ./ghostty
     ./hyprland
+    ./lazygit.nix
     ./mako.nix
+    ./neovide.nix
     ./obs-studio.nix
+    ./opencode
     ./starship.nix
+    ./stylix.nix
     ./thunderbird
     ./tmux.nix
     ./walker
     ./waybar
     ./wleave.nix
+    ./yazi
   ];
 }

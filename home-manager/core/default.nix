@@ -1,26 +1,20 @@
 {
   imports = [
-    ./bat.nix
     ./btop.nix
     ./ccache.nix
     ./direnv.nix
-    ./eza.nix
-    ./fastfetch.nix
     ./fd.nix
+    ./firefox.nix
     ./fzf.nix
     ./git.nix
     ./jq.nix
-    ./lazygit.nix
     ./mime.nix
     ./mpv.nix
     ./neovim.nix
     ./nix-index.nix
-    ./opencode
     ./ripgrep.nix
     ./ssh.nix
-    ./stylix.nix
     ./xdg.nix
-    ./yazi
     ./zathura.nix
     ./zoxide.nix
   ];

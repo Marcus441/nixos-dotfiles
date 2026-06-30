@@ -4,7 +4,9 @@
   # CLI tooling (fzf, ripgrep, fd, ...) is inherited from ../../core.
   imports = [
     ./bash.nix
+    ./colors.nix
     ./dwl.nix
+    ./font.nix
     ./foot.nix
     ./monitors.nix
   ];
