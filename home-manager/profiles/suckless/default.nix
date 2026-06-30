@@ -5,6 +5,7 @@
   imports = [
     ./bash.nix
     ./colors.nix
+    ./cursor.nix
     ./dwl.nix
     ./font.nix
     ./foot.nix
