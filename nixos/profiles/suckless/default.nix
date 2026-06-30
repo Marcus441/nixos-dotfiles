@@ -31,4 +31,18 @@
 in {
   # Register the dwl session with the display manager (ly, from ../../core/ly.nix).
   services.displayManager.sessionPackages = [dwl-desktop];
+
+  # Portals: wlr backend gives screenshot/screencast (grim/pipewire) on any
+  # wlroots compositor incl. dwl; gtk backend covers file choosers + settings.
+  # The wrapper exports XDG_CURRENT_DESKTOP=dwl, so this `dwl` config applies.
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.dwl = {
+      default = ["gtk"];
+      "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
+      "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
+    };
+  };
 }
