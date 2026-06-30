@@ -13,7 +13,7 @@
     };
     size = lib.mkOption {
       type = lib.types.int;
-      default = 11;
+      default = 16;
       description = "Default font size, in points.";
     };
     ligatures = lib.mkOption {

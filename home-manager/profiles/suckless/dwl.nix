@@ -9,16 +9,12 @@
   # #rrggbb -> 0xrrggbbff for dwl's colour tables.
   toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
 
-  # OCR-to-clipboard helper, shared with the maximal hyprland session.
   ocr-copy = pkgs.callPackage ../../pkgs/ocr-copy.nix {};
 
-  # Absolute store paths for the programs the keybinds spawn, so they resolve
-  # regardless of the session PATH (and get pulled into dwl's runtime closure).
   foot = "${pkgs.foot}/bin/foot";
   wmenuRun = "${pkgs.wmenu}/bin/wmenu-run";
   wmenu = "${pkgs.wmenu}/bin/wmenu";
   grimblast = "${pkgs.grimblast}/bin/grimblast";
-  hyprpicker = "${pkgs.hyprpicker}/bin/hyprpicker";
   cliphist = "${pkgs.cliphist}/bin/cliphist";
   wlCopy = "${pkgs.wl-clipboard}/bin/wl-copy";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
@@ -54,8 +50,8 @@
     /* base16 colours: foreground, background, border */
     static uint32_t colors[][3] = {
       [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base02} },
-      [SchemeSel]  = { ${toBar colors.base06}, ${toBar colors.base0D}, ${toBar colors.base0D} },
-      [SchemeUrg]  = { 0,          0,          ${toBar colors.base08} },
+      [SchemeSel]  = { ${toBar colors.base00}, ${toBar colors.base0D}, ${toBar colors.base0D} },
+      [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
     };
 
     /* tagging */
@@ -120,9 +116,18 @@
 
     /* commands (absolute store paths; keysyms are matched case-insensitively) */
     static const char *termcmd[]      = { "${foot}", NULL };
-    static const char *menucmd[]      = { "${wmenuRun}", NULL };
+    static const char *menucmd[] = {
+      "${wmenuRun}",
+      "-f", "${font.name} 10",
+      "-N", "${colors.base00}",
+      "-n", "${colors.base05}",
+      "-M", "${colors.base00}",
+      "-m", "${colors.base0D}",
+      "-S", "${colors.base0D}",
+      "-s", "${colors.base00}",
+      NULL
+    };
     static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
-    static const char *pickcmd[]      = { "${hyprpicker}", "-an", NULL };
     static const char *shotcmd[]      = { "${grimblast}", "--notify", "--freeze", "copysave", "screen", NULL };
     static const char *areashotcmd[]  = { "${grimblast}", "--notify", "--freeze", "copysave", "area", NULL };
     static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
@@ -140,7 +145,6 @@
       { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },     /* super+enter   -> terminal      */
       { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },     /* super+d       -> launcher      */
       { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },      /* super+c       -> OCR to clip   */
-      { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_c,      spawn, {.v = pickcmd} },     /* super+shift+c -> colour picker */
       { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn, {.v = shotcmd} },     /* super+shift+s -> shot (screen) */
       { 0,                         XKB_KEY_Print,  spawn, {.v = areashotcmd} }, /* print         -> shot (area)   */
       { MODKEY,                    XKB_KEY_v,      spawn,                       /* super+v       -> clipboard     */
