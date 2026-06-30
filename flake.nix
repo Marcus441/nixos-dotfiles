@@ -48,7 +48,7 @@
       {
         hostname = "UM790pro";
         stateVersion = "25.11";
-        profile = "maximal";
+        profile = "suckless";
       }
     ];
 
