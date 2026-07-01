@@ -3,6 +3,18 @@
   user,
   ...
 }: let
+  # A single wallpaper pulled straight from the walls repo (sparse-checkout, so
+  # only this one image is fetched -- not the whole 4k collection). swaybg paints
+  # it on any wlroots compositor, dwl included.
+  wallpaper = pkgs.fetchFromGitHub {
+    owner = "Marcus441";
+    repo = "walls";
+    rev = "b11022653952ac634b0c9af6966c560bb0ef0876";
+    hash = "sha256-ncCvJdy1wCVRdTK/WWnR63kfXw02q0I0xjIQdVM/jvU=";
+    sparseCheckout = ["walled_tiers/4k/aerial/satellite_dishes_on_a_building.jpg"];
+  };
+  wallpaperImage = "${wallpaper}/walled_tiers/4k/aerial/satellite_dishes_on_a_building.jpg";
+
   # dwl is compiled-and-configured in the suckless *home* profile (its config
   # is compile-time), so the session launches the user's ~/.nix-profile copy.
   # Running `home-manager switch` for the suckless profile is therefore a
@@ -17,9 +29,9 @@
     export XDG_SESSION_TYPE=wayland
 
     # dwl's -s autostart runs once the compositor is up (so WAYLAND_DISPLAY is
-    # set): apply the host monitor layout, then start the notification daemon.
-    # dwl reads its bar status from stdin; feed a minimal clock.
-    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; mako &'
+    # set): apply the host monitor layout, paint the wallpaper, then start the
+    # notification daemon. dwl reads its bar status from stdin; feed a clock.
+    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako &'
   '';
 
   dwl-desktop = pkgs.writeTextFile {
