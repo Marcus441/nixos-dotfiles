@@ -26,7 +26,9 @@
         "e" = 14;
         "f" = 15;
       }
-      .${lib.toLower c};
+      .${
+        lib.toLower c
+      };
     cs = lib.stringToCharacters s;
   in
     digit (builtins.elemAt cs 0) * 16 + digit (builtins.elemAt cs 1);
@@ -65,13 +67,13 @@ in {
       # Coloured man pages, using the base16 Kanagawa Dragon palette (./colors.nix)
       # via less' termcap hooks (truecolor escapes).
       export GROFF_NO_SGR=1
-      export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                       # blink     -> red
-      export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base0D}m'                       # bold      -> blue
-      export LESS_TERMCAP_me=$'\e[0m'                                                 # reset
+      export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                            # blink     -> red
+      export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base0D}m'                            # bold      -> blue
+      export LESS_TERMCAP_me=$'\e[0m'                                                      # reset
       export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m' # standout -> yellow bg
-      export LESS_TERMCAP_se=$'\e[0m'                                                 # reset standout
-      export LESS_TERMCAP_us=$'\e[4;38;2;${rgb colors.base0B}m'                       # underline -> green
-      export LESS_TERMCAP_ue=$'\e[0m'                                                 # reset underline
+      export LESS_TERMCAP_se=$'\e[0m'                                                      # reset standout
+      export LESS_TERMCAP_us=$'\e[4;38;2;${rgb colors.base0B}m'                            # underline -> green
+      export LESS_TERMCAP_ue=$'\e[0m'                                                      # reset underline
     '';
   };
 }

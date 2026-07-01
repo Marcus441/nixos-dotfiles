@@ -14,7 +14,8 @@
   foot = "${pkgs.foot}/bin/foot";
   wmenuRun = "${pkgs.wmenu}/bin/wmenu-run";
   wmenu = "${pkgs.wmenu}/bin/wmenu";
-  grimblast = "${pkgs.grimblast}/bin/grimblast";
+  grim = "${pkgs.grim}/bin/grim";
+  slurp = "${pkgs.slurp}/bin/slurp";
   cliphist = "${pkgs.cliphist}/bin/cliphist";
   wlCopy = "${pkgs.wl-clipboard}/bin/wl-copy";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
@@ -49,8 +50,8 @@
 
     /* base16 colours: foreground, background, border */
     static uint32_t colors[][3] = {
-      [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base02} },
-      [SchemeSel]  = { ${toBar colors.base00}, ${toBar colors.base0D}, ${toBar colors.base0D} },
+      [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base0D} },
+      [SchemeSel]  = { ${toBar colors.base00}, ${toBar colors.base02}, ${toBar colors.base02} },
       [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
     };
 
@@ -122,14 +123,14 @@
       "-N", "${colors.base00}",
       "-n", "${colors.base05}",
       "-M", "${colors.base00}",
-      "-m", "${colors.base0D}",
-      "-S", "${colors.base0D}",
+      "-m", "${colors.base02}",
+      "-S", "${colors.base02}",
       "-s", "${colors.base00}",
       NULL
     };
     static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
-    static const char *shotcmd[]      = { "${grimblast}", "--notify", "--freeze", "copysave", "screen", NULL };
-    static const char *areashotcmd[]  = { "${grimblast}", "--notify", "--freeze", "copysave", "area", NULL };
+    static const char *shotcmd[]      = { "${grim}", NULL };
+    static const char *areashotcmd[]  = { "${grim}", "-g", "$(${slurp})", "-", NULL };
     static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
     static const char *voldncmd[]     = { "${wpctl}", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-", NULL };
     static const char *volmutecmd[]   = { "${wpctl}", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };

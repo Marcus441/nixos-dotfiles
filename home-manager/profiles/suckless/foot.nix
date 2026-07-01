@@ -16,36 +16,38 @@ in {
       main = {
         font = fontStr;
         pad = "8x8";
+        initial-color-theme = "dark";
       };
       scrollback.lines = 10000;
       mouse.hide-when-typing = "yes";
 
       colors-dark = {
-        background = strip colors.base00;
-        foreground = strip colors.base05;
+        foreground = "c5c9c5";
+        background = "181616";
 
-        cursor = "${strip colors.base00} ${strip colors.base05}";
+        selection-foreground = "c8c093";
+        selection-background = "2d4f67";
 
-        regular0 = strip colors.base00;
-        regular1 = strip colors.base08;
-        regular2 = strip colors.base0B;
-        regular3 = strip colors.base0A;
-        regular4 = strip colors.base0D;
-        regular5 = strip colors.base0E;
-        regular6 = strip colors.base0C;
-        regular7 = strip colors.base05;
+        regular0 = "0d0c0c";
+        regular1 = "c4746e";
+        regular2 = "8a9a7b";
+        regular3 = "c4b28a";
+        regular4 = "8ba4b0";
+        regular5 = "a292a3";
+        regular6 = "8ea4a2";
+        regular7 = "c8c093";
 
-        bright0 = strip colors.base03;
-        bright1 = strip colors.base08;
-        bright2 = strip colors.base0B;
-        bright3 = strip colors.base0A;
-        bright4 = strip colors.base0D;
-        bright5 = strip colors.base0E;
-        bright6 = strip colors.base0C;
-        bright7 = strip colors.base07;
+        bright0 = "a6a69c";
+        bright1 = "e46876";
+        bright2 = "87a987";
+        bright3 = "e6c384";
+        bright4 = "7fb4ca";
+        bright5 = "938aa9";
+        bright6 = "7aa89f";
+        bright7 = "c5c9c5";
 
-        selection-foreground = strip colors.base00;
-        selection-background = strip colors.base05;
+        "16" = "b6927b";
+        "17" = "b98d7b";
       };
     };
   };

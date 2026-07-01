@@ -1,16 +1,18 @@
-# OCR-to-clipboard helper shared by the maximal (hyprland) and suckless (dwl)
-# sessions: grab a region, run tesseract over it, copy the text and notify.
 {
   lib,
   writeShellScriptBin,
-  grimblast,
+  grim,
+  slurp,
   tesseract,
   wl-clipboard,
   libnotify,
 }:
 writeShellScriptBin "ocr-copy" ''
-  export PATH=$PATH:${lib.makeBinPath [grimblast tesseract wl-clipboard libnotify]}
-  text=$(grimblast --freeze save area - | tesseract stdin stdout --psm 6)
+  export PATH=$PATH:${lib.makeBinPath [grim slurp tesseract wl-clipboard libnotify]}
+
+  # Select area and capture it using tools compatible with both dwl and Hyprland
+  text=$(grim -g "$(slurp)" - | tesseract stdin stdout --psm 6 2>/dev/null)
+
   if [ -n "$text" ]; then
     echo "$text" | wl-copy
     notify-send "OCR Successful" "Text copied to clipboard"

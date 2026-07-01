@@ -8,21 +8,22 @@
   };
 
   config.suckless.colors = {
-    base00 = "#181616"; # background
-    base01 = "#282727"; # lighter background (status bars)
-    base02 = "#393836"; # selection background
-    base03 = "#625e5a"; # comments, line highlight
-    base04 = "#a6a69c"; # dark foreground
-    base05 = "#c5c9c5"; # default foreground
-    base06 = "#c8c093"; # light foreground
-    base07 = "#c5c9c5"; # light background
-    base08 = "#c4746e"; # red
-    base09 = "#b6927b"; # orange
-    base0A = "#c4b28a"; # yellow
-    base0B = "#8a9a7b"; # green
-    base0C = "#8ea4a2"; # cyan / aqua
-    base0D = "#8ba4b0"; # blue
-    base0E = "#a292a3"; # magenta / violet
-    base0F = "#b98d7b"; # brown / special
+    base00 = "#181616";
+    base01 = "#0d0c0c";
+    base02 = "#2d4f67";
+    base03 = "#a6a69c";
+    base04 = "#7fb4ca";
+    base05 = "#c5c9c5";
+    base06 = "#938aa9";
+    base07 = "#c5c9c5";
+
+    base08 = "#c4746e";
+    base09 = "#e46876";
+    base0A = "#c4b28a";
+    base0B = "#8a9a7b";
+    base0C = "#8ea4a2";
+    base0D = "#8ba4b0";
+    base0E = "#a292a3";
+    base0F = "#7aa89f";
   };
 }
