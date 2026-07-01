@@ -55,6 +55,11 @@ in {
   # Register the dwl session with the display manager (ly, from ../../core/ly.nix).
   services.displayManager.sessionPackages = [dwl-desktop];
 
+  # Registers the ca.desrt.dconf D-Bus service so home-manager's dconf settings
+  # (the GTK color-scheme in the suckless home profile) can be applied. Maximal
+  # gets this implicitly via programs.thunar; suckless has no such consumer.
+  programs.dconf.enable = true;
+
   # Portals: wlr backend gives screenshot/screencast (grim/pipewire) on any
   # wlroots compositor incl. dwl; gtk backend covers file choosers + settings.
   # The wrapper exports XDG_CURRENT_DESKTOP=dwl, so this `dwl` config applies.
