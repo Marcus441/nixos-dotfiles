@@ -250,7 +250,6 @@ in {
   home.packages = [
     dwl-suckless
     pkgs.wmenu # super+d launcher
-    pkgs.grimblast # screenshots (super+shift+s / Print)
     pkgs.wl-clipboard
     ocr-copy # super+c
   ];
