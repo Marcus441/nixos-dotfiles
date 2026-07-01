@@ -65,15 +65,18 @@ in {
       PS1='\[\e[1;34m\]\w\[\e[0m\] \$ '
 
       # Coloured man pages, using the base16 Kanagawa Dragon palette (./colors.nix)
-      # via less' termcap hooks (truecolor escapes).
+      # via less' termcap hooks (truecolor escapes). Colour scheme adapted from
+      # https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf
       export GROFF_NO_SGR=1
-      export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                            # blink     -> red
-      export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base0D}m'                            # bold      -> blue
-      export LESS_TERMCAP_me=$'\e[0m'                                                      # reset
-      export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m' # standout -> yellow bg
-      export LESS_TERMCAP_se=$'\e[0m'                                                      # reset standout
-      export LESS_TERMCAP_us=$'\e[4;38;2;${rgb colors.base0B}m'                            # underline -> green
-      export LESS_TERMCAP_ue=$'\e[0m'                                                      # reset underline
+      export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                              # blink       -> bold red
+      export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base08}m'                              # bold        -> bold red   (headings, commands)
+      export LESS_TERMCAP_me=$'\e[0m'                                                        # reset
+      export LESS_TERMCAP_so=$'\e[1;38;2;${rgb colors.base0A}m\e[48;2;${rgb colors.base0D}m' # standout    -> yellow on blue (status/search)
+      export LESS_TERMCAP_se=$'\e[0m'                                                        # reset standout
+      export LESS_TERMCAP_us=$'\e[4;1;38;2;${rgb colors.base0B}m'                            # underline   -> bold green  (args, options)
+      export LESS_TERMCAP_ue=$'\e[0m'                                                        # reset underline
+      export LESS_TERMCAP_mr=$'\e[7m'                                                        # reverse     -> inverse
+      export LESS_TERMCAP_mh=$'\e[2m'                                                        # half-bright -> dim
     '';
   };
 }
