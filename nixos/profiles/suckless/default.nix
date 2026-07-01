@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   user,
   ...
 }: let
@@ -36,10 +35,10 @@
     passthru.providedSessions = ["dwl"];
   };
 in {
-  # Override core's fish login shell -- the suckless branch is bash (its
-  # configured shell lives in the suckless home profile). fish stays installed
-  # system-wide via core, this just changes ${user}'s login shell.
-  users.users.${user}.shell = lib.mkForce pkgs.bashInteractive;
+  # bash is the suckless login shell (its interactive config lives in the
+  # suckless home profile, home-manager/profiles/suckless/bash.nix). core no
+  # longer sets a shell, so no override is needed.
+  users.users.${user}.shell = pkgs.bashInteractive;
 
   # Register the dwl session with the display manager (ly, from ../../core/ly.nix).
   services.displayManager.sessionPackages = [dwl-desktop];
