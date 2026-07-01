@@ -1,20 +1,18 @@
 {pkgs, ...}: {
+  # Essential packages shared by every profile (suckless + maximal). Profile
+  # -specific / heavy GUI apps live in home-manager/profiles/<profile>/packages.nix.
   home.packages = with pkgs; [
     # Desktop apps
     imv
-    kdePackages.kdenlive
 
     # Document & Image Rendering (for Neovim/Snacks)
     ghostscript
     tectonic
 
-    # Screen & Clipboard
-    grimblast
-    hyprpicker
+    # Screen & Clipboard (compositor-agnostic)
     wl-clipboard
     wtype
     cliphist
-    (callPackage ./pkgs/ocr-copy.nix {})
 
     # Media
     ffmpeg
@@ -41,6 +39,5 @@
     bemoji
     nix-prefetch-scripts
     silicon
-    xdg-desktop-portal-gtk
   ];
 }

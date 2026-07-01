@@ -7,7 +7,6 @@
   imports = [
     ./core
     ./profiles/${profile}
-    ./home-packages.nix
   ];
   home = {
     username = user;

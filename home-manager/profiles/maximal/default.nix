@@ -12,6 +12,7 @@
     ./neovide.nix
     ./obs-studio.nix
     ./opencode
+    ./packages.nix
     ./starship.nix
     ./stylix.nix
     ./thunderbird
