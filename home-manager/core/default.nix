@@ -11,7 +11,6 @@
     ./mime.nix
     ./mpv.nix
     ./neovim.nix
-    ./nix-index.nix
     ./ripgrep.nix
     ./ssh.nix
     ./xdg.nix
