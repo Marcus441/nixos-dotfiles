@@ -9,6 +9,22 @@
   # #rrggbb -> 0xrrggbbff for dwl's colour tables.
   toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
 
+  # Shared wmenu flags: themed to match dwl's bar schemes (normal entries =
+  # SchemeNorm, prompt & selection = SchemeSel) and vertical with 10 lines.
+  # Used by both the launcher (wmenu-run) and the clipboard picker (wmenu).
+  wmenuFlags = [
+    "-f" "${font.name} 10"
+    "-l" "10"
+    "-N" colors.base00
+    "-n" colors.base05
+    "-M" colors.base02
+    "-m" colors.base05
+    "-S" colors.base02
+    "-s" colors.base05
+  ];
+  wmenuFlagsC = lib.concatMapStringsSep ", " (f: ''"${f}"'') wmenuFlags;
+  wmenuFlagsSh = lib.escapeShellArgs wmenuFlags;
+
   ocr-copy = pkgs.callPackage ../../pkgs/ocr-copy.nix {};
 
   foot = "${pkgs.foot}/bin/foot";
@@ -48,10 +64,12 @@
     /* Set the alpha to zero to restore the old (pre xdg-protocol) behaviour. */
     static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
 
-    /* base16 colours: foreground, background, border */
+    /* base24 colours: foreground, background, border. Borders stay muted
+       greys: unfocused sinks toward the background (base01), focused lifts a
+       shade above it (base03). */
     static uint32_t colors[][3] = {
-      [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base0D} },
-      [SchemeSel]  = { ${toBar colors.base00}, ${toBar colors.base02}, ${toBar colors.base02} },
+      [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
+      [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base02}, ${toBar colors.base03} },
       [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
     };
 
@@ -117,17 +135,7 @@
 
     /* commands (absolute store paths; keysyms are matched case-insensitively) */
     static const char *termcmd[]      = { "${foot}", NULL };
-    static const char *menucmd[] = {
-      "${wmenuRun}",
-      "-f", "${font.name} 10",
-      "-N", "${colors.base00}",
-      "-n", "${colors.base05}",
-      "-M", "${colors.base00}",
-      "-m", "${colors.base02}",
-      "-S", "${colors.base02}",
-      "-s", "${colors.base00}",
-      NULL
-    };
+    static const char *menucmd[]      = { "${wmenuRun}", ${wmenuFlagsC}, NULL };
     static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
     static const char *shotcmd[]      = { "${grim}", NULL };
     static const char *areashotcmd[]  = { "${grim}", "-g", "$(${slurp})", "-", NULL };
@@ -149,7 +157,7 @@
       { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn, {.v = shotcmd} },     /* super+shift+s -> shot (screen) */
       { 0,                         XKB_KEY_Print,  spawn, {.v = areashotcmd} }, /* print         -> shot (area)   */
       { MODKEY,                    XKB_KEY_v,      spawn,                       /* super+v       -> clipboard     */
-        SHCMD("${cliphist} list | ${wmenu} | ${cliphist} decode | ${wlCopy}") },
+        SHCMD("${cliphist} list | ${wmenu} ${wmenuFlagsSh} | ${cliphist} decode | ${wlCopy}") },
 
       /* --- window & layout management --- */
       { MODKEY,                    XKB_KEY_q,      killclient,       {0} },                /* super+q       -> close      */
