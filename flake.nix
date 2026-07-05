@@ -84,11 +84,14 @@
         extraSpecialArgs = {
           inherit inputs user hostname homeStateVersion monitors sensitivity profile dev;
         };
-        modules = [
-          inputs.stylix.homeModules.stylix
-          inputs.walker.homeManagerModules.default
-          ./home-manager/home.nix
-        ];
+        modules =
+          # stylix and walker are only configured by the maximal home profile,
+          # so the suckless configuration never loads their modules.
+          nixpkgs.lib.optionals (profile == "maximal") [
+            inputs.stylix.homeModules.stylix
+            inputs.walker.homeManagerModules.default
+          ]
+          ++ [./home-manager/home.nix];
       };
 
     homeConfigs = builtins.listToAttrs (map (host: {
