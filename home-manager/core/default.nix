@@ -1,6 +1,5 @@
 {
   imports = [
-    ./btop.nix
     ./ccache.nix
     ./direnv.nix
     ./fd.nix

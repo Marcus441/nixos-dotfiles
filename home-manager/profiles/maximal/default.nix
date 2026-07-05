@@ -1,6 +1,7 @@
 {
   imports = [
     ./bat.nix
+    ./btop.nix
     ./discord
     ./eza.nix
     ./fastfetch.nix

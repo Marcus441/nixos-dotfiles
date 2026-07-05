@@ -6,6 +6,10 @@
     # Heavy GUI apps
     kdePackages.kdenlive
 
+    # Document & Image Rendering (for Neovim/Snacks)
+    ghostscript
+    tectonic
+
     # Screenshots & picking (Hyprland-specific / used by the hyprland binds)
     grimblast
     hyprpicker

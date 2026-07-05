@@ -5,13 +5,8 @@
     # Desktop apps
     imv
 
-    # Document & Image Rendering (for Neovim/Snacks)
-    ghostscript
-    tectonic
-
     # Screen & Clipboard (compositor-agnostic)
     wl-clipboard
-    wtype
     cliphist
 
     # Media
@@ -27,7 +22,6 @@
     brightnessctl
     dnsutils
     httpie
-    nmap
     man-pages
     man-pages-posix
 
@@ -36,8 +30,6 @@
     zip
 
     # Other
-    bemoji
     nix-prefetch-scripts
-    silicon
   ];
 }
