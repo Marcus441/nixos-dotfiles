@@ -35,16 +35,19 @@
         hostname = "swift5";
         stateVersion = "25.11";
         profile = "maximal";
+        dev = true;
       }
       {
         hostname = "gpc";
         stateVersion = "25.11";
         profile = "maximal";
+        dev = false;
       }
       {
         hostname = "UM790pro";
         stateVersion = "25.11";
         profile = "suckless";
+        dev = true;
       }
     ];
 
@@ -52,12 +55,13 @@
       hostname,
       stateVersion,
       profile,
+      dev,
     }: let
       utils = import ./utilities;
       monitors = import ./hosts/${hostname}/monitors.nix utils;
     in
       nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs stateVersion hostname user monitors profile;};
+        specialArgs = {inherit inputs stateVersion hostname user monitors profile dev;};
         modules = [
           {nixpkgs.hostPlatform = system;}
           ./hosts/${hostname}/configuration.nix
@@ -67,6 +71,7 @@
     mkHome = {
       hostname,
       profile,
+      dev,
       ...
     }: let
       utils = import ./utilities;
@@ -77,7 +82,7 @@
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs user hostname homeStateVersion monitors sensitivity profile;
+          inherit inputs user hostname homeStateVersion monitors sensitivity profile dev;
         };
         modules = [
           inputs.stylix.homeModules.stylix
