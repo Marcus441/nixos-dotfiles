@@ -64,7 +64,7 @@ in {
       # Minimal prompt (cwd + exit-status aware), no external prompt program.
       PS1='\[\e[1;34m\]\w\[\e[0m\] \$ '
 
-      # Coloured man pages, using the base16 Kanagawa Dragon palette (./colors.nix)
+      # Coloured man pages, using the base24 Kanagawa Dragon palette (./colors.nix)
       # via less' termcap hooks (truecolor escapes). Colour scheme adapted from
       # https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf
       export GROFF_NO_SGR=1

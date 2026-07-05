@@ -21,33 +21,35 @@ in {
       scrollback.lines = 10000;
       mouse.hide-when-typing = "yes";
 
+      # base24 terminal mapping (./colors.nix): brights from base12-17,
+      # extended colours 16/17 from base09/base0F.
       colors-dark = {
-        foreground = "c5c9c5";
-        background = "181616";
+        foreground = strip colors.base05;
+        background = strip colors.base00;
 
-        selection-foreground = "c8c093";
-        selection-background = "2d4f67";
+        selection-foreground = strip colors.base06;
+        selection-background = strip colors.base02;
 
-        regular0 = "0d0c0c";
-        regular1 = "c4746e";
-        regular2 = "8a9a7b";
-        regular3 = "c4b28a";
-        regular4 = "8ba4b0";
-        regular5 = "a292a3";
-        regular6 = "8ea4a2";
-        regular7 = "c8c093";
+        regular0 = strip colors.base11;
+        regular1 = strip colors.base08;
+        regular2 = strip colors.base0B;
+        regular3 = strip colors.base0A;
+        regular4 = strip colors.base0D;
+        regular5 = strip colors.base0E;
+        regular6 = strip colors.base0C;
+        regular7 = strip colors.base06;
 
-        bright0 = "a6a69c";
-        bright1 = "e46876";
-        bright2 = "87a987";
-        bright3 = "e6c384";
-        bright4 = "7fb4ca";
-        bright5 = "938aa9";
-        bright6 = "7aa89f";
-        bright7 = "c5c9c5";
+        bright0 = strip colors.base03;
+        bright1 = strip colors.base12;
+        bright2 = strip colors.base14;
+        bright3 = strip colors.base13;
+        bright4 = strip colors.base16;
+        bright5 = strip colors.base17;
+        bright6 = strip colors.base15;
+        bright7 = strip colors.base07;
 
-        "16" = "b6927b";
-        "17" = "b98d7b";
+        "16" = strip colors.base09;
+        "17" = strip colors.base0F;
       };
     };
   };

@@ -1,29 +1,38 @@
 {lib, ...}: {
-  # base16 "Kanagawa Dragon" palette for the lean branch (the suckless profile
+  # base24 "Kanagawa Dragon" palette for the lean branch (the suckless profile
   # carries no stylix, so the theme is defined explicitly here). Consumed by
   # ./bash.nix for coloured man pages; available to any other suckless module.
   options.suckless.colors = lib.mkOption {
     type = lib.types.attrsOf lib.types.str;
-    description = "base16 colour palette (hex, with leading '#') for the suckless profile.";
+    description = "base24 colour palette (hex, with leading '#') for the suckless profile.";
   };
 
   config.suckless.colors = {
     base00 = "#181616";
-    base01 = "#0d0c0c";
-    base02 = "#2d4f67";
-    base03 = "#a6a69c";
-    base04 = "#7fb4ca";
+    base01 = "#282727";
+    base02 = "#393836";
+    base03 = "#625e5a";
+    base04 = "#737c73";
     base05 = "#c5c9c5";
-    base06 = "#938aa9";
+    base06 = "#c8c093";
     base07 = "#c5c9c5";
 
     base08 = "#c4746e";
-    base09 = "#e46876";
+    base09 = "#b6927b";
     base0A = "#c4b28a";
     base0B = "#8a9a7b";
     base0C = "#8ea4a2";
     base0D = "#8ba4b0";
     base0E = "#a292a3";
-    base0F = "#7aa89f";
+    base0F = "#b98d7b";
+
+    base10 = "#12120f";
+    base11 = "#0d0c0c";
+    base12 = "#e46876";
+    base13 = "#e6c384";
+    base14 = "#87a987";
+    base15 = "#7aa89f";
+    base16 = "#7fb4ca";
+    base17 = "#938aa9";
   };
 }
