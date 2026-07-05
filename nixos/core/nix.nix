@@ -1,5 +1,13 @@
 {
   nix = {
+    # `nix flake init -t templates#cpp` etc. on any host; points at the repo
+    # (not a pin), so template updates flow without touching this flake.
+    registry.templates.to = {
+      type = "github";
+      owner = "Marcus441";
+      repo = "nix-templates";
+    };
+
     settings = {
       experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
