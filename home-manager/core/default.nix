@@ -1,7 +1,6 @@
 {
   imports = [
     ./ccache.nix
-    ./direnv.nix
     ./fd.nix
     ./firefox.nix
     ./fzf.nix

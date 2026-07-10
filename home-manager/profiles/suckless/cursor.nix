@@ -24,6 +24,7 @@
 
   config = {
     home.pointerCursor = {
+      enable = true;
       name = config.suckless.cursor.name;
       package = config.suckless.cursor.package;
       size = config.suckless.cursor.size;
