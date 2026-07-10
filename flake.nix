@@ -11,10 +11,6 @@
       url = "github:Marcus441/neovim.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stylix = {
       url = "github:danth/stylix";
@@ -38,33 +34,46 @@
       {
         hostname = "swift5";
         stateVersion = "25.11";
+        profile = "maximal";
+        dev = true;
       }
       {
         hostname = "gpc";
         stateVersion = "25.11";
+        profile = "maximal";
+        dev = false;
       }
       {
         hostname = "UM790pro";
         stateVersion = "25.11";
+        profile = "suckless";
+        dev = true;
       }
     ];
 
     makeSystem = {
       hostname,
       stateVersion,
+      profile,
+      dev,
     }: let
       utils = import ./utilities;
       monitors = import ./hosts/${hostname}/monitors.nix utils;
     in
       nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs stateVersion hostname user monitors;};
+        specialArgs = {inherit inputs stateVersion hostname user monitors profile dev;};
         modules = [
           {nixpkgs.hostPlatform = system;}
           ./hosts/${hostname}/configuration.nix
         ];
       };
 
-    mkHome = hostname: let
+    mkHome = {
+      hostname,
+      profile,
+      dev,
+      ...
+    }: let
       utils = import ./utilities;
       monitorConfig = import ./hosts/${hostname}/monitors.nix utils;
       inherit (monitorConfig) monitors;
@@ -73,19 +82,21 @@
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs user hostname homeStateVersion monitors sensitivity;
+          inherit inputs user hostname homeStateVersion monitors sensitivity profile dev;
         };
-        modules = [
-          inputs.nix-index-database.homeModules.default
-          inputs.stylix.homeModules.stylix
-          inputs.walker.homeManagerModules.default
-          ./home-manager/home.nix
-        ];
+        modules =
+          # stylix and walker are only configured by the maximal home profile,
+          # so the suckless configuration never loads their modules.
+          nixpkgs.lib.optionals (profile == "maximal") [
+            inputs.stylix.homeModules.stylix
+            inputs.walker.homeManagerModules.default
+          ]
+          ++ [./home-manager/home.nix];
       };
 
     homeConfigs = builtins.listToAttrs (map (host: {
         name = "${user}@${host.hostname}";
-        value = mkHome host.hostname;
+        value = mkHome host;
       })
       hosts);
   in {

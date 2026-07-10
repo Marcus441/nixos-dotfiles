@@ -1,25 +1,20 @@
 {
   imports = [
+    ../dev # per-host dev tooling, self-gated by the `dev` flag
     ./audio.nix
-    ./binfmt.nix
     ./bluetooth.nix
     ./boot.nix
     ./common-packages.nix
-    ./docker.nix
     ./env.nix
     ./home-manager.nix
-    ./hyprland.nix
     ./kernel.nix
     ./ly.nix
     ./net.nix
     ./nh.nix
     ./nix.nix
     ./power.nix
-    ./qemu.nix
-    ./thunar.nix
     ./timezone.nix
     ./user.nix
-    ./virt-manager.nix
     ./zram.nix
   ];
 }

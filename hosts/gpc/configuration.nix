@@ -5,12 +5,14 @@
   config,
   lib,
   user,
+  profile,
   ...
 }: {
   imports = [
     ./hardware-configuration.nix
     ./local-packages.nix
-    ../../nixos/modules
+    ../../nixos/core
+    ../../nixos/profiles/${profile}
   ];
 
   networking.hostName = hostname;

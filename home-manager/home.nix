@@ -1,17 +1,18 @@
 {
   homeStateVersion,
   user,
+  profile,
   ...
 }: {
   imports = [
-    ./modules
-    ./home-packages.nix
+    ./core
+    ./profiles/${profile}
   ];
   home = {
     username = user;
     homeDirectory = "/home/${user}";
     stateVersion = homeStateVersion;
-    shell.enableFishIntegration = true;
+    shell.enableFishIntegration = profile == "maximal";
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
       QT_QPA_PLATFORM = "wayland";

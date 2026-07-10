@@ -112,7 +112,7 @@
       osu = "nh os switch --update";
       nd = "nix develop -c $SHELL";
       ndi = "nix develop --impure -c $SHELL";
-      pkgs = "nvim ~/flake/home-manager/home-packages.nix";
+      pkgs = "nvim ~/flake/home-manager/core/packages.nix";
       # ── git ─────────────────────────────────────────────────────────────────
       gs = "git status";
       gc = "git checkout";
@@ -126,6 +126,7 @@
 
     shellAliases = {
       gg = "git-graph --style round";
+      man = "batman";
     };
   };
 }
