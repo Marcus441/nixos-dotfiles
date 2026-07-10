@@ -13,14 +13,22 @@
   # SchemeNorm, prompt & selection = SchemeSel) and vertical with 10 lines.
   # Used by both the launcher (wmenu-run) and the clipboard picker (wmenu).
   wmenuFlags = [
-    "-f" "${font.name} 10"
-    "-l" "10"
-    "-N" colors.base00
-    "-n" colors.base05
-    "-M" colors.base02
-    "-m" colors.base05
-    "-S" colors.base02
-    "-s" colors.base05
+    "-f"
+    "${font.name} 10"
+    "-l"
+    "10"
+    "-N"
+    colors.base00
+    "-n"
+    colors.base05
+    "-M"
+    colors.base02
+    "-m"
+    colors.base05
+    "-S"
+    colors.base02
+    "-s"
+    colors.base05
   ];
   wmenuFlagsC = lib.concatMapStringsSep ", " (f: ''"${f}"'') wmenuFlags;
   wmenuFlagsSh = lib.escapeShellArgs wmenuFlags;
@@ -137,8 +145,6 @@
     static const char *termcmd[]      = { "${foot}", NULL };
     static const char *menucmd[]      = { "${wmenuRun}", ${wmenuFlagsC}, NULL };
     static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
-    static const char *shotcmd[]      = { "${grim}", NULL };
-    static const char *areashotcmd[]  = { "${grim}", "-g", "$(${slurp})", "-", NULL };
     static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
     static const char *voldncmd[]     = { "${wpctl}", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-", NULL };
     static const char *volmutecmd[]   = { "${wpctl}", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
@@ -151,12 +157,14 @@
 
     static const Key keys[] = {
       /* --- applications & screenshots (mirror the hyprland binds) --- */
-      { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },     /* super+enter   -> terminal      */
-      { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },     /* super+d       -> launcher      */
-      { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },      /* super+c       -> OCR to clip   */
-      { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn, {.v = shotcmd} },     /* super+shift+s -> shot (screen) */
-      { 0,                         XKB_KEY_Print,  spawn, {.v = areashotcmd} }, /* print         -> shot (area)   */
-      { MODKEY,                    XKB_KEY_v,      spawn,                       /* super+v       -> clipboard     */
+      { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },   /* super+enter   -> terminal      */
+      { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
+      { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },    /* super+c       -> OCR to clip   */
+      { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn,                     /* super+shift+s -> shot (screen) */
+        SHCMD("${grim} - | ${wlCopy}") },
+      { 0,                         XKB_KEY_Print,  spawn,                     /* print         -> shot (area)   */
+        SHCMD("${grim} -g \"$(${slurp})\" - | ${wlCopy}") },
+      { MODKEY,                    XKB_KEY_v,      spawn,                     /* super+v       -> clipboard     */
         SHCMD("${cliphist} list | ${wmenu} ${wmenuFlagsSh} | ${cliphist} decode | ${wlCopy}") },
 
       /* --- window & layout management --- */
@@ -260,5 +268,7 @@ in {
     pkgs.wmenu # super+d launcher
     pkgs.wl-clipboard
     ocr-copy # super+c
+    pkgs.grim
+    pkgs.slurp
   ];
 }
