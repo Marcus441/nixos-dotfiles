@@ -240,6 +240,10 @@
         };
       };
 
+      userChrome = ''
+        #firefox-view-button { display: none !important; }
+      '';
+
       settings = {
         "intl.accept_languages" = "en-AU, en";
         "spellchecker.dictionary" = "en-AU";
@@ -346,6 +350,33 @@
         "ui.prefersReducedMotion" = 0;
 
         "extensions.autoDisableScopes" = 0;
+
+        # ── UI density & chrome ──────────────────────────────
+        "browser.uidensity" = 1;
+        "browser.compactmode.show" = true;
+        "browser.toolbars.bookmarks.visibility" = "newtab";
+        "browser.tabs.firefox-view" = false;
+
+        # ── Tabs ─────────────────────────────────────────────
+        "browser.ctrlTab.sortByRecentlyUsed" = true;
+        "browser.tabs.hoverPreview.enabled" = true;
+        "browser.tabs.loadBookmarksInTabs" = true;
+        "browser.tabs.closeTabByDblclick" = true;
+
+        # ── URL bar & find ───────────────────────────────────
+        "browser.urlbar.suggest.calculator" = true;
+        "browser.urlbar.unitConversion.enabled" = true;
+        "findbar.highlightAll" = true;
+
+        # ── Annoyance fixes ──────────────────────────────────
+        "browser.download.alwaysOpenPanel" = false;
+        "browser.translations.automaticallyPopup" = false;
+        "cookiebanners.service.mode" = 2;
+        "cookiebanners.service.mode.privateBrowsing" = 2;
+        "middlemouse.paste" = false;
+        "full-screen-api.transition-duration.enter" = "0 0";
+        "full-screen-api.transition-duration.leave" = "0 0";
+        "full-screen-api.warning.delay" = -1;
 
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "browser.download.useDownloadDir" = false;
