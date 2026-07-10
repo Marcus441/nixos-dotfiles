@@ -2,6 +2,7 @@
   imports = [
     ./bat.nix
     ./btop.nix
+    ./direnv.nix
     ./discord
     ./eza.nix
     ./fastfetch.nix
