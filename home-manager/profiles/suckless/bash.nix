@@ -71,7 +71,7 @@ in {
       export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                              # blink       -> bold red
       export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base08}m'                              # bold        -> bold red   (headings, commands)
       export LESS_TERMCAP_me=$'\e[0m'                                                        # reset
-      export LESS_TERMCAP_so=$'\e[1;38;2;${rgb colors.base0A}m\e[48;2;${rgb colors.base0D}m' # standout    -> yellow on blue (status/search)
+      export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m'   # standout -> dark on yellow (status/search)
       export LESS_TERMCAP_se=$'\e[0m'                                                        # reset standout
       export LESS_TERMCAP_us=$'\e[4;1;38;2;${rgb colors.base0B}m'                            # underline   -> bold green  (args, options)
       export LESS_TERMCAP_ue=$'\e[0m'                                                        # reset underline
