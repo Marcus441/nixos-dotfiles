@@ -2,7 +2,6 @@
   programs.zathura = {
     enable = true;
     options = {
-      font = "JetBrains Mono Bold 13";
       selection-clipboard = "clipboard";
       adjust-open = "best-fit";
       pages-per-row = 1;
@@ -10,9 +9,7 @@
       zoom-min = 10;
       zoom-step = 10;
       render-loading = false;
-      page-padding = 1;
       scroll-full-overlap = "0.01";
-      fastrender = true;
     };
     mappings = {
       "u" = "scroll half-up";
