@@ -34,7 +34,7 @@
       {
         hostname = "swift5";
         stateVersion = "25.11";
-        profile = "maximal";
+        profile = "suckless";
         dev = true;
       }
       {
@@ -46,7 +46,7 @@
       {
         hostname = "UM790pro";
         stateVersion = "25.11";
-        profile = "suckless";
+        profile = "maximal";
         dev = true;
       }
     ];

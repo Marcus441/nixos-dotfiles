@@ -237,11 +237,11 @@
         "nvf": "nvf"
       },
       "locked": {
-        "lastModified": 1784896557,
-        "narHash": "sha256-4EELeV0pH1T0/hFDNr1mpQqd4xy64IwmC287GpehYNs=",
+        "lastModified": 1784897438,
+        "narHash": "sha256-IVlXqsOE6XW1v5yxSlglDaJ+XIUO1bY4OIA1qhfn+PE=",
         "owner": "Marcus441",
         "repo": "neovim.nix",
-        "rev": "9517f1747c9c3f6d9d8c5275fff8bc9981632f24",
+        "rev": "9f201081183121507410d27b0b3daf3b42a1645b",
         "type": "github"
       },
       "original": {
