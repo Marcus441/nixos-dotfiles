@@ -57,20 +57,23 @@ in {
       # instances (and footclient windows) in the current directory.
       __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "''${HOSTNAME:-$(hostname)}" "$PWD"; }
 
-      # Prompt: cwd + git branch + exit-status-coloured "$", using the base24
-      # palette (./colors.nix). Replaced starship in step 1.2; no external
-      # prompt program.
+      # Prompt: cwd + git branch + active dev environment (devenv / nix
+      # devshell / python venv) + white "$", using the base24 palette
+      # (./colors.nix). Replaced starship in step 1.2; no external prompt
+      # program.
       __prompt() {
-        local st=$?
-        local branch
+        local branch env=""
         branch=$(command git symbolic-ref --quiet --short HEAD 2>/dev/null)
+        if [[ -n $DEVENV_ROOT ]]; then
+          env="devenv"
+        elif [[ -n $IN_NIX_SHELL ]]; then
+          env="nix"
+        fi
+        [[ -n $VIRTUAL_ENV ]] && env="''${env:+$env,}venv:''${VIRTUAL_ENV##*/}"
         PS1='\[\e[1;38;2;${rgb colors.base0D}m\]\w\[\e[0m\]'
         [[ -n $branch ]] && PS1+=" \[\e[38;2;${rgb colors.base0E}m\]git:$branch\[\e[0m\]"
-        if ((st == 0)); then
-          PS1+=' \[\e[1;38;2;${rgb colors.base0B}m\]\$\[\e[0m\] '
-        else
-          PS1+=' \[\e[1;38;2;${rgb colors.base08}m\]\$\[\e[0m\] '
-        fi
+        [[ -n $env ]] && PS1+=" \[\e[38;2;${rgb colors.base0C}m\]($env)\[\e[0m\]"
+        PS1+=' \[\e[1;38;2;${rgb colors.base05}m\]\$\[\e[0m\] '
       }
       case "$PROMPT_COMMAND" in
         *__prompt*) ;;

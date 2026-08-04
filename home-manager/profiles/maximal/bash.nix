@@ -39,9 +39,6 @@
     '';
 
     initExtra = ''
-      # vi editing mode (was fish_vi_key_bindings)
-      set -o vi
-
       # Create a directory and cd into it
       mkcd() { mkdir -p "$1" && cd "$1"; }
 
