@@ -5,7 +5,6 @@
     ./btop.nix
     ./direnv.nix
     ./discord
-    ./eza.nix
     ./fastfetch.nix
     ./font.nix
     ./hyprland

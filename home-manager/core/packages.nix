@@ -25,6 +25,9 @@
     man-pages
     man-pages-posix
 
+    # Files
+    tree
+
     # Archive
     unzip
     zip
