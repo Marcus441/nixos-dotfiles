@@ -1,0 +1,25 @@
+{
+  imports = [
+    ./bash.nix
+    ./bat.nix
+    ./btop.nix
+    ./direnv.nix
+    ./discord
+    ./fastfetch.nix
+    ./font.nix
+    ./hyprland
+    ./lazygit.nix
+    ./mako.nix
+    ./neovide.nix
+    ./obs-studio.nix
+    ./opencode
+    ./packages.nix
+    ./stylix.nix
+    ./thunderbird
+    ./tmux.nix
+    ./walker
+    ./waybar
+    ./wleave.nix
+    ./yazi
+  ];
+}

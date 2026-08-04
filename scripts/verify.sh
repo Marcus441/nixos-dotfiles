@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# Verify that the refactored flake produces byte-identical build outputs.
+#
+#   ./scripts/verify.sh          compare current tree against ../dotfiles-old
+#   ./scripts/verify.sh build    build current tree only (Phase 1 / smoke test)
+#
+# PASS means the output store paths are identical, which is a proof of
+# equivalence, not an eyeball judgement. Any FAIL must be explained before
+# committing.
+
+set -uo pipefail
+
+HOSTS=(swift5 gpc UM790pro)
+USER_NAME=marcus
+OLD=${OLD:-../dotfiles-old}
+MODE=${1:-compare}
+
+fail=0
+pass=0
+
+# Flakes only see tracked files. This is the single most common cause of
+# spurious "path does not exist" errors.
+git add -A >/dev/null 2>&1 || true
+
+targets() {
+  local h=$1
+  echo "nixosConfigurations.\"$h\".config.system.build.toplevel"
+  echo "homeConfigurations.\"$USER_NAME@$h\".activationPackage"
+}
+
+build() {
+  # $1 = flake ref, $2 = attr
+  nix build --no-link --print-out-paths "$1#$2" 2>/dev/null
+}
+
+if [[ $MODE == build ]]; then
+  for h in "${HOSTS[@]}"; do
+    while read -r attr; do
+      printf '%-70s ' "$h :: ${attr%%.*}"
+      if out=$(build . "$attr") && [[ -n $out ]]; then
+        echo "OK"
+        pass=$((pass + 1))
+      else
+        echo "BUILD FAILED"
+        echo "  retry verbosely:  nix build .#$attr"
+        fail=$((fail + 1))
+      fi
+    done < <(targets "$h")
+  done
+  echo
+  echo "built $pass, failed $fail"
+  exit $((fail > 0))
+fi
+
+if [[ ! -d $OLD ]]; then
+  echo "error: baseline tree not found at $OLD"
+  echo "create it with:  git worktree add $OLD main"
+  exit 2
+fi
+
+# The baseline worktree needs its own files staged too.
+git -C "$OLD" add -A >/dev/null 2>&1 || true
+
+command -v nvd >/dev/null || echo "note: nvd not on PATH; diffs will not be explained"
+
+for h in "${HOSTS[@]}"; do
+  while read -r attr; do
+    label="$h :: $(echo "$attr" | cut -d. -f1)"
+    printf '%-50s ' "$label"
+
+    old=$(build "$OLD" "$attr")
+    if [[ -z $old ]]; then
+      echo "BASELINE BUILD FAILED"
+      echo "  nix build $OLD#$attr"
+      fail=$((fail + 1))
+      continue
+    fi
+
+    new=$(build . "$attr")
+    if [[ -z $new ]]; then
+      echo "NEW BUILD FAILED"
+      echo "  nix build .#$attr"
+      fail=$((fail + 1))
+      continue
+    fi
+
+    if [[ $old == "$new" ]]; then
+      echo "PASS"
+      pass=$((pass + 1))
+    else
+      echo "FAIL"
+      fail=$((fail + 1))
+      echo "  old: $old"
+      echo "  new: $new"
+      if command -v nvd >/dev/null; then
+        nvd diff "$old" "$new" | sed 's/^/    /'
+      fi
+      echo "  if this looks innocent, check REFACTOR.md ->"
+      echo "  'When paths differ for boring reasons'"
+    fi
+  done < <(targets "$h")
+done
+
+echo
+echo "$pass passed, $fail failed"
+[[ $fail -eq 0 ]] || echo "DO NOT COMMIT until this is 6 PASS or the difference is understood."
+exit $((fail > 0))

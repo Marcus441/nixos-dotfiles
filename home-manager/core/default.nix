@@ -1,0 +1,23 @@
+{
+  imports = [
+    ./bash.nix
+    ./ccache.nix
+    ./colors.nix
+    ./fd.nix
+    ./firefox.nix
+    ./font.nix
+    ./foot.nix
+    ./fzf.nix
+    ./git.nix
+    ./jq.nix
+    ./mime.nix
+    ./mpv.nix
+    ./neovim.nix
+    ./packages.nix
+    ./ripgrep.nix
+    ./ssh.nix
+    ./xdg.nix
+    ./zathura.nix
+    ./zoxide.nix
+  ];
+}
