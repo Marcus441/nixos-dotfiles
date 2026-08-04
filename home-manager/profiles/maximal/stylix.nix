@@ -10,6 +10,11 @@ in {
     noto-fonts-lgc-plus
   ];
 
+  # The pinned stylix drives home.pointerCursor without the (newly required)
+  # explicit enable, which trips a home-manager deprecation warning. State it
+  # explicitly here; drop this once stylix is updated post-refactor.
+  home.pointerCursor.enable = true;
+
   stylix = {
     enable = true;
     autoEnable = false;
