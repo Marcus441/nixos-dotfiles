@@ -18,7 +18,6 @@ in {
     polarity = "dark";
     targets = {
       bat.enable = true;
-      fish.enable = true;
       ghostty.enable = true;
       gtk.enable = true;
       hyprlock.enable = true;

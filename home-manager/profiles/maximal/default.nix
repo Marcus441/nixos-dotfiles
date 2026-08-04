@@ -1,12 +1,12 @@
 {
   imports = [
+    ./bash.nix
     ./bat.nix
     ./btop.nix
     ./direnv.nix
     ./discord
     ./eza.nix
     ./fastfetch.nix
-    ./fish.nix
     ./ghostty
     ./hyprland
     ./lazygit.nix
@@ -15,7 +15,6 @@
     ./obs-studio.nix
     ./opencode
     ./packages.nix
-    ./starship.nix
     ./stylix.nix
     ./thunderbird
     ./tmux.nix

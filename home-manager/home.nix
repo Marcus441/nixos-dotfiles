@@ -12,7 +12,6 @@
     username = user;
     homeDirectory = "/home/${user}";
     stateVersion = homeStateVersion;
-    shell.enableFishIntegration = profile == "maximal";
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
       QT_QPA_PLATFORM = "wayland";

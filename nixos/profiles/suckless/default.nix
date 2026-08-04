@@ -47,10 +47,7 @@
     passthru.providedSessions = ["dwl"];
   };
 in {
-  # bash is the suckless login shell (its interactive config lives in the
-  # suckless home profile, home-manager/profiles/suckless/bash.nix). core no
-  # longer sets a shell, so no override is needed.
-  users.users.${user}.shell = pkgs.bashInteractive;
+  # The bash login shell comes from ../../core/user.nix.
 
   # Register the dwl session with the display manager (ly, from ../../core/ly.nix).
   services.displayManager.sessionPackages = [dwl-desktop];

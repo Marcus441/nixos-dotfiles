@@ -56,13 +56,26 @@ in {
       # OSC 7: report the working directory so foot can spawn new
       # instances (and footclient windows) in the current directory.
       __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "''${HOSTNAME:-$(hostname)}" "$PWD"; }
-      case "$PROMPT_COMMAND" in
-        *__osc7_cwd*) ;;
-        *) PROMPT_COMMAND="__osc7_cwd''${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
-      esac
 
-      # Minimal prompt (cwd + exit-status aware), no external prompt program.
-      PS1='\[\e[1;34m\]\w\[\e[0m\] \$ '
+      # Prompt: cwd + git branch + exit-status-coloured "$", using the base24
+      # palette (./colors.nix). Replaced starship in step 1.2; no external
+      # prompt program.
+      __prompt() {
+        local st=$?
+        local branch
+        branch=$(command git symbolic-ref --quiet --short HEAD 2>/dev/null)
+        PS1='\[\e[1;38;2;${rgb colors.base0D}m\]\w\[\e[0m\]'
+        [[ -n $branch ]] && PS1+=" \[\e[38;2;${rgb colors.base0E}m\]git:$branch\[\e[0m\]"
+        if ((st == 0)); then
+          PS1+=' \[\e[1;38;2;${rgb colors.base0B}m\]\$\[\e[0m\] '
+        else
+          PS1+=' \[\e[1;38;2;${rgb colors.base08}m\]\$\[\e[0m\] '
+        fi
+      }
+      case "$PROMPT_COMMAND" in
+        *__prompt*) ;;
+        *) PROMPT_COMMAND="__prompt;__osc7_cwd''${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
+      esac
 
       # Coloured man pages, using the base24 Kanagawa Dragon palette (./colors.nix)
       # via less' termcap hooks (truecolor escapes). Colour scheme adapted from
