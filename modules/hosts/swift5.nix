@@ -5,6 +5,6 @@
     stateVersion = "25.11";
     profile = "suckless";
     dev = true;
-    aspects = ["dev" "core"];
+    aspects = ["dev" "core" "suckless"];
   };
 }

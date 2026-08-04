@@ -54,8 +54,8 @@
             (config.legacy.hostFile hostname "hardware-configuration.nix")
             (config.legacy.hostFile hostname "local-packages.nix")
             {imports = aspectModules "nixos" aspects;}
-            (config.legacy.nixosProfile profile)
-          ];
+          ]
+          ++ lib.optional (config.legacy.nixosProfiles ? ${profile}) config.legacy.nixosProfiles.${profile};
         }
         (config.legacy.nixosHost hostname)
       ];
@@ -87,8 +87,8 @@
           {
             imports = [
               {imports = aspectModules "homeManager" aspects;}
-              (config.legacy.homeProfile profile)
-            ];
+            ]
+            ++ lib.optional (config.legacy.homeProfiles ? ${profile}) config.legacy.homeProfiles.${profile};
           }
           config.legacy.homeEntry
         ];
