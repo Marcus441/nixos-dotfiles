@@ -23,10 +23,6 @@ in {
     polarity = "dark";
     targets = {
       bat.enable = true;
-      # Step 1.3 Option A: foot keeps its explicit base24 palette from
-      # home-manager/core/foot.nix; stylix must not fight it. autoEnable is
-      # already false — this is deliberate documentation, not a fix.
-      foot.enable = false;
       gtk.enable = true;
       hyprlock.enable = true;
       lazygit.enable = true;

@@ -7,6 +7,7 @@
     ./discord
     ./eza.nix
     ./fastfetch.nix
+    ./font.nix
     ./hyprland
     ./lazygit.nix
     ./mako.nix
