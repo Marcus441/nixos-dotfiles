@@ -78,7 +78,10 @@
         inherit inputs user hostname homeStateVersion monitors sensitivity profile dev;
       };
       modules =
-        nixpkgs.lib.optionals (profile == "maximal") [
+        # Not movable into modules/maximal/*: these sit at the root of the
+        # module list, and importing them from the aspect puts them two levels
+        # deeper, which reorders home.packages.
+        lib.optionals (lib.elem "maximal" aspects) [
           inputs.stylix.homeModules.stylix
           inputs.walker.homeManagerModules.default
         ]
