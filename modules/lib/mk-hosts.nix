@@ -10,21 +10,30 @@
   homeStateVersion = "25.11";
   utils = import config.legacy.utilities;
 
+  # Aspect modules are placed ahead of the legacy entry point so that anything
+  # peeled out of nixos/core or home-manager/core keeps its position in the
+  # list-valued options (home.packages, environment.systemPackages) it feeds.
+  aspectModules = class: aspects:
+    lib.concatMap
+    (name: lib.optional (config.flake.modules ? ${class}.${name}) config.flake.modules.${class}.${name})
+    aspects;
+
   makeSystem = {
     hostname,
     system,
     stateVersion,
     profile,
     dev,
+    aspects,
   }: let
     monitors = import (config.legacy.monitors hostname) utils;
   in
     nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs stateVersion hostname user monitors profile dev;};
-      modules = [
-        {nixpkgs.hostPlatform = system;}
-        (config.legacy.nixosHost hostname)
-      ];
+      modules =
+        [{nixpkgs.hostPlatform = system;}]
+        ++ aspectModules "nixos" aspects
+        ++ [(config.legacy.nixosHost hostname)];
     };
 
   mkHome = {
@@ -32,6 +41,7 @@
     system,
     profile,
     dev,
+    aspects,
     ...
   }: let
     monitorConfig = import (config.legacy.monitors hostname) utils;
@@ -48,6 +58,7 @@
           inputs.stylix.homeModules.stylix
           inputs.walker.homeManagerModules.default
         ]
+        ++ aspectModules "homeManager" aspects
         ++ [config.legacy.homeEntry];
     };
 in {

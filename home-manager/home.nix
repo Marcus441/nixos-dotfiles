@@ -5,7 +5,6 @@
   ...
 }: {
   imports = [
-    ./core
     ./profiles/${profile}
   ];
   home = {

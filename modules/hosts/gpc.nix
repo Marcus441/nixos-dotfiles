@@ -5,5 +5,6 @@
     stateVersion = "25.11";
     profile = "maximal";
     dev = false;
+    aspects = ["core"];
   };
 }
