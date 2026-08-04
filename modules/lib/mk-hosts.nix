@@ -10,12 +10,12 @@
   homeStateVersion = "25.11";
   utils = import config.legacy.utilities;
 
-  # Aspect modules are placed ahead of the legacy entry point so that anything
-  # peeled out of nixos/core or home-manager/core keeps its position in the
-  # list-valued options (home.packages, environment.systemPackages) it feeds.
+  # Merge order of list-valued options follows the module tree, and reaches a
+  # derivation hash. The nested `{imports = ...;}` below are not decoration:
+  # they put the aspects at the depth nixos/core and home-manager/core held.
   aspectModules = class: aspects:
     lib.concatMap
-    (name: lib.optional (config.flake.modules ? ${class}.${name}) config.flake.modules.${class}.${name})
+    (name: config.flake.modules.${class}.${name} or [])
     aspects;
 
   makeSystem = {
@@ -30,10 +30,18 @@
   in
     nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs stateVersion hostname user monitors profile dev;};
-      modules =
-        [{nixpkgs.hostPlatform = system;}]
-        ++ aspectModules "nixos" aspects
-        ++ [(config.legacy.nixosHost hostname)];
+      modules = [
+        {nixpkgs.hostPlatform = system;}
+        {
+          imports = [
+            (config.legacy.hostFile hostname "hardware-configuration.nix")
+            (config.legacy.hostFile hostname "local-packages.nix")
+            {imports = aspectModules "nixos" aspects;}
+            (config.legacy.nixosProfile profile)
+          ];
+        }
+        (config.legacy.nixosHost hostname)
+      ];
     };
 
   mkHome = {
@@ -58,8 +66,15 @@
           inputs.stylix.homeModules.stylix
           inputs.walker.homeManagerModules.default
         ]
-        ++ aspectModules "homeManager" aspects
-        ++ [config.legacy.homeEntry];
+        ++ [
+          {
+            imports = [
+              {imports = aspectModules "homeManager" aspects;}
+              (config.legacy.homeProfile profile)
+            ];
+          }
+          config.legacy.homeEntry
+        ];
     };
 in {
   options.hostRecords = lib.mkOption {

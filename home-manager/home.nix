@@ -1,12 +1,8 @@
 {
   homeStateVersion,
   user,
-  profile,
   ...
 }: {
-  imports = [
-    ./profiles/${profile}
-  ];
   home = {
     username = user;
     homeDirectory = "/home/${user}";
