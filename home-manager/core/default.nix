@@ -1,6 +1,8 @@
 {
   imports = [
+    ./bash.nix
     ./ccache.nix
+    ./colors.nix
     ./fd.nix
     ./firefox.nix
     ./fzf.nix

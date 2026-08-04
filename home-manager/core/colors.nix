@@ -1,7 +1,8 @@
 {lib, ...}: {
-  # base24 "Kanagawa Dragon" palette for the lean branch (the suckless profile
-  # carries no stylix, so the theme is defined explicitly here). Consumed by
-  # ./bash.nix for coloured man pages; available to any other suckless module.
+  # base24 "Kanagawa Dragon" palette, defined explicitly (independent of
+  # stylix, which the suckless profile does not carry). Consumed by ./bash.nix
+  # for coloured man pages and by the suckless modules (foot, dwl, ...).
+  # Option namespace kept as `suckless.colors` until its consumers move.
   options.suckless.colors = lib.mkOption {
     type = lib.types.attrsOf lib.types.str;
     description = "base24 colour palette (hex, with leading '#') for the suckless profile.";

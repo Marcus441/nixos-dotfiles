@@ -36,9 +36,9 @@
     h = lib.removePrefix "#" hex;
   in "${toString (hexPair (builtins.substring 0 2 h))};${toString (hexPair (builtins.substring 2 2 h))};${toString (hexPair (builtins.substring 4 2 h))}";
 in {
-  # Bash is the suckless shell -- no fish, no starship prompt engine.
-  # fzf (Ctrl+R), zoxide and direnv come from ../../core and wire themselves
-  # into bash automatically via their default bash integration.
+  # Shared bash config for all profiles. fzf (Ctrl+R) and zoxide live here in
+  # core, direnv in the maximal profile; all three wire themselves into bash
+  # automatically via their default bash integration.
   programs.bash = {
     enable = true;
 
