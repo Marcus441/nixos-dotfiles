@@ -18,6 +18,23 @@
     (name: config.flake.modules.${class}.${name} or [])
     aspects;
 
+  # An aspect may define only one class -- `dev` is nixos-only -- so
+  # aspectModules has to tolerate a miss. That makes a typo silently produce a
+  # host with modules missing rather than an error, hence this check.
+  unknownAspects = aspects:
+    lib.filter
+    (name: !lib.any (class: config.flake.modules.${class} ? ${name}) (lib.attrNames config.flake.modules))
+    aspects;
+
+  checkHost = name: host:
+    lib.throwIf (host.hostname != name)
+    "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name"
+    (
+      lib.throwIf (unknownAspects host.aspects != [])
+      "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}"
+      host
+    );
+
   makeSystem = {
     hostname,
     system,
@@ -77,7 +94,7 @@
         ];
     };
 in {
-  options.hostRecords = lib.mkOption {
+  options.hosts = lib.mkOption {
     type = lib.types.attrsOf (lib.types.attrsOf lib.types.raw);
     default = {};
   };
@@ -85,12 +102,15 @@ in {
   config = {
     systems = ["x86_64-linux"];
 
-    flake.nixosConfigurations = lib.mapAttrs (_: makeSystem) config.hostRecords;
+    # Both output sets are keyed off the attribute name, so they cannot drift
+    # apart; checkHost pins the record's hostname to it as well.
+    flake.nixosConfigurations =
+      lib.mapAttrs (name: host: makeSystem (checkHost name host)) config.hosts;
 
     flake.homeConfigurations =
       lib.mapAttrs' (
-        _: host: lib.nameValuePair "${user}@${host.hostname}" (mkHome host)
+        name: host: lib.nameValuePair "${user}@${name}" (mkHome (checkHost name host))
       )
-      config.hostRecords;
+      config.hosts;
   };
 }
