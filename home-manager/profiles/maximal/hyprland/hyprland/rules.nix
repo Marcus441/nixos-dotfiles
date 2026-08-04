@@ -58,6 +58,11 @@
         match = {tag = "floating-window";};
         size = "1200 600";
       }
+      {
+        name = "thunar-no-anim";
+        match = {class = "^(thunar|Thunar)$";};
+        no_anim = true;
+      }
       # Smart gaps (Zero constraints when single window matches tiled criteria)
       {
         name = "no-gaps-wtv1";
