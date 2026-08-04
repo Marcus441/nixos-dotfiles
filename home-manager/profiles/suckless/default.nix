@@ -6,7 +6,6 @@
     ./cursor.nix
     ./dwl.nix
     ./font.nix
-    ./foot.nix
     ./gtk.nix
     ./mako.nix
     ./monitors.nix

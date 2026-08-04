@@ -1,28 +1,6 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
-  # Font definition for the lean branch: IosevkaTerm Nerd Font Mono, no ligatures.
-  # Consumed by ./foot.nix; available to any other suckless module.
-  options.suckless.font = {
-    name = lib.mkOption {
-      type = lib.types.str;
-      default = "IosevkaTerm Nerd Font Mono";
-      description = "Primary monospace font family.";
-    };
-    size = lib.mkOption {
-      type = lib.types.int;
-      default = 16;
-      description = "Default font size, in points.";
-    };
-    ligatures = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Whether to enable programming ligatures.";
-    };
-  };
-
+{pkgs, ...}: {
+  # Font packages for the lean branch. The shared font *definition*
+  # (suckless.font) moved to home-manager/core/font.nix in step 1.3.
   config = {
     home.packages = [
       pkgs.nerd-fonts.iosevka-term # primary mono / terminal / icon glyphs

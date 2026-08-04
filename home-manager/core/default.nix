@@ -5,6 +5,8 @@
     ./colors.nix
     ./fd.nix
     ./firefox.nix
+    ./font.nix
+    ./foot.nix
     ./fzf.nix
     ./git.nix
     ./jq.nix

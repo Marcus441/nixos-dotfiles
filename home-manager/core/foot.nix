@@ -10,6 +10,10 @@
 
   strip = c: lib.removePrefix "#" c;
 in {
+  # Shared terminal for all profiles (step 1.3, Option A): the explicit
+  # base24 palette below is the single source of terminal colours on every
+  # host. stylix must NOT theme foot on maximal — see the explicit
+  # stylix.targets.foot.enable = false in profiles/maximal/stylix.nix.
   programs.foot = {
     enable = true;
     settings = {
