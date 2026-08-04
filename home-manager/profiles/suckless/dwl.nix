@@ -36,6 +36,7 @@
   ocr-copy = pkgs.callPackage ../../pkgs/ocr-copy.nix {};
 
   foot = "${pkgs.foot}/bin/foot";
+  footclient = "${pkgs.foot}/bin/footclient";
   wmenuRun = "${pkgs.wmenu}/bin/wmenu-run";
   wmenu = "${pkgs.wmenu}/bin/wmenu";
   grim = "${pkgs.grim}/bin/grim";
@@ -142,7 +143,10 @@
     #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
     /* commands (absolute store paths; keysyms are matched case-insensitively) */
-    static const char *termcmd[]      = { "${foot}", NULL };
+    /* footclient against the foot server started in the session autostart
+       below (step 1.4); termfbcmd spawns plain foot if the server is down. */
+    static const char *termcmd[]      = { "${footclient}", NULL };
+    static const char *termfbcmd[]    = { "${foot}", NULL };
     static const char *menucmd[]      = { "${wmenuRun}", ${wmenuFlagsC}, NULL };
     static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
     static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
@@ -158,6 +162,7 @@
     static const Key keys[] = {
       /* --- applications & screenshots (mirror the hyprland binds) --- */
       { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },   /* super+enter   -> terminal      */
+      { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return, spawn, {.v = termfbcmd} }, /* super+ctrl+enter -> plain foot (server-down fallback) */
       { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
       { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },    /* super+c       -> OCR to clip   */
       { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn,                     /* super+shift+s -> shot (screen) */

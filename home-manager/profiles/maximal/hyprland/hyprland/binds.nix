@@ -1,6 +1,9 @@
 {lib, ...}: let
   mainMod = "SUPER";
-  terminal = "uwsm app -- ghostty";
+  # footclient needs the foot server (core/foot.nix, step 1.4); the SHIFT
+  # variant below spawns plain foot as a fallback if the server is down.
+  terminal = "uwsm app -- footclient";
+  terminalFallback = "uwsm app -- foot";
   fileManager = "uwsm app -- thunar";
 in {
   wayland.windowManager.hyprland.settings.bind = [
@@ -63,6 +66,12 @@ in {
       _args = [
         "${mainMod} + Return"
         (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${terminal}\")")
+      ];
+    }
+    {
+      _args = [
+        "${mainMod} + SHIFT + Return"
+        (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${terminalFallback}\")")
       ];
     }
     {

@@ -16,6 +16,13 @@ in {
   # stylix.targets.foot.enable = false in profiles/maximal/stylix.nix.
   programs.foot = {
     enable = true;
+    # Daemon mode (step 1.4): terminals spawn as footclient against this
+    # server. The systemd unit binds to graphical-session.target, which uwsm
+    # activates on maximal; the dwl session is a plain script, so suckless
+    # starts the server from dwl's autostart instead (see
+    # profiles/suckless/dwl.nix). Every spawn point keeps a fallback bind to
+    # plain foot in case the server is down.
+    server.enable = true;
     settings = {
       main = {
         font = fontStr;

@@ -31,7 +31,11 @@
     # dwl's -s autostart runs once the compositor is up (so WAYLAND_DISPLAY is
     # set): apply the host monitor layout, paint the wallpaper, then start the
     # notification daemon. dwl reads its bar status from stdin; feed a clock.
-    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako &'
+    # foot --server backs the footclient keybind (step 1.4); the dwl session
+    # is a plain script (no graphical-session.target), so the home-manager
+    # foot systemd unit never activates here and the server starts manually,
+    # like mako below.
+    { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &'
   '';
 
   dwl-desktop = pkgs.writeTextFile {

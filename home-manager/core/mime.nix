@@ -75,7 +75,7 @@
       "text/x-shellscript" = "neovim.desktop";
 
       # Terminal
-      "x-scheme-handler/terminal" = "ghostty.desktop";
+      "x-scheme-handler/terminal" = "footclient.desktop";
     };
   };
 }
