@@ -1,9 +1,6 @@
 {config, ...}: let
   inherit (config.suckless) colors font;
 in {
-  # Minimal notification daemon so notify-send works (ocr-copy, grimblast
-  # --notify). Started inside the dwl session via `dwl -s` (see the session
-  # wrapper in nixos/profiles/suckless), themed with the suckless palette.
   services.mako = {
     enable = true;
     settings = {

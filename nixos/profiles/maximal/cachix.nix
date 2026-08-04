@@ -1,7 +1,4 @@
 {
-  # Caches for inputs only the maximal profile consumes: danth is stylix's
-  # cache, walker/walker-git cover walker and its elephant backend. Shared
-  # caches (nix-community, nvf) stay in nixos/core/nix.nix.
   nix.settings = {
     extra-substituters = [
       "https://danth.cachix.org"

@@ -1,6 +1,6 @@
 {
   imports = [
-    ../dev # per-host dev tooling, self-gated by the `dev` flag
+    ../dev
     ./audio.nix
     ./bluetooth.nix
     ./boot.nix

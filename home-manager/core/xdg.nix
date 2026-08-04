@@ -3,7 +3,6 @@
     enable = true;
     createDirectories = true;
 
-    # Adopt the new API default behavior to silence the warning
     setSessionVariables = false;
   };
 

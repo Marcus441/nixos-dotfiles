@@ -1,5 +1,4 @@
 {lib, ...}: {
-  # Faster boot time, does not wait to connect to internet on boot
   systemd.services.NetworkManager-wait-online.enable = false;
   networking = {
     hosts = {

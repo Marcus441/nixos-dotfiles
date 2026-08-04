@@ -28,12 +28,10 @@
       name = config.suckless.cursor.name;
       package = config.suckless.cursor.package;
       size = config.suckless.cursor.size;
-      gtk.enable = true; # GTK apps (e.g. anything spawned that uses GTK)
-      x11.enable = true; # harmless even under wayland-only, covers XWayland
+      gtk.enable = true;
+      x11.enable = true;
     };
 
-    # wlroots compositors (dwl included) read these directly; they don't
-    # consult GTK settings or Xresources for the default cursor.
     home.sessionVariables = {
       XCURSOR_THEME = config.suckless.cursor.name;
       XCURSOR_SIZE = toString config.suckless.cursor.size;

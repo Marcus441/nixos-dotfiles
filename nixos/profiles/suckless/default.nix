@@ -1,11 +1,4 @@
-{
-  pkgs,
-  user,
-  ...
-}: let
-  # A single wallpaper pulled straight from the walls repo (sparse-checkout, so
-  # only this one image is fetched -- not the whole 4k collection). swaybg paints
-  # it on any wlroots compositor, dwl included.
+{pkgs, ...}: let
   wallpaper = pkgs.fetchFromGitHub {
     owner = "Marcus441";
     repo = "walls";
