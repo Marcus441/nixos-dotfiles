@@ -27,7 +27,6 @@ in {
       # home-manager/core/foot.nix; stylix must not fight it. autoEnable is
       # already false — this is deliberate documentation, not a fix.
       foot.enable = false;
-      ghostty.enable = true;
       gtk.enable = true;
       hyprlock.enable = true;
       lazygit.enable = true;
