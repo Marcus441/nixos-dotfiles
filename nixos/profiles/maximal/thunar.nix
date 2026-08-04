@@ -14,21 +14,24 @@
     tumbler.enable = true;
   };
 
-  # Daemon mode: keeps a thunar instance resident so windows open instantly.
-  # /run/current-system/sw/bin points at the plugin-wrapped thunar that
-  # programs.thunar installs (referencing pkgs.xfce.thunar here would build a
-  # second, unwrapped copy). graphical-session.target is activated by uwsm.
+  # Daemon mode: keep a thunar instance resident so windows open instantly.
+  #
+  # thunar ships its own `thunar.service` (Type=dbus, ExecStart=Thunar
+  # --daemon), which systemd starts on demand when something asks for
+  # org.xfce.FileManager. It has no [Install] section, so it only ever starts
+  # lazily -- the first window still pays the startup cost. This override adds
+  # the missing install wiring so the daemon comes up with the graphical
+  # session instead.
+  #
+  # Deliberately no ExecStart here: NixOS merges this as a drop-in over the
+  # packaged unit, and a second ExecStart on a non-oneshot service makes
+  # systemd refuse to load it ("more than one ExecStart= setting").
   systemd.user.services.thunar = {
-    description = "Thunar file manager daemon";
     partOf = ["graphical-session.target"];
     after = ["graphical-session.target"];
     wantedBy = ["graphical-session.target"];
-    serviceConfig = {
-      ExecStart = "/run/current-system/sw/bin/thunar --daemon";
-      Restart = "on-failure";
-      # uwsm's slice for session apps: the daemon owns every thunar window,
-      # so it belongs where `uwsm app -- thunar` would put them.
-      Slice = "app-graphical.slice";
-    };
+    # uwsm's slice for session apps: the daemon owns every thunar window, so
+    # it belongs where `uwsm app -- thunar` would have put them.
+    serviceConfig.Slice = "app-graphical.slice";
   };
 }
