@@ -154,9 +154,15 @@ modules/
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
 
-**A basename is a sort key.** Moving a file between directories is free, but renaming one
-changes where its contributions land in list-valued options, which reaches store paths.
-Measured, and it is why `monitors.nix` still carries a name its concern outgrew.
+**`import-tree` orders files by basename, globally — not by full path.** Verified with a
+probe: `modules/zzz-dir/aaa.nix` is loaded *before* `modules/aab.nix`, the reverse of
+full-path order.
+
+The consequence reaches derivation hashes. A file's position sets where its contributions
+land in list-valued options, `home.packages` among them, which sets `buildEnv` input order.
+So **renaming a file moves store paths; moving it between directories does not.** That is
+why Step 0 relocated ~70 files with zero effect, and why `monitors.nix` still carries a
+name its concern has outgrown.
 
 There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
 directory. Creating one is a structural regression — say so instead of doing it.

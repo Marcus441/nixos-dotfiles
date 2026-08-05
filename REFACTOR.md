@@ -13,6 +13,21 @@ baseline is retired and `../dotfiles-old` is gone. Earlier plans are in git hist
 git log --oneline --all -- REFACTOR.md
 ```
 
+## Progress
+
+Update this list in the commit that completes each step. It is the only record of where
+the work is — the plan is otherwise stateless, and a fresh session will start at the top.
+
+- [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
+- [ ] Step 1 — re-test `deferredModule`
+- [ ] Step 2 — `extraSpecialArgs` → `_module.args`
+- [ ] Step 3 — theming becomes an axis
+- [ ] Step 4 — `hyprland` and `dwl` aspects
+- [ ] Step 5 — `gaming` and `nvidia`
+- [ ] Step 6 — surface the `_` trees
+- [ ] Step 7 — retire the archetype names, create `laptop`
+- [ ] Step 8 — darwin groundwork
+
 ---
 
 ## Target state
@@ -59,13 +74,18 @@ which is what §11.2 is about.
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which
   reaches derivation hashes. When splitting one aspect into two, put the new names where
   the old one sat so the split is a partition, not a reordering.
-- **Directory moves are free; basename changes are not.** Measured during Step 0 under
-  `types.raw`: moving all 70-odd files out of their aspect directories left every target
-  byte-identical, but renaming one file `monitors.nix` → `dwl-monitors.nix` moved its
-  contribution from position 1 to 11 in `home.packages` and shifted swift5's closure.
-  A basename is a sort key. **Preserve basenames unless the step is allowed to move
-  paths.** Step 1 may change even this — if `deferredModule` stamps `_file` from the
-  containing file, directory moves become hash-moving too; re-measure if it sticks.
+- **Renaming moves store paths; moving between directories does not.** `import-tree`
+  orders by **basename, globally** — probed directly: `modules/zzz-dir/aaa.nix` loads
+  before `modules/aab.nix`, the reverse of full-path order. Position sets where a file's
+  contributions land in list-valued options, which sets `buildEnv` order.
+
+  Step 0 confirmed both halves: ~70 files changed directory with every target
+  byte-identical, while renaming `monitors.nix` → `dwl-monitors.nix` moved its package
+  from position 1 to 11 and shifted swift5's closure.
+
+  **Preserve basenames unless the step is allowed to move paths.** Step 1 can invalidate
+  this — if `deferredModule` keys on `_file`, directory moves become hash-moving too.
+  Re-measure if it sticks.
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
