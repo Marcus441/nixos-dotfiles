@@ -35,6 +35,8 @@
       host
     );
 
+  # `packages` and `nixos` sit at different depths on purpose -- see the note on
+  # aspectModules.
   makeSystem = {
     hostname,
     system,
@@ -42,21 +44,28 @@
     profile,
     dev,
     aspects,
+    hardware,
+    monitors,
+    packages,
+    nixos,
   }: let
-    monitors = import (config.legacy.monitors hostname) utils;
+    monitorConfig = monitors utils;
   in
     nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs stateVersion hostname user monitors profile dev;};
+      specialArgs =
+        {inherit inputs stateVersion hostname user profile dev;}
+        # NixOS takes the whole record, home takes it apart. Phase 3 fixes this.
+        // {monitors = monitorConfig;};
       modules = [
         {nixpkgs.hostPlatform = system;}
         {
           imports = [
-            (config.legacy.hostFile hostname "hardware-configuration.nix")
-            (config.legacy.hostFile hostname "local-packages.nix")
+            hardware
+            packages
             {imports = aspectModules "nixos" aspects;}
           ];
         }
-        (config.legacy.nixosHost hostname)
+        nixos
       ];
     };
 
@@ -66,17 +75,16 @@
     profile,
     dev,
     aspects,
+    monitors,
     ...
   }: let
-    monitorConfig = import (config.legacy.monitors hostname) utils;
-    inherit (monitorConfig) monitors;
-    inherit (monitorConfig) sensitivity;
+    monitorConfig = monitors utils;
   in
     home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
-      extraSpecialArgs = {
-        inherit inputs user hostname homeStateVersion monitors sensitivity profile dev;
-      };
+      extraSpecialArgs =
+        {inherit inputs user hostname homeStateVersion profile dev;}
+        // {inherit (monitorConfig) monitors sensitivity;};
       modules =
         # Not movable into modules/maximal/*: these sit at the root of the
         # module list, and importing them from the aspect puts them two levels

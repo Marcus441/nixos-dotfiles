@@ -5,9 +5,6 @@
   };
 
   config.legacy = {
-    nixosHost = hostname: ../../hosts/${hostname}/configuration.nix;
-    hostFile = hostname: file: ../../hosts/${hostname}/${file};
-    monitors = hostname: ../../hosts/${hostname}/monitors.nix;
     utilities = ../../utilities;
     homeEntry = ../../home-manager/home.nix;
   };
