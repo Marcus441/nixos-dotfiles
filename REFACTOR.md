@@ -19,7 +19,7 @@ Update this list in the commit that completes each step. It is the only record o
 the work is — the plan is otherwise stateless, and a fresh session will start at the top.
 
 - [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
-- [ ] Step 1 — re-test `deferredModule`
+- [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
 - [ ] Step 2 — `extraSpecialArgs` → `_module.args`
 - [ ] Step 3 — theming becomes an axis
 - [ ] Step 4 — `hyprland` and `dwl` aspects
@@ -61,7 +61,7 @@ which is what §11.2 is about.
   | Step | swift5 | gpc | UM790pro |
   | --- | --- | --- | --- |
   | 0 paths | identical | identical | identical |
-  | 1 deferredModule | may move | may move | may move |
+  | 1 deferredModule | identical *(measured; "may move" was allowed)* | identical | identical |
   | 2 `_module.args` | identical | identical | identical |
   | 3 theming | **changes** | **changes** | **changes** |
   | 4 sessions | **changes** | **changes** | **changes** |
@@ -88,9 +88,15 @@ which is what §11.2 is about.
   into `modules/`, moving them relative to hyprland-aspect files that are already flat —
   which is why its row says **changes**, and now says it for a reason rather than a guess.
 
-  Step 1 can invalidate all of this: if `deferredModule` keys on `_file`, directory moves
-  become hash-moving too. Re-measure if it sticks — and measure rather than predict
-  regardless, since discovery order is not strictly positional (`CLAUDE.md` §4).
+  Step 1 could have invalidated all of this — if `deferredModule` keyed on `_file`,
+  directory moves would become hash-moving. It stuck, and the re-measurement says the model
+  survives: `modules/monitors.nix` → `modules/monitors/monitors.nix`, a move that changes
+  `_file` while preserving walk position, left swift5 byte-identical. So a **position-
+  preserving** move is still free.
+
+  That is one data point and it is narrow. It says nothing about moves that *change*
+  position, which is exactly what Step 6 does. Measure rather than predict regardless, since
+  discovery order is not strictly positional (`CLAUDE.md` §4).
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
@@ -210,9 +216,10 @@ The reason is timing: **the right taxonomy is not knowable until `maximal` disso
 Step 7.** Grouping now means grouping with the archetype structure still in your head, and
 you would be encoding the thing this refactor exists to remove. Defer it.
 
-Regrouping later is free *if* Step 1 reverts to `raw`. If `deferredModule` sticks, a later
-regroup is one hash-moving commit — which the harness verifies fine, but accept that
-knowingly rather than discover it.
+Regrouping later was expected to cost one hash-moving commit if `deferredModule` stuck. It
+stuck and that cost did not appear: a position-preserving grouping move measured free (see
+the ground rules). A regroup that *reorders* files within an aspect is still a hash-moving
+commit — which the harness verifies fine, but accept that knowingly rather than discover it.
 
 **The test for any grouping, then or now:** a directory is safe when its name would be a
 *bad aspect name* and the files inside span *more than one aspect*. `font/` passes — bad
@@ -228,7 +235,10 @@ in Steps 1 and 2. Those steps describe files by concern; resolve them by content
 
 ## Step 1 — Re-test `deferredModule`
 
-**Second, because it improves the diagnostics for every step after it.**
+**Second, because it improves the diagnostics for every step after it.** *(Done — it holds.
+`modules/aspects.nix` now uses `deferredModule`; all six targets came out byte-identical,
+and `modules/stylix.nix`, the repo's only multi-element declaration, kept both elements.
+The measured before/after conflict message is in `CLAUDE.md` §8.)*
 
 This placement is a deliberate trade, not an obvious ordering. Step 1 is the only step
 whose outcome is unknown, and it sits *before* Step 2 proves the harness works — so if it

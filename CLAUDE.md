@@ -340,21 +340,29 @@ evaluation to reach a value, importing a module file by path to call a function 
 
 ## 8. Hazards
 
-- **Aspect elements are `types.raw`, not `deferredModule`. This is deliberate, and it has
-  a cost.** Switching to `deferredModule` was measured to move store paths (it runs
-  `setDefaultModuleLocation`, rewriting each element's `_file`); the precise causal chain
-  from `_file` to output order is *not* fully characterised, so do not reason from it.
-  The known cost of `raw` is lost provenance: an option conflict reports
+- **Aspect elements are `types.deferredModule`.** They were `types.raw` until Step 1 of
+  `REFACTOR.md`, on the grounds that `deferredModule` had been measured to move store
+  paths. **That did not reproduce.** On the flattened tree, switching the element type left
+  all six targets byte-identical: empty `diff-closures`, no diff under `home-files`, no diff
+  under `/etc`. Nothing is claimed here about why the two measurements disagree — the
+  earlier one is simply not evidence about this tree.
+
+  What the change buys, measured on the same probe under both types — two files setting
+  `programs.bash.historySize` in `core`:
 
   ```
-  - In `<unknown-file>': 5
-  - In `<unknown-file>': 100000
+  raw:             - In `<unknown-file>': 100000
+  deferredModule:  - In `…/modules/probe-b.nix, via option
+                     flake.modules.homeManager.core."[definition 15-entry 1]"': 100000
   ```
 
-  instead of naming the files, which is a real debugging tax across 105 files. The
-  constraint that forced `raw` (Phase 2 byte-identity) is retired, so revisiting this is
-  legitimate — but re-test with `verify.sh build` plus the `diff-closures` recipe in §9,
-  and do not change it casually.
+  Provenance across 105 files, which is the whole reason for it.
+
+  The risk this was tested for is elements *vanishing* — a multi-element aspect list
+  declared in one file could in principle lose members. `modules/stylix.nix` is the only
+  such declaration in the repo (2 elements) and both survived. Note that
+  `builtins.length config.flake.modules.…` does **not** detect this; the byte-identity
+  block in §9 does. Re-run all three parts of it if you change the element type again.
 - **`config` shadowing** inside `flake.modules.*` — see §7.
 - **Stylix themes what it detects.** The stylix aspect sets `autoEnable = false` with an
   explicit target list, so a program is themed only if named. Moving a themed program
