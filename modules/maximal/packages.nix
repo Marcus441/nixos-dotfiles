@@ -14,7 +14,7 @@
           # Screenshots & picking (Hyprland-specific / used by the hyprland binds)
           grimblast
           hyprpicker
-          (callPackage ../../home-manager/pkgs/ocr-copy.nix {})
+          (callPackage ../_pkgs/ocr-copy.nix {})
 
           # Portals for GTK file choosers / settings
           xdg-desktop-portal-gtk
