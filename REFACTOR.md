@@ -59,9 +59,12 @@ which is what §11.2 is about.
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which
   reaches derivation hashes. When splitting one aspect into two, put the new names where
   the old one sat so the split is a partition, not a reordering.
-- **File names are not.** Renaming a file does not move any store path, and does not
-  change `home.packages` order — both measured directly. Module tree *depth and shape*
-  matter; file position does not. Do not add defensive ordering ceremony around renames.
+- **File names are not — measured under `types.raw`.** Renaming a file moves no store path
+  and does not change `home.packages` order; module tree *depth and shape* matter, file
+  position does not. **This is the assumption the whole ordering rests on, and Step 1 can
+  invalidate it:** if `deferredModule` stamps `_file` from the containing file, renames
+  become hash-moving. If Step 1 keeps `deferredModule`, re-measure before treating a
+  rename as free in Steps 3–8, and correct this bullet.
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
@@ -76,10 +79,14 @@ which is what §11.2 is about.
 `./scripts/verify.sh build` must report 6 OK before every commit. Then prove nothing
 changed but order:
 
+Run this as one block — every command below depends on `$h`:
+
 ```bash
 git worktree add ../dotfiles-prev <previous-commit>
 
 for h in swift5 gpc UM790pro; do
+  echo "=== $h ==="
+
   old=$(nix build --no-link --print-out-paths \
         "../dotfiles-prev#homeConfigurations.\"marcus@$h\".activationPackage")
   new=$(nix build --no-link --print-out-paths \
@@ -87,24 +94,23 @@ for h in swift5 gpc UM790pro; do
 
   nix store diff-closures "$old" "$new"          # must be EMPTY
   diff -rq "$old/home-files" "$new/home-files"   # only intended files
+
+  # diff-closures alone is NOT sufficient: a module that vanishes while setting
+  # only config values adds no package, so the closure is unchanged.
+  oldt=$(nix build --no-link --print-out-paths \
+         "../dotfiles-prev#nixosConfigurations.$h.config.system.build.toplevel")
+  newt=$(nix build --no-link --print-out-paths \
+         ".#nixosConfigurations.$h.config.system.build.toplevel")
+
+  diff -rq "$oldt/etc" "$newt/etc" 2>&1 | grep -v "^diff:.*No such file"
 done
 
 git worktree remove ../dotfiles-prev
 ```
 
 Empty `diff-closures` means no package was added, removed or version-changed. `diff -rq`
-naming only files you meant to touch means no generated config drifted.
-
-**`diff-closures` alone is not sufficient.** A module that silently vanishes while setting
-only config values — no package — leaves the closure identical. Diff the NixOS side too:
-
-```bash
-oldt=$(nix build --no-link --print-out-paths "../dotfiles-prev#nixosConfigurations.$h.config.system.build.toplevel")
-newt=$(nix build --no-link --print-out-paths ".#nixosConfigurations.$h.config.system.build.toplevel")
-diff -rq "$oldt/etc" "$newt/etc" 2>&1 | grep -v "^diff:.*No such file"
-```
-
-The `grep -v` drops dangling-symlink noise, which is expected and not a real difference.
+naming only files you meant to touch means no generated config drifted. The `grep -v`
+drops dangling-symlink noise, which is expected and not a real difference.
 
 ---
 
@@ -127,12 +133,27 @@ Move files to concern-named locations. Do **not** change any aspect membership: 
 must be a pure rename, so that any path movement is unambiguous evidence of something you
 did not expect.
 
+`_`-prefixed trees move **as units**, keeping their names — `_hyprland`, `_waybar` and the
+rest are still hidden from import-tree after this step. Surfacing them is Step 6, and
+mixing the two makes both diffs unreadable.
+
+**After this step, every path named in Steps 3–8 is obsolete.** Those steps therefore
+describe files by concern rather than by location; resolve them by content.
+
 - Verify: all six targets byte-identical. This is also a free rehearsal of the harness
   before anything semantic moves.
 
 ## Step 1 — Re-test `deferredModule`
 
 **Second, because it improves the diagnostics for every step after it.**
+
+This placement is a deliberate trade, not an obvious ordering. Step 1 is the only step
+whose outcome is unknown, and it sits *before* Step 2 proves the harness works — so if it
+goes badly you spend the run's most confusing debugging first. The alternative, 0 → 2 → 1,
+lets a pure no-op validate `verify.sh` before anything uncertain. It was rejected because
+Step 2 rewrites ten files, and `deferredModule`'s file-naming in error messages is exactly
+what makes that legible when it goes wrong. If Step 1 stalls, do Step 2 first and come
+back — nothing depends on the order.
 
 Aspect elements are `types.raw`, so option conflicts report `<unknown-file>` twice instead
 of naming files. Across 105 files that is a real tax, and the next seven steps are exactly
@@ -222,9 +243,12 @@ those two machines. Push it to the host record and deliver it via Step 2's `_mod
 
 ## Step 4 — `hyprland` and `dwl` aspects (§11.2)
 
-Split the session out of `maximal` and `suckless`. `modules/maximal/hyprland.nix` becomes
-`modules/hyprland.nix` declaring both classes; the dwl half of `modules/suckless/dwl.nix`
-becomes `modules/dwl.nix`.
+Split the session out of `maximal` and `suckless`. Step 0 already moved these files to
+concern-named paths, so **this step changes membership only** — do not rename anything, or
+the interesting diff disappears under moves.
+
+The Hyprland session file declares `flake.modules.nixos.hyprland` and
+`flake.modules.homeManager.hyprland`; the dwl half of the dwl file declares `dwl`.
 
 Place the new names where the old ones sat — `["core" "hyprland" "maximal"]` — so this is a
 partition.
@@ -238,8 +262,8 @@ Decide during this step, from `CLAUDE.md` §4's coupling table:
 
 - **waybar** is hard-coupled to Hyprland (`hyprland/workspaces`, `hyprland/window`,
   `wayland-session@hyprland.desktop.target`). It moves.
-- **the uwsm autostart** in `modules/maximal/bash.nix` is session startup wearing shell
-  clothing. It moves.
+- **the uwsm autostart** — the `uwsm check may-start` / `uwsm start default` block in the
+  maximal bash file — is session startup wearing shell clothing. It moves.
 - **thunar** is coupled only by a uwsm slice; **packages.nix** is partly Hyprland tooling.
   Leave both, revisit in Step 6.
 
@@ -310,9 +334,22 @@ archetype.
 
 Only once the above is done, and only when there is a Mac to test on.
 
-- Add `aarch64-darwin` to `systems`, and gate every Linux-only `perSystem` output on
-  `pkgs.stdenv.hostPlatform` — `perSystem` evaluates for *every* entry, unlike aspect
-  contents (`CLAUDE.md` §6).
+- Add `aarch64-darwin` to `systems`. `perSystem` evaluates for *every* entry, unlike
+  aspect contents (`CLAUDE.md` §6), so every Linux-only output must be excluded —
+  **by attribute, not by value**:
+
+  ```nix
+  # right: the attribute does not exist on darwin, so the RHS is never evaluated
+  packages = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+    foo = pkgs.someLinuxOnlyThing;
+  };
+
+  # wrong: mkIf gates the value, but pkgs.someLinuxOnlyThing still evaluates
+  packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux pkgs.someLinuxOnlyThing;
+  ```
+
+  Same eval-time versus config-time distinction as `CLAUDE.md` §8; this is the one place
+  it bites hardest.
 - Add `mkDarwin` to the generator alongside `makeSystem` and `mkHome`.
 - Standalone Home Manager is the asset here: the same home aspects activate on macOS with
   no NixOS underneath.
@@ -346,5 +383,5 @@ Update §11 in the same commit that closes each item. It is a ratchet, not a led
   elements (issue #3 item 1).
 - Overlays reaching Home Manager. Changing `pkgs` for home configs moves every home store
   path; its own project, with its own switch cycle.
-- `modules/home/xdg.nix` writing `uwsm/env` in `core`, so swift5 carries a uwsm config it
-  never uses. Real, small, unrelated — own commit.
+- The xdg concern writes `uwsm/env` into `core`, so swift5 carries a uwsm config it never
+  uses. Real, small, unrelated — own commit.
