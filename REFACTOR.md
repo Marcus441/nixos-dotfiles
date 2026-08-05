@@ -20,10 +20,10 @@ git log --oneline --all -- REFACTOR.md
 When this is done, host files read as archetypes and nothing else:
 
 ```nix
-swift5   = ["core" "laptop" "dev" "dwl"      "palette"];
+swift5   = ["core" "laptop" "dev" "dwl" "palette"];
 gpc      = ["core" "gaming" "nvidia" "hyprland" "stylix" "apps"];
-UM790pro = ["core" "dev"              "hyprland" "stylix" "apps"];
-mbp      = ["core" "laptop" "dev"     "aerospace" "stylix"];   # planned
+UM790pro = ["core" "dev" "hyprland" "stylix" "apps"];
+mbp      = ["core" "laptop" "dev" "aerospace" "stylix"];   # planned
 ```
 
 Every name there is a decision some host makes differently. `core` is what nobody opts out
@@ -129,19 +129,72 @@ nor `home.packages` order, both measured directly. Step 1 may change that — if
 event forever after. Buy the reorganisation now, at zero, rather than later at an unknown
 price.
 
-Move files to concern-named locations. Do **not** change any aspect membership: this step
-must be a pure rename, so that any path movement is unambiguous evidence of something you
-did not expect.
+Do **not** change any aspect membership: this step is a pure rename, so that any path
+movement is unambiguous evidence of something you did not expect.
 
-`_`-prefixed trees move **as units**, keeping their names — `_hyprland`, `_waybar` and the
-rest are still hidden from import-tree after this step. Surfacing them is Step 6, and
-mixing the two makes both diffs unreadable.
+### Target layout
 
-**After this step, every path named in Steps 3–8 is obsolete.** Those steps therefore
-describe files by concern rather than by location; resolve them by content.
+```
+modules/
+  aspects.nix                      # was lib/aspects.nix
+  hosts/{generator,swift5,gpc,UM790pro}.nix   # generator was lib/mk-hosts.nix
+  display/{monitor-option,render}.nix
+  font/ mako/ bash/ packages/      # concerns currently split across buckets
+  _hyprland/ _waybar/ _walker/ _yazi/ _thunderbird/ _discord/ _opencode/
+  _pkgs/ _dormant/
+  <concern>.nix                    # ~50 single-file concerns, flat
+```
 
-- Verify: all six targets byte-identical. This is also a free rehearsal of the harness
-  before anything semantic moves.
+**`_`-prefixed trees keep their underscores.** Dropping them would surface ~21 modules and
+change all six targets inside a step whose entire verification is byte-identity. Surfacing
+is Step 6.
+
+**`lib/` disappears.** `CLAUDE.md` §4 blesses `lib/mk-hosts.nix` while §10 forbids `lib/`
+directories; moving the two files resolves the contradiction without amending either. The
+generator belongs with the host schema it enforces, and `generator.nix` is obviously not a
+hostname, so §5's "add `modules/hosts/<hostname>.nix`" recipe stays unambiguous.
+
+### The four collision directories, and what becomes of them
+
+A flat rename collides on four basenames — which is `§11.4` surfacing as a filename clash,
+not an obstacle. Each gets a directory here, but they do **not** share a fate, and the
+difference matters:
+
+| Directory | Fate |
+| --- | --- |
+| `font/` | **collapses** to `font.nix` in Step 3 — one concern, three theming audiences |
+| `mako/` | **collapses** to `mako.nix` in Step 3 — same |
+| `bash/` | **collapses** in Step 3, minus its `profileExtra`, which is the uwsm session autostart and leaves for `hyprland` in Step 4 |
+| `packages/` | **dissolves.** Not a concern — a junk drawer. `packages` names no decision and no capability, so §3 would reject it as an aspect name and it is no better as a file name. Its contents redistribute to real concerns in Steps 6–7. |
+
+`packages/` exists only to keep Step 0 mechanical. Do not let it survive because it
+outlived a step that was about exactly this.
+
+### Why flat
+
+Not because the pattern demands it — Invariant 4 says paths carry no *meaning*, not that
+they must be flat, and grouping for navigation is explicitly fine. Fifty files in one
+directory is a navigation cost being chosen, not a tax.
+
+The reason is timing: **the right taxonomy is not knowable until `maximal` dissolves in
+Step 7.** Grouping now means grouping with the archetype structure still in your head, and
+you would be encoding the thing this refactor exists to remove. Defer it.
+
+Regrouping later is free *if* Step 1 reverts to `raw`. If `deferredModule` sticks, a later
+regroup is one hash-moving commit — which the harness verifies fine, but accept that
+knowingly rather than discover it.
+
+**The test for any grouping, then or now:** a directory is safe when its name would be a
+*bad aspect name* and the files inside span *more than one aspect*. `font/` passes — bad
+aspect name, spans core/stylix/palette. A `system/` directory for the sixteen `nixos.core`
+files fails both: every file is nixos-core, so the path predicts class and membership
+exactly, which is `modules/nixos/` under another name.
+
+**After this step, every path named in Steps 1–8 is obsolete** — including the two named
+in Steps 1 and 2. Those steps describe files by concern; resolve them by content.
+
+- Verify: all six targets byte-identical. Also a free rehearsal of the harness before
+  anything semantic moves.
 
 ## Step 1 — Re-test `deferredModule`
 
@@ -162,7 +215,8 @@ the kind of work that provokes conflicts. `deferredModule` restores `_file`.
 `raw` was chosen under the Phase 2 byte-identity constraint, which no longer exists. So
 this is now a measurement, not a rule.
 
-Change the element type in `modules/lib/aspects.nix` and look for **two different
+Change the element type in the file declaring the `flake.modules` option (Step 0 moved it
+to `modules/aspects.nix`) and look for **two different
 failures**, not one:
 
 1. **Store paths move.** Expected and acceptable.
@@ -368,7 +422,10 @@ Only once the above is done, and only when there is a Mac to test on.
 - no aspect named for a magnitude or a host archetype — `maximal` and `suckless` are both
   gone, not merely unused;
 - **no directory named for a class or an archetype** — no `modules/home/`,
-  `modules/nixos/`, `modules/maximal/`, `modules/suckless/`. `CLAUDE.md` §10 row one;
+  `modules/nixos/`, `modules/maximal/`, `modules/suckless/`, and no `lib/`.
+  `CLAUDE.md` §10 row one;
+- **no `packages` concern** — neither `modules/packages.nix` nor `modules/packages/`.
+  A package list is not a decision; its members belong with the concerns that want them;
 - `/_` only on non-modules;
 - every host file readable as "what this machine is".
 

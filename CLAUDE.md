@@ -156,6 +156,13 @@ modules/
 There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
 directory. Creating one is a structural regression — say so instead of doing it.
 
+Grouping for navigation is fine — Invariant 4 says paths carry no *meaning*, not that they
+must be flat. **A directory is safe when its name would be a bad aspect name and the files
+inside span more than one aspect.** `font/` passes: `font` names no decision, and its files
+serve core, stylix and palette. A `system/` directory holding every `nixos.core` file fails
+both halves — the path would predict class and membership exactly, which is `nixos/` under
+another name.
+
 Host files declare archetype and machine facts only:
 
 ```nix
