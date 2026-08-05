@@ -1,10 +1,11 @@
 {
   lib,
   monitors,
+  render,
   ...
 }: let
   mkLabel = m: {
-    monitor = m.name;
+    monitor = render.identify m;
     text = "$TIME";
     # Scale font size with physical height to ensure consistent physical size.
     # 1080 / 11 ≈ 98.
@@ -18,14 +19,14 @@
   };
 
   mkBackground = m: {
-    monitor = m.name;
+    monitor = render.identify m;
     path = "screenshot";
     blur_passes = 3;
     blur_size = 8;
   };
 
   mkInputField = m: {
-    monitor = m.name;
+    monitor = render.identify m;
     size = "${toString (builtins.floor (m.width / 10))}, ${toString (builtins.floor (m.height / 20))}";
     position = "0, -${toString (builtins.floor (m.height / 10))}";
     dots_center = true;
