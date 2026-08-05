@@ -266,8 +266,15 @@ per-platform implementation aspects (§3).
 
 **`perSystem` is the one place platform breakage bites early.** Unlike aspect contents,
 `perSystem` outputs are evaluated for *every* entry in `systems`. Adding `aarch64-darwin`
-to that list will immediately fail any Linux-only `perSystem.packages`. Gate those on
-`pkgs.stdenv.hostPlatform` when the Mac lands.
+will immediately fail any Linux-only `perSystem.packages`. Exclude them **by attribute,
+not by value** — `mkIf` gates the value but still evaluates it:
+
+```nix
+packages = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {   # right
+  foo = pkgs.someLinuxOnlyThing;
+};
+packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux pkgs.someLinuxOnlyThing;  # wrong
+```
 
 ---
 
@@ -365,17 +372,39 @@ nix flake check                  # cheap eval sweep; warns 'unknown flake output
 
 For structural changes that reorder modules, prove nothing changed but order:
 
+Run it as one block — every command depends on `$h`, and checking a single host misses
+exactly the leaks worth catching:
+
 ```bash
 git worktree add ../dotfiles-prev <previous-commit>
-old=$(nix build --no-link --print-out-paths "../dotfiles-prev#homeConfigurations.\"marcus@gpc\".activationPackage")
-new=$(nix build --no-link --print-out-paths ".#homeConfigurations.\"marcus@gpc\".activationPackage")
-nix store diff-closures "$old" "$new"          # must be EMPTY
-diff -rq "$old/home-files" "$new/home-files"   # only intended files
+
+for h in swift5 gpc UM790pro; do
+  echo "=== $h ==="
+
+  old=$(nix build --no-link --print-out-paths \
+        "../dotfiles-prev#homeConfigurations.\"marcus@$h\".activationPackage")
+  new=$(nix build --no-link --print-out-paths \
+        ".#homeConfigurations.\"marcus@$h\".activationPackage")
+
+  nix store diff-closures "$old" "$new"          # must be EMPTY
+  diff -rq "$old/home-files" "$new/home-files"   # only intended files
+
+  # A module that vanishes while setting only config adds no package, so the
+  # closure is unchanged. The NixOS side needs its own diff.
+  oldt=$(nix build --no-link --print-out-paths \
+         "../dotfiles-prev#nixosConfigurations.$h.config.system.build.toplevel")
+  newt=$(nix build --no-link --print-out-paths \
+         ".#nixosConfigurations.$h.config.system.build.toplevel")
+
+  diff -rq "$oldt/etc" "$newt/etc" 2>&1 | grep -v "^diff:.*No such file"
+done
+
 git worktree remove ../dotfiles-prev
 ```
 
-`swift5` takes neither Hyprland nor stylix, which makes it a free control: a swift5 path
-that moves during Hyprland work means the change leaked.
+`swift5` takes neither Hyprland nor stylix, so it is a useful control *for work on those* —
+a swift5 path that moves during Hyprland work means the change leaked. It is not a blanket
+stop condition: plenty of legitimate changes move all three. Know which you are doing.
 
 Because `import-tree` loads everything, an eval error anywhere breaks every host and the
 message rarely names the file. **Bisect by temporarily renaming a file to `_name.nix`** —
@@ -404,7 +433,8 @@ config.flake.modules.homeManager.hyprland
 | Anti-pattern | Why |
 | --- | --- |
 | `nixos/`, `home/`, `darwin/` directories | Paths encode class, not concern (Inv. 4) |
-| `pkgs/`, `overlays/`, `lib/` directories | Breaks feature closure; the derivation belongs with its config |
+| `pkgs/`, `overlays/` directories | Breaks feature closure; the derivation belongs with its config |
+| A `lib/` directory of helpers | A helper library is not a flake-parts module (Inv. 1). Expose the value as an option (§7) |
 | `imports = [ ./foo.nix ]` inside `modules/` | `import-tree` already loaded it (Inv. 6) |
 | `specialArgs = { inherit self inputs; }` | Closure or `_module.args` (Inv. 5, §7) |
 | `_` to group related files | `_` is for non-modules only (§4) |
