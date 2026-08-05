@@ -8,7 +8,12 @@
 
   user = "marcus";
   homeStateVersion = "25.11";
-  utils = import config.legacy.utilities;
+
+  # Neutral, compositor-agnostic monitor description; each consumer renders it
+  # into its own format. Phase 3 replaces this with typed options.
+  utils.makeMonitor = name: width: height: refresh: x: y: scale: {
+    inherit name width height refresh x y scale;
+  };
 
   # Merge order of list-valued options follows the module tree, and reaches a
   # derivation hash. The nested `{imports = ...;}` below are not decoration:
@@ -95,7 +100,18 @@
               {imports = aspectModules "homeManager" aspects;}
             ];
           }
-          config.legacy.homeEntry
+          {
+            home = {
+              username = user;
+              homeDirectory = "/home/${user}";
+              stateVersion = homeStateVersion;
+              sessionVariables = {
+                NIXOS_OZONE_WL = "1";
+                QT_QPA_PLATFORM = "wayland";
+                XDG_SCREENSHOTS_DIR = "/home/${user}/Screenshots";
+              };
+            };
+          }
         ];
     };
 in {
