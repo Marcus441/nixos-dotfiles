@@ -39,15 +39,37 @@ which is what §11.2 is about.
 
 `CLAUDE.md` §8, §9 and §12 apply in full. The ones that bite hardest here:
 
-- **`swift5` is the control.** It takes neither `hyprland` nor `stylix`. Until Step 5
-  touches it directly, **every step must leave both swift5 targets byte-identical.** A
-  swift5 path that moves means the change leaked into shared ground — stop and find out
-  why before continuing.
-- **Aspect order in a host list is load-bearing.** It sets module merge order, which sets
-  `buildEnv` order, which reaches derivation hashes. When splitting one aspect into two,
-  put the new names where the old one sat so the split is a partition, not a reordering.
+- **`swift5` is a control only where a step says so.** It is *not* a blanket stop
+  condition — Steps 3, 4, 6, 7 and 8 change swift5 by design. Each step states its own
+  expectation, and only these two are byte-identity controls:
+
+  | Step | swift5 | gpc | UM790pro |
+  | --- | --- | --- | --- |
+  | 0 paths | identical | identical | identical |
+  | 1 deferredModule | may move | may move | may move |
+  | 2 `_module.args` | identical | identical | identical |
+  | 3 theming | **changes** | **changes** | **changes** |
+  | 4 sessions | **changes** | **changes** | **changes** |
+  | 5 gaming/nvidia | identical | **changes** (nixos) | identical |
+  | 6 surface `_` | **changes** | **changes** | **changes** |
+  | 7 rename aspects | **changes** | **changes** | **changes** |
+
+  Treat a deviation from that column as the signal, not "swift5 moved".
+
+- **Aspect order in a host list is load-bearing.** It sets module merge order, which
+  reaches derivation hashes. When splitting one aspect into two, put the new names where
+  the old one sat so the split is a partition, not a reordering.
+- **File names are not.** Renaming a file does not move any store path, and does not
+  change `home.packages` order — both measured directly. Module tree *depth and shape*
+  matter; file position does not. Do not add defensive ordering ceremony around renames.
+- **Declare before you reference.** The generator rejects an aspect name that resolves in
+  no class, so a commit that adds a name to a host list before the declaring file exists
+  will not evaluate. Land the file first, or both in one commit — otherwise a bisect
+  lands on a broken tree.
 - **One concern per commit.** These steps move store paths by design; small commits are
   what make a bisect possible.
+- **The human switches and confirms before the next step** for every step marked
+  **changes** above. This is not restated per-step; absence is not permission.
 
 ### Verification
 
@@ -73,14 +95,44 @@ git worktree remove ../dotfiles-prev
 Empty `diff-closures` means no package was added, removed or version-changed. `diff -rq`
 naming only files you meant to touch means no generated config drifted.
 
-**The human switches, and confirms, before the next step** whenever a step changes
-generated config rather than only its order.
+**`diff-closures` alone is not sufficient.** A module that silently vanishes while setting
+only config values — no package — leaves the closure identical. Diff the NixOS side too:
+
+```bash
+oldt=$(nix build --no-link --print-out-paths "../dotfiles-prev#nixosConfigurations.$h.config.system.build.toplevel")
+newt=$(nix build --no-link --print-out-paths ".#nixosConfigurations.$h.config.system.build.toplevel")
+diff -rq "$oldt/etc" "$newt/etc" 2>&1 | grep -v "^diff:.*No such file"
+```
+
+The `grep -v` drops dangling-symlink noise, which is expected and not a real difference.
 
 ---
 
-## Step 1 — Re-test `deferredModule` (§11 groundwork)
+## Step 0 — Flatten the directory tree (§11.3)
 
-**First, because it improves the diagnostics for every step after it.**
+**First, because renames are free right now and may not stay that way.**
+
+`modules/home/` and `modules/nixos/` are the first row of `CLAUDE.md` §10's anti-pattern
+table — paths encoding class. `modules/maximal/` and `modules/suckless/` encode a host
+archetype. Under Invariant 4 none of them mean anything, but an agent reading the tree as
+a schema will reproduce them.
+
+Renaming is currently **provably free**: renaming a file changes neither the store paths
+nor `home.packages` order, both measured directly. Step 1 may change that — if
+`deferredModule` stamps `_file` from the containing file, a rename becomes a hash-moving
+event forever after. Buy the reorganisation now, at zero, rather than later at an unknown
+price.
+
+Move files to concern-named locations. Do **not** change any aspect membership: this step
+must be a pure rename, so that any path movement is unambiguous evidence of something you
+did not expect.
+
+- Verify: all six targets byte-identical. This is also a free rehearsal of the harness
+  before anything semantic moves.
+
+## Step 1 — Re-test `deferredModule`
+
+**Second, because it improves the diagnostics for every step after it.**
 
 Aspect elements are `types.raw`, so option conflicts report `<unknown-file>` twice instead
 of naming files. Across 105 files that is a real tax, and the next seven steps are exactly
@@ -92,16 +144,28 @@ this is now a measurement, not a rule.
 Change the element type in `modules/lib/aspects.nix` and look for **two different
 failures**, not one:
 
-1. **Store paths move.** Expected and acceptable — check `diff-closures` is empty.
-2. **Modules silently disappear.** This is the real risk. `setDefaultModuleLocation` stamps
-   every element of one list with the same `_file`, and `_file` becomes the module key, so
-   a multi-element aspect list declared in a single file may collide and lose elements.
-   A non-empty `diff-closures` showing *removed* packages is the signature.
+1. **Store paths move.** Expected and acceptable.
+2. **Modules silently disappear.** This is the real risk. One *hypothesis* is that
+   `setDefaultModuleLocation` stamps every element of a list with the same `_file`, which
+   becomes the module key, so a multi-element aspect list declared in one file could
+   collide and lose elements. Anonymous modules normally get index-disambiguated keys, so
+   this may not be the mechanism — treat it as a thing to look for, not an explanation.
 
-If it holds, keep it and update `CLAUDE.md` §8. If elements vanish, revert, and record in
-§8 that `deferredModule` is unusable *for this reason* — which is more than is known today.
+**Counting `builtins.length config.flake.modules.homeManager.<aspect>` does not detect
+this.** That list is the same length either way; any dropping happens later, inside the
+guest evaluation, when Home Manager collects and deduplicates. The detection is the full
+verification block above — `diff-closures`, `diff -rq` on `home-files`, **and** the `/etc`
+diff on all three NixOS targets. Run all three parts.
 
-- Verify: 6 OK, `diff-closures` empty on all three hosts.
+Only multi-element aspect lists declared in a single file are at risk. Enumerate them
+first so you know where to look:
+
+```bash
+grep -rn "flake\.modules\.[a-zA-Z]*\.[a-zA-Z0-9_-]* = \[" --include=*.nix modules/
+```
+
+If it holds, keep it and update `CLAUDE.md` §8. If elements vanish, revert and record in
+§8 what actually happened — which is more than is known today either way.
 
 ## Step 2 — `extraSpecialArgs` → `_module.args` (§11.1)
 
@@ -124,7 +188,12 @@ Two things to watch:
 - **Nothing may use these to compute `imports`.** That is infinite recursion, not an error
   (`CLAUDE.md` §7). Grep for `imports` in the ten consumers before starting.
 
-- Verify: all three hosts byte-identical. This step should be a pure no-op in output.
+- Verify: all six targets byte-identical.
+
+**This is the harness test.** Step 2 changes only the channel a value arrives through, so
+its output must be identical. If anything drifts here, the fault is in `verify.sh`, the
+generator, or your understanding of the module system — not in the change. Diagnose it
+before going near Step 3, where drift is expected and would hide the same bug.
 
 ## Step 3 — Theming becomes an axis (§11.3, §11.4)
 
@@ -134,10 +203,9 @@ Today `font` is split across three files and `mako` across two, because the aspe
 *which host archetype* but not *who does the theming*. Introduce `stylix` and `palette` as
 aspects; hosts take exactly one.
 
-`modules/maximal/stylix.nix` declares `flake.modules.homeManager.stylix`;
-`modules/suckless/{font,gtk,cursor,qt,mako}.nix` declare `palette`. **Their paths stay
-wrong for now and that is fine** — Invariant 4 means paths carry no meaning, and fixing
-them here would bury the interesting diff under renames.
+The stylix file declares `flake.modules.homeManager.stylix`; the former suckless theming
+files — font, gtk, cursor, qt, mako — declare `palette`. Step 0 already put them at
+concern-named paths, so this step changes membership only.
 
 Then collapse the duplicates into the one-file form from `CLAUDE.md` §2:
 
@@ -149,9 +217,8 @@ Then collapse the duplicates into the one-file form from `CLAUDE.md` §2:
 `suckless.font.size = 20` on the maximal hosts is not theming — it is a HiDPI fact about
 those two machines. Push it to the host record and deliver it via Step 2's `_module.args`.
 
-This step changes generated config. **Human switches and confirms before Step 4.**
-
-- Verify: 6 OK. swift5 and the maximal hosts all move; `diff-closures` must still be empty.
+- Verify: 6 OK. All three hosts change. `diff-closures` must still be empty — the packages
+  are the same, only which aspect contributes them changes.
 
 ## Step 4 — `hyprland` and `dwl` aspects (§11.2)
 
@@ -175,6 +242,11 @@ Decide during this step, from `CLAUDE.md` §4's coupling table:
   clothing. It moves.
 - **thunar** is coupled only by a uwsm slice; **packages.nix** is partly Hyprland tooling.
   Leave both, revisit in Step 6.
+
+**`suckless` ends here.** Its seven files are fully consumed by Steps 3 and 4 — font, gtk,
+cursor, qt and mako to `palette`; dwl and the wlr-randr monitor script to `dwl`. Delete the
+aspect name and remove it from swift5's list in this step. If anything is left over, it is
+a member you have not classified — do not leave the name alive to hold it.
 
 ## Step 5 — `gaming` and `nvidia` (§11.6)
 
@@ -204,12 +276,35 @@ directly, so the `_module.args.render` bridge disappears.
 
 Assets need no underscore at all — `import-tree` collects only `.nix`.
 
-## Step 7 — Retire `maximal` (§11.2)
+**Watch the file body, not the aspect contents.** A surfaced file is evaluated for every
+host at the flake-parts level, even though the modules *inside* its aspect list stay lazy.
+Anything Hyprland-specific pulled into a `let` at the top of the file — a package
+reference, an `inputs.hyprland` attribute — now evaluates on swift5 too. Keep such
+references inside the aspect list where laziness protects them.
 
-Whatever is left after Steps 3, 4 and 6 is the heavy app set. Name it `apps`, and decide
+## Step 7 — Retire the archetype names, create `laptop` (§11.2)
+
+Two halves, both finishing the archetype story.
+
+**`maximal` → `apps`.** Whatever survives Steps 3, 4 and 6 is the heavy app set. Decide
 then whether `gpc` takes it — a gaming rig may not want thunderbird.
 
-At this point `CLAUDE.md` §11 items 1–6 are closed and host files are archetypes.
+**Create `laptop`.** The target state names it on swift5 and mbp, and nothing has created
+it yet. It gathers what is currently scattered:
+
+- `networking.networkmanager.wifi.powersave` — set `true` on swift5 and `false` on
+  UM790pro from their host files, so it is a genuine per-host difference, not a constant;
+- `power-profiles-daemon` and `upower`, currently in `core` where the gaming rig and the
+  dev box also get them;
+- `brightnessctl`, currently in core packages, used by hypridle's dim-on-idle.
+
+Be careful splitting `power.nix`: a desktop losing `upower` may break status tooling that
+assumes it. If in doubt leave it in `core` and take only the unambiguous members — an
+aspect that is too small is recoverable, a broken suspend path on the primary machine is
+not.
+
+At this point `CLAUDE.md` §11 items 1–6 are closed and every host file reads as an
+archetype.
 
 ## Step 8 — Darwin groundwork (§11.7)
 
@@ -233,7 +328,10 @@ Only once the above is done, and only when there is a Mac to test on.
 - no `specialArgs` or `extraSpecialArgs` anywhere;
 - at least one file contributing to two aspects, and no concern split across files
   because of a bucket;
-- no aspect named for a magnitude or a host archetype;
+- no aspect named for a magnitude or a host archetype — `maximal` and `suckless` are both
+  gone, not merely unused;
+- **no directory named for a class or an archetype** — no `modules/home/`,
+  `modules/nixos/`, `modules/maximal/`, `modules/suckless/`. `CLAUDE.md` §10 row one;
 - `/_` only on non-modules;
 - every host file readable as "what this machine is".
 
