@@ -35,7 +35,9 @@
     );
 
   # `packages` and `nixos` sit at different depths on purpose -- see the note on
-  # aspectModules.
+  # aspectModules. `monitors` and `input` are matched but unused: the pattern is
+  # strict so a typo in an untyped host field is an error here rather than a
+  # silently missing module.
   makeSystem = {
     hostname,
     system,
@@ -48,11 +50,7 @@
     nixos,
   }:
     nixpkgs.lib.nixosSystem {
-      specialArgs =
-        {inherit inputs stateVersion hostname user;}
-        # Nothing on the NixOS side reads this; it is kept only so the shape
-        # stays as it was until 3.4 retires the passthrough.
-        // {monitors = {inherit monitors; inherit (input) sensitivity;};};
+      specialArgs = {inherit inputs stateVersion hostname user;};
       modules = [
         {nixpkgs.hostPlatform = system;}
         {
