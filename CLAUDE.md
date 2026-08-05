@@ -320,6 +320,13 @@ evaluation to reach a value, importing a module file by path to call a function 
   legitimate — but re-test with `verify.sh build` plus the `diff-closures` recipe in §9,
   and do not change it casually.
 - **`config` shadowing** inside `flake.modules.*` — see §7.
+- **Stylix themes what it detects.** The stylix aspect sets `autoEnable = false` with an
+  explicit target list, so a program is themed only if named. Moving a themed program
+  between aspects can therefore change its appearance in either direction: into a
+  stylix-carrying host it may get themed and silently override an explicit palette; out of
+  one it may lose theming entirely. When a program carries its own colours, set
+  `stylix.targets.<name>.enable = false` explicitly rather than relying on it not being
+  listed. `foot` is the worked example.
 - **Every *file* is evaluated once**, at the flake-parts level — so a syntax or eval error
   anywhere breaks every host. But an **aspect's contents are only evaluated by hosts that
   take it**: a `throw` inside `maximal` does not break swift5. Verified, not assumed.
@@ -367,6 +374,13 @@ Because `import-tree` loads everything, an eval error anywhere breaks every host
 message rarely names the file. **Bisect by temporarily renaming a file to `_name.nix`** —
 `import-tree` skips it, and dormant code is a sanctioned use of `/_` (§4). Halve the tree
 until the build recovers. Undo before committing.
+
+Inspect generated output rather than asserting it is right. Rendered files live under
+`$out/home-files/` (`.config/hypr/hyprland.lua`, `.config/foot/foot.ini`, `.bashrc`) and
+`$out/etc/systemd/user/` for NixOS toplevels. `systemd-analyze verify <unit>` catches
+broken units before a switch does.
+
+Run `nix build` from the repo root — `.#` resolves against the working directory.
 
 Inspect a merged aspect:
 
@@ -436,3 +450,10 @@ Existing code is therefore **not** a safe template — see the exemplars named i
   wild differ. Record the decision here once made.
 - **If a request genuinely doesn't fit the pattern,** say so and give two or three options
   with their costs. Do not silently pick the one that bends an invariant.
+- **When something breaks after a switch, diagnose the live system before editing Nix.**
+  Two real cases, neither a flake bug: stale `~/.config/systemd/user/*.service` symlinks
+  left by an old manual `systemctl --user enable`, pointing at garbage-collected store
+  paths and silently masking working units; and a drop-in adding a second `ExecStart=` to
+  a packaged `Type=dbus` unit, which systemd refuses. Check for masking, shadowing and
+  stale user-level state first — a config that builds correctly can still be overridden at
+  runtime.
