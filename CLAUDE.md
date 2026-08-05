@@ -86,6 +86,17 @@ whom".
 A host is a short list of aspect names. Reading a host file should tell you what the
 machine **is**.
 
+### Read these before writing a new file
+
+- `modules/home/ccache.nix` — the **only** file whose aspect is not implied by its path
+  (it lives under `home/`, declares `dev`). Invariant 4, demonstrated.
+- `modules/suckless/dwl.nix`, `modules/maximal/hyprland.nix` — one concern spanning both
+  `nixos` and `homeManager` in one file. Invariant 3, half-demonstrated.
+
+**No file yet contributes to two aspects.** The `font.nix` sketch above is the target, not
+something you can copy from the repo. Copying a nearby file will reproduce the divergences
+in §11 — check there first.
+
 ---
 
 ## 3. Naming aspects
@@ -126,6 +137,10 @@ clipboard) becomes its own aspect that both take.
 ---
 
 ## 4. Layout and host wiring
+
+Descriptive, not normative. Invariant 4 means the generator does not care where any file
+lives — this is where things happen to sit, not a schema to pattern-match a new
+`modules/wayland/` tree onto.
 
 ```
 flake.nix                    # inputs + mkFlake + import-tree. Rarely touched.
@@ -242,6 +257,11 @@ Cross-platform intents worth naming now so the Mac is cheap later: `launcher`,
 `screenshot`, `clipboard`, `lock`, `notifications`. Each gets an option namespace plus
 per-platform implementation aspects (§3).
 
+**`perSystem` is the one place platform breakage bites early.** Unlike aspect contents,
+`perSystem` outputs are evaluated for *every* entry in `systems`. Adding `aarch64-darwin`
+to that list will immediately fail any Linux-only `perSystem.packages`. Gate those on
+`pkgs.stdenv.hostPlatform` when the Mac lands.
+
 ---
 
 ## 7. Sharing values
@@ -264,9 +284,18 @@ In order of preference:
 
    Getting this wrong produces infinite recursion, not a clear error.
 3. **`_module.args`, injected by the host wiring**, for values that vary per host
-   (monitors, hostname, sensitivity). Aspects are host-agnostic (Inv. 7), so these cannot
-   come from the aspect — and a standalone Home Manager evaluation cannot read flake-parts
-   `config`, so they cannot come by closure either. The host wiring is the only channel.
+   (monitors, hostname, sensitivity).
+
+   Closure cannot do this — not because the guest evaluation can't see flake-parts values
+   (option 2 proves it can; the interpolation happens during flake evaluation, long before
+   Home Manager runs), but because **an aspect is a single value shared by every host that
+   takes it.** There is nothing for a closure to specialise on. Inv. 7 restated.
+
+**`_module.args` cannot compute `imports`.** Resolving imports happens before config, so
+using an injected arg to decide what to import is infinite recursion, not a clear error.
+Avoiding exactly this is why `specialArgs` exists in the module system — but do not
+reintroduce it. If an import needs to depend on a host fact, that fact is a *decision*, and
+decisions belong in the host's aspect list.
 
 Forbidden: `specialArgs`, `extraSpecialArgs`, threading `self`/`inputs` into a nested
 evaluation to reach a value, importing a module file by path to call a function out of it.
@@ -275,16 +304,29 @@ evaluation to reach a value, importing a module file by path to call a function 
 
 ## 8. Hazards
 
-- **Aspect elements are `types.raw`, not `deferredModule`.** `deferredModule` runs
-  `setDefaultModuleLocation`, rewriting each element's `_file` — which is its module key,
-  which changes collection order, which reorders list-valued options and moves store
-  paths. Do not "improve" this without measuring.
+- **Aspect elements are `types.raw`, not `deferredModule`. This is deliberate, and it has
+  a cost.** Switching to `deferredModule` was measured to move store paths (it runs
+  `setDefaultModuleLocation`, rewriting each element's `_file`); the precise causal chain
+  from `_file` to output order is *not* fully characterised, so do not reason from it.
+  The known cost of `raw` is lost provenance: an option conflict reports
+
+  ```
+  - In `<unknown-file>': 5
+  - In `<unknown-file>': 100000
+  ```
+
+  instead of naming the files, which is a real debugging tax across 105 files. The
+  constraint that forced `raw` (Phase 2 byte-identity) is retired, so revisiting this is
+  legitimate — but re-test with `verify.sh build` plus the `diff-closures` recipe in §9,
+  and do not change it casually.
 - **`config` shadowing** inside `flake.modules.*` — see §7.
-- **Eval-time vs config-time.** `lib.mkIf pkgs.stdenv.isLinux { ... pkgs.grim ... }` still
-  *evaluates* `pkgs.grim` and will break a darwin build. Guard the reference, not just the
-  config, or split the file.
-- **Every module file is evaluated for every host.** A syntax error in a Hyprland-only
-  file breaks the swift5 build. Expected, not a regression.
+- **Every *file* is evaluated once**, at the flake-parts level — so a syntax or eval error
+  anywhere breaks every host. But an **aspect's contents are only evaluated by hosts that
+  take it**: a `throw` inside `maximal` does not break swift5. Verified, not assumed.
+- **Eval-time vs config-time.** Within an aspect a host *does* take,
+  `lib.mkIf pkgs.stdenv.isLinux { ... pkgs.grim ... }` still evaluates `pkgs.grim`. Guard
+  the reference, not just the config, or split the file. This does **not** mean a
+  Linux-only reference in an aspect `mbp` never takes needs guarding — it doesn't.
 - **`git add -A` before every `nix` command.** Flakes see only tracked files; skipping
   this gives "path does not exist" for files visibly on disk.
 - **Never switch.** No `nixos-rebuild switch`, no `nh os switch`, no `home-manager switch`.
@@ -321,6 +363,11 @@ git worktree remove ../dotfiles-prev
 `swift5` takes neither Hyprland nor stylix, which makes it a free control: a swift5 path
 that moves during Hyprland work means the change leaked.
 
+Because `import-tree` loads everything, an eval error anywhere breaks every host and the
+message rarely names the file. **Bisect by temporarily renaming a file to `_name.nix`** —
+`import-tree` skips it, and dormant code is a sanctioned use of `/_` (§4). Halve the tree
+until the build recovers. Undo before committing.
+
 Inspect a merged aspect:
 
 ```bash
@@ -350,8 +397,11 @@ config.flake.modules.homeManager.hyprland
 
 ## 11. Known divergences
 
-The repo does not yet satisfy §1. These are tracked, not licence to add more. See
-`REFACTOR.md`.
+The repo does not yet satisfy §1. **This is a ratchet, not a ledger:** if a task touches a
+file listed here, migrate that file in the same change, or state plainly why not. Nothing
+below is grandfathered, and the count is supposed to fall. See `REFACTOR.md`.
+
+Existing code is therefore **not** a safe template — see the exemplars named in §2.
 
 1. **`extraSpecialArgs` is still in use.** ~10 files take `monitors`, `sensitivity`,
    `hostname`, `user`, or `homeStateVersion` as module arguments. Target: `_module.args`
