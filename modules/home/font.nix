@@ -2,9 +2,9 @@
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {
-        # Font *definition* shared by every profile (consumed by ./foot.nix).
-        # The font *packages* are profile business: suckless installs them in
-        # home-manager/profiles/suckless/font.nix, maximal via stylix.nix.
+        # Font *definition* shared by every host (consumed by ./foot.nix).
+        # The font *packages* are aspect business: ../suckless/font.nix installs
+        # them directly, ../maximal/stylix.nix via stylix.
         # Option namespace kept as `suckless.font` until its consumers move.
         options.suckless.font = {
           name = lib.mkOption {

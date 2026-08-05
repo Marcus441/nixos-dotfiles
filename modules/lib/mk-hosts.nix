@@ -17,7 +17,7 @@
 
   # Merge order of list-valued options follows the module tree, and reaches a
   # derivation hash. The nested `{imports = ...;}` below are not decoration:
-  # they put the aspects at the depth nixos/core and home-manager/core held.
+  # they hold the aspects at the depth the pre-refactor entry points sat at.
   aspectModules = class: aspects:
     lib.concatMap
     (name: config.flake.modules.${class}.${name} or [])

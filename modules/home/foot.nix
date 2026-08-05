@@ -13,18 +13,18 @@
 
         strip = c: lib.removePrefix "#" c;
       in {
-        # Shared terminal for all profiles (step 1.3, Option A): the explicit
-        # base24 palette below is the single source of terminal colours on every
-        # host. stylix must NOT theme foot on maximal — see the explicit
-        # stylix.targets.foot.enable = false in profiles/maximal/stylix.nix.
+        # Shared terminal for all hosts: the explicit base24 palette below is the
+        # single source of terminal colours everywhere. stylix must NOT theme
+        # foot on maximal — see stylix.targets.foot.enable = false in
+        # ../maximal/stylix.nix.
         programs.foot = {
           enable = true;
-          # Daemon mode (step 1.4): terminals spawn as footclient against this
-          # server. The systemd unit binds to graphical-session.target, which uwsm
-          # activates on maximal; the dwl session is a plain script, so suckless
-          # starts the server from dwl's autostart instead (see
-          # profiles/suckless/dwl.nix). Every spawn point keeps a fallback bind to
-          # plain foot in case the server is down.
+          # Daemon mode: terminals spawn as footclient against this server. The
+          # systemd unit binds to graphical-session.target, which uwsm activates
+          # on maximal; the dwl session is a plain script, so suckless starts the
+          # server from dwl's autostart instead (see ../suckless/dwl.nix). Every
+          # spawn point keeps a fallback bind to plain foot in case the server is
+          # down.
           server.enable = true;
           settings = {
             main = {

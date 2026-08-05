@@ -7,9 +7,10 @@
         monitors,
         ...
       }: let
-        # Consume the neutral monitor data (utilities/makeMonitor) and render a
-        # wlr-randr invocation. wlr-randr drives any wlroots compositor (incl. dwl),
-        # so the same host monitor definitions work for both desktop profiles.
+        # Consume the neutral monitor data (the monitors block in
+        # modules/hosts/<h>.nix) and render a wlr-randr invocation. wlr-randr
+        # drives any wlroots compositor (incl. dwl), so the same host monitor
+        # definitions work for both desktops.
         applyMonitor = m: ''
           wlr-randr --output ${m.name} \
             --mode ${toString m.width}x${toString m.height}@${toString m.refresh}Hz \

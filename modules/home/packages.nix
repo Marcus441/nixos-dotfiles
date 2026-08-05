@@ -2,8 +2,8 @@
   flake.modules.homeManager.core = [
     (
       {pkgs, ...}: {
-        # Essential packages shared by every profile (suckless + maximal). Profile
-        # -specific / heavy GUI apps live in home-manager/profiles/<profile>/packages.nix.
+        # Essential packages shared by every host. Aspect-specific / heavy GUI
+        # apps live in modules/<aspect>/packages.nix.
         home.packages = with pkgs; [
           # Desktop apps
           imv
