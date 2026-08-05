@@ -1,5 +1,6 @@
-{...}: {
+{inputs, ...}: {
   flake.modules.homeManager.maximal = [
+    inputs.stylix.homeModules.stylix
     (
       {pkgs, ...}: let
         theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";

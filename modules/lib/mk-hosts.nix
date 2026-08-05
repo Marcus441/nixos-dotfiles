@@ -86,33 +86,25 @@
       extraSpecialArgs =
         {inherit inputs user hostname homeStateVersion;}
         // {inherit (monitorConfig) monitors sensitivity;};
-      modules =
-        # Not movable into modules/maximal/*: these sit at the root of the
-        # module list, and importing them from the aspect puts them two levels
-        # deeper, which reorders home.packages.
-        lib.optionals (lib.elem "maximal" aspects) [
-          inputs.stylix.homeModules.stylix
-          inputs.walker.homeManagerModules.default
-        ]
-        ++ [
-          {
-            imports = [
-              {imports = aspectModules "homeManager" aspects;}
-            ];
-          }
-          {
-            home = {
-              username = user;
-              homeDirectory = "/home/${user}";
-              stateVersion = homeStateVersion;
-              sessionVariables = {
-                NIXOS_OZONE_WL = "1";
-                QT_QPA_PLATFORM = "wayland";
-                XDG_SCREENSHOTS_DIR = "/home/${user}/Screenshots";
-              };
+      modules = [
+        {
+          imports = [
+            {imports = aspectModules "homeManager" aspects;}
+          ];
+        }
+        {
+          home = {
+            username = user;
+            homeDirectory = "/home/${user}";
+            stateVersion = homeStateVersion;
+            sessionVariables = {
+              NIXOS_OZONE_WL = "1";
+              QT_QPA_PLATFORM = "wayland";
+              XDG_SCREENSHOTS_DIR = "/home/${user}/Screenshots";
             };
-          }
-        ];
+          };
+        }
+      ];
     };
 in {
   options.hosts = lib.mkOption {
