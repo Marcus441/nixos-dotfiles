@@ -3,7 +3,6 @@
     hostname = "UM790pro";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    dev = true;
     aspects = ["dev" "core" "maximal"];
 
     hardware = ../../hosts/UM790pro/hardware-configuration.nix;

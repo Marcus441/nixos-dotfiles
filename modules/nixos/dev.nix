@@ -1,12 +1,8 @@
 {...}: {
   flake.modules.nixos.dev = [
     (
-      {
-        dev,
-        lib,
-        ...
-      }: {
-        imports = lib.optionals dev [
+      {...}: {
+        imports = [
           {
             boot.binfmt = {
               emulatedSystems = ["aarch64-linux"];

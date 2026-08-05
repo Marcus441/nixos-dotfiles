@@ -41,7 +41,6 @@
     hostname,
     system,
     stateVersion,
-    dev,
     aspects,
     hardware,
     monitors,
@@ -52,7 +51,7 @@
   in
     nixpkgs.lib.nixosSystem {
       specialArgs =
-        {inherit inputs stateVersion hostname user dev;}
+        {inherit inputs stateVersion hostname user;}
         # NixOS takes the whole record, home takes it apart. Phase 3 fixes this.
         // {monitors = monitorConfig;};
       modules = [
@@ -71,7 +70,6 @@
   mkHome = {
     hostname,
     system,
-    dev,
     aspects,
     monitors,
     ...
@@ -81,7 +79,7 @@
     home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
       extraSpecialArgs =
-        {inherit inputs user hostname homeStateVersion dev;}
+        {inherit inputs user hostname homeStateVersion;}
         // {inherit (monitorConfig) monitors sensitivity;};
       modules =
         # Not movable into modules/maximal/*: these sit at the root of the

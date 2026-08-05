@@ -3,8 +3,7 @@
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    dev = false;
-    aspects = ["dev" "core" "maximal"];
+    aspects = ["core" "maximal"];
 
     hardware = ../../hosts/gpc/hardware-configuration.nix;
 
