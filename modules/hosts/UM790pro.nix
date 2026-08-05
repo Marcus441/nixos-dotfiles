@@ -7,13 +7,17 @@
 
     hardware = ../../hosts/UM790pro/hardware-configuration.nix;
 
-    # Phase 3 replaces this block wholesale.
-    monitors = utils: {
-      monitors = [
-        (utils.makeMonitor "HDMI-A-1" 3840 2160 120 0 0 1.5)
-      ];
-      sensitivity = 1;
-    };
+    monitors = [
+      {
+        name = "HDMI-A-1";
+        description = "Dell Inc. DELL S2725QC B1WK464";
+        width = 3840;
+        height = 2160;
+        refresh = 120;
+        scale = 1.5;
+      }
+    ];
+    input.sensitivity = 1;
 
     packages = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [

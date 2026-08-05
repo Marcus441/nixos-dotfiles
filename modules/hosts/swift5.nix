@@ -7,13 +7,14 @@
 
     hardware = ../../hosts/swift5/hardware-configuration.nix;
 
-    # Phase 3 replaces this block wholesale.
-    monitors = utils: {
-      monitors = [
-        (utils.makeMonitor "eDP-1" 1920 1080 60 0 0 1)
-      ];
-      sensitivity = 0;
-    };
+    monitors = [
+      {
+        name = "eDP-1";
+        width = 1920;
+        height = 1080;
+      }
+    ];
+    input.sensitivity = 0;
 
     packages = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [

@@ -9,12 +9,6 @@
   user = "marcus";
   homeStateVersion = "25.11";
 
-  # Neutral, compositor-agnostic monitor description; each consumer renders it
-  # into its own format. Phase 3 replaces this with typed options.
-  utils.makeMonitor = name: width: height: refresh: x: y: scale: {
-    inherit name width height refresh x y scale;
-  };
-
   # Merge order of list-valued options follows the module tree, and reaches a
   # derivation hash. The nested `{imports = ...;}` below are not decoration:
   # they hold the aspects at the depth the pre-refactor entry points sat at.
@@ -49,16 +43,16 @@
     aspects,
     hardware,
     monitors,
+    input,
     packages,
     nixos,
-  }: let
-    monitorConfig = monitors utils;
-  in
+  }:
     nixpkgs.lib.nixosSystem {
       specialArgs =
         {inherit inputs stateVersion hostname user;}
-        # NixOS takes the whole record, home takes it apart. Phase 3 fixes this.
-        // {monitors = monitorConfig;};
+        # Nothing on the NixOS side reads this; it is kept only so the shape
+        # stays as it was until 3.4 retires the passthrough.
+        // {monitors = {inherit monitors; inherit (input) sensitivity;};};
       modules = [
         {nixpkgs.hostPlatform = system;}
         {
@@ -77,15 +71,14 @@
     system,
     aspects,
     monitors,
+    input,
     ...
-  }: let
-    monitorConfig = monitors utils;
-  in
+  }:
     home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
       extraSpecialArgs =
-        {inherit inputs user hostname homeStateVersion;}
-        // {inherit (monitorConfig) monitors sensitivity;};
+        {inherit inputs user hostname homeStateVersion monitors;}
+        // {inherit (input) sensitivity;};
       modules = [
         {
           imports = [
@@ -107,11 +100,6 @@
       ];
     };
 in {
-  options.hosts = lib.mkOption {
-    type = lib.types.attrsOf (lib.types.attrsOf lib.types.raw);
-    default = {};
-  };
-
   config = {
     systems = ["x86_64-linux"];
 

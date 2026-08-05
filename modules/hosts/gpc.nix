@@ -7,14 +7,21 @@
 
     hardware = ../../hosts/gpc/hardware-configuration.nix;
 
-    # Phase 3 replaces this block wholesale.
-    monitors = utils: {
-      monitors = [
-        (utils.makeMonitor "DisplayPort-1" 2560 1440 144 0 0 1)
-        (utils.makeMonitor "DisplayPort-2" 1920 1080 60 2560 0 1)
-      ];
-      sensitivity = 0;
-    };
+    monitors = [
+      {
+        name = "DisplayPort-1";
+        width = 2560;
+        height = 1440;
+        refresh = 144;
+      }
+      {
+        name = "DisplayPort-2";
+        width = 1920;
+        height = 1080;
+        x = 2560;
+      }
+    ];
+    input.sensitivity = 0;
 
     packages = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [
