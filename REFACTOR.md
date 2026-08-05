@@ -1,95 +1,61 @@
-# Refactor Plan: Split the `maximal` aspect
+# Refactor Plan: close the §11 divergences
 
-The Dendritic migration is done. `main` is the ex-`dendritic` branch, the
-byte-identity baseline is retired, and `../dotfiles-old` is gone. The previous
-plan — shell unification, Dendritic migration, typed monitors — is complete and
-lives in git history if you need it:
+`CLAUDE.md` defines the invariants and lists, in §11, the seven places this repo does not
+yet satisfy them. **That list is the backlog. This file is the order.**
+
+Do not restate the invariants here — read them there. This document only says what to do
+next, in what sequence, and how to know it worked.
+
+The Dendritic migration and the typed-monitor work are finished; the byte-identity
+baseline is retired and `../dotfiles-old` is gone. Earlier plans are in git history:
 
 ```bash
 git log --oneline --all -- REFACTOR.md
-git show <sha>:REFACTOR.md
 ```
-
-This plan addresses what that migration left behind: **`maximal` is not an
-aspect, it is three aspects fused together.**
 
 ---
 
-## The problem
+## Target state
 
-`maximal` currently means all of:
+When this is done, host files read as archetypes and nothing else:
 
-1. **the Hyprland session** — compositor, hypridle/hyprlock/hyprpaper, waybar,
-   the uwsm autostart, the wleave power menu;
-2. **the heavy app set** — thunderbird, discord, obs, virt-manager, neovide;
-3. **stylix theming**.
+```nix
+swift5   = ["core" "laptop" "dev" "dwl"      "palette"];
+gpc      = ["core" "gaming" "nvidia" "hyprland" "stylix" "apps"];
+UM790pro = ["core" "dev"              "hyprland" "stylix" "apps"];
+mbp      = ["core" "laptop" "dev"     "aerospace" "stylix"];   # planned
+```
 
-A host that wanted Hyprland without Thunderbird, or the app set under a
-different compositor, cannot say so. This is the same conflation
-`suckless`/`maximal` had before the migration, reproduced one level down.
+Every name there is a decision some host makes differently. `core` is what nobody opts out
+of. Two entries are genuine open questions, flagged at the steps that create them: whether
+`gpc` takes `apps`, and whether `dev` on a gaming rig is really absent or just untested.
 
-The visible symptom is the `_` directories. `modules/maximal/_hyprland` is 14
-files hidden from import-tree, and it feels like it needs a directory because it
-*is* a distinct concern — the directory is standing in for an aspect name it was
-never given.
-
-### Audit findings this plan acts on
-
-- 105 `.nix` files under `modules/`, **32 hidden behind `_`** (30%).
-- Of those 32, only **9 genuinely cannot be flake-parts modules**: seven files
-  imported as *values* (`import ./style.nix {inherit config;}`), the
-  `callPackage` target `_pkgs/ocr-copy.nix`, and the deliberately-unloaded
-  `_dormant/ghostty`.
-- **~21 are ordinary Home Manager modules**, hidden only because the `_`
-  boundary was drawn around whole subtrees rather than around the non-module
-  leaves.
-- Non-`.nix` assets never needed `_` at all — import-tree collects only `.nix`
-  files. Verified empirically. `_discord` and `_opencode` are hidden for no
-  reason.
-- `modules/_dormant` is referenced by nothing.
-- No file inside a `_` directory declares `flake.modules`. Good — that would be
-  silently unreachable code.
-
-`_` is import-tree's documented escape hatch *from* auto-discovery, not part of
-the Dendritic pattern. Using it is fine. Using it as a grouping mechanism is
-what this plan undoes.
+`maximal` and `suckless` do not survive. They are host archetypes wearing aspect names,
+which is what §11.2 is about.
 
 ---
 
 ## Ground rules
 
-1. **Every step ends buildable.** `./scripts/verify.sh build` must report 6 OK
-   before committing. Never commit a broken tree to fix in the next one.
-2. **`git add -A` before every `nix` command.** Flakes only see tracked files.
-3. **Never run `nix flake update`.** Adding an input and running
-   `nix flake lock` is fine.
-4. **Build only, never switch.** The human switches.
-5. **One concern per commit.** These steps move store paths; small commits are
-   what make a bisect possible.
-6. **No opportunistic changes.** If you spot something wrong, write it down and
-   raise it — do not fix it inside an unrelated step.
+`CLAUDE.md` §8, §9 and §12 apply in full. The ones that bite hardest here:
 
-### `swift5` is the control
+- **`swift5` is the control.** It takes neither `hyprland` nor `stylix`. Until Step 5
+  touches it directly, **every step must leave both swift5 targets byte-identical.** A
+  swift5 path that moves means the change leaked into shared ground — stop and find out
+  why before continuing.
+- **Aspect order in a host list is load-bearing.** It sets module merge order, which sets
+  `buildEnv` order, which reaches derivation hashes. When splitting one aspect into two,
+  put the new names where the old one sat so the split is a partition, not a reordering.
+- **One concern per commit.** These steps move store paths by design; small commits are
+  what make a bisect possible.
 
-`swift5` runs no Hyprland and carries neither `maximal` nor the new `hyprland`
-aspect. **Every step here must leave both swift5 targets byte-identical.** If a
-swift5 path moves, the step leaked into shared ground — stop and find out why.
-This costs nothing and catches the most likely class of mistake.
+### Verification
 
----
-
-## Verification
-
-There is no baseline worktree any more, so store-path equality is no longer the
-test. Paths *will* move: reordering modules changes `buildEnv` order. The
-question is whether anything changed **besides** order.
-
-Per step:
+`./scripts/verify.sh build` must report 6 OK before every commit. Then prove nothing
+changed but order:
 
 ```bash
 git worktree add ../dotfiles-prev <previous-commit>
-
-./scripts/verify.sh build            # all 6 must be OK
 
 for h in swift5 gpc UM790pro; do
   old=$(nix build --no-link --print-out-paths \
@@ -104,142 +70,183 @@ done
 git worktree remove ../dotfiles-prev
 ```
 
-**`diff-closures` empty** means no package was added, removed or version-changed:
-same software, different order. **`diff -rq` naming only files you meant to
-touch** means no generated config drifted. Together these are as strong as the
-old byte-identity check for structural work, and unlike it they survive
-intentional change.
+Empty `diff-closures` means no package was added, removed or version-changed. `diff -rq`
+naming only files you meant to touch means no generated config drifted.
 
-When a step is *meant* to change generated text, diff the config file itself,
-not the store path.
+**The human switches, and confirms, before the next step** whenever a step changes
+generated config rather than only its order.
 
 ---
 
-## Step 0 — Boundary decision (human answers before Step 1)
+## Step 1 — Re-test `deferredModule` (§11 groundwork)
 
-Four members of `maximal` are genuinely ambiguous. Decide before touching code;
-guessing means redoing Steps 1–3.
+**First, because it improves the diagnostics for every step after it.**
 
-| Member | Coupling to Hyprland | Question |
-|---|---|---|
-| `waybar` | `hyprland/workspaces` and `hyprland/window` modules; systemd target `wayland-session@hyprland.desktop.target` | Hard-coupled. Move to `hyprland`, or keep in `maximal` and accept it breaks under another compositor? |
-| `bash.nix` uwsm autostart | `uwsm check may-start` / `uwsm start default` on login | This is session startup, not shell config. Move to `hyprland`? |
-| `thunar.nix` | uwsm slice placement for its daemon windows | Only the slice is coupled, not the file manager. Split or leave whole? |
-| `packages.nix` | comments mark part of the list "Hyprland-specific / used by the hyprland binds" | Split the tooling out, or leave the list whole? |
+Aspect elements are `types.raw`, so option conflicts report `<unknown-file>` twice instead
+of naming files. Across 105 files that is a real tax, and the next seven steps are exactly
+the kind of work that provokes conflicts. `deferredModule` restores `_file`.
 
-Recommendation: move `waybar` and the uwsm autostart into `hyprland`; leave
-`thunar` and `packages` in `maximal` and revisit once the aspect exists —
-splitting a package list is easy later and hard to review inside a structural
-step.
+`raw` was chosen under the Phase 2 byte-identity constraint, which no longer exists. So
+this is now a measurement, not a rule.
 
-**Flagged, not part of this plan:** `modules/home/xdg.nix` writes `uwsm/env` in
-the **core** aspect, so swift5 gets a uwsm config it never uses. Harmless, but
-core is carrying maximal's concern. Own commit, separate from this work.
+Change the element type in `modules/lib/aspects.nix` and look for **two different
+failures**, not one:
 
----
+1. **Store paths move.** Expected and acceptable — check `diff-closures` is empty.
+2. **Modules silently disappear.** This is the real risk. `setDefaultModuleLocation` stamps
+   every element of one list with the same `_file`, and `_file` becomes the module key, so
+   a multi-element aspect list declared in a single file may collide and lose elements.
+   A non-empty `diff-closures` showing *removed* packages is the signature.
 
-## Step 1 — Create the `hyprland` aspect
+If it holds, keep it and update `CLAUDE.md` §8. If elements vanish, revert, and record in
+§8 that `deferredModule` is unusable *for this reason* — which is more than is known today.
 
-Move the contents of `modules/maximal/hyprland.nix` into
-`modules/hyprland/session.nix`, declaring `flake.modules.homeManager.hyprland`
-and `flake.modules.nixos.hyprland` (the latter carries `programs.hyprland` and
-`security.pam.services.hyprlock`). Add `"hyprland"` to gpc's and UM790pro's
-aspect lists.
+- Verify: 6 OK, `diff-closures` empty on all three hosts.
 
-Do **not** move anything inside `_hyprland` yet. This step only changes who owns
-the tree.
+## Step 2 — `extraSpecialArgs` → `_module.args` (§11.1)
 
-Aspect order in the host list decides merge order, so put `hyprland` where
-`maximal` sits today — `["core" "hyprland" "maximal"]` — making the split a
-partition rather than a reordering.
+Closes Invariant 5. ~10 files take `monitors`, `sensitivity`, `hostname`, `user` or
+`homeStateVersion` as module arguments.
 
-- swift5: byte-identical.
-- gpc/UM790pro: `diff-closures` empty, `diff -rq` empty or near-empty.
+The generator injects them instead, as an ordinary module in the host's list:
 
-## Step 2 — Surface `_hyprland`
-
-Each plain module becomes its own discovered file under `modules/hyprland/`,
-declaring `flake.modules.homeManager.hyprland`:
-
-```
-hypridle.nix  hyprlock.nix
-hyprland/{animations,binds,core,hyprland,monitors,rules}.nix
-hyprpaper/{wallpaper-picker,wallpaper-service}.nix
+```nix
+modules = [ {_module.args = {inherit monitors hostname user; /* ... */ };} ] ++ aspects;
 ```
 
-`_hyprland/default.nix` and `_hyprland/hyprland/default.nix` are pure
-aggregators and simply disappear.
+Consumers do not change — they still receive the same argument names. Only the channel
+changes.
 
-**`hyprpaper/wallpapers.nix` stays hidden**, as `modules/hyprland/_wallpapers.nix`.
-Three files do `import ./wallpapers.nix {inherit pkgs;}` — it is a value, not a
-module, and cannot become an aspect.
+Two things to watch:
 
-**Bonus:** once these are flake-parts modules they can capture the flake-parts
-`config` in an outer `let` and read `flake.lib.monitors` directly, so the
-`_module.args.render` bridge added during Phase 3 becomes unnecessary. Delete it
-here.
+- A module contributing only `_module.args` adds nothing to any list-valued option, so it
+  should not reorder anything. Confirm rather than assume.
+- **Nothing may use these to compute `imports`.** That is infinite recursion, not an error
+  (`CLAUDE.md` §7). Grep for `imports` in the ten consumers before starting.
 
-Watch merge order *within* the aspect: import-tree walks lexicographically, so
-each file now sorts against new siblings. `diff-closures` catches any real
-consequence.
+- Verify: all three hosts byte-identical. This step should be a pure no-op in output.
 
-## Step 3 — Move whatever Step 0 decided
+## Step 3 — Theming becomes an axis (§11.3, §11.4)
 
-Expect `waybar` to be the interesting one: three files in `_waybar`, no
-value-imports, no assets — so it surfaces at the same time it moves.
+**The step that demonstrates the pattern, and it moves no files.**
 
-## Step 4 — Surface the remaining unnecessary `_` trees
+Today `font` is split across three files and `mako` across two, because the aspect can say
+*which host archetype* but not *who does the theming*. Introduce `stylix` and `palette` as
+aspects; hosts take exactly one.
 
-`_thunderbird` (2 files), `_discord` (1 file + JSON assets), `_opencode`
-(2 files + markdown assets). None contain value-imports.
+`modules/maximal/stylix.nix` declares `flake.modules.homeManager.stylix`;
+`modules/suckless/{font,gtk,cursor,qt,mako}.nix` declare `palette`. **Their paths stay
+wrong for now and that is fine** — Invariant 4 means paths carry no meaning, and fixing
+them here would bury the interesting diff under renames.
 
-Assets stay put and keep their relative references — they need co-location, not
-hiding. A directory holding only assets can keep any name, since import-tree
-ignores non-`.nix` files entirely.
+Then collapse the duplicates into the one-file form from `CLAUDE.md` §2:
 
-## Step 5 — Leave the rest alone, and write down why
+- `font` — one file declaring `core` (the option), `stylix`, and `palette`.
+- `mako` — one file declaring `stylix` and `palette`.
+- Rename the option namespace `suckless.font` → `desktop.font`. An option in `core` named
+  after an aspect is the clearest single symptom of §11.2.
 
-`_walker` (4 value-imported data files), `_yazi` (2), `_pkgs/ocr-copy.nix`
-(a derivation), `_dormant/ghostty` (deliberately unloaded). These are correct
-uses of the escape hatch.
+`suckless.font.size = 20` on the maximal hosts is not theming — it is a HiDPI fact about
+those two machines. Push it to the host record and deliver it via Step 2's `_module.args`.
 
-Add the rule to `CLAUDE.md` so the next pass does not re-litigate it:
+This step changes generated config. **Human switches and confirms before Step 4.**
 
-> `_` marks files that are **not** flake-parts modules — values consumed by
-> `import`, derivations consumed by `callPackage`, and dormant code. It is not a
-> grouping mechanism. Grouping is what aspect names are for.
+- Verify: 6 OK. swift5 and the maximal hosts all move; `diff-closures` must still be empty.
 
-Consider deleting `_dormant/ghostty` outright; git remembers.
+## Step 4 — `hyprland` and `dwl` aspects (§11.2)
+
+Split the session out of `maximal` and `suckless`. `modules/maximal/hyprland.nix` becomes
+`modules/hyprland.nix` declaring both classes; the dwl half of `modules/suckless/dwl.nix`
+becomes `modules/dwl.nix`.
+
+Place the new names where the old ones sat — `["core" "hyprland" "maximal"]` — so this is a
+partition.
+
+Anything genuinely shared between the two sessions (locking, notifications, portals,
+clipboard) becomes its own aspect rather than being duplicated. Anything portable in
+*intent* (gaps, mod key, keybinding philosophy) becomes an option namespace consumed by
+both, per `CLAUDE.md` §3 — **not** one aspect that branches internally.
+
+Decide during this step, from `CLAUDE.md` §4's coupling table:
+
+- **waybar** is hard-coupled to Hyprland (`hyprland/workspaces`, `hyprland/window`,
+  `wayland-session@hyprland.desktop.target`). It moves.
+- **the uwsm autostart** in `modules/maximal/bash.nix` is session startup wearing shell
+  clothing. It moves.
+- **thunar** is coupled only by a uwsm slice; **packages.nix** is partly Hyprland tooling.
+  Leave both, revisit in Step 6.
+
+## Step 5 — `gaming` and `nvidia` (§11.6)
+
+The clearest latent aspects in the repo: nvidia drivers, steam, gamescope and gamemode are
+inline in gpc's host `nixos` block. That is reusable configuration written as host-local —
+a second nvidia machine means copy-paste.
+
+Lift them into `modules/gaming.nix` and `modules/nvidia.nix`, add both to gpc's aspect
+list. `nixpkgs.config.allowUnfree` moves to `core`; it is not a gaming fact.
+
+Small, self-contained, and the first step that makes a host file read as an archetype.
+
+- Verify: swift5 and UM790pro byte-identical; gpc's nixos target moves, home does not.
+
+## Step 6 — Surface the `_` trees (§11.5)
+
+~21 ordinary modules are hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`,
+`_opencode` for no reason beyond the boundary having been drawn around whole subtrees.
+Each becomes a discovered file declaring its own aspect membership.
+
+Stays hidden, correctly: the seven value-imported data files (`_walker`, `_yazi`,
+`hyprpaper/wallpapers.nix`), `_pkgs/ocr-copy.nix`, and `_dormant/ghostty` — consider
+deleting that last one outright.
+
+Once `_hyprland`'s files are flake-parts modules they can read `flake.lib.monitors`
+directly, so the `_module.args.render` bridge disappears.
+
+Assets need no underscore at all — `import-tree` collects only `.nix`.
+
+## Step 7 — Retire `maximal` (§11.2)
+
+Whatever is left after Steps 3, 4 and 6 is the heavy app set. Name it `apps`, and decide
+then whether `gpc` takes it — a gaming rig may not want thunderbird.
+
+At this point `CLAUDE.md` §11 items 1–6 are closed and host files are archetypes.
+
+## Step 8 — Darwin groundwork (§11.7)
+
+Only once the above is done, and only when there is a Mac to test on.
+
+- Add `aarch64-darwin` to `systems`, and gate every Linux-only `perSystem` output on
+  `pkgs.stdenv.hostPlatform` — `perSystem` evaluates for *every* entry, unlike aspect
+  contents (`CLAUDE.md` §6).
+- Add `mkDarwin` to the generator alongside `makeSystem` and `mkHome`.
+- Standalone Home Manager is the asset here: the same home aspects activate on macOS with
+  no NixOS underneath.
+- Name the intent aspects — `launcher`, `screenshot`, `clipboard`, `lock`,
+  `notifications` — with per-platform implementations.
 
 ---
 
-## Traps
+## Done means
 
-- **Aspect elements are `types.raw`, not `deferredModule`.** `deferredModule`
-  rewrites each element's `_file`, which is its module key, which changes
-  collection order and so reorders list-valued options. Do not "improve" this.
-- **`config` shadowing.** Inside
-  `flake.modules.homeManager.foo = [ ({config, ...}: ...) ]`, `config` is the
-  Home Manager config. To reach flake-parts, capture it outside:
-  `{config, ...}: let top = config; in { ... top.flake.lib ... }`. Getting this
-  wrong gives infinite recursion, not a clear error.
-- **The generator owns the import lists.** `imports` computed from a module
-  *argument* collect in a different order than static ones. `modules/lib/mk-hosts.nix`
-  splices aspects at a fixed depth; do not move that.
-- **import-tree skips any path containing `/_`** and collects only `.nix` files.
-- **Every module file is evaluated for every host.** A syntax error in a
-  Hyprland-only file breaks the swift5 build too. Expected, not a regression.
-- **Home Manager is standalone.** Outputs are
-  `homeConfigurations."marcus@<host>"`, activated separately, on
-  `nixpkgs.legacyPackages.${system}` — flake overlays do not reach them.
+`CLAUDE.md` §11 lists only item 7, and:
+
+- no `specialArgs` or `extraSpecialArgs` anywhere;
+- at least one file contributing to two aspects, and no concern split across files
+  because of a bucket;
+- no aspect named for a magnitude or a host archetype;
+- `/_` only on non-modules;
+- every host file readable as "what this machine is".
+
+Update §11 in the same commit that closes each item. It is a ratchet, not a ledger.
 
 ---
 
 ## Out of scope
 
 - Quickshell. Waybar and walker stay.
-- Typing the rest of the host record (issue #3 item 2).
-- `_class` enforcement on aspect elements (issue #3 item 1).
-- Overlays for Home Manager. Affects every home store path; its own project.
-- Splitting stylix out of `maximal` into a `theme` aspect. Plausibly the next
-  refactor after this one, but not this one.
+- Typing the rest of the host record (issue #3 item 2) and `_class` enforcement on aspect
+  elements (issue #3 item 1).
+- Overlays reaching Home Manager. Changing `pkgs` for home configs moves every home store
+  path; its own project, with its own switch cycle.
+- `modules/home/xdg.nix` writing `uwsm/env` in `core`, so swift5 carries a uwsm config it
+  never uses. Real, small, unrelated — own commit.
