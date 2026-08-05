@@ -3,8 +3,8 @@
     (
       {lib, ...}: {
         # Font *definition* shared by every host (consumed by ./foot.nix).
-        # The font *packages* are aspect business: ../suckless/font.nix installs
-        # them directly, ../maximal/stylix.nix via stylix.
+        # The font *packages* are aspect business: ./packages.nix installs them
+        # directly, ../stylix.nix via stylix.
         # Option namespace kept as `suckless.font` until its consumers move.
         options.suckless.font = {
           name = lib.mkOption {

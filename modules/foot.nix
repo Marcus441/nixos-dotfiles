@@ -16,13 +16,13 @@
         # Shared terminal for all hosts: the explicit base24 palette below is the
         # single source of terminal colours everywhere. stylix must NOT theme
         # foot on maximal — see stylix.targets.foot.enable = false in
-        # ../maximal/stylix.nix.
+        # ./stylix.nix.
         programs.foot = {
           enable = true;
           # Daemon mode: terminals spawn as footclient against this server. The
           # systemd unit binds to graphical-session.target, which uwsm activates
           # on maximal; the dwl session is a plain script, so suckless starts the
-          # server from dwl's autostart instead (see ../suckless/dwl.nix). Every
+          # server from dwl's autostart instead (see ./dwl.nix). Every
           # spawn point keeps a fallback bind to plain foot in case the server is
           # down.
           server.enable = true;

@@ -88,10 +88,10 @@ machine **is**.
 
 ### Read these before writing a new file
 
-- `modules/home/ccache.nix` — the **only** file whose aspect is not implied by its path
-  (it lives under `home/`, declares `dev`). Invariant 4, demonstrated.
-- `modules/suckless/dwl.nix`, `modules/maximal/hyprland.nix` — one concern spanning both
-  `nixos` and `homeManager` in one file. Invariant 3, half-demonstrated.
+- `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
+  Nothing about its location says which. Invariant 4, demonstrated.
+- `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
+  `homeManager` in one file. Invariant 3, half-demonstrated.
 
 **No file yet contributes to two aspects.** The `font.nix` sketch above is the target, not
 something you can copy from the repo. Copying a nearby file will reproduce the divergences
@@ -145,13 +145,18 @@ lives — this is where things happen to sit, not a schema to pattern-match a ne
 ```
 flake.nix                    # inputs + mkFlake + import-tree. Rarely touched.
 modules/
-  lib/mk-hosts.nix           # the generator: the ONE permitted central wiring point
+  aspects.nix                # declares the flake.modules option
+  hosts/generator.nix        # the generator: the ONE permitted central wiring point
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
   display/                   # typed monitor options + renderers (flake.lib.monitors)
   <concern>.nix              # a concern; declares its own aspect membership
   <concern>/*.nix            # a concern too large for one file
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
+
+**A basename is a sort key.** Moving a file between directories is free, but renaming one
+changes where its contributions land in list-valued options, which reaches store paths.
+Measured, and it is why `monitors.nix` still carries a name its concern outgrew.
 
 There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
 directory. Creating one is a structural regression — say so instead of doing it.
@@ -459,9 +464,9 @@ Existing code is therefore **not** a safe template — see the exemplars named i
    from the generator (§7.3).
 2. **Aspects are named after host archetypes** — `core`, `dev`, `suckless`, `maximal`.
    `maximal` fuses three concerns: the Hyprland session, the heavy app set, and stylix.
-3. **Paths still imply aspects.** 104 of 105 files have membership determined by their
-   directory; only `modules/home/ccache.nix` declares an aspect its path does not.
-   No file yet declares two aspects.
+3. **No file yet declares two aspects.** The directory tree no longer encodes class or
+   archetype, but each file still contributes to exactly one aspect, so a concern that
+   serves several is still split across several files.
 4. **The consequence:** `font` is split across three files (`core` declares
    `options.suckless.font`, `suckless` installs packages, `maximal` sets the size) and
    `mako` across two. The one-file form in §2 is the fix.

@@ -36,7 +36,7 @@
         wmenuFlagsC = lib.concatMapStringsSep ", " (f: ''"${f}"'') wmenuFlags;
         wmenuFlagsSh = lib.escapeShellArgs wmenuFlags;
 
-        ocr-copy = pkgs.callPackage ../_pkgs/ocr-copy.nix {};
+        ocr-copy = pkgs.callPackage ./_pkgs/ocr-copy.nix {};
 
         foot = "${pkgs.foot}/bin/foot";
         footclient = "${pkgs.foot}/bin/footclient";

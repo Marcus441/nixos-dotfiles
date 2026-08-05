@@ -59,12 +59,13 @@ which is what §11.2 is about.
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which
   reaches derivation hashes. When splitting one aspect into two, put the new names where
   the old one sat so the split is a partition, not a reordering.
-- **File names are not — measured under `types.raw`.** Renaming a file moves no store path
-  and does not change `home.packages` order; module tree *depth and shape* matter, file
-  position does not. **This is the assumption the whole ordering rests on, and Step 1 can
-  invalidate it:** if `deferredModule` stamps `_file` from the containing file, renames
-  become hash-moving. If Step 1 keeps `deferredModule`, re-measure before treating a
-  rename as free in Steps 3–8, and correct this bullet.
+- **Directory moves are free; basename changes are not.** Measured during Step 0 under
+  `types.raw`: moving all 70-odd files out of their aspect directories left every target
+  byte-identical, but renaming one file `monitors.nix` → `dwl-monitors.nix` moved its
+  contribution from position 1 to 11 in `home.packages` and shifted swift5's closure.
+  A basename is a sort key. **Preserve basenames unless the step is allowed to move
+  paths.** Step 1 may change even this — if `deferredModule` stamps `_file` from the
+  containing file, directory moves become hash-moving too; re-measure if it sticks.
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
