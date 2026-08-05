@@ -74,18 +74,23 @@ which is what §11.2 is about.
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which
   reaches derivation hashes. When splitting one aspect into two, put the new names where
   the old one sat so the split is a partition, not a reordering.
-- **Renaming moves store paths; moving between directories does not.** `import-tree`
-  orders by **basename, globally** — probed directly: `modules/zzz-dir/aaa.nix` loads
-  before `modules/aab.nix`, the reverse of full-path order. Position sets where a file's
-  contributions land in list-valued options, which sets `buildEnv` order.
+- **What reaches store paths is the relative order of files contributing to the *same*
+  aspect.** `import-tree` walks depth-first, per-directory alphabetical (see `CLAUDE.md`
+  §4). But `home.packages` is the concatenation over the aspect list, so interleaving files
+  of *different* aspects is invisible — the aspect list already separated them.
 
-  Step 0 confirmed both halves: ~70 files changed directory with every target
-  byte-identical, while renaming `monitors.nix` → `dwl-monitors.nix` moved its package
-  from position 1 to 11 and shifted swift5's closure.
+  Step 0 measured both sides. Relocating ~70 files was byte-identical, because a total
+  flatten preserves within-aspect relative order. Renaming `monitors.nix` →
+  `dwl-monitors.nix` moved its package from position 1 to 11, because it changed that
+  file's rank among its own aspect's siblings.
 
-  **Preserve basenames unless the step is allowed to move paths.** Step 1 can invalidate
-  this — if `deferredModule` keys on `_file`, directory moves become hash-moving too.
-  Re-measure if it sticks.
+  **A partial move is therefore not automatically free.** Step 6 surfaces `_hyprland/*.nix`
+  into `modules/`, moving them relative to hyprland-aspect files that are already flat —
+  which is why its row says **changes**, and now says it for a reason rather than a guess.
+
+  Step 1 can invalidate all of this: if `deferredModule` keys on `_file`, directory moves
+  become hash-moving too. Re-measure if it sticks — and measure rather than predict
+  regardless, since discovery order is not strictly positional (`CLAUDE.md` §4).
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
@@ -137,18 +142,22 @@ drops dangling-symlink noise, which is expected and not a real difference.
 
 ## Step 0 — Flatten the directory tree (§11.3)
 
-**First, because renames are free right now and may not stay that way.**
+**First, because a total flatten is free and may not stay that way.** *(Done — `8b28361`.)*
 
-`modules/home/` and `modules/nixos/` are the first row of `CLAUDE.md` §10's anti-pattern
-table — paths encoding class. `modules/maximal/` and `modules/suckless/` encode a host
-archetype. Under Invariant 4 none of them mean anything, but an agent reading the tree as
-a schema will reproduce them.
+`modules/home/` and `modules/nixos/` were the first row of `CLAUDE.md` §10's anti-pattern
+table — paths encoding class. `modules/maximal/` and `modules/suckless/` encoded a host
+archetype. Under Invariant 4 none of them meant anything, but an agent reading the tree as
+a schema would have reproduced them.
 
-Renaming is currently **provably free**: renaming a file changes neither the store paths
-nor `home.packages` order, both measured directly. Step 1 may change that — if
-`deferredModule` stamps `_file` from the containing file, a rename becomes a hash-moving
-event forever after. Buy the reorganisation now, at zero, rather than later at an unknown
-price.
+The original rationale here was that *renames* are free. **That was wrong**, and Step 0 is
+where it was caught: it rested on renaming `modules/jq.nix`, a file that sets only
+`programs.jq.enable` and so contributes nothing positional to `home.packages`. A null
+experiment.
+
+What is true is narrower and was enough: a *total* flatten preserves within-aspect relative
+order, so it costs nothing, while Step 1 may make even directory moves hash-moving. The
+reorganisation was worth buying at zero rather than at an unknown price — but see the
+ground rules for what that does and does not license.
 
 Do **not** change any aspect membership: this step is a pure rename, so that any path
 movement is unambiguous evidence of something you did not expect.

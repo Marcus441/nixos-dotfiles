@@ -154,15 +154,26 @@ modules/
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
 
-**`import-tree` orders files by basename, globally — not by full path.** Verified with a
-probe: `modules/zzz-dir/aaa.nix` is loaded *before* `modules/aab.nix`, the reverse of
-full-path order.
+**Import order is a depth-first walk, per-directory alphabetical.** From import-tree's
+source: `builtins.attrNames` returns names sorted, and directories recurse inline at their
+own name's position. Component-wise path order — not a global basename sort. The `/_`
+filter is `hasInfix "/_"`, a literal substring test on the full path, which is exactly the
+"anywhere in the path" rule above.
 
-The consequence reaches derivation hashes. A file's position sets where its contributions
-land in list-valued options, `home.packages` among them, which sets `buildEnv` input order.
-So **renaming a file moves store paths; moving it between directories does not.** That is
-why Step 0 relocated ~70 files with zero effect, and why `monitors.nix` still carries a
-name its concern has outgrown.
+**What reaches store paths is narrower than that.** A host's `home.packages` is the
+concatenation over its *aspect list*, in host-list order; within each aspect, contributions
+land in discovery order. So only the **relative order of files contributing to the same
+aspect** matters. Interleaving files of different aspects is invisible — the aspect list
+already separated them.
+
+That predicts both things Step 0 measured: relocating ~70 files was byte-identical because
+a total flatten preserves within-aspect relative order, while renaming `monitors.nix` moved
+its package from position 1 to 11 because it changed that file's rank among its own
+aspect's siblings. It is also why a *partial* move is not automatically free.
+
+Treat this as a working model, not a mechanism. A controlled probe produced a definition
+order this model does not predict, so discovery order is not strictly positional. **Measure
+with the recipe below; do not predict.**
 
 There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
 directory. Creating one is a structural regression — say so instead of doing it.
