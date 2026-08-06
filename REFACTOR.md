@@ -380,7 +380,8 @@ table assigned to step 3, and a follow-up commit correcting text that named the 
 aspect — that one does move swift5, since two of the strings are generated output.*
 
 *No shared-session aspect was created. Nothing is duplicated between the two sessions:
-the overlap — wl-clipboard, cliphist, brightnessctl — already sits in `core`, and dwl
+the overlap — wl-clipboard, cliphist, brightnessctl — already sits in `core` (`brightnessctl`
+no longer does: step 7 moved it to `hyprland` **and** `laptop`), and dwl
 carries its own portal config while Hyprland gets portals from `programs.hyprland`. The
 `tiling` option namespace in §3 is still unbuilt; dwl's mod key is a `#define` in a C
 patch and it has no gaps at all, so there is no shared value to lift yet. Step 6 is better
@@ -482,7 +483,9 @@ against the letter of this step, each measured first:*
 
 *`modules/common-packages.nix` — five nixos packages with no concern between them — is the
 same defect as `packages/` and survives. It is not in §12, so closing it is a choice, not a
-ratchet obligation.)*
+ratchet obligation. **It was closed anyway** in `317abf5`: the five went to the concerns
+that own them, staying in `environment.systemPackages` rather than moving to the user
+profile, which is recorded as an accepted choice in `CLAUDE.md` §13.)*
 
 Two halves, both finishing the archetype story.
 
@@ -546,9 +549,12 @@ vocabulary cost nothing to introduce. What remains below genuinely needs hardwar
 
 **All of the following now hold, checked rather than assumed.** The ten aspect names in the
 repo are `apps core dev dwl gaming hyprland laptop nvidia palette stylix` — every one a
-decision some host makes differently. Ten files declare more than one aspect or class:
-`font.nix` and `bash.nix` declare three each; `nix.nix`, `net.nix`, `brightnessctl.nix`,
-`dwl.nix`, `mako.nix`, `gtk.nix`, `hyprland.nix` and `neovim.nix` declare two.
+decision some host makes differently. **Sixteen** files declare more than one aspect or
+class — `bash`, `brightnessctl`, `clipboard`, `dwl`, `font`, `git`, `gtk`, `hyprland`,
+`launcher`, `lock`, `mako`, `neovim`, `net`, `nix`, `screenshot`, `xdg` — against 91 that
+declare any. This said "ten" until the intent aspects (`clipboard`, `launcher`, `lock`,
+`screenshot`, `xdg`) landed after it was written, and it had missed `git.nix` besides.
+`CLAUDE.md` §2 carries the current count; recount there rather than trusting this line.
 
 Nine files remain under `/_`, all non-modules: `_pkgs/ocr-copy.nix` is callPackage'd,
 `_walker/*`, `_yazi/*` and `_wallpapers.nix` are value-imported data, and

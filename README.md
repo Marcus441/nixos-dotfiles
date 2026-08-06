@@ -1,7 +1,15 @@
 # NixOS Config
 
-This is my personal NixOS configuration, featuring a Kanagawa Dragon themed
-desktop environment.
+My personal NixOS configuration, featuring a Kanagawa Dragon themed desktop.
+
+It follows **the dendritic pattern**: every `.nix` file under `modules/` is a
+flake-parts module, and NixOS / home-manager modules are stored as option values
+under `flake.modules.<class>.<aspect>` rather than imported from paths. There are
+no profile directories and no per-class trees — a host is a short list of aspect
+names, and adding a feature means adding one file.
+
+`CLAUDE.md` is the authority on the pattern and its invariants. This file only
+covers getting a machine running.
 
 ## Inspiration and Attribution
 
@@ -15,110 +23,191 @@ under the **GNU General Public License v3.0 (GPL-3.0)**, in accordance with the
 original project's licensing. You can find a copy of the license in the
 `LICENSE` file within this repository.
 
-## Features
+## Hosts
 
-- **Kanagawa Dragon Theme:** A consistent and eye-pleasing muted yet saturated
-  theme across both profiles
-- **Two desktop profiles**, selected per host in `flake.nix`:
-  - **maximal:** Hyprland with walker, waybar, fish + starship, ghostty,
-    tmux and stylix-driven (base16) theming
-  - **suckless:** dwl (bar patch) with foot, wmenu, mako and bash, themed by a
-    hand-carried base24 palette (`home-manager/profiles/suckless/colors.nix`)
-    instead of stylix
-- **Per-host `dev` toggle:** docker, qemu/quickemu, aarch64 binfmt emulation
-  and ccache are gated behind a `dev` flag per host (`nixos/dev`); compilers
-  come from project devshells, not the system
-- **Flake templates registry:** `nix flake init -t templates#<name>` resolves
-  to [nix-templates](https://github.com/Marcus441/nix-templates) on every host
-- **Neovim** from a dedicated flake:
-  [neovim.nix](https://github.com/Marcus441/neovim.nix)
-- **Multiple Hosts:** Designed to be easily adaptable for various machines
-- **Home Manager Integration:** Seamless management of user-specific
-  configurations
+| Host | Machine | Session | Aspects |
+| --- | --- | --- | --- |
+| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl palette` |
+| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland stylix apps` |
+| `UM790pro` | dev machine | Hyprland | `dev core hyprland stylix apps` |
+
+Six build targets: three `nixosConfigurations.<host>` and three
+`homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
+separately rather than as a NixOS module.
+
+## Aspects
+
+An aspect is a decision or a capability that some host declines. It is not a
+magnitude and not a host archetype — the archetype is the *list*, not an entry
+in it.
+
+| Aspect | Meaning |
+| --- | --- |
+| `core` | Everything no host opts out of |
+| `hyprland` | Hyprland session: waybar, hypridle, hyprlock, hyprpaper |
+| `dwl` | dwl session: a patched dwl, wmenu |
+| `stylix` | Theming driven by stylix from a base16 scheme |
+| `palette` | Theming from a hand-carried base24 palette, no stylix |
+| `apps` | The heavy app set: thunderbird, discord, obs, kdenlive, yazi |
+| `dev` | Docker, qemu, aarch64 binfmt, ccache |
+| `gaming` | Steam and gamemode |
+| `nvidia` | NVIDIA drivers |
+| `laptop` | Wifi powersave, backlight, a longer battery-notification timeout |
+
+`laptop` is deliberately small: `power-profiles-daemon` and `upower` stay in
+`core`, because waybar runs a battery module on the desktops too and a too-small
+aspect is recoverable where a broken power path is not. The terminal (`foot`),
+the editor and the shell are `core` — every host gets them regardless of
+session.
+
+`hyprland` and `dwl` are mutually exclusive, as are `stylix` and `palette`.
+Portable intents — `launcher`, `screenshot`, `clipboard`, `lock` — are option
+namespaces set by whichever session aspect a host takes, so nothing binds a
+session-specific command directly.
 
 ## Layout
 
 ```
-flake.nix              hosts (hostname/stateVersion/profile/dev) and wiring
-hosts/<hostname>/      hardware config, host-local packages, monitor layout
-nixos/
-  core/                every host: boot, audio, net, nix settings, nh, ly, ...
-  dev/                 dev tooling, self-gated by the per-host `dev` flag
-  profiles/            maximal | suckless system-side profile modules
-home-manager/
-  core/                every host: neovim, git, firefox, cli tools, ...
-  profiles/            maximal (hyprland stack) | suckless (dwl stack)
-  pkgs/                small custom packages (ocr-copy)
+flake.nix                    inputs + mkFlake + import-tree. Rarely touched.
+statix.toml                  lint config; see CLAUDE.md §13 for the one refusal
+modules/
+  aspects.nix                declares the flake.modules option
+  hosts/generator.nix        builds both output sets from each host record
+  hosts/<hostname>.nix       what the machine IS: aspects + machine facts
+  display/                   typed monitor options and renderers
+  <concern>.nix              one concern; declares its own aspect membership
+hosts/<hostname>/            hardware-configuration.nix only (machine-generated)
+scripts/verify.sh            builds or compares all six targets
 ```
 
-## Installation
+File paths carry no meaning — a path never encodes a class, a host or an
+aspect. Membership is declared inside each file, so files move freely.
 
-To get started with this NixOS setup, follow these steps:
+## Adding a host
 
-1. **Install NixOS:** Refer to the official
-   [NixOS Installation Guide](https://nixos.org/manual/nixos/stable/#sec-installation)
-   for instructions on installing the base system.
+Everything a machine needs lives in one file. There is no central list to edit
+and no profile to pick.
 
-2. **Clone this Repository:**
+1. **Install NixOS** using the official
+   [installation guide](https://nixos.org/manual/nixos/stable/#sec-installation),
+   then clone this repository:
 
    ```bash
    git clone https://github.com/Marcus441/nixos-dotfiles.git ~/dotfiles/flake
    cd ~/dotfiles/flake
    ```
 
-3. **Prepare Your Host Configuration:** Navigate to the `hosts` directory and
-   copy one of the existing host configurations as a starting point for your
-   machine. Replace `<hostname>` with your desired machine's name.
+2. **Drop in the hardware config.** This is the one machine-generated file, and
+   it is never edited by hand:
 
    ```bash
-   cd hosts
-   cp -r UM790pro <hostname> # Example: cp -r UM790pro my-laptop
-   cd <hostname>
+   mkdir -p hosts/<hostname>
+   cp /etc/nixos/hardware-configuration.nix hosts/<hostname>/
    ```
 
-4. **Copy `hardware-configuration.nix`:** Place your system's
-   `hardware-configuration.nix` file into your newly created host directory.
-
-   ```bash
-   cp /etc/nixos/hardware-configuration.nix ./
-   ```
-
-5. **Customize Packages:** Edit `local-packages.nix` in your host directory
-   for host-only software, and the shared sets in
-   `nixos/core/common-packages.nix` / `home-manager/core/packages.nix`.
-
-6. **Update `flake.nix` for Your System:** Modify the `flake.nix` file at the
-   root of the repository to reflect your `homeStateVersion`, `user`, and your
-   host entry. Each host picks a `profile` (`maximal` or `suckless`) and
-   whether it carries dev tooling (`dev`):
+3. **Write `modules/hosts/<hostname>.nix`.** The record is matched strictly, so
+   every field below must be present — a typo is an evaluation error rather than
+   a silently missing module:
 
    ```nix
-   homeStateVersion = "25.11";
-   user = "<your_username>";
-   hosts = [
-     {
-       hostname = "<hostname>";
-       stateVersion = "<your_state_version>";
-       profile = "maximal"; # or "suckless"
-       dev = true;          # docker/qemu/binfmt/ccache on this host
-     }
-   ];
+   _: {
+     hosts.<hostname> = {
+       hostname = "<hostname>";          # must equal the attribute name
+       system = "x86_64-linux";
+       stateVersion = "25.11";
+
+       # What this machine is. Order is load-bearing: it sets module merge
+       # order, which reaches derivation hashes.
+       aspects = ["core" "hyprland" "stylix" "apps"];
+
+       fontSize = 12;
+       hardware = ../../hosts/<hostname>/hardware-configuration.nix;
+
+       # name, width and height are required; description defaults to null and
+       # refresh to 60. A description is an EDID string from `hyprctl monitors
+       # -j`, which survives replugging where a connector does not.
+       monitors = [
+         {
+           name = "DP-1";
+           width = 2560;
+           height = 1440;
+           refresh = 144;
+         }
+       ];
+       input.sensitivity = 0;
+
+       packages = {pkgs, ...}: {
+         environment.systemPackages = with pkgs; [];
+       };
+
+       nixos = {
+         pkgs,
+         stateVersion,
+         hostname,
+         ...
+       }: {
+         networking.hostName = hostname;
+         system.stateVersion = stateVersion;
+       };
+     };
+   }
    ```
 
-7. **Rebuild Your System:** After making the necessary changes, navigate back
-   to the root of the repository and rebuild.
+   The generator derives both `nixosConfigurations.<hostname>` and
+   `homeConfigurations."marcus@<hostname>"` from the attribute name, so they
+   cannot drift apart. It rejects a `hostname` that disagrees with its attribute
+   and an aspect name that resolves in no class.
+
+4. **Build before switching.** Flakes only see tracked files, so stage first:
 
    ```bash
-   git add . # flakes only see tracked files
+   git add -A
+   ./scripts/verify.sh build          # all six targets
+   ```
 
-   # First install:
+5. **Switch.**
+
+   ```bash
    sudo nixos-rebuild switch --flake .#<hostname>
-   home-manager switch --flake .#<user>@<hostname>
+   home-manager switch --flake .#marcus@<hostname>
 
-   # After that, nh (configured in nixos/core/nh.nix) is the daily driver:
+   # after the first install, nh is the daily driver
    nh os switch
    nh home switch
    ```
+
+## Adding a feature
+
+Create `modules/<concern>.nix` and declare which aspects it contributes to. One
+file may serve several aspects and both classes at once — that is the pattern
+working, not duplication:
+
+```nix
+_: {
+  flake.modules.homeManager.core = [ {programs.foo.enable = true;} ];
+  flake.modules.nixos.hyprland   = [ {services.foo.enable = true;} ];
+}
+```
+
+Nothing imports it: `import-tree` discovers every file under `modules/`. To
+extend an existing feature, add another file targeting the same aspect rather
+than growing one file or adding an enable flag.
+
+Custom packages go in `perSystem.packages` in the file that uses them — there is
+no `pkgs/` or `overlays/` directory, because a derivation belongs beside the
+config that consumes it.
+
+## Verifying
+
+```bash
+./scripts/verify.sh build                    # build all six targets
+OLD=../previous ./scripts/verify.sh          # compare six targets against a worktree
+nix flake check                              # cheap eval sweep
+```
+
+For structural changes, prove nothing moved but order — build the same targets
+from a worktree at the previous commit and compare store paths. `CLAUDE.md` §10
+carries the full recipe.
 
 ## Contributions
 

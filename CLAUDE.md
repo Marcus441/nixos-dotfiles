@@ -210,6 +210,7 @@ lives — this is where things happen to sit, not a schema to pattern-match a ne
 
 ```
 flake.nix                    # inputs + mkFlake + import-tree. Rarely touched.
+statix.toml                  # lint config; the one disabled rule is argued in §13
 modules/
   aspects.nix                # declares the flake.modules option
   hosts/generator.nix        # the generator: the ONE permitted central wiring point
@@ -455,11 +456,12 @@ evaluation to reach a value, importing a module file by path to call a function 
                      flake.modules.homeManager.core."[definition 15-entry 1]"': 100000
   ```
 
-  Provenance across 105 files, which is the whole reason for it.
+  Provenance across the 98 files `import-tree` loads, which is the whole reason for it.
 
   The risk this was tested for is elements *vanishing* — a multi-element aspect list
-  declared in one file could in principle lose members. `modules/stylix.nix` is the only
-  such declaration in the repo (2 elements) and both survived. Note that
+  declared in one file could in principle lose members. Two files declare one:
+  `modules/stylix.nix` and `modules/walker.nix`, each pairing a flake input's module with
+  a local one, and all four elements survived. Note that
   `builtins.length config.flake.modules.…` does **not** detect this; the byte-identity
   block in §10 does. Re-run all three parts of it if you change the element type again.
 - **`config` shadowing** inside `flake.modules.*` — see §8.
