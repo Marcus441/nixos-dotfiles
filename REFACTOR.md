@@ -1,9 +1,9 @@
-# Refactor Plan: close the §11 divergences
+# Refactor Plan: close the §12 divergences
 
-`CLAUDE.md` defines the invariants and lists, in §11, the places this repo does not yet
+`CLAUDE.md` defines the invariants and lists, in §12, the places this repo does not yet
 satisfy them. **That list is the backlog. This file is the order.** Its item numbers are
 stable identities — a closed item is deleted and the rest keep their numbers — so the
-§11.x citations below stay valid as the list shrinks.
+§12.x citations below stay valid as the list shrinks.
 
 Do not restate the invariants here — read them there. This document only says what to do
 next, in what sequence, and how to know it worked.
@@ -23,11 +23,11 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
 - [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
 - [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
-- [x] **Step 3** — theming becomes an axis; §11.3 and §11.4 closed
+- [x] **Step 3** — theming becomes an axis; §12.3 and §12.4 closed
 - [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
-- [x] **Step 5** — `gaming` and `nvidia`; §11.6 closed
-- [x] **Step 6** — surface the `_` trees; §11.5 closed
-- [x] **Step 7** — retire the archetype names, create `laptop`; §11.2 closed
+- [x] **Step 5** — `gaming` and `nvidia`; §12.6 closed
+- [x] **Step 6** — surface the `_` trees; §12.5 closed
+- [x] **Step 7** — retire the archetype names, create `laptop`; §12.2 closed
 - [ ] Step 8 — darwin groundwork *(intent aspects done ahead of it; the rest needs a Mac)*
 
 ---
@@ -44,7 +44,7 @@ mbp      = ["core" "laptop" "dev" "aerospace" "stylix"];   # planned
 ```
 
 Every name there is a decision some host makes differently. `core` is what nobody opts out
-of. `maximal` and `suckless` are gone, which is what §11.2 was about.
+of. `maximal` and `suckless` are gone, which is what §12.2 was about.
 
 Two deviations from the list this section originally targeted, both deliberate:
 
@@ -63,7 +63,7 @@ likewise untouched: gpc still does not take it.
 
 ## Ground rules
 
-`CLAUDE.md` §8, §9 and §12 apply in full. The ones that bite hardest here:
+`CLAUDE.md` §9, §10 and §13 apply in full. The ones that bite hardest here:
 
 - **`swift5` is a control only where a step says so.** It is *not* a blanket stop
   condition — Steps 3, 4, 6, 7 and 8 change swift5 by design. Each step states its own
@@ -87,7 +87,7 @@ likewise untouched: gpc still does not take it.
   the old one sat so the split is a partition, not a reordering.
 - **What reaches store paths is the relative order of files contributing to the *same*
   aspect.** `import-tree` walks depth-first, per-directory alphabetical (see `CLAUDE.md`
-  §4). But `home.packages` is the concatenation over the aspect list, so interleaving files
+  §5). But `home.packages` is the concatenation over the aspect list, so interleaving files
   of *different* aspects is invisible — the aspect list already separated them.
 
   Step 0 measured both sides. Relocating ~70 files was byte-identical, because a total
@@ -114,7 +114,7 @@ likewise untouched: gpc still does not take it.
 
   That is one data point and it is narrow. It says nothing about moves that *change*
   position, which is exactly what Step 6 does. Measure rather than predict regardless, since
-  discovery order is not strictly positional (`CLAUDE.md` §4).
+  discovery order is not strictly positional (`CLAUDE.md` §5).
 - **Declare before you reference.** The generator rejects an aspect name that resolves in
   no class, so a commit that adds a name to a host list before the declaring file exists
   will not evaluate. Land the file first, or both in one commit — otherwise a bisect
@@ -164,11 +164,11 @@ drops dangling-symlink noise, which is expected and not a real difference.
 
 ---
 
-## Step 0 — Flatten the directory tree (§11.3)
+## Step 0 — Flatten the directory tree (§12.3)
 
 **First, because a total flatten is free and may not stay that way.** *(Done — `8b28361`.)*
 
-`modules/home/` and `modules/nixos/` were the first row of `CLAUDE.md` §10's anti-pattern
+`modules/home/` and `modules/nixos/` were the first row of `CLAUDE.md` §11's anti-pattern
 table — paths encoding class. `modules/maximal/` and `modules/suckless/` encoded a host
 archetype. Under Invariant 4 none of them meant anything, but an agent reading the tree as
 a schema would have reproduced them.
@@ -203,14 +203,14 @@ modules/
 change all six targets inside a step whose entire verification is byte-identity. Surfacing
 is Step 6.
 
-**`lib/` disappears.** `CLAUDE.md` §4 blesses `lib/mk-hosts.nix` while §10 forbids `lib/`
+**`lib/` disappears.** `CLAUDE.md` §4 blesses `lib/mk-hosts.nix` while §11 forbids `lib/`
 directories; moving the two files resolves the contradiction without amending either. The
 generator belongs with the host schema it enforces, and `generator.nix` is obviously not a
-hostname, so §5's "add `modules/hosts/<hostname>.nix`" recipe stays unambiguous.
+hostname, so §6's "add `modules/hosts/<hostname>.nix`" recipe stays unambiguous.
 
 ### The four collision directories, and what becomes of them
 
-A flat rename collides on four basenames — which is `§11.4` surfacing as a filename clash,
+A flat rename collides on four basenames — which is `§12.4` surfacing as a filename clash,
 not an obstacle. Each gets a directory here, but they do **not** share a fate, and the
 difference matters:
 
@@ -256,7 +256,7 @@ in Steps 1 and 2. Those steps describe files by concern; resolve them by content
 **Second, because it improves the diagnostics for every step after it.** *(Done — it holds.
 `modules/aspects.nix` now uses `deferredModule`; all six targets came out byte-identical,
 and `modules/stylix.nix`, the repo's only multi-element declaration, kept both elements.
-The measured before/after conflict message is in `CLAUDE.md` §8.)*
+The measured before/after conflict message is in `CLAUDE.md` §9.)*
 
 This placement is a deliberate trade, not an obvious ordering. Step 1 is the only step
 whose outcome is unknown, and it sits *before* Step 2 proves the harness works — so if it
@@ -297,12 +297,12 @@ first so you know where to look:
 grep -rn "flake\.modules\.[a-zA-Z]*\.[a-zA-Z0-9_-]* = \[" --include=*.nix modules/
 ```
 
-If it holds, keep it and update `CLAUDE.md` §8. If elements vanish, revert and record in
-§8 what actually happened — which is more than is known today either way.
+If it holds, keep it and update `CLAUDE.md` §9. If elements vanish, revert and record in
+§9 what actually happened — which is more than is known today either way.
 
-## Step 2 — `extraSpecialArgs` → `_module.args` (§11.1)
+## Step 2 — `extraSpecialArgs` → `_module.args` (§12.1)
 
-*(Done — §11.1 closed. Six targets byte-identical, so the harness is sound.)*
+*(Done — §12.1 closed. Six targets byte-identical, so the harness is sound.)*
 
 Closes Invariant 5. ~10 files take `monitors`, `sensitivity`, `hostname`, `user` or
 `homeStateVersion` as module arguments.
@@ -322,9 +322,9 @@ Two things to watch:
   should not reorder anything. Confirmed, not assumed: the home injection was added as a
   **new first element** of the modules list and all six targets stayed byte-identical.
 - **Nothing may use these to compute `imports`.** That is infinite recursion, not an error
-  (`CLAUDE.md` §7). Grep for `imports` in the ten consumers before starting. This caught a
+  (`CLAUDE.md` §8). Grep for `imports` in the ten consumers before starting. This caught a
   real one: `modules/home-manager.nix` computed `imports` from the `inputs` module arg.
-  `inputs` was never in §11.1's list, but Invariant 5 forbids the channel it arrived on, so
+  `inputs` was never in §12.1's list, but Invariant 5 forbids the channel it arrived on, so
   it and the two other `inputs` consumers moved to closure first, as a separate commit.
 
 - Verify: all six targets byte-identical.
@@ -334,7 +334,7 @@ its output must be identical. If anything drifts here, the fault is in `verify.s
 generator, or your understanding of the module system — not in the change. Diagnose it
 before going near Step 3, where drift is expected and would hide the same bug.
 
-## Step 3 — Theming becomes an axis (§11.3, §11.4)
+## Step 3 — Theming becomes an axis (§12.3, §12.4)
 
 *(Done — both items closed. `modules/font.nix` now declares `core`, `palette` and `stylix`
 in one file and is the §2 exemplar; `modules/mako.nix` declares two. Only the membership
@@ -357,7 +357,7 @@ Then collapse the duplicates into the one-file form from `CLAUDE.md` §2:
 - `font` — one file declaring `core` (the option), `stylix`, and `palette`.
 - `mako` — one file declaring `stylix` and `palette`.
 - Rename the option namespace `suckless.font` → `desktop.font`. An option in `core` named
-  after an aspect is the clearest single symptom of §11.2.
+  after an aspect is the clearest single symptom of §12.2.
 
 `suckless.font.size = 20` on the maximal hosts is not theming — it is a HiDPI fact about
 those two machines. Push it to the host record and deliver it via Step 2's `_module.args`.
@@ -365,9 +365,9 @@ those two machines. Push it to the host record and deliver it via Step 2's `_mod
 - Verify: 6 OK. All three hosts change. `diff-closures` must still be empty — the packages
   are the same, only which aspect contributes them changes.
 
-## Step 4 — `hyprland` and `dwl` aspects (§11.2)
+## Step 4 — `hyprland` and `dwl` aspects (§12.2)
 
-*(Done. `suckless` no longer exists; `maximal` survives as the app set and §11.2 is
+*(Done. `suckless` no longer exists; `maximal` survives as the app set and §12.2 is
 narrowed to it. All six targets stayed byte-identical, against a predicted **changes** on
 all three — an aspect name does not reach the output, and neither renaming `suckless` to
 `dwl` in place nor inserting `hyprland` ahead of `stylix` reordered anything measurable.
@@ -415,9 +415,9 @@ cursor, qt and mako to `palette`; dwl and the wlr-randr monitor script to `dwl`.
 aspect name and remove it from swift5's list in this step. If anything is left over, it is
 a member you have not classified — do not leave the name alive to hold it.
 
-## Step 5 — `gaming` and `nvidia` (§11.6)
+## Step 5 — `gaming` and `nvidia` (§12.6)
 
-*(Done — §11.6 closed, and the verification matched this step's prediction exactly.
+*(Done — §12.6 closed, and the verification matched this step's prediction exactly.
 mangohud and protonup-ng moved into `gaming` as well: they were the whole of gpc's
 `packages` escape hatch, so the field is now the same empty stub swift5 carries. gpc's
 `nixos` block is down to hostname and stateVersion.)*
@@ -433,9 +433,9 @@ Small, self-contained, and the first step that makes a host file read as an arch
 
 - Verify: swift5 and UM790pro byte-identical; gpc's nixos target moves, home does not.
 
-## Step 6 — Surface the `_` trees (§11.5)
+## Step 6 — Surface the `_` trees (§12.5)
 
-*(Done — §11.5 closed. 21 modules surfaced across five trees; the `_module.args.render`
+*(Done — §12.5 closed. 21 modules surfaced across five trees; the `_module.args.render`
 bridge is gone. Nine files keep their underscore and all nine are sanctioned uses:
 `_pkgs/ocr-copy.nix` is callPackage'd, and `_walker/*`, `_yazi/*` and `_wallpapers.nix`
 are value-imported data. `_dormant/ghostty` is still there — dormant code is a sanctioned
@@ -465,9 +465,9 @@ Anything Hyprland-specific pulled into a `let` at the top of the file — a pack
 reference, an `inputs.hyprland` attribute — now evaluates on swift5 too. Keep such
 references inside the aspect list where laziness protects them.
 
-## Step 7 — Retire the archetype names, create `laptop` (§11.2)
+## Step 7 — Retire the archetype names, create `laptop` (§12.2)
 
-*(Done — §11.2 closed, and `modules/packages/` dissolved with it. Three things went
+*(Done — §12.2 closed, and `modules/packages/` dissolved with it. Three things went
 against the letter of this step, each measured first:*
 
 - *`power-profiles-daemon` and `upower` stayed in `core`. waybar runs a battery module on
@@ -481,7 +481,7 @@ against the letter of this step, each measured first:*
   intent rather than changing behaviour.*
 
 *`modules/common-packages.nix` — five nixos packages with no concern between them — is the
-same defect as `packages/` and survives. It is not in §11, so closing it is a choice, not a
+same defect as `packages/` and survives. It is not in §12, so closing it is a choice, not a
 ratchet obligation.)*
 
 Two halves, both finishing the archetype story.
@@ -503,10 +503,10 @@ assumes it. If in doubt leave it in `core` and take only the unambiguous members
 aspect that is too small is recoverable, a broken suspend path on the primary machine is
 not.
 
-At this point `CLAUDE.md` §11 items 1–6 are closed and every host file reads as an
+At this point `CLAUDE.md` §12 items 1–6 are closed and every host file reads as an
 archetype.
 
-## Step 8 — Darwin groundwork (§11.7)
+## Step 8 — Darwin groundwork (§12.7)
 
 Only once the above is done, and only when there is a Mac to test on.
 
@@ -514,13 +514,13 @@ Only once the above is done, and only when there is a Mac to test on.
 `screenshot`, `clipboard` and `lock` are option namespaces in `core`, set by `hyprland`
 and `dwl` and read by their binds. Adding `aerospace` later means setting the same four
 options, not finding every hard-coded command. `notifications` was considered and
-rejected — see `CLAUDE.md` §6 for why an intent with only one implementation is ceremony.
+rejected — see `CLAUDE.md` §7 for why an intent with only one implementation is ceremony.
 
 That commit was byte-identical on all six targets, dwl's compiled binary included, so the
 vocabulary cost nothing to introduce. What remains below genuinely needs hardware.
 
 - Add `aarch64-darwin` to `systems`. `perSystem` evaluates for *every* entry, unlike
-  aspect contents (`CLAUDE.md` §6), so every Linux-only output must be excluded —
+  aspect contents (`CLAUDE.md` §7), so every Linux-only output must be excluded —
   **by attribute, not by value**:
 
   ```nix
@@ -533,7 +533,7 @@ vocabulary cost nothing to introduce. What remains below genuinely needs hardwar
   packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux pkgs.someLinuxOnlyThing;
   ```
 
-  Same eval-time versus config-time distinction as `CLAUDE.md` §8; this is the one place
+  Same eval-time versus config-time distinction as `CLAUDE.md` §9; this is the one place
   it bites hardest.
 - Add `mkDarwin` to the generator alongside `makeSystem` and `mkHome`.
 - Standalone Home Manager is the asset here: the same home aspects activate on macOS with
@@ -554,7 +554,7 @@ Nine files remain under `/_`, all non-modules: `_pkgs/ocr-copy.nix` is callPacka
 `_walker/*`, `_yazi/*` and `_wallpapers.nix` are value-imported data, and
 `_dormant/ghostty` is dormant code.
 
-`CLAUDE.md` §11 lists only item 7, and:
+`CLAUDE.md` §12 lists only item 7, and:
 
 - no `specialArgs` or `extraSpecialArgs` anywhere;
 - at least one file contributing to two aspects, and no concern split across files
@@ -563,13 +563,13 @@ Nine files remain under `/_`, all non-modules: `_pkgs/ocr-copy.nix` is callPacka
   gone, not merely unused;
 - **no directory named for a class or an archetype** — no `modules/home/`,
   `modules/nixos/`, `modules/maximal/`, `modules/suckless/`, and no `lib/`.
-  `CLAUDE.md` §10 row one;
+  `CLAUDE.md` §11 row one;
 - **no `packages` concern** — neither `modules/packages.nix` nor `modules/packages/`.
   A package list is not a decision; its members belong with the concerns that want them;
 - `/_` only on non-modules;
 - every host file readable as "what this machine is".
 
-Update §11 in the same commit that closes each item. It is a ratchet, not a ledger.
+Update §12 in the same commit that closes each item. It is a ratchet, not a ledger.
 
 ---
 
