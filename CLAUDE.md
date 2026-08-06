@@ -88,14 +88,17 @@ machine **is**.
 
 ### Read these before writing a new file
 
+- `modules/font.nix` — the sketch above, as an actual file: `core` declares the option,
+  `palette` installs the fonts, `stylix` hands the same option to stylix. One concern,
+  three audiences. **This is the file to copy.**
+- `modules/mako.nix` — the same daemon under two theming regimes, one file.
 - `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
   Nothing about its location says which. Invariant 4, demonstrated.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
   `homeManager` in one file. Invariant 3, half-demonstrated.
 
-**No file yet contributes to two aspects.** The `font.nix` sketch above is the target, not
-something you can copy from the repo. Copying a nearby file will reproduce the divergences
-in §11 — check there first.
+Those four aside, most files still contribute to exactly one aspect. Copying an arbitrary
+nearby file will reproduce the divergences in §11 — check there first.
 
 ---
 
@@ -490,12 +493,6 @@ are safe to cite. `REFACTOR.md` cites them.
 
 2. **Aspects are named after host archetypes** — `core`, `dev`, `suckless`, `maximal`.
    `maximal` fuses three concerns: the Hyprland session, the heavy app set, and stylix.
-3. **No file yet declares two aspects.** The directory tree no longer encodes class or
-   archetype, but each file still contributes to exactly one aspect, so a concern that
-   serves several is still split across several files.
-4. **The consequence:** `font` is split across three files (`core` declares
-   `options.suckless.font`, `suckless` installs packages, `maximal` sets the size) and
-   `mako` across two. The one-file form in §2 is the fix.
 5. **`_` is used for grouping**, not only for non-modules — ~21 ordinary modules are
    hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`, `_opencode`.
 6. **`gaming` and `nvidia` are inline** in gpc's host file rather than being aspects.

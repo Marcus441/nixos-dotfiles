@@ -5,15 +5,6 @@
       {pkgs, ...}: let
         theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
       in {
-        home.packages = with pkgs; [
-          font-awesome
-          nerd-fonts.iosevka-term
-          nerd-fonts.symbols-only
-          noto-fonts
-          noto-fonts-color-emoji
-          noto-fonts-lgc-plus
-        ];
-
         # The pinned stylix drives home.pointerCursor without the (newly required)
         # explicit enable, which trips a home-manager deprecation warning. State it
         # explicitly here; drop this once stylix is updated post-refactor.
@@ -41,25 +32,6 @@
             name = "Adwaita";
             size = 24;
             package = pkgs.adwaita-icon-theme;
-          };
-
-          fonts = {
-            monospace = {
-              name = "IosevkaTerm Nerd Font Mono";
-              package = pkgs.nerd-fonts.iosevka-term;
-            };
-            sansSerif = {
-              name = "Inter";
-              package = pkgs.inter;
-            };
-            serif = {
-              name = "Noto Serif";
-              package = pkgs.noto-fonts;
-            };
-            emoji = {
-              name = "Noto Color Emoji";
-              package = pkgs.noto-fonts-color-emoji;
-            };
           };
 
           icons = {

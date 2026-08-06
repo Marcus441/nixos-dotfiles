@@ -23,7 +23,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
 - [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
 - [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
-- [ ] Step 3 — theming becomes an axis
+- [x] **Step 3** — theming becomes an axis; §11.3 and §11.4 closed
 - [ ] Step 4 — `hyprland` and `dwl` aspects
 - [ ] Step 5 — `gaming` and `nvidia`
 - [ ] Step 6 — surface the `_` trees
@@ -319,6 +319,12 @@ generator, or your understanding of the module system — not in the change. Dia
 before going near Step 3, where drift is expected and would hide the same bug.
 
 ## Step 3 — Theming becomes an axis (§11.3, §11.4)
+
+*(Done — both items closed. `modules/font.nix` now declares `core`, `palette` and `stylix`
+in one file and is the §2 exemplar; `modules/mako.nix` declares two. Only the membership
+commit moved store paths; the rename, the host-fact move and the collapse were each
+byte-identical. `suckless` survives this step — dwl and the wlr-randr monitor script are
+still in it, and it ends in Step 4.)*
 
 **The step that demonstrates the pattern, and it moves no files.**
 
