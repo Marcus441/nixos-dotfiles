@@ -25,7 +25,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
 - [x] **Step 3** — theming becomes an axis; §11.3 and §11.4 closed
 - [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
-- [ ] Step 5 — `gaming` and `nvidia`
+- [x] **Step 5** — `gaming` and `nvidia`; §11.6 closed
 - [ ] Step 6 — surface the `_` trees
 - [ ] Step 7 — retire the archetype names, create `laptop`
 - [ ] Step 8 — darwin groundwork
@@ -400,6 +400,11 @@ aspect name and remove it from swift5's list in this step. If anything is left o
 a member you have not classified — do not leave the name alive to hold it.
 
 ## Step 5 — `gaming` and `nvidia` (§11.6)
+
+*(Done — §11.6 closed, and the verification matched this step's prediction exactly.
+mangohud and protonup-ng moved into `gaming` as well: they were the whole of gpc's
+`packages` escape hatch, so the field is now the same empty stub swift5 carries. gpc's
+`nixos` block is down to hostname and stateVersion.)*
 
 The clearest latent aspects in the repo: nvidia drivers, steam, gamescope and gamemode are
 inline in gpc's host `nixos` block. That is reusable configuration written as host-local —

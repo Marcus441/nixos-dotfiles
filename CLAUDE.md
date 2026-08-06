@@ -496,7 +496,6 @@ are safe to cite. `REFACTOR.md` cites them.
    set under a name that does not say so. It becomes `apps` in step 7.
 5. **`_` is used for grouping**, not only for non-modules — ~21 ordinary modules are
    hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`, `_opencode`.
-6. **`gaming` and `nvidia` are inline** in gpc's host file rather than being aspects.
 7. **No darwin.** `systems = ["x86_64-linux"]`; `mbp` is planned, not present.
 
 ---
