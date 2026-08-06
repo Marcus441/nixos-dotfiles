@@ -13,7 +13,7 @@
         };
 
         environment.sessionVariables = {
-          STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${user}/.steam/root/compatibilitytoolds.d";
+          STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${user}/.steam/root/compatibilitytools.d";
         };
 
         environment.systemPackages = with pkgs; [
