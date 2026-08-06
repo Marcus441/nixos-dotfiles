@@ -1,4 +1,7 @@
 _: {
+  # reads config.lib.stylix.colors
+  aspectRequires.apps = ["stylix"];
+
   flake.modules.homeManager.apps = [
     (
       {config, ...}: let

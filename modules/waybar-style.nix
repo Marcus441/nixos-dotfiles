@@ -1,4 +1,7 @@
 _: {
+  # reads config.lib.stylix.colors
+  aspectRequires.hyprland = ["stylix"];
+
   flake.modules.homeManager.hyprland = [
     (
       {config, ...}: let

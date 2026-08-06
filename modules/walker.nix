@@ -1,4 +1,7 @@
 {inputs, ...}: {
+  # _walker/style.nix reads config.lib.stylix.colors
+  aspectRequires.apps = ["stylix"];
+
   flake.modules.homeManager.apps = [
     inputs.walker.homeManagerModules.default
     (

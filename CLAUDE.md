@@ -212,7 +212,7 @@ lives — this is where things happen to sit, not a schema to pattern-match a ne
 flake.nix                    # inputs + mkFlake + import-tree. Rarely touched.
 statix.toml                  # lint config; the one disabled rule is argued in §13
 modules/
-  aspects.nix                # declares the flake.modules option
+  aspects.nix                # declares the flake.modules and aspectRequires options
   hosts/generator.nix        # the generator: the ONE permitted central wiring point
   hosts/record.nix           # the typed host record the generator consumes
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
@@ -333,7 +333,16 @@ two files and let hosts differ by which aspect they take.
 
 Add `modules/hosts/<hostname>.nix`. The generator produces both output sets from the
 attribute name, so they cannot drift; it rejects a `hostname` that disagrees with its
-attribute, and rejects aspect names that resolve in no class.
+attribute, aspect names that resolve in no class, and an aspect list that leaves an
+`aspectRequires` entry unmet.
+
+**When an aspect reads another aspect's options, say so where the reading happens.**
+`hyprland` and `apps` read `config.lib.stylix.colors`, so a host taking either without
+`stylix` dies with `attribute 'stylix' missing` pointing into a guest module and naming
+neither the host nor the aspect. The seven files that do the reading each declare
+`aspectRequires.<aspect> = ["stylix"];` beside their membership, and the generator rejects
+a host that leaves one unmet. Declaring it in the file that creates the dependency is what
+keeps it from drifting — a central table would not know when a file stops reading stylix.
 
 ### Add a package or overlay
 

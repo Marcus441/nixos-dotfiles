@@ -35,18 +35,50 @@
     (name: !lib.any (class: config.flake.modules.${class} ? ${name}) (lib.attrNames config.flake.modules))
     aspects;
 
+  # `aspectRequires` merges from the files that read another aspect's options
+  # (aspects.nix). Without this the failure is `attribute 'stylix' missing`
+  # pointing at a line in a guest module, naming neither the host nor the aspect
+  # that is actually missing.
+  unmetRequires = aspects:
+    lib.unique (lib.concatMap
+      (a:
+        map (r: "${a} needs ${r}")
+        (lib.filter (r: !lib.elem r aspects) (config.aspectRequires.${a} or [])))
+      aspects);
+
+  # A requirement is only ever consulted under a key that is itself an aspect, so
+  # a typo'd key is a requirement that silently never fires -- the failure this
+  # whole check exists to remove, one level up.
+  unknownRequireKeys = unknownAspects (lib.attrNames config.aspectRequires);
+
+  # Data rather than nesting: five throwIfs deep, the nesting hid the order, and
+  # the order is the point -- a bogus aspect name must be reported before the
+  # requirements that could not resolve because of it. Each fold step wraps the
+  # accumulator, so the LAST entry is the outermost and fires FIRST; the list
+  # below reads bottom-to-top.
   checkHost = name: host:
-    lib.throwIf (unknownClasses != [])
-    "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}"
-    (
-      lib.throwIf (host.hostname != name)
-      "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name"
-      (
-        lib.throwIf (unknownAspects host.aspects != [])
-        "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}"
-        host
-      )
-    );
+    lib.foldl' (acc: c: lib.throwIf c.cond c.msg acc) host [
+      {
+        cond = unmetRequires host.aspects != [];
+        msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
+      }
+      {
+        cond = unknownAspects host.aspects != [];
+        msg = "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}";
+      }
+      {
+        cond = unknownRequireKeys != [];
+        msg = "aspectRequires: unknown aspect ${lib.concatStringsSep ", " unknownRequireKeys}";
+      }
+      {
+        cond = host.hostname != name;
+        msg = "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name";
+      }
+      {
+        cond = unknownClasses != [];
+        msg = "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}";
+      }
+    ];
 
   # `packages` and `nixos` sit at different depths on purpose -- see the note on
   # aspectModules. `monitors` and `input` are matched but unused: the host record
