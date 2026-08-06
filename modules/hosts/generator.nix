@@ -49,9 +49,10 @@
     );
 
   # `packages` and `nixos` sit at different depths on purpose -- see the note on
-  # aspectModules. `monitors` and `input` are matched but unused: the pattern is
-  # strict so a typo in an untyped host field is an error here rather than a
-  # silently missing module.
+  # aspectModules. `monitors` and `input` are matched but unused: the host record
+  # is typed, so a typo is now caught at the definition site, but the strict
+  # pattern still forces a newly declared host option to be wired here rather
+  # than silently ignored.
   makeSystem = {
     hostname,
     system,

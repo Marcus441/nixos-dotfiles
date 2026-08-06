@@ -582,7 +582,7 @@ Update §12 in the same commit that closes each item. It is a ratchet, not a led
 ## Out of scope
 
 - Quickshell. Waybar and walker stay.
-- Typing the rest of the host record (issue #3 item 2) and `_class` enforcement on aspect
-  elements (issue #3 item 1).
+- `_class` enforcement on aspect elements (issue #3 item 1). Item 2, typing the host
+  record, is done.
 - Overlays reaching Home Manager. Changing `pkgs` for home configs moves every home store
   path; its own project, with its own switch cycle.

@@ -215,7 +215,7 @@ modules/
   aspects.nix                # declares the flake.modules option
   hosts/generator.nix        # the generator: the ONE permitted central wiring point
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
-  display/                   # typed monitor options + renderers (flake.lib.monitors)
+  display/                   # the typed host record + monitor renderers (flake.lib.monitors)
   <concern>.nix              # a concern; declares its own aspect membership
   <concern>/                 # assets a concern reads; import-tree collects only .nix
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)

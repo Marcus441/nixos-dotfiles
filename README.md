@@ -74,7 +74,7 @@ modules/
   aspects.nix                declares the flake.modules option
   hosts/generator.nix        builds both output sets from each host record
   hosts/<hostname>.nix       what the machine IS: aspects + machine facts
-  display/                   typed monitor options and renderers
+  display/                   the typed host record and monitor renderers
   <concern>.nix              one concern; declares its own aspect membership
 hosts/<hostname>/            hardware-configuration.nix only (machine-generated)
 scripts/verify.sh            builds or compares all six targets
