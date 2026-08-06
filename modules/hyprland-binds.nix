@@ -1,7 +1,11 @@
 {...}: {
   flake.modules.homeManager.hyprland = [
     (
-      {lib, ...}: let
+      {
+        lib,
+        config,
+        ...
+      }: let
         mainMod = "SUPER";
         # footclient needs the foot server (core/foot.nix, step 1.4); the SHIFT
         # variant below spawns plain foot as a fallback if the server is down.
@@ -20,7 +24,7 @@
           {
             _args = [
               "${mainMod} + SHIFT + S"
-              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- grimblast --notify --freeze copysave screen\")")
+              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.screenshot.screen}\")")
             ];
           }
           {
@@ -44,7 +48,7 @@
           {
             _args = [
               "${mainMod} + D"
-              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker\")")
+              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.launcher.command}\")")
             ];
           }
           {
@@ -98,7 +102,7 @@
           {
             _args = [
               "${mainMod} + V"
-              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m clipboard\")")
+              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.clipboard.history}\")")
             ];
           }
           {
@@ -116,7 +120,7 @@
           {
             _args = [
               "Print"
-              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- grimblast --notify --freeze copysave area\")")
+              (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.screenshot.area}\")")
             ];
           }
 

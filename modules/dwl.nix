@@ -12,40 +12,18 @@
         # #rrggbb -> 0xrrggbbff for dwl's colour tables.
         toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
 
-        # Shared wmenu flags: themed to match dwl's bar schemes (normal entries =
-        # SchemeNorm, prompt & selection = SchemeSel) and vertical with 10 lines.
-        # Used by both the launcher (wmenu-run) and the clipboard picker (wmenu).
-        wmenuFlags = [
-          "-f"
-          "${font.name} 10"
-          "-l"
-          "10"
-          "-N"
-          colors.base00
-          "-n"
-          colors.base05
-          "-M"
-          colors.base02
-          "-m"
-          colors.base05
-          "-S"
-          colors.base02
-          "-s"
-          colors.base05
-        ];
-        wmenuFlagsC = lib.concatMapStringsSep ", " (f: ''"${f}"'') wmenuFlags;
-        wmenuFlagsSh = lib.escapeShellArgs wmenuFlags;
-
         ocr-copy = pkgs.callPackage ./_pkgs/ocr-copy.nix {};
+
+        # dwl's binds are a C argv array, so the launcher intent arrives as argv
+        # rather than through its shell rendering.
+        menuArgvC = lib.concatMapStringsSep ", " (a: ''"${a}"'') config.launcher.argv;
+
+        # The intent options hold shell commands; SHCMD embeds them in a C string
+        # literal, which is the only place that quoting has to be re-done.
+        cEsc = lib.replaceStrings [''\'' ''"''] [''\\'' ''\"''];
 
         foot = "${pkgs.foot}/bin/foot";
         footclient = "${pkgs.foot}/bin/footclient";
-        wmenuRun = "${pkgs.wmenu}/bin/wmenu-run";
-        wmenu = "${pkgs.wmenu}/bin/wmenu";
-        grim = "${pkgs.grim}/bin/grim";
-        slurp = "${pkgs.slurp}/bin/slurp";
-        cliphist = "${pkgs.cliphist}/bin/cliphist";
-        wlCopy = "${pkgs.wl-clipboard}/bin/wl-copy";
         wpctl = "${pkgs.wireplumber}/bin/wpctl";
         brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
         playerctl = "${pkgs.playerctl}/bin/playerctl";
@@ -144,7 +122,7 @@
              below (step 1.4); termfbcmd spawns plain foot if the server is down. */
           static const char *termcmd[]      = { "${footclient}", NULL };
           static const char *termfbcmd[]    = { "${foot}", NULL };
-          static const char *menucmd[]      = { "${wmenuRun}", ${wmenuFlagsC}, NULL };
+          static const char *menucmd[]      = { ${menuArgvC}, NULL };
           static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
           static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
           static const char *voldncmd[]     = { "${wpctl}", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-", NULL };
@@ -163,11 +141,11 @@
             { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
             { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },    /* super+c       -> OCR to clip   */
             { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn,                     /* super+shift+s -> shot (screen) */
-              SHCMD("${grim} - | ${wlCopy}") },
+              SHCMD("${cEsc config.screenshot.screen}") },
             { 0,                         XKB_KEY_Print,  spawn,                     /* print         -> shot (area)   */
-              SHCMD("${grim} -g \"$(${slurp})\" - | ${wlCopy}") },
+              SHCMD("${cEsc config.screenshot.area}") },
             { MODKEY,                    XKB_KEY_v,      spawn,                     /* super+v       -> clipboard     */
-              SHCMD("${cliphist} list | ${wmenu} ${wmenuFlagsSh} | ${cliphist} decode | ${wlCopy}") },
+              SHCMD("${cEsc config.clipboard.history}") },
 
             /* --- window & layout management --- */
             { MODKEY,                    XKB_KEY_q,      killclient,       {0} },                /* super+q       -> close      */
