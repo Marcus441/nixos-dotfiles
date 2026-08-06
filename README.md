@@ -201,13 +201,16 @@ config that consumes it.
 
 ```bash
 ./scripts/verify.sh build                    # build all six targets
-OLD=../previous ./scripts/verify.sh          # compare six targets against a worktree
+./scripts/verify.sh                          # compare six targets against HEAD~1
+./scripts/verify.sh <ref>                    # compare against any git ref
+OLD=../previous ./scripts/verify.sh          # compare against an existing worktree
 nix flake check                              # cheap eval sweep
 ```
 
-For structural changes, prove nothing moved but order — build the same targets
-from a worktree at the previous commit and compare store paths. `CLAUDE.md` §10
-carries the full recipe.
+For structural changes, prove nothing moved but order. Compare-mode checks out
+the baseline ref itself and cleans up after; `./scripts/verify.sh HEAD` on a
+clean tree is a no-op that must report 6 PASS, which tests the harness rather
+than the change. `CLAUDE.md` §10 carries the full recipe.
 
 ## Contributions
 

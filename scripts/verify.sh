@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
-# Verify that the refactored flake produces byte-identical build outputs.
+# Verify that the flake produces byte-identical build outputs.
 #
-#   ./scripts/verify.sh          compare current tree against ../dotfiles-old
-#   ./scripts/verify.sh build    build current tree only (Phase 1 / smoke test)
+#   ./scripts/verify.sh build         build current tree only (smoke test)
+#   ./scripts/verify.sh               compare current tree against HEAD~1
+#   ./scripts/verify.sh <ref>         compare current tree against any git ref
+#   OLD=../tree ./scripts/verify.sh   compare against an existing worktree
 #
 # PASS means the output store paths are identical, which is a proof of
 # equivalence, not an eyeball judgement. Any FAIL must be explained before
 # committing.
+#
+# The baseline used to be a fixed `../dotfiles-old` path. That tree is retired,
+# and a fixed baseline answers the wrong question anyway: on a long-lived branch
+# it reports every commit's differences at once, so a change that moved nothing
+# still reads as FAIL. A ref-based baseline compares the change under test.
 
 set -uo pipefail
 
 HOSTS=(swift5 gpc UM790pro)
 USER_NAME=marcus
-OLD=${OLD:-../dotfiles-old}
-MODE=${1:-compare}
+REPO=$(git rev-parse --show-toplevel) || exit 2
 
 fail=0
 pass=0
@@ -33,7 +39,7 @@ build() {
   nix build --no-link --print-out-paths "$1#$2" 2>/dev/null
 }
 
-if [[ $MODE == build ]]; then
+if [[ ${1:-} == build ]]; then
   for h in "${HOSTS[@]}"; do
     while read -r attr; do
       printf '%-70s ' "$h :: ${attr%%.*}"
@@ -52,26 +58,45 @@ if [[ $MODE == build ]]; then
   exit $((fail > 0))
 fi
 
-if [[ ! -d $OLD ]]; then
-  echo "error: baseline tree not found at $OLD"
-  echo "create it with:  git worktree add $OLD main"
-  exit 2
+# An explicit OLD points at a tree that already exists and is not ours to
+# manage. Otherwise check out the ref ourselves and clean up after.
+if [[ -n ${OLD:-} ]]; then
+  if [[ ! -d $OLD ]]; then
+    echo "error: OLD=$OLD is not a directory"
+    exit 2
+  fi
+  # A hand-managed tree may carry uncommitted edits; a ref worktree cannot.
+  git -C "$OLD" add -A >/dev/null 2>&1 || true
+  baseline=$OLD
+  label_ref=$OLD
+else
+  ref=${1:-HEAD~1}
+  if ! rev=$(git rev-parse --verify --quiet "$ref^{commit}"); then
+    echo "error: '$ref' is not a commit"
+    exit 2
+  fi
+  baseline=$(mktemp -d -t verify-baseline-XXXXXX)
+  trap 'git -C "$REPO" worktree remove --force "$baseline" >/dev/null 2>&1' EXIT
+  if ! git -C "$REPO" worktree add --detach "$baseline" "$rev" >/dev/null 2>&1; then
+    echo "error: could not create a worktree at $ref"
+    exit 2
+  fi
+  label_ref="$ref ($(git log -1 --format=%h "$rev"))"
 fi
 
-# The baseline worktree needs its own files staged too.
-git -C "$OLD" add -A >/dev/null 2>&1 || true
+echo "baseline: $label_ref"
+echo
 
 command -v nvd >/dev/null || echo "note: nvd not on PATH; diffs will not be explained"
 
 for h in "${HOSTS[@]}"; do
   while read -r attr; do
-    label="$h :: $(echo "$attr" | cut -d. -f1)"
-    printf '%-50s ' "$label"
+    printf '%-50s ' "$h :: ${attr%%.*}"
 
-    old=$(build "$OLD" "$attr")
+    old=$(build "$baseline" "$attr")
     if [[ -z $old ]]; then
       echo "BASELINE BUILD FAILED"
-      echo "  nix build $OLD#$attr"
+      echo "  nix build $baseline#$attr"
       fail=$((fail + 1))
       continue
     fi
