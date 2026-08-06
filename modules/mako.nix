@@ -7,6 +7,19 @@ _: let
     border-size = 2;
     padding = 10;
   };
+
+  # Per-summary timeouts for notifications either session can raise. Both bind
+  # OCR -- dwl on super+c, Hyprland in its binds -- and ocr-copy reports through
+  # notify-send, so the rule applied to only one session was an omission. The
+  # screenshot rule is inert under dwl, which pipes grim to wl-copy without
+  # notifying; it costs a line and starts working if that ever changes.
+  rules = ''
+    [app-name=notify-send summary="OCR*"]
+    default-timeout=3000
+
+    [summary="*screenshot*"]
+    default-timeout=5000
+  '';
 in {
   # Same daemon, two theming regimes: palette colours it from desktop.colors,
   # stylix is listed in the stylix target set and colours it itself.
@@ -25,6 +38,7 @@ in {
               text-color = colors.base05;
               border-color = colors.base0D;
             };
+          extraConfig = rules;
         };
       }
     )
@@ -47,13 +61,7 @@ in {
             width = 420;
             height = 110;
           };
-        extraConfig = ''
-          [app-name=notify-send summary="OCR*"]
-          default-timeout=3000
-
-          [summary="*screenshot*"]
-          default-timeout=5000
-        '';
+        extraConfig = rules;
       };
     }
   ];
