@@ -17,6 +17,16 @@
     (name: config.flake.modules.${class}.${name} or [])
     aspects;
 
+  # `flake.modules` is an open attrset, so `flake.modules.homemanager.core`
+  # type-checks, is read by nobody, and drops its modules in silence. Measured:
+  # a host built fine with the option it set simply absent. Enumerating the
+  # classes in the option type catches it at the declaring file instead, but
+  # that was measured to move all six targets; this is the same check for free.
+  classes = ["nixos" "homeManager"];
+
+  unknownClasses =
+    lib.filter (c: !lib.elem c classes) (lib.attrNames config.flake.modules);
+
   # An aspect may define only one class -- `dev` is nixos-only -- so
   # aspectModules has to tolerate a miss. That makes a typo silently produce a
   # host with modules missing rather than an error, hence this check.
@@ -26,12 +36,16 @@
     aspects;
 
   checkHost = name: host:
-    lib.throwIf (host.hostname != name)
-    "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name"
+    lib.throwIf (unknownClasses != [])
+    "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}"
     (
-      lib.throwIf (unknownAspects host.aspects != [])
-      "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}"
-      host
+      lib.throwIf (host.hostname != name)
+      "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name"
+      (
+        lib.throwIf (unknownAspects host.aspects != [])
+        "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}"
+        host
+      )
     );
 
   # `packages` and `nixos` sit at different depths on purpose -- see the note on
