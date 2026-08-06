@@ -73,8 +73,9 @@ statix.toml                  lint config; see CLAUDE.md §13 for the one refusal
 modules/
   aspects.nix                declares the flake.modules option
   hosts/generator.nix        builds both output sets from each host record
+  hosts/record.nix           the typed host record the generator consumes
   hosts/<hostname>.nix       what the machine IS: aspects + machine facts
-  display/                   the typed host record and monitor renderers
+  display/                   monitor renderers
   <concern>.nix              one concern; declares its own aspect membership
 hosts/<hostname>/            hardware-configuration.nix only (machine-generated)
 scripts/verify.sh            builds or compares all six targets

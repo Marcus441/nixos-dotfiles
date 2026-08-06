@@ -214,8 +214,9 @@ statix.toml                  # lint config; the one disabled rule is argued in Â
 modules/
   aspects.nix                # declares the flake.modules option
   hosts/generator.nix        # the generator: the ONE permitted central wiring point
+  hosts/record.nix           # the typed host record the generator consumes
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
-  display/                   # the typed host record + monitor renderers (flake.lib.monitors)
+  display/                   # monitor renderers (flake.lib.monitors)
   <concern>.nix              # a concern; declares its own aspect membership
   <concern>/                 # assets a concern reads; import-tree collects only .nix
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
