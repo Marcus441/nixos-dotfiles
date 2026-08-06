@@ -620,6 +620,17 @@ are safe to cite. `REFACTOR.md` cites them.
   move would change which profile they install into, which is a behavioural change wearing
   a refactor's clothes. **This is an accepted choice, not a divergence** — it is deliberately
   absent from §12, so do not "fix" it as ratchet work.
+- **`statix.toml` disables `repeated_keys`, and it stays disabled.** The rule fires on a
+  file that assigns `flake.modules.<class>.<aspect>` more than once and proposes collapsing
+  it to `flake = { modules.homeManager.core = …; }`. That is the wrong direction here: it
+  buries the aspect name a level deeper and makes parallel declarations read as one thing
+  with parts. The nine files it flags are the six §2 exemplars — `bash`, `clipboard`,
+  `font`, `launcher`, `mako`, `screenshot` — plus the three
+  `hosts/*/hardware-configuration.nix`, which §4 says never to edit. It is silent on all 75
+  single-aspect files, so its signal is inverted: it flags the best files and the untouchable
+  ones. Measured twice — applying it to `bash.nix` produced exactly that nesting and dropped
+  the file's only rationale comment, and splitting mako's battery rule into a third aspect
+  *raised* the count. **An accepted choice, not a divergence**, deliberately absent from §12.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`, `easy-hosts`) without
   being asked. This repo depends on `flake-parts` and `import-tree` only.
 - **Unresolved — ask rather than inventing a convention:** secrets management (sops-nix vs
