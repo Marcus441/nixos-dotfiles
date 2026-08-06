@@ -2,11 +2,9 @@
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {
-        # Font *definition* shared by every host (consumed by ./foot.nix).
-        # The font *packages* are aspect business: ./packages.nix installs them
-        # directly, ../stylix.nix via stylix.
-        # Option namespace kept as `suckless.font` until its consumers move.
-        options.suckless.font = {
+        # Font *definition* shared by every host. The font *packages* are aspect
+        # business: palette installs them directly, stylix via stylix.
+        options.desktop.font = {
           name = lib.mkOption {
             type = lib.types.str;
             default = "IosevkaTerm Nerd Font Mono";

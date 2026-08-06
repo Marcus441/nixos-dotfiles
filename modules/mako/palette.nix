@@ -2,7 +2,7 @@
   flake.modules.homeManager.suckless = [
     (
       {config, ...}: let
-        inherit (config.suckless) colors font;
+        inherit (config.desktop) colors font;
       in {
         services.mako = {
           enable = true;

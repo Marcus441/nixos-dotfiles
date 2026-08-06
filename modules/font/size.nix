@@ -1,7 +1,7 @@
 {...}: {
   flake.modules.homeManager.maximal = [
     {
-      suckless.font.size = 20;
+      desktop.font.size = 20;
     }
   ];
 }

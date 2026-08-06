@@ -6,7 +6,7 @@
         lib,
         ...
       }: let
-        inherit (config.suckless) colors;
+        inherit (config.desktop) colors;
 
         # hex ("#rrggbb") -> "r;g;b" for ANSI truecolor escapes.
         hexPair = s: let

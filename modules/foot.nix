@@ -6,7 +6,7 @@
         lib,
         ...
       }: let
-        inherit (config.suckless) font colors;
+        inherit (config.desktop) font colors;
         fontStr =
           "${font.name}:size=${toString font.size}"
           + lib.optionalString (!font.ligatures) ":fontfeatures=-calt,-liga,-clig,-dlig";

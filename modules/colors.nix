@@ -2,16 +2,14 @@
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {
-        # base24 "Kanagawa Dragon" palette, defined explicitly (independent of
-        # stylix, which the suckless profile does not carry). Consumed by ./bash.nix
-        # for coloured man pages and by the suckless modules (foot, dwl, ...).
-        # Option namespace kept as `suckless.colors` until its consumers move.
-        options.suckless.colors = lib.mkOption {
+        # base24 "Kanagawa Dragon" palette, defined explicitly so it does not
+        # depend on stylix, which not every host carries.
+        options.desktop.colors = lib.mkOption {
           type = lib.types.attrsOf lib.types.str;
-          description = "base24 colour palette (hex, with leading '#') for the suckless profile.";
+          description = "base24 colour palette (hex, with leading '#').";
         };
 
-        config.suckless.colors = {
+        config.desktop.colors = {
           base00 = "#181616";
           base01 = "#282727";
           base02 = "#393836";

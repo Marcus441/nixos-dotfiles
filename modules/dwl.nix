@@ -7,7 +7,7 @@
         config,
         ...
       }: let
-        inherit (config.suckless) colors font;
+        inherit (config.desktop) colors font;
 
         # #rrggbb -> 0xrrggbbff for dwl's colour tables.
         toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";

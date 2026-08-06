@@ -7,7 +7,7 @@
         config,
         ...
       }: {
-        options.suckless.cursor = {
+        options.desktop.cursor = {
           name = lib.mkOption {
             type = lib.types.str;
             default = "DMZ-Black";
@@ -28,16 +28,16 @@
         config = {
           home.pointerCursor = {
             enable = true;
-            name = config.suckless.cursor.name;
-            package = config.suckless.cursor.package;
-            size = config.suckless.cursor.size;
+            name = config.desktop.cursor.name;
+            package = config.desktop.cursor.package;
+            size = config.desktop.cursor.size;
             gtk.enable = true;
             x11.enable = true;
           };
 
           home.sessionVariables = {
-            XCURSOR_THEME = config.suckless.cursor.name;
-            XCURSOR_SIZE = toString config.suckless.cursor.size;
+            XCURSOR_THEME = config.desktop.cursor.name;
+            XCURSOR_SIZE = toString config.desktop.cursor.size;
           };
         };
       }
