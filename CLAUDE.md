@@ -494,8 +494,6 @@ are safe to cite. `REFACTOR.md` cites them.
 2. **`maximal` is a magnitude name.** `suckless` is gone and `maximal` no longer fuses the
    session or the theming — those left in steps 3 and 4 — so what remains is the heavy app
    set under a name that does not say so. It becomes `apps` in step 7.
-5. **`_` is used for grouping**, not only for non-modules — ~21 ordinary modules are
-   hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`, `_opencode`.
 7. **No darwin.** `systems = ["x86_64-linux"]`; `mbp` is planned, not present.
 
 ---

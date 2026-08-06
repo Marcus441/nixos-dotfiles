@@ -26,7 +26,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 3** — theming becomes an axis; §11.3 and §11.4 closed
 - [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
 - [x] **Step 5** — `gaming` and `nvidia`; §11.6 closed
-- [ ] Step 6 — surface the `_` trees
+- [x] **Step 6** — surface the `_` trees; §11.5 closed
 - [ ] Step 7 — retire the archetype names, create `laptop`
 - [ ] Step 8 — darwin groundwork
 
@@ -68,7 +68,7 @@ which is what §11.2 is about.
   | 3 theming | **changes** | **changes** | **changes** |
   | 4 sessions | identical *(predicted "changes")* | identical | identical |
   | 5 gaming/nvidia | identical | **changes** (nixos) | identical |
-  | 6 surface `_` | **changes** | **changes** | **changes** |
+  | 6 surface `_` | identical | **changes** | **changes** *(surfacing was free; see below)* |
   | 7 rename aspects | **changes** | **changes** | **changes** |
 
   Treat a deviation from that column as the signal, not "swift5 moved".
@@ -86,9 +86,16 @@ which is what §11.2 is about.
   `dwl-monitors.nix` moved its package from position 1 to 11, because it changed that
   file's rank among its own aspect's siblings.
 
-  **A partial move is therefore not automatically free.** Step 6 surfaces `_hyprland/*.nix`
-  into `modules/`, moving them relative to hyprland-aspect files that are already flat —
-  which is why its row says **changes**, and now says it for a reason rather than a guess.
+  **A partial move is therefore not automatically free** — but step 6 measured this
+  particular one at zero. Surfacing `_hyprland/*.nix` into `modules/` moved 21 files
+  relative to aspect siblings that were already flat, *and* replaced the tree's
+  hand-written import order (binds, hyprland, monitors, core, animations, rules) with
+  alphabetical discovery order, and all six targets stayed byte-identical. What actually
+  moved gpc and UM790pro in step 6 was the membership change in 6d, not any of the moves.
+
+  So the reasoning that predicted **changes** here was sound and the conclusion was still
+  wrong: within-aspect rank only reaches the output when two files contribute to the same
+  list-valued option, and these did not. Measure.
 
   Step 1 could have invalidated all of this — if `deferredModule` keyed on `_file`,
   directory moves would become hash-moving. It stuck, and the re-measurement says the model
@@ -418,6 +425,17 @@ Small, self-contained, and the first step that makes a host file read as an arch
 - Verify: swift5 and UM790pro byte-identical; gpc's nixos target moves, home does not.
 
 ## Step 6 — Surface the `_` trees (§11.5)
+
+*(Done — §11.5 closed. 21 modules surfaced across five trees; the `_module.args.render`
+bridge is gone. Nine files keep their underscore and all nine are sanctioned uses:
+`_pkgs/ocr-copy.nix` is callPackage'd, and `_walker/*`, `_yazi/*` and `_wallpapers.nix`
+are value-imported data. `_dormant/ghostty` is still there — dormant code is a sanctioned
+use too, so deleting it stays a judgement call rather than a divergence.*
+
+*Session config files needed a `hyprland-` prefix: `hyprland.nix` and `monitors.nix`
+already existed at the top level, which is what a flat namespace costs. The trap this step
+carries did not fire — nothing Hyprland-specific escaped into a top-level `let`, and
+swift5 building byte-identical is the evidence.)*
 
 ~21 ordinary modules are hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`,
 `_opencode` for no reason beyond the boundary having been drawn around whole subtrees.
