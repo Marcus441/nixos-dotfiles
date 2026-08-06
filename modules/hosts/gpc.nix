@@ -49,8 +49,6 @@
         enable32Bit = true;
       };
 
-      nixpkgs.config.allowUnfree = true;
-
       services.xserver.videoDrivers = ["nvidia"];
 
       hardware.nvidia = {
