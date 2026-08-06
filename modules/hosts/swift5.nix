@@ -3,7 +3,7 @@
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "dwl" "palette"];
+    aspects = ["dev" "core" "laptop" "dwl" "palette"];
 
     fontSize = 16;
 
@@ -32,8 +32,6 @@
       networking.hostName = hostname;
 
       system.stateVersion = stateVersion;
-
-      networking.networkmanager.wifi.powersave = true;
     };
   };
 }

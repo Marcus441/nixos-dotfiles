@@ -22,7 +22,6 @@
 
           # Network & System
           bc
-          brightnessctl
           dnsutils
           httpie
           man-pages
