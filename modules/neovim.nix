@@ -24,4 +24,16 @@
       }
     )
   ];
+
+  # Snacks renders documents and images inline; these are what it shells out to.
+  flake.modules.homeManager.apps = [
+    (
+      {pkgs, ...}: {
+        home.packages = with pkgs; [
+          ghostscript
+          tectonic
+        ];
+      }
+    )
+  ];
 }

@@ -1,4 +1,15 @@
 {...}: {
+  flake.modules.homeManager.core = [
+    (
+      {pkgs, ...}: {
+        home.packages = with pkgs; [
+          dnsutils
+          httpie
+        ];
+      }
+    )
+  ];
+
   flake.modules.nixos.core = [
     (
       {lib, ...}: {

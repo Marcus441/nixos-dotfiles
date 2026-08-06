@@ -1,4 +1,8 @@
 {...}: {
+  flake.modules.homeManager.core = [
+    ({pkgs, ...}: {home.packages = [pkgs.nix-prefetch-scripts];})
+  ];
+
   flake.modules.nixos.core = [
     {
       nix = {
