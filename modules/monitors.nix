@@ -1,7 +1,7 @@
 {config, ...}: let
   top = config;
 in {
-  flake.modules.homeManager.suckless = [
+  flake.modules.homeManager.dwl = [
     (
       {
         pkgs,

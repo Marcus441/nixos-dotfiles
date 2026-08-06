@@ -3,7 +3,7 @@
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "suckless" "palette"];
+    aspects = ["dev" "core" "dwl" "palette"];
 
     fontSize = 16;
 

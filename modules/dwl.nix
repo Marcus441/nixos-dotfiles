@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.suckless = [
+  flake.modules.homeManager.dwl = [
     (
       {
         pkgs,
@@ -269,7 +269,7 @@
     )
   ];
 
-  flake.modules.nixos.suckless = [
+  flake.modules.nixos.dwl = [
     (
       {pkgs, ...}: let
         wallpaper = pkgs.fetchFromGitHub {
