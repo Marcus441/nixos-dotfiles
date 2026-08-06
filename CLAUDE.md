@@ -153,7 +153,7 @@ modules/
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
   display/                   # typed monitor options + renderers (flake.lib.monitors)
   <concern>.nix              # a concern; declares its own aspect membership
-  <concern>/*.nix            # a concern too large for one file
+  <concern>/                 # assets a concern reads; import-tree collects only .nix
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
 
@@ -376,7 +376,7 @@ evaluation to reach a value, importing a module file by path to call a function 
   listed. `foot` is the worked example.
 - **Every *file* is evaluated once**, at the flake-parts level — so a syntax or eval error
   anywhere breaks every host. But an **aspect's contents are only evaluated by hosts that
-  take it**: a `throw` inside `maximal` does not break swift5. Verified, not assumed.
+  take it**: a `throw` inside `apps` does not break swift5. Verified, not assumed.
 - **Eval-time vs config-time.** Within an aspect a host *does* take,
   `lib.mkIf pkgs.stdenv.isLinux { ... pkgs.grim ... }` still evaluates `pkgs.grim`. Guard
   the reference, not just the config, or split the file. This does **not** mean a
@@ -481,19 +481,18 @@ config.flake.modules.homeManager.hyprland
 
 ## 11. Known divergences
 
-The repo does not yet satisfy §1. **This is a ratchet, not a ledger:** if a task touches a
-file listed here, migrate that file in the same change, or state plainly why not. Nothing
-below is grandfathered, and the count is supposed to fall. See `REFACTOR.md`.
+**This is a ratchet, not a ledger:** if a task touches a file listed here, migrate that
+file in the same change, or state plainly why not. Nothing below is grandfathered, and the
+count is supposed to fall. See `REFACTOR.md`.
 
-Existing code is therefore **not** a safe template — see the exemplars named in §2.
+Steps 0–7 of that plan closed items 1–6, so the structural invariants in §1 now hold and
+the exemplars in §2 are real files rather than sketches. What is left is a platform gap,
+not a pattern violation.
 
 **Item numbers are stable identities, not positions.** A closed item is deleted and the
 survivors keep their numbers, so this list does not necessarily start at 1 and its numbers
 are safe to cite. `REFACTOR.md` cites them.
 
-2. **`maximal` is a magnitude name.** `suckless` is gone and `maximal` no longer fuses the
-   session or the theming — those left in steps 3 and 4 — so what remains is the heavy app
-   set under a name that does not say so. It becomes `apps` in step 7.
 7. **No darwin.** `systems = ["x86_64-linux"]`; `mbp` is planned, not present.
 
 ---

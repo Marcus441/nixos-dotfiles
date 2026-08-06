@@ -27,28 +27,37 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
 - [x] **Step 5** — `gaming` and `nvidia`; §11.6 closed
 - [x] **Step 6** — surface the `_` trees; §11.5 closed
-- [ ] Step 7 — retire the archetype names, create `laptop`
+- [x] **Step 7** — retire the archetype names, create `laptop`; §11.2 closed
 - [ ] Step 8 — darwin groundwork
 
 ---
 
 ## Target state
 
-When this is done, host files read as archetypes and nothing else:
+**Reached after step 7**, except `mbp`. What the host files actually say now:
 
 ```nix
-swift5   = ["core" "laptop" "dev" "dwl" "palette"];
+swift5   = ["dev" "core" "laptop" "dwl" "palette"];
 gpc      = ["core" "gaming" "nvidia" "hyprland" "stylix" "apps"];
-UM790pro = ["core" "dev" "hyprland" "stylix" "apps"];
+UM790pro = ["dev" "core" "hyprland" "stylix" "apps"];
 mbp      = ["core" "laptop" "dev" "aerospace" "stylix"];   # planned
 ```
 
 Every name there is a decision some host makes differently. `core` is what nobody opts out
-of. Two entries are genuine open questions, flagged at the steps that create them: whether
-`gpc` takes `apps`, and whether `dev` on a gaming rig is really absent or just untested.
+of. `maximal` and `suckless` are gone, which is what §11.2 was about.
 
-`maximal` and `suckless` do not survive. They are host archetypes wearing aspect names,
-which is what §11.2 is about.
+Two deviations from the list this section originally targeted, both deliberate:
+
+- **`dev` still precedes `core`** on swift5 and UM790pro. The target wrote `core` first,
+  but swapping them reorders two aspects for cosmetics, and aspect order reaches derivation
+  hashes. Left alone.
+- **`gpc` takes `apps`.** This was flagged as an open question — a gaming rig may not want
+  thunderbird — and the answer here is only "status quo": `maximal` → `apps` was a rename,
+  and dropping the aspect from gpc is a behavioural change someone should choose on
+  purpose. Still open, now as a preference rather than a refactor step.
+
+The other flagged question, whether `dev` on a gaming rig is absent or untested, is
+likewise untouched: gpc still does not take it.
 
 ---
 
@@ -69,7 +78,7 @@ which is what §11.2 is about.
   | 4 sessions | identical *(predicted "changes")* | identical | identical |
   | 5 gaming/nvidia | identical | **changes** (nixos) | identical |
   | 6 surface `_` | identical | **changes** | **changes** *(surfacing was free; see below)* |
-  | 7 rename aspects | **changes** | **changes** | **changes** |
+  | 7 rename aspects | **changes** | **changes** | **changes** *(home only; both toplevels identical)* |
 
   Treat a deviation from that column as the signal, not "swift5 moved".
 
@@ -458,6 +467,23 @@ references inside the aspect list where laziness protects them.
 
 ## Step 7 — Retire the archetype names, create `laptop` (§11.2)
 
+*(Done — §11.2 closed, and `modules/packages/` dissolved with it. Three things went
+against the letter of this step, each measured first:*
+
+- *`power-profiles-daemon` and `upower` stayed in `core`. waybar runs a battery module on
+  both Hyprland desktops, which is the status tooling this step warns about. Taking only
+  the unambiguous members leaves `laptop` at one setting, which the step explicitly allows.*
+- *`brightnessctl` went to `hyprland` **and** `laptop`, not `laptop` alone. hypridle and the
+  Hyprland binds call it by bare name, so laptop-only would have silently broken brightness
+  control on gpc and UM790pro.*
+- *swift5's wifi powersave moved into `laptop`, but UM790pro's explicit `false` stayed in
+  its host file. Measured: the NixOS default is already false, so that line documents
+  intent rather than changing behaviour.*
+
+*`modules/common-packages.nix` — five nixos packages with no concern between them — is the
+same defect as `packages/` and survives. It is not in §11, so closing it is a choice, not a
+ratchet obligation.)*
+
 Two halves, both finishing the archetype story.
 
 **`maximal` → `apps`.** Whatever survives Steps 3, 4 and 6 is the heavy app set. Decide
@@ -509,6 +535,16 @@ Only once the above is done, and only when there is a Mac to test on.
 ---
 
 ## Done means
+
+**All of the following now hold, checked rather than assumed.** The ten aspect names in the
+repo are `apps core dev dwl gaming hyprland laptop nvidia palette stylix` — every one a
+decision some host makes differently. Ten files declare more than one aspect or class:
+`font.nix` and `bash.nix` declare three each; `nix.nix`, `net.nix`, `brightnessctl.nix`,
+`dwl.nix`, `mako.nix`, `gtk.nix`, `hyprland.nix` and `neovim.nix` declare two.
+
+Nine files remain under `/_`, all non-modules: `_pkgs/ocr-copy.nix` is callPackage'd,
+`_walker/*`, `_yazi/*` and `_wallpapers.nix` are value-imported data, and
+`_dormant/ghostty` is dormant code.
 
 `CLAUDE.md` §11 lists only item 7, and:
 
