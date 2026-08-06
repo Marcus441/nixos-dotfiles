@@ -4,7 +4,7 @@ This repository follows **the dendritic pattern**. Read §1 before editing anyth
 change would violate an invariant, stop and say so rather than working around it — the
 invariants are the whole value of this structure, and a single exception metastasises.
 
-§11 lists where the repo does **not yet** satisfy its own invariants. Read it before
+§12 lists where the repo does **not yet** satisfy its own invariants. Read it before
 concluding that existing code is an example to copy.
 
 | Host | Archetype | Session | Platform |
@@ -35,7 +35,7 @@ User is `marcus`. Six build targets today: three
    "type". Paths are navigation; membership is declared in the file. Files move freely.
 5. **No `specialArgs` / `extraSpecialArgs`.** Static values cross by closure over the
    flake-parts `config`; host-varying values arrive as `_module.args` injected by the host
-   wiring. See §7.
+   wiring. See §8.
 6. **No manual import lists** except the host wiring (§4). `import-tree` discovers
    everything else.
 7. **Aspects are host-agnostic and platform-agnostic.** Machine facts — hostname,
@@ -97,8 +97,15 @@ machine **is**.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
   `homeManager` in one file. Invariant 3, half-demonstrated.
 
-Those four aside, most files still contribute to exactly one aspect. Copying an arbitrary
-nearby file will reproduce the divergences in §11 — check there first.
+**Sixteen files declare more than one aspect or more than one class.** Counted over
+`modules/` excluding `/_`, by `flake.modules.<class>.<aspect>` occurrences: 91 files
+declare at least one, and 16 declare two or more — `bash`, `brightnessctl`, `clipboard`,
+`dwl`, `font`, `git`, `gtk`, `hyprland`, `launcher`, `lock`, `mako`, `neovim`, `net`,
+`nix`, `screenshot`, `xdg`. The other 75 contribute to exactly one.
+
+So the single-aspect file is the majority but not the model. Copying an arbitrary
+neighbour reproduces the majority; the sixteen above are where the second direction of the
+merge is actually demonstrated. Check §12 before treating any file as an example.
 
 ---
 
@@ -116,26 +123,82 @@ An aspect is a **decision or a capability**, never a magnitude and never a host 
 is `core`. Do not make every package an aspect: files already give you per-tool
 granularity, and per-tool *selection* only turns each host into a duplicated manifest.
 
+**A bad name is cheap to fix.** Renaming `suckless` to `dwl` in place left all six targets
+byte-identical (`REFACTOR.md` Step 4, measured against a predicted *changes* on all three
+hosts). The name itself does not reach a store path — only its *position* in a host's
+aspect list does (§5). So a name that has started to lie should be corrected, not kept for
+fear of a rebuild.
+
+The exception is a name that has leaked into generated text. The follow-up commit that
+corrected prose naming the dead aspect *did* move swift5, because two of those strings are
+rendered output rather than comments.
+
 ### Intent vs implementation
 
-Two compositors share ideas (gaps, mod key, keybinding philosophy) but no code. Do **not**
-build one `tiling-wm` aspect that branches internally, and do not force one aspect name to
-mean two implementations — both files would declare the same attribute and merge into any
-host taking it.
+Two compositors share intent — what a key should *do* — but no code. Do **not** build one
+`tiling-wm` aspect that branches internally, and do not force one aspect name to mean two
+implementations — both files would declare the same attribute and merge into any host
+taking it.
 
 Instead: the portable part is an **option namespace**, the implementations are **separate
-aspects**.
+aspects**. `modules/launcher.nix` is the worked example — one file, three memberships:
 
 ```nix
-# modules/tiling.nix — portable intent, no implementation
-{ flake.modules.homeManager.core = [ { options.tiling = { /* gaps, modKey */ }; } ]; }
+# modules/launcher.nix — portable intent, per-session implementation
+{
+  flake.modules.homeManager.core = [
+    ({config, lib, ...}: {
+      options.launcher.argv = lib.mkOption { type = lib.types.listOf lib.types.str; };
+      # plus `launcher.command`, readOnly, = lib.escapeShellArgs config.launcher.argv
+    })
+  ];
 
-# modules/hyprland.nix        reads config.tiling, declares flake.modules.*.hyprland
-# modules/dwl.nix             reads config.tiling, declares flake.modules.*.dwl
+  flake.modules.homeManager.hyprland = [ {launcher.argv = ["walker"];} ];
+
+  flake.modules.homeManager.dwl = [
+    ({config, pkgs, ...}: {
+      launcher.argv = ["${pkgs.wmenu}/bin/wmenu-run"] ++ config.wmenu.flags;
+    })
+  ];
+}
 ```
 
-Hosts take `hyprland` **or** `dwl`. Genuine overlap (locking, notifications, portals,
-clipboard) becomes its own aspect that both take.
+Hosts take `hyprland` **or** `dwl`, and both set the same option. §7 explains why the
+shape is `argv` and not a string.
+
+**The shared namespace is sometimes empty, and zero shared aspects is a valid outcome.**
+This section used to sketch a `tiling` namespace carrying gaps and a mod key. It was never
+built, and Step 4 recorded why: dwl's mod key is a `#define` in a C patch and dwl has no
+gaps at all, so there was no shared *value* to lift. Step 4 likewise created no shared
+session aspect — what the two sessions genuinely share is declared per-session inside the
+one file that owns the concern, as `clipboard.nix`, `lock.nix` and `screenshot.nix` do.
+
+Name an intent when two implementations actually diverge over a value. Naming one to
+complete a set gives an option with no setter and no reader — see §7 on why
+`notifications` is deliberately not an intent.
+
+### A tool invoked by bare name must be installed by every aspect that invokes it
+
+`modules/brightnessctl.nix` declares **both** `hyprland` and `laptop`, installing the same
+package twice. That is correct, and the reasoning generalises:
+
+- hypridle (`on-timeout = "brightnessctl -s set 30"`) and the Hyprland binds
+  (`hl.dsp.exec_cmd("brightnessctl s 10%+")`) invoke it **by bare name**, so it has to be
+  on `PATH` wherever that session runs.
+- swift5 takes `laptop`; gpc and UM790pro take `hyprland` and *not* `laptop`. So
+  `laptop`-only would have silently broken brightness control on both desktops — the
+  concrete failure Step 7 caught.
+- dwl needs neither entry: `modules/dwl.nix` interpolates the store path into the C
+  `config.h` it compiles, so the binary carries its own reference.
+
+**The rule.** If aspect A's config invokes a tool by bare name, every aspect that can
+supply that config must install it. The resulting duplication is *not* an Invariant 3
+failure: Invariant 3 is about one concern being spread across several files, and this is
+one file declaring several memberships — the merge working as intended (§2).
+
+Where the consumer can hold a path instead, interpolating the store path removes the
+duplication and the `PATH` dependency at once. Prefer it when you have the choice; dwl
+does, hypridle's settings string does not.
 
 ---
 
@@ -157,26 +220,8 @@ modules/
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
 
-**Import order is a depth-first walk, per-directory alphabetical.** From import-tree's
-source: `builtins.attrNames` returns names sorted, and directories recurse inline at their
-own name's position. Component-wise path order — not a global basename sort. The `/_`
-filter is `hasInfix "/_"`, a literal substring test on the full path, which is exactly the
-"anywhere in the path" rule above.
-
-**What reaches store paths is narrower than that.** A host's `home.packages` is the
-concatenation over its *aspect list*, in host-list order; within each aspect, contributions
-land in discovery order. So only the **relative order of files contributing to the same
-aspect** matters. Interleaving files of different aspects is invisible — the aspect list
-already separated them.
-
-That predicts both things Step 0 measured: relocating ~70 files was byte-identical because
-a total flatten preserves within-aspect relative order, while renaming `monitors.nix` moved
-its package from position 1 to 11 because it changed that file's rank among its own
-aspect's siblings. It is also why a *partial* move is not automatically free.
-
-Treat this as a working model, not a mechanism. A controlled probe produced a definition
-order this model does not predict, so discovery order is not strictly positional. **Measure
-with the recipe below; do not predict.**
+The `/_` filter is `hasInfix "/_"`, a literal substring test on the full path — which is
+exactly the "anywhere in the path" rule above. Ordering is §5.
 
 There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
 directory. Creating one is a structural regression — say so instead of doing it.
@@ -204,9 +249,7 @@ Host files declare archetype and machine facts only:
 }
 ```
 
-**Aspect order in that list is load-bearing.** It determines module merge order, which
-determines `buildEnv` order, which reaches derivation hashes. Reordering is a real change,
-not a cosmetic one.
+Aspect order in that list is load-bearing — see §5.
 
 `hosts/<h>/hardware-configuration.nix` is the sole exception to Invariant 4: it is
 machine-generated, **never edit it**, and it is not regenerable without physical access.
@@ -225,7 +268,49 @@ reaching for `_` to tidy a directory, you want an aspect.
 
 ---
 
-## 5. Task recipes
+## 5. Ordering and store paths
+
+Order is the one thing about this structure that reaches a derivation hash. Read this
+before any change that moves, renames or regroups files, or that touches a host's aspect
+list.
+
+**Import order is a depth-first walk, per-directory alphabetical.** From import-tree's
+source: `builtins.attrNames` returns names sorted, and directories recurse inline at their
+own name's position. Component-wise path order — not a global basename sort.
+
+**Aspect order in a host's list is load-bearing.** It determines module merge order, which
+determines `buildEnv` order, which reaches derivation hashes. Reordering a host's `aspects`
+is a real change, not a cosmetic one. When splitting one aspect into two, put the new names
+where the old one sat so the split is a partition rather than a reordering.
+
+**What reaches store paths is narrower than the walk.** A host's `home.packages` is the
+concatenation over its *aspect list*, in host-list order; within each aspect, contributions
+land in discovery order. So only the **relative order of files contributing to the same
+aspect** matters. Interleaving files of different aspects is invisible — the aspect list
+already separated them.
+
+That model predicts both things Step 0 measured: relocating ~70 files was byte-identical,
+because a total flatten preserves within-aspect relative order, while renaming
+`monitors.nix` moved its package from position 1 to 11, because it changed that file's rank
+among its own aspect's siblings. It is also why a *partial* move is not automatically free.
+
+**Treat it as a working model, not a mechanism.** Three measurements bound it:
+
+- A controlled probe produced a definition order the model does not predict, so discovery
+  order is not strictly positional.
+- A *position-preserving* move is free even though it changes `_file`:
+  `modules/monitors.nix` → `modules/monitors/monitors.nix` left swift5 byte-identical
+  (re-measured after §9's `deferredModule` change).
+- Within-aspect rank only reaches the output when two files contribute to the same
+  list-valued option. Step 6 surfaced 21 files out of `_hyprland/`, changing both their
+  rank and the tree's hand-written import order, and all six targets stayed identical —
+  a sound prediction of *changes* that was still wrong.
+
+**Measure with the recipe in §10; do not predict.**
+
+---
+
+## 6. Task recipes
 
 ### Add a feature
 
@@ -234,7 +319,7 @@ reaching for `_` to tidy a directory, you want an aspect.
 3. Declare membership for every class and aspect it touches. Omitting `darwin` is normal
    and correct for Linux-only features.
 4. Add the aspect name to the relevant hosts.
-5. Verify (§9).
+5. Verify (§10).
 
 ### Extend a feature
 
@@ -266,7 +351,7 @@ module argument. **Never run `nix flake update`** — adding an input and runnin
 
 ---
 
-## 6. Class placement — and the Mac
+## 7. Class placement — and the Mac
 
 `mbp` does not exist yet and `systems` is currently `["x86_64-linux"]`. The constraint
 still binds today, because **every line put in `nixos` that could have lived in
@@ -314,7 +399,7 @@ packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux pkgs.someLinuxOnlyThing
 
 ---
 
-## 7. Sharing values
+## 8. Sharing values
 
 In order of preference:
 
@@ -352,7 +437,7 @@ evaluation to reach a value, importing a module file by path to call a function 
 
 ---
 
-## 8. Hazards
+## 9. Hazards
 
 - **Aspect elements are `types.deferredModule`.** They were `types.raw` until Step 1 of
   `REFACTOR.md`, on the grounds that `deferredModule` had been measured to move store
@@ -376,8 +461,8 @@ evaluation to reach a value, importing a module file by path to call a function 
   declared in one file could in principle lose members. `modules/stylix.nix` is the only
   such declaration in the repo (2 elements) and both survived. Note that
   `builtins.length config.flake.modules.…` does **not** detect this; the byte-identity
-  block in §9 does. Re-run all three parts of it if you change the element type again.
-- **`config` shadowing** inside `flake.modules.*` — see §7.
+  block in §10 does. Re-run all three parts of it if you change the element type again.
+- **`config` shadowing** inside `flake.modules.*` — see §8.
 - **Stylix themes what it detects.** The stylix aspect sets `autoEnable = false` with an
   explicit target list, so a program is themed only if named. Moving a themed program
   between aspects can therefore change its appearance in either direction: into a
@@ -401,7 +486,7 @@ evaluation to reach a value, importing a module file by path to call a function 
 
 ---
 
-## 9. Verification
+## 10. Verification
 
 Do not claim a config builds without having built it.
 
@@ -472,25 +557,31 @@ config.flake.modules.homeManager.hyprland
 
 ---
 
-## 10. Anti-patterns
+## 11. Anti-patterns
 
 | Anti-pattern | Why |
 | --- | --- |
 | `nixos/`, `home/`, `darwin/` directories | Paths encode class, not concern (Inv. 4) |
 | `pkgs/`, `overlays/` directories | Breaks feature closure; the derivation belongs with its config |
-| A `lib/` directory of helpers | A helper library is not a flake-parts module (Inv. 1). Expose the value as an option (§7) |
+| A `lib/` directory of helpers | A helper library is not a flake-parts module (Inv. 1). Expose the value as an option (§8) |
 | `imports = [ ./foo.nix ]` inside `modules/` | `import-tree` already loaded it (Inv. 6) |
-| `specialArgs = { inherit self inputs; }` | Closure or `_module.args` (Inv. 5, §7) |
+| `specialArgs = { inherit self inputs; }` | Closure or `_module.args` (Inv. 5, §8) |
 | `_` to group related files | `_` is for non-modules only (§4) |
 | An aspect named `maximal` / `minimal` | Magnitude, not a decision (§3) |
 | `mkEnableOption` per aspect | Hosts compose by taking aspects, not by enabling |
 | One aspect that branches between dwl and Hyprland | Option namespace + variant aspects (§3) |
 | Aspect reading `config.networking.hostName` | Aspects are host-agnostic (Inv. 7) |
-| Editing three files to add one feature | The concern is wrongly decomposed (Inv. 3) |
+| Editing three files to add one feature | The concern is wrongly decomposed (Inv. 3) — but see §3: one file installing the same tool into several aspects is not this |
+
+Every row above is a prohibition, so read together they suggest no directory is ever
+allowed. They are not the whole rule. The positive half: **a directory is fine when its
+name would be a bad aspect name and its contents span several aspects** (§4). `font/`
+passes on both halves; `hyprland/` fails on both, because the name is a good aspect name
+and every file in it would belong to that one aspect.
 
 ---
 
-## 11. Known divergences
+## 12. Known divergences
 
 **This is a ratchet, not a ledger:** if a task touches a file listed here, migrate that
 file in the same change, or state plainly why not. Nothing below is grandfathered, and the
@@ -508,13 +599,27 @@ are safe to cite. `REFACTOR.md` cites them.
 
 ---
 
-## 12. Working style
+## 13. Working style
 
+- **Structural changes go through the `dendritic-reviewer` subagent — before the commit,
+  not after.** Structural means: moving, renaming or regrouping files; adding, splitting,
+  renaming or retiring an aspect; changing a host's aspect list; editing the generator or
+  `aspects.nix`. An ordinary edit inside one existing file does not need it. The agent
+  reads and reports — *violation*, *risk* or *preference*, each named against §1 — and
+  does not edit; this session decides and acts on what it finds.
 - **Small, single-concern commits.** Rationale goes in the commit message, not in comments.
 - **Terse comments.** Explain *why*, never *what*.
 - **Prefer adding a file to editing one**, especially when extending an aspect.
 - **No unrequested changes.** No package bumps, no deprecation fixes, no reformatting
   files the current task does not touch.
+- **The five ex-`common-packages` tools stay in `nixos`.** `common-packages.nix` was
+  dissolved (`317abf5`) and its members went to the concerns that own them — `home-manager`
+  to `home-manager.nix`, `iw` and `wget` to `net.nix`, `gh` to `git.nix`, `htop` to its own
+  file. All five stayed in `environment.systemPackages` rather than moving to
+  `home.packages`. That is against §7's default-to-`homeManager` rule and was chosen: the
+  move would change which profile they install into, which is a behavioural change wearing
+  a refactor's clothes. **This is an accepted choice, not a divergence** — it is deliberately
+  absent from §12, so do not "fix" it as ratchet work.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`, `easy-hosts`) without
   being asked. This repo depends on `flake-parts` and `import-tree` only.
 - **Unresolved — ask rather than inventing a convention:** secrets management (sops-nix vs
