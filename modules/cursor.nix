@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.suckless = [
+  flake.modules.homeManager.palette = [
     (
       {
         pkgs,

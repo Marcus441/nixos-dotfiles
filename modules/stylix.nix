@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.homeManager.maximal = [
+  flake.modules.homeManager.stylix = [
     inputs.stylix.homeModules.stylix
     (
       {pkgs, ...}: let

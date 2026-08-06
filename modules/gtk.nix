@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.suckless = [
+  flake.modules.homeManager.palette = [
     (
       {pkgs, ...}: {
         gtk = {
@@ -36,7 +36,7 @@
 
   # Registers the ca.desrt.dconf D-Bus service so the dconf settings above can
   # be applied. Maximal gets this implicitly via programs.thunar.
-  flake.modules.nixos.suckless = [
+  flake.modules.nixos.palette = [
     {
       programs.dconf.enable = true;
     }

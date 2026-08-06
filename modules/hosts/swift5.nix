@@ -3,7 +3,7 @@
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "suckless"];
+    aspects = ["dev" "core" "suckless" "palette"];
 
     hardware = ../../hosts/swift5/hardware-configuration.nix;
 
