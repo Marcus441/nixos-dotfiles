@@ -77,7 +77,7 @@
       modules = [
         {
           _module.args =
-            {inherit user hostname homeStateVersion monitors;}
+            {inherit hostname monitors;}
             // {inherit (input) sensitivity;};
         }
         {
