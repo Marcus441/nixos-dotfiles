@@ -50,8 +50,8 @@
     nixos,
   }:
     nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs stateVersion hostname user;};
       modules = [
+        {_module.args = {inherit stateVersion hostname user;};}
         {nixpkgs.hostPlatform = system;}
         {
           imports = [
@@ -74,10 +74,12 @@
   }:
     home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
-      extraSpecialArgs =
-        {inherit inputs user hostname homeStateVersion monitors;}
-        // {inherit (input) sensitivity;};
       modules = [
+        {
+          _module.args =
+            {inherit user hostname homeStateVersion monitors;}
+            // {inherit (input) sensitivity;};
+        }
         {
           imports = [
             {imports = aspectModules "homeManager" aspects;}

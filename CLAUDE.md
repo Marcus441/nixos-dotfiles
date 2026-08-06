@@ -484,9 +484,10 @@ below is grandfathered, and the count is supposed to fall. See `REFACTOR.md`.
 
 Existing code is therefore **not** a safe template — see the exemplars named in §2.
 
-1. **`extraSpecialArgs` is still in use.** ~10 files take `monitors`, `sensitivity`,
-   `hostname`, `user`, or `homeStateVersion` as module arguments. Target: `_module.args`
-   from the generator (§7.3).
+**Item numbers are stable identities, not positions.** A closed item is deleted and the
+survivors keep their numbers, so this list does not necessarily start at 1 and its numbers
+are safe to cite. `REFACTOR.md` cites them.
+
 2. **Aspects are named after host archetypes** — `core`, `dev`, `suckless`, `maximal`.
    `maximal` fuses three concerns: the Hyprland session, the heavy app set, and stylix.
 3. **No file yet declares two aspects.** The directory tree no longer encodes class or

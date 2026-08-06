@@ -1,7 +1,9 @@
 # Refactor Plan: close the §11 divergences
 
-`CLAUDE.md` defines the invariants and lists, in §11, the seven places this repo does not
-yet satisfy them. **That list is the backlog. This file is the order.**
+`CLAUDE.md` defines the invariants and lists, in §11, the places this repo does not yet
+satisfy them. **That list is the backlog. This file is the order.** Its item numbers are
+stable identities — a closed item is deleted and the rest keep their numbers — so the
+§11.x citations below stay valid as the list shrinks.
 
 Do not restate the invariants here — read them there. This document only says what to do
 next, in what sequence, and how to know it worked.
@@ -20,7 +22,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 
 - [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
 - [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
-- [ ] Step 2 — `extraSpecialArgs` → `_module.args`
+- [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
 - [ ] Step 3 — theming becomes an axis
 - [ ] Step 4 — `hyprland` and `dwl` aspects
 - [ ] Step 5 — `gaming` and `nvidia`
@@ -284,6 +286,8 @@ If it holds, keep it and update `CLAUDE.md` §8. If elements vanish, revert and 
 
 ## Step 2 — `extraSpecialArgs` → `_module.args` (§11.1)
 
+*(Done — §11.1 closed. Six targets byte-identical, so the harness is sound.)*
+
 Closes Invariant 5. ~10 files take `monitors`, `sensitivity`, `hostname`, `user` or
 `homeStateVersion` as module arguments.
 
@@ -299,9 +303,13 @@ changes.
 Two things to watch:
 
 - A module contributing only `_module.args` adds nothing to any list-valued option, so it
-  should not reorder anything. Confirm rather than assume.
+  should not reorder anything. Confirmed, not assumed: the home injection was added as a
+  **new first element** of the modules list and all six targets stayed byte-identical.
 - **Nothing may use these to compute `imports`.** That is infinite recursion, not an error
-  (`CLAUDE.md` §7). Grep for `imports` in the ten consumers before starting.
+  (`CLAUDE.md` §7). Grep for `imports` in the ten consumers before starting. This caught a
+  real one: `modules/home-manager.nix` computed `imports` from the `inputs` module arg.
+  `inputs` was never in §11.1's list, but Invariant 5 forbids the channel it arrived on, so
+  it and the two other `inputs` consumers moved to closure first, as a separate commit.
 
 - Verify: all six targets byte-identical.
 
