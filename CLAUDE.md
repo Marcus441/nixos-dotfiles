@@ -285,9 +285,20 @@ NixOS underneath. Do not convert it to `home-manager.nixosModules.home-manager`.
 
 **Default to `homeManager`. Justify the exception, not the rule.**
 
-Cross-platform intents worth naming now so the Mac is cheap later: `launcher`,
-`screenshot`, `clipboard`, `lock`, `notifications`. Each gets an option namespace plus
-per-platform implementation aspects (§3).
+Cross-platform intents are named so the Mac is cheap later: `launcher`, `screenshot`,
+`clipboard` and `lock` are option namespaces in `core`, set by `hyprland` and `dwl` and
+read by their binds (§3). A darwin session implements them by setting the same options —
+that is the whole point of the indirection.
+
+`notifications` is deliberately **not** one: mako already serves both sessions from a
+single file and nothing invokes it by command, so the option would have no setter and no
+reader. Name an intent when two implementations actually diverge, not to complete a set.
+
+Their shapes are set by their consumers, not by taste. `launcher.argv` is a list because
+dwl's binds are a C argv array while Hyprland's are shell strings, with `launcher.command`
+as its read-only shell rendering; the rest are shell strings. A consumer that embeds one
+somewhere with its own quoting rules re-escapes it — `modules/dwl.nix` does this for the C
+string literals in its generated `config.h`.
 
 **`perSystem` is the one place platform breakage bites early.** Unlike aspect contents,
 `perSystem` outputs are evaluated for *every* entry in `systems`. Adding `aarch64-darwin`

@@ -28,7 +28,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 5** — `gaming` and `nvidia`; §11.6 closed
 - [x] **Step 6** — surface the `_` trees; §11.5 closed
 - [x] **Step 7** — retire the archetype names, create `laptop`; §11.2 closed
-- [ ] Step 8 — darwin groundwork
+- [ ] Step 8 — darwin groundwork *(intent aspects done ahead of it; the rest needs a Mac)*
 
 ---
 
@@ -510,6 +510,15 @@ archetype.
 
 Only once the above is done, and only when there is a Mac to test on.
 
+**The last bullet is already done**, pulled forward because it needs no Mac: `launcher`,
+`screenshot`, `clipboard` and `lock` are option namespaces in `core`, set by `hyprland`
+and `dwl` and read by their binds. Adding `aerospace` later means setting the same four
+options, not finding every hard-coded command. `notifications` was considered and
+rejected — see `CLAUDE.md` §6 for why an intent with only one implementation is ceremony.
+
+That commit was byte-identical on all six targets, dwl's compiled binary included, so the
+vocabulary cost nothing to introduce. What remains below genuinely needs hardware.
+
 - Add `aarch64-darwin` to `systems`. `perSystem` evaluates for *every* entry, unlike
   aspect contents (`CLAUDE.md` §6), so every Linux-only output must be excluded —
   **by attribute, not by value**:
@@ -529,8 +538,7 @@ Only once the above is done, and only when there is a Mac to test on.
 - Add `mkDarwin` to the generator alongside `makeSystem` and `mkHome`.
 - Standalone Home Manager is the asset here: the same home aspects activate on macOS with
   no NixOS underneath.
-- Name the intent aspects — `launcher`, `screenshot`, `clipboard`, `lock`,
-  `notifications` — with per-platform implementations.
+- ~~Name the intent aspects~~ — done ahead of this step; see above.
 
 ---
 
