@@ -1,13 +1,11 @@
-{...}: {
+_: {
   flake.modules.homeManager.palette = [
-    (
-      {...}: {
-        qt = {
-          enable = true;
-          platformTheme.name = "adwaita";
-          style.name = "adwaita-dark";
-        };
-      }
-    )
+    {
+      qt = {
+        enable = true;
+        platformTheme.name = "adwaita";
+        style.name = "adwaita-dark";
+      };
+    }
   ];
 }

@@ -1,11 +1,7 @@
-{...}: {
+_: {
   flake.modules.homeManager.apps = [
     (
-      {
-        pkgs,
-        config,
-        ...
-      }: {
+      {pkgs, ...}: {
         programs.thunderbird = {
           enable = true;
           package = pkgs.thunderbird-latest;
