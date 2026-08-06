@@ -1,9 +1,8 @@
-{...}: {
+{inputs, ...}: {
   flake.modules.homeManager.maximal = [
     (
       {
         pkgs,
-        inputs,
         ...
       }: let
         inherit (pkgs.stdenv.hostPlatform) system;
