@@ -51,13 +51,23 @@ in {
           [app-name=notify-send summary="OCR*"]
           default-timeout=3000
 
-          [summary="*Battery*"]
-          default-timeout=20000
-
           [summary="*screenshot*"]
           default-timeout=5000
         '';
       };
+    }
+  ];
+
+  # A battery warning is worth reading for longer, and the rule belongs to the
+  # machine that has a battery rather than to a theming regime. It sat in
+  # `stylix`, so the two desktops carried a rule that cannot fire and swift5 --
+  # the only host taking `laptop` -- was the one missing it.
+  flake.modules.homeManager.laptop = [
+    {
+      services.mako.extraConfig = ''
+        [summary="*Battery*"]
+        default-timeout=20000
+      '';
     }
   ];
 }
