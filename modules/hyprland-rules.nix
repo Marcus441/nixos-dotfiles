@@ -40,11 +40,6 @@
               match = {class = "^(org.pulseaudio.pavucontrol|.blueman-manager-wrapped|thunar|Thunar|xdg-desktop-portal-gtk)$";};
               tag = "+floating-window";
             }
-            {
-              name = "tag-floating-by-title";
-              match = {title = "^(ghostty-float)$";};
-              tag = "+floating-window";
-            }
             # Apply behaviors onto custom matching window tags
             {
               name = "floating-float";
