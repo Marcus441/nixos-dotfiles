@@ -3,7 +3,7 @@
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["core" "hyprland" "stylix" "maximal"];
+    aspects = ["core" "gaming" "nvidia" "hyprland" "stylix" "maximal"];
 
     fontSize = 20;
 
@@ -27,52 +27,16 @@
 
     packages = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [
-        mangohud # gaming performance
-        protonup-ng
       ];
     };
 
     nixos = {
-      pkgs,
       stateVersion,
       hostname,
-      config,
-      lib,
-      user,
       ...
     }: {
       networking.hostName = hostname;
 
-      # nvidia stuff
-      hardware.graphics = {
-        enable = true;
-        enable32Bit = true;
-      };
-
-      services.xserver.videoDrivers = ["nvidia"];
-
-      hardware.nvidia = {
-        modesetting.enable = true;
-
-        powerManagement.enable = false;
-
-        powerManagement.finegrained = false;
-
-        open = true;
-
-        nvidiaSettings = true;
-
-        package = config.boot.kernelPackages.nvidiaPackages.latest;
-      };
-      programs = {
-        # gaming stuff
-        steam.enable = true;
-        steam.gamescopeSession.enable = true;
-        gamemode.enable = true;
-      };
-      environment.sessionVariables = {
-        STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${user}/.steam/root/compatibilitytoolds.d";
-      };
       system.stateVersion = stateVersion;
     };
   };
