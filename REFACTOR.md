@@ -24,7 +24,7 @@ the work is — the plan is otherwise stateless, and a fresh session will start 
 - [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
 - [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
 - [x] **Step 3** — theming becomes an axis; §11.3 and §11.4 closed
-- [ ] Step 4 — `hyprland` and `dwl` aspects
+- [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
 - [ ] Step 5 — `gaming` and `nvidia`
 - [ ] Step 6 — surface the `_` trees
 - [ ] Step 7 — retire the archetype names, create `laptop`
@@ -66,7 +66,7 @@ which is what §11.2 is about.
   | 1 deferredModule | identical *(measured; "may move" was allowed)* | identical | identical |
   | 2 `_module.args` | identical | identical | identical |
   | 3 theming | **changes** | **changes** | **changes** |
-  | 4 sessions | **changes** | **changes** | **changes** |
+  | 4 sessions | identical *(predicted "changes")* | identical | identical |
   | 5 gaming/nvidia | identical | **changes** (nixos) | identical |
   | 6 surface `_` | **changes** | **changes** | **changes** |
   | 7 rename aspects | **changes** | **changes** | **changes** |
@@ -350,6 +350,25 @@ those two machines. Push it to the host record and deliver it via Step 2's `_mod
   are the same, only which aspect contributes them changes.
 
 ## Step 4 — `hyprland` and `dwl` aspects (§11.2)
+
+*(Done. `suckless` no longer exists; `maximal` survives as the app set and §11.2 is
+narrowed to it. All six targets stayed byte-identical, against a predicted **changes** on
+all three — an aspect name does not reach the output, and neither renaming `suckless` to
+`dwl` in place nor inserting `hyprland` ahead of `stylix` reordered anything measurable.
+Because byte-identity can equally mean "the modules went nowhere", it was checked
+positively: gpc evaluates hyprland home+nixos and waybar enabled with uwsm in
+`profileExtra`, swift5's `profileExtra` is empty.*
+
+*Two things landed here that the plan filed elsewhere: the `bash/` collapse, which step 0's
+table assigned to step 3, and a follow-up commit correcting text that named the dead
+aspect — that one does move swift5, since two of the strings are generated output.*
+
+*No shared-session aspect was created. Nothing is duplicated between the two sessions:
+the overlap — wl-clipboard, cliphist, brightnessctl — already sits in `core`, and dwl
+carries its own portal config while Hyprland gets portals from `programs.hyprland`. The
+`tiling` option namespace in §3 is still unbuilt; dwl's mod key is a `#define` in a C
+patch and it has no gaps at all, so there is no shared value to lift yet. Step 6 is better
+placed, once `_hyprland`'s files are real modules.)*
 
 Split the session out of `maximal` and `suckless`. Step 0 already moved these files to
 concern-named paths, so **this step changes membership only** — do not rename anything, or
