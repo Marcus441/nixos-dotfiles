@@ -41,12 +41,7 @@ _: {
               disable-scroll = true;
               all-outputs = true;
               warp-on-scroll = false;
-              format = "{icon}";
-              format-icons = {
-                "active" = "●";
-                "empty" = "○";
-                "default" = "●";
-              };
+              format = "{name}";
               persistent-workspaces = {
                 "1" = [];
                 "2" = [];
