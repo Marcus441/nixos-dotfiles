@@ -1,4 +1,4 @@
-{...}: {
+_: {
   hosts.UM790pro = {
     hostname = "UM790pro";
     system = "x86_64-linux";

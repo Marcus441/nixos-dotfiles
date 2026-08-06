@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # Same daemon, two theming regimes: palette colours it from desktop.colors,
   # stylix is listed in the stylix target set and colours it itself.
   flake.modules.homeManager.palette = [

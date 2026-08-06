@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # Declared for every host, implemented only by Hyprland: swift5's dwl session
   # has no locker at all, which the empty default states rather than hides.
   flake.modules.homeManager.core = [

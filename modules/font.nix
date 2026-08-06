@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # One concern, three audiences: every host needs the definition, palette
   # installs the fonts itself, stylix hands the same definition to stylix.
   flake.modules.homeManager.core = [

@@ -1,4 +1,4 @@
-{...}: {
+_: {
   hosts.gpc = {
     hostname = "gpc";
     system = "x86_64-linux";

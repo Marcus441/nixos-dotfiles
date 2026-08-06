@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # Compositor-agnostic: both sessions bind a clipboard-history key.
   flake.modules.homeManager.core = [
     (

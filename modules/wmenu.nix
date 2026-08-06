@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # wmenu is dwl's menu program, and two intents render through it: the launcher
   # (wmenu-run) and the clipboard picker (wmenu). Its theming is therefore
   # neither intent's business, so it is an option both of them read.
