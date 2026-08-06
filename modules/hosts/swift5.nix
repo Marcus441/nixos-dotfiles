@@ -5,6 +5,8 @@
     stateVersion = "25.11";
     aspects = ["dev" "core" "suckless" "palette"];
 
+    fontSize = 16;
+
     hardware = ../../hosts/swift5/hardware-configuration.nix;
 
     monitors = [

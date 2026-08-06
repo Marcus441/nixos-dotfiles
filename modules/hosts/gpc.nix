@@ -5,6 +5,8 @@
     stateVersion = "25.11";
     aspects = ["core" "stylix" "maximal"];
 
+    fontSize = 20;
+
     hardware = ../../hosts/gpc/hardware-configuration.nix;
 
     monitors = [

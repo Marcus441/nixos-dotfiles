@@ -46,6 +46,7 @@
     hardware,
     monitors,
     input,
+    fontSize,
     packages,
     nixos,
   }:
@@ -70,6 +71,7 @@
     aspects,
     monitors,
     input,
+    fontSize,
     ...
   }:
     home-manager.lib.homeManagerConfiguration {
@@ -77,7 +79,7 @@
       modules = [
         {
           _module.args =
-            {inherit hostname monitors;}
+            {inherit hostname monitors fontSize;}
             // {inherit (input) sensitivity;};
         }
         {

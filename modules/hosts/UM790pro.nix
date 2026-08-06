@@ -5,6 +5,8 @@
     stateVersion = "25.11";
     aspects = ["dev" "core" "stylix" "maximal"];
 
+    fontSize = 20;
+
     hardware = ../../hosts/UM790pro/hardware-configuration.nix;
 
     monitors = [
