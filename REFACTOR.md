@@ -402,7 +402,7 @@ clipboard) becomes its own aspect rather than being duplicated. Anything portabl
 *intent* (gaps, mod key, keybinding philosophy) becomes an option namespace consumed by
 both, per `CLAUDE.md` §3 — **not** one aspect that branches internally.
 
-Decide during this step, from `CLAUDE.md` §4's coupling table:
+Decide during this step, by what each thing is actually coupled to:
 
 - **waybar** is hard-coupled to Hyprland (`hyprland/workspaces`, `hyprland/window`,
   `wayland-session@hyprland.desktop.target`). It moves.

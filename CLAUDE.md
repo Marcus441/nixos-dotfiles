@@ -9,7 +9,7 @@ concluding that existing code is an example to copy.
 
 | Host | Archetype | Session | Platform |
 | --- | --- | --- | --- |
-| `swift5` | laptop | dwl (Wayland, suckless) | `x86_64-linux` |
+| `swift5` | laptop | dwl (Wayland, minimalist) | `x86_64-linux` |
 | `gpc` | gaming rig | Hyprland | `x86_64-linux` |
 | `UM790pro` | dev machine, primary | Hyprland | `x86_64-linux` |
 | `mbp` | laptop | — | `aarch64-darwin`, **planned** |
