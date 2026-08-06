@@ -15,7 +15,7 @@
       in {
         # Shared terminal for all hosts: the explicit base24 palette below is the
         # single source of terminal colours everywhere. stylix must NOT theme
-        # foot on maximal — see stylix.targets.foot.enable = false in
+        # foot on the stylix hosts — see stylix.targets.foot.enable = false in
         # ./stylix.nix.
         programs.foot = {
           enable = true;

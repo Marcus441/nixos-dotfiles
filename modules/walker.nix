@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.homeManager.maximal = [
+  flake.modules.homeManager.apps = [
     inputs.walker.homeManagerModules.default
     (
       {config, ...}: {

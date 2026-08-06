@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.homeManager.maximal = [
+  flake.modules.homeManager.apps = [
     (
       {
         pkgs,
@@ -8,7 +8,7 @@
         inherit (pkgs.stdenv.hostPlatform) system;
         neovim = inputs.neovim-config.packages.${system};
       in {
-        # Neovide is the GUI front-end for neovim -- maximal only. The core
+        # Neovide is the GUI front-end for neovim -- apps only. The core
         # neovim.nix provides the headless `nvim` shared by both profiles.
         programs.neovide = {
           enable = true;

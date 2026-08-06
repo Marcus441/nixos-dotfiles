@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.maximal = [
+  flake.modules.homeManager.apps = [
     (
       {
         pkgs,

@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.nixos.maximal = [
+  flake.modules.nixos.apps = [
     (
       {pkgs, ...}: {
         programs = {
