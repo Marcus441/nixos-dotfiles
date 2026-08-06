@@ -21,8 +21,8 @@
           enable = true;
           # Daemon mode: terminals spawn as footclient against this server. The
           # systemd unit binds to graphical-session.target, which uwsm activates
-          # on maximal; the dwl session is a plain script, so suckless starts the
-          # server from dwl's autostart instead (see ./dwl.nix). Every
+          # on hyprland; the dwl session is a plain script, so dwl starts the
+          # server from its own autostart instead (see ./dwl.nix). Every
           # spawn point keeps a fallback bind to plain foot in case the server is
           # down.
           server.enable = true;
