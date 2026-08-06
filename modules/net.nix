@@ -11,6 +11,12 @@
   ];
 
   flake.modules.nixos.core = [
+    ({pkgs, ...}: {
+      environment.systemPackages = with pkgs; [
+        iw
+        wget
+      ];
+    })
     (
       {lib, ...}: {
         systemd.services.NetworkManager-wait-online.enable = false;

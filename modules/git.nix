@@ -1,4 +1,9 @@
 {...}: {
+  # The GitHub CLI is system-wide because it was; only its home changed.
+  flake.modules.nixos.core = [
+    ({pkgs, ...}: {environment.systemPackages = [pkgs.gh];})
+  ];
+
   flake.modules.homeManager.core = [
     (
       {pkgs, ...}: {

@@ -580,5 +580,3 @@ Update §11 in the same commit that closes each item. It is a ratchet, not a led
   elements (issue #3 item 1).
 - Overlays reaching Home Manager. Changing `pkgs` for home configs moves every home store
   path; its own project, with its own switch cycle.
-- The xdg concern writes `uwsm/env` into `core`, so swift5 carries a uwsm config it never
-  uses. Real, small, unrelated — own commit.
