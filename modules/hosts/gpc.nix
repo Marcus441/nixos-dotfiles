@@ -3,7 +3,7 @@
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["core" "stylix" "maximal"];
+    aspects = ["core" "hyprland" "stylix" "maximal"];
 
     fontSize = 20;
 
