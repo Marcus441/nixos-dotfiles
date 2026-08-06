@@ -1,11 +1,14 @@
-{config, ...}: let
-  top = config;
-in {
+{...}: {
   flake.modules.homeManager.hyprland = [
-    # ./_hyprland is a plain module tree, not a flake-parts module, so it
-    # cannot reach flake.lib itself.
-    {_module.args.render = top.flake.lib.monitors;}
-    ./_hyprland
+    {
+      wayland.windowManager.hyprland = {
+        enable = true;
+        systemd.enable = false;
+        configType = "lua";
+        package = null;
+        portalPackage = null;
+      };
+    }
   ];
 
   flake.modules.nixos.hyprland = [
