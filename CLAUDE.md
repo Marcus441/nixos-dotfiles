@@ -87,7 +87,7 @@ machine **is**.
   `fileManager.command`, `thunar` sets it and the `nixos` half installs the daemon. One
   concern, two aspects, both classes. **This is the file to copy.**
 - `modules/tmtheme.nix` — declares `desktop.syntaxTheme` in `core` and renders it from the
-  palette; `bat.nix` and `_yazi/style.nix` read it. The provider/consumer split of §3 in its
+  palette; `bat.nix` and `yazi.nix` read it. The provider/consumer split of §3 in its
   smallest form.
 - `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
   Nothing about its location says which. Invariant 4, demonstrated.
