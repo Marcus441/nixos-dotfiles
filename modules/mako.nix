@@ -7,8 +7,6 @@ _: {
       services.mako = {
         enable = true;
 
-        # Placement and timing hold under either regime; only colour and
-        # geometry differ, so the theming aspects below add just those.
         settings = {
           anchor = "top-right";
           default-timeout = 5000;
@@ -30,11 +28,11 @@ _: {
         '';
       };
     }
-  ];
 
-  # Two theming regimes: palette colours mako from desktop.colors, stylix is
-  # listed in the stylix target set and colours it itself.
-  flake.modules.homeManager.palette = [
+    # One appearance, not two. The geometry sat in `stylix` and the colours in
+    # `palette`, so swift5 kept mako's stock size (max-icon-size 64,
+    # outer-margin 0, width 300, height 100) purely because it did not carry
+    # stylix -- nobody decided a 1080p panel wanted different notifications.
     (
       {config, ...}: let
         inherit (config.desktop) colors font;
@@ -44,24 +42,31 @@ _: {
           background-color = colors.base00;
           text-color = colors.base05;
           border-color = colors.base0D;
+
+          ignore-timeout = false;
+          max-icon-size = 32;
+          outer-margin = 20;
+          width = 420;
+          height = 110;
+
+          progress-color = "over ${colors.base02}";
         };
+
+        # Urgency is the one thing a notification daemon must show at a glance,
+        # so the border carries it: red for critical, muted for low.
+        services.mako.extraConfig = ''
+          [urgency=critical]
+          background-color=${colors.base00}
+          border-color=${colors.base08}
+          text-color=${colors.base05}
+
+          [urgency=low]
+          background-color=${colors.base00}
+          border-color=${colors.base03}
+          text-color=${colors.base05}
+        '';
       }
     )
-  ];
-
-  flake.modules.homeManager.stylix = [
-    {
-      # Geometry is deliberately not shared. These override mako's defaults
-      # (max-icon-size 64, outer-margin 0, width 300, height 100) for the
-      # 1440p and 4K desktops; swift5's 1080p panel keeps the defaults.
-      services.mako.settings = {
-        ignore-timeout = false;
-        max-icon-size = 32;
-        outer-margin = 20;
-        width = 420;
-        height = 110;
-      };
-    }
   ];
 
   # A battery warning is worth reading for longer, and the rule belongs to the

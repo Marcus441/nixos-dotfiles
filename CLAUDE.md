@@ -67,18 +67,15 @@ asking "which folder does this belong in" — ask "what does this concern contri
 whom".
 
 ```nix
-# modules/font.nix — one concern, three audiences, one file
+# modules/font.nix — one concern, two audiences, one file
 {
   flake.modules.homeManager.core = [
     { options.desktop.font = { /* name, size */ }; }
+    { home.packages = [ /* fonts */ ]; fonts.fontconfig.enable = true; }
   ];
 
   flake.modules.homeManager.stylix = [
     ({config, ...}: { stylix.fonts.monospace.name = config.desktop.font.name; })
-  ];
-
-  flake.modules.homeManager.palette = [
-    { home.packages = [ /* fonts */ ]; fonts.fontconfig.enable = true; }
   ];
 }
 ```
@@ -88,10 +85,11 @@ machine **is**.
 
 ### Read these before writing a new file
 
-- `modules/font.nix` — the sketch above, as an actual file: `core` declares the option,
-  `palette` installs the fonts, `stylix` hands the same option to stylix. One concern,
-  three audiences. **This is the file to copy.**
-- `modules/mako.nix` — the same daemon under two theming regimes, one file.
+- `modules/font.nix` — the sketch above, as an actual file: `core` declares the option and
+  installs the fonts, `stylix` hands the same option to the targets it still themes. One
+  concern, two audiences. **This is the file to copy.**
+- `modules/thunar.nix` — `core` declares `fileManager.command`, `thunar` sets it and the
+  `nixos` half installs the daemon. One concern, two aspects, both classes.
 - `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
   Nothing about its location says which. Invariant 4, demonstrated.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
@@ -113,7 +111,7 @@ merge is actually demonstrated. Check §12 before treating any file as an exampl
 
 An aspect is a **decision or a capability**, never a magnitude and never a host class.
 
-- Good: `hyprland`, `dwl`, `gaming`, `nvidia`, `laptop`, `dev`, `stylix`, `palette`.
+- Good: `hyprland`, `dwl`, `gaming`, `nvidia`, `laptop`, `dev`, `stylix`.
 - Bad: `maximal`, `minimal`, `heavy`, `extras` — magnitude names rot the first time you
   want one member without the others, and then the name lies.
 - Bad: `desktop-machine`, `workstation` — that is a host archetype, not a concern. The
@@ -241,7 +239,7 @@ directory. Creating one is a structural regression — say so instead of doing i
 Grouping for navigation is fine — Invariant 4 says paths carry no *meaning*, not that they
 must be flat. **A directory is safe when its name would be a bad aspect name and the files
 inside span more than one aspect.** `font/` passes: `font` names no decision, and its files
-serve core, stylix and palette. A `system/` directory holding every `nixos.core` file fails
+serve core and stylix. A `system/` directory holding every `nixos.core` file fails
 both halves — the path would predict class and membership exactly, which is `nixos/` under
 another name.
 

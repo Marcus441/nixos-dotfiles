@@ -27,9 +27,9 @@ original project's licensing. You can find a copy of the license in the
 
 | Host | Machine | Session | Aspects |
 | --- | --- | --- | --- |
-| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl palette` |
-| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland stylix apps` |
-| `UM790pro` | dev machine | Hyprland | `dev core hyprland stylix apps` |
+| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl` |
+| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland waybar wleave thunar stylix apps` |
+| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar wleave thunar stylix apps` |
 
 Six build targets: three `nixosConfigurations.<host>` and three
 `homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
@@ -50,7 +50,6 @@ in it.
 | `wleave` | The power menu |
 | `thunar` | The file manager |
 | `stylix` | Theming driven by stylix from a base16 scheme |
-| `palette` | Theming from a hand-carried base24 palette, no stylix |
 | `apps` | The heavy app set: thunderbird, discord, obs, kdenlive, yazi |
 | `dev` | Docker, qemu, aarch64 binfmt, ccache |
 | `gaming` | Steam and gamemode |
@@ -63,7 +62,8 @@ aspect is recoverable where a broken power path is not. The terminal (`foot`),
 the editor and the shell are `core` — every host gets them regardless of
 session.
 
-`hyprland` and `dwl` are mutually exclusive, as are `stylix` and `palette`.
+`hyprland` and `dwl` are mutually exclusive. Theming is not an aspect: colours,
+fonts and the cursor live in `core`, so every host is themed the same way.
 Portable intents — `launcher`, `terminal`, `screenshot`, `clipboard`, `lock`,
 `logout`, `bar`, `fileManager`, `powerMenu` — are option namespaces in `core`,
 set by whichever aspect provides the thing, so nothing binds a session-specific

@@ -91,7 +91,7 @@ Update this list in the commit that completes each step.
 - [x] **Step 2** — fonts to `core`
 - [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
 - [x] **Step 4** — gtk and qt to `core`, taking the icon theme with them
-- [ ] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
+- [x] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
 - [ ] **Step 6** — bat, lazygit, tmux, yazi, zathura, hyprlock themed from the palette
 - [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
 
@@ -264,6 +264,28 @@ unbuildable. Confirm before committing it:
 ```
 nix repl → :lf . → config.flake.modules.homeManager ? palette
 ```
+
+**Measured.** Reading the old output before deleting the target paid for itself again: stylix
+generated `[urgency=critical]` and `[urgency=low]` sections and a `progress-color`, none of
+which the palette branch had. Urgency is the one thing a notification daemon must show at a
+glance, so those are written by hand and **swift5 gains them** — it never had urgency colours
+at all. What is left of the desktop diff is two lines: `#181616FF` → `#181616`, the same
+colour without a redundant alpha, and the font.
+
+**The font changed on the desktops and is the one thing to look at.** stylix used its
+sans-serif at a fixed size (`Inter 10`); `core` uses `desktop.font`, which is
+`IosevkaTerm Nerd Font Mono` at the host's `fontSize` — 20 on the desktops, 16 on swift5. It
+is self-consistent (the same relationship swift5 has had all along) but 20pt notifications are
+noticeably larger than 10pt. If that reads badly, the fix is a notification-specific size in
+`mako.nix`, not a change to `desktop.font`.
+
+Two files, one aspect, one attrset: `mako.nix` now declares `homeManager.core` **once with
+two elements**, not twice. Nix rejects a duplicated attribute path in a single literal — this
+is not the `repeated_keys` style question §13 argues about, it is an eval error.
+
+`palette` also leaves `README.md`'s aspect table and host lists, and `CLAUDE.md`'s §2 `font.nix`
+exemplar, which was built entirely on the split. `mako.nix` was §2's "same daemon under two
+theming regimes" example and is no longer that; `thunar.nix` takes its place.
 
 ## Step 6 — the six programs stylix themed and nothing else does
 

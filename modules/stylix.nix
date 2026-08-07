@@ -15,7 +15,6 @@
             bat.enable = true;
             hyprlock.enable = true;
             lazygit.enable = true;
-            mako.enable = true;
             tmux.enable = true;
             yazi.enable = true;
             zathura.enable = true;
