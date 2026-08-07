@@ -8,7 +8,11 @@ _: {
       }: let
         c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
         thm_bg = "#${c.base00}";
+        thm_surface = "#${c.base01}";
         thm_gray = "#${c.base03}";
+        thm_dim = "#${c.base04}";
+        thm_fg = "#${c.base05}";
+        thm_red = "#${c.base08}";
         thm_blue = "#${c.base0D}";
       in {
         programs.tmux = {
@@ -101,6 +105,14 @@ _: {
             set -g message-command-style "bg=default,fg=${thm_blue}"
             set -g mode-style "bg=${thm_blue},fg=${thm_bg}"
             setw -g clock-mode-colour "${thm_blue}"
+
+            # The status line above sets its colours inline, so these are the
+            # states it cannot reach: prefix+q pane numbers, and a window
+            # flagging a bell or activity.
+            set -g display-panes-active-colour "${thm_dim}"
+            set -g display-panes-colour "${thm_surface}"
+            setw -g window-status-bell-style "fg=${thm_bg},bg=${thm_red}"
+            setw -g window-status-activity-style "fg=${thm_fg},bg=${thm_bg}"
           '';
         };
       }
