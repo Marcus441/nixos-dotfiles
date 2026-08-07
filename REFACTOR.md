@@ -22,7 +22,7 @@ introduced the first role option, `fileManager.command`.
 Update this list in the commit that completes each step. It is the only record of where the
 work is — the plan is otherwise stateless, and a fresh session will start at the top.
 
-- [ ] **Step 1** — `mako` moves to `core`
+- [x] **Step 1** — `mako` moves to `core`
 - [ ] **Step 2** — `thunar` becomes an aspect
 - [ ] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
 - [ ] **Step 4** — `waybar` becomes an aspect; `bar.toggle`; dwl's bar patch becomes conditional
@@ -152,7 +152,7 @@ someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, n
 
   | Step | swift5 | gpc | UM790pro |
   | --- | --- | --- | --- |
-  | 1 mako → core | **changes** | **changes** | **changes** |
+  | 1 mako → core | **changed** | identical | identical |
   | 2 thunar aspect | identical | **changes** | **changes** |
   | 3 wleave aspect | identical | **changes** | **changes** |
   | 4 waybar aspect | identical | **changes** | **changes** |
@@ -262,9 +262,21 @@ looks*, not *whether it exists*.
 Closes the audit finding that `dwl.nix`'s autostart invokes `mako` by bare name from a
 theming aspect.
 
-**Expect:** all three hosts change. Watch for stylix theming mako differently once the
-daemon is declared in `core` — §9's warning about moving a themed program between aspects
-applies directly.
+**Measured:** only swift5 changed, and only in the order of the three rule sections in
+`.config/mako/config`; the criteria are disjoint, so nothing overrides anything else. gpc and
+UM790pro are byte-identical.
+
+The prediction of three moved hosts was wrong for a reason the later steps must not inherit:
+mako's package enters `home.packages` from home-manager's own module, not from any aspect
+file, so flipping *which* aspect sets `enable` cannot move it. A file changing aspect moves
+packages only when that file lists the package itself. Steps 2–5 mostly do; check before
+treating an identical path as a mistake.
+
+The same measurement contradicts §5 on direction: definitions accumulate in **reverse**
+aspect-list order, and within an aspect in reverse discovery order. The relative-rank model
+is unaffected — a reversal is still a total order fixed by within-aspect rank — but the
+sentence naming host-list order is wrong. §9's stylix hazard did not fire: theming still
+tracks the `stylix` aspect's explicit target list, which no host's list changed.
 
 ## Step 2 — `thunar` becomes an aspect
 
