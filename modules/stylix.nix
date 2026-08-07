@@ -5,11 +5,6 @@
       {pkgs, ...}: let
         theme = "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
       in {
-        # The pinned stylix drives home.pointerCursor without the (newly required)
-        # explicit enable, which trips a home-manager deprecation warning. State it
-        # explicitly here; drop this once stylix is updated post-refactor.
-        home.pointerCursor.enable = true;
-
         stylix = {
           enable = true;
           autoEnable = false;
@@ -26,12 +21,6 @@
             tmux.enable = true;
             yazi.enable = true;
             zathura.enable = true;
-          };
-
-          cursor = {
-            name = "Adwaita";
-            size = 24;
-            package = pkgs.adwaita-icon-theme;
           };
 
           icons = {

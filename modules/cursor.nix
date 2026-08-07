@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.palette = [
+  flake.modules.homeManager.core = [
     (
       {
         pkgs,
@@ -7,6 +7,9 @@ _: {
         config,
         ...
       }: {
+        # The two theming regimes disagreed -- swift5 was DMZ-Black, the stylix
+        # hosts Adwaita, both 24px. DMZ-Black wins the whole fleet: it is the
+        # one a file in this repo chose, where Adwaita came with the generator.
         options.desktop.cursor = {
           name = lib.mkOption {
             type = lib.types.str;

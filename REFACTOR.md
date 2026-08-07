@@ -89,8 +89,8 @@ Update this list in the commit that completes each step.
 
 - [x] **Step 1** — colour readers move to `desktop.colors`; every stylix `aspectRequires` dissolves
 - [x] **Step 2** — fonts to `core`
-- [ ] **Step 3** — cursor and icons to `core` *(the one decision — see below)*
-- [ ] **Step 4** — gtk and qt to `core`
+- [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
+- [ ] **Step 4** — gtk and qt to `core`, taking the icon theme with them
 - [ ] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
 - [ ] **Step 6** — bat, lazygit, tmux, yazi, zathura, hyprlock themed from the palette
 - [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
@@ -194,9 +194,27 @@ would elect DMZ-Black fleet-wide by accident. **Set the default explicitly in th
 commit**, so the choice is argued rather than inherited. One cursor package leaving the
 closure is then the expected diff, not a mistake.
 
-Icons are a **dedupe, not a gain**: `gtk.nix:13-16` already sets `Papirus-Dark` from
-`palette`, so swift5 has it. What has no palette equivalent is stylix's
-`icons.light = "Papirus-Light"`, and nothing here uses a light theme.
+**Decided: DMZ-Black, fleet-wide.** It is the one a file in this repo chose; Adwaita arrived
+with the generator being removed. `stylix.cursor` goes, and with it the
+`home.pointerCursor.enable` workaround that existed only because the pinned stylix tripped a
+home-manager deprecation.
+
+**Icons moved to Step 4.** They are a dedupe rather than a gain — `gtk.nix` already sets
+`Papirus-Dark` from `palette` — but deleting `stylix.icons` here would strip the desktops'
+icon theme until `gtk.nix` reaches `core`, the same trap Step 2 hit with `stylix.fonts`.
+Icons belong with the gtk move.
+
+**Measured:** swift5 **byte-identical**, UM790pro gains `vanilla-dmz` and substitutes
+Adwaita → DMZ-Black in every consumer at once — `gtk-3.0/settings.ini`, `gtk-4.0`,
+`.gtkrc-2.0`, `uwsm/env`'s `XCURSOR_THEME`, and the `.icons` / `.local/share/icons` trees.
+`gtk-icon-theme-name=Papirus-Dark` is untouched, confirming the icon deferral was the right
+call.
+
+That swift5 did not move contradicts the ground rule above, which predicted it would move at
+every step from 2 to 5. The rule is right about *why* — within-aspect rank does reach
+`home.packages` — but `cursor.nix` contributes no package of its own, so changing its aspect
+moved nothing. Same lesson the roles plan learned twice: a file changing aspect only moves
+store paths when that file itself lists a package.
 
 ## Step 4 — gtk and qt to `core`
 
