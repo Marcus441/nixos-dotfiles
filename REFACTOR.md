@@ -480,11 +480,32 @@ The status line is written in tmux's vocabulary deliberately: transparent behind
 one reversed chip, colour carried by the foreground. `tmux.nix`'s `status-left` is
 `fg=thm_bg,bg=thm_blue,bold`, and `mode.normal_main` is now the same three values.
 
-**`bg = "reset"`, not an omitted key.** A partial `theme.toml` merges onto the preset, so a
-background is only cleared by naming one; `reset` is the preset's own spelling for the
-terminal default (`mgr.find_position` uses it). Every inline table this file touches is
-restated in full for the same reason — that makes the result independent of how deep yazi's
-merge goes, which is the one thing about it that is not measured here.
+**A background is only cleared by naming one**, since a partial `theme.toml` merges onto the
+preset. Every inline table this file touches is restated in full for the same reason — that
+makes the result independent of how deep yazi's merge goes, which is the one thing about it
+that is not measured here.
+
+**Which name, though, depends on whether anything reads the background back.** The first pass
+used `reset` everywhere, and that put a base05 bar in the middle of the status line. The
+status bar is Lua — `yazi-plugin/preset/components/status.lua` — and it builds the powerline
+by taking one segment's background and drawing the next separator *in* it:
+
+```lua
+ui.Span(" " .. ya.readable_size(len) .. " "):style(style.alt),
+ui.Span(th.status.sep_left.close):fg(style.alt:bg()),   -- fg FROM a bg
+```
+
+`style.alt` is `th.mode.normal_alt`. With `bg = "reset"` that resolves to the terminal's
+default *foreground* — base05, a bright bar between the size and the filename, and a second
+one before the position chip in `Status:percent`. base00 instead: it is the value `foot.nix`
+gives the terminal background, so the separator is drawn in the background colour and
+disappears, while the segment it caps still looks transparent.
+
+`status.progress_normal` and `progress_error` keep `reset`, because `progress.lua` passes them
+to `gauge_style` and nothing transposes them. **The rule is not "prefer `reset`" but "`reset`
+is a value that only survives being drawn"** — the same shape as the base16/base24 lesson from
+Step 6, one level down: a colour that is correct in one role is wrong the moment something
+reads it in another.
 
 **The fourth override is not a colour.** `indicator.preview` is preset `underline = true`, and
 an underline crosses the descenders of the filenames it marks. `bg = base02` carries the same

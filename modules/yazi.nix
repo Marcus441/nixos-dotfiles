@@ -33,8 +33,10 @@ _: {
           # here is yazi's own, which names ANSI colours and so already reads
           # `desktop.colors` through foot.
           #
-          # `bg = "reset"` rather than an omitted key: a partial theme merges
-          # onto the preset, so a background is only cleared by naming it.
+          # A partial theme merges onto the preset, so a background is only
+          # cleared by naming one. Which name depends on whether anything reads
+          # it back: `reset` where the style is only ever drawn, base00 where a
+          # component uses the background as a foreground -- see `mode` below.
           theme = {
             mgr = {
               marker_marked = {
@@ -75,6 +77,13 @@ _: {
             # tmux's status vocabulary: transparent behind everything, one
             # reversed chip, colour carried by the foreground. `_main` is the
             # chip, `_alt` the separator caps and the segment after it.
+            #
+            # `_alt.bg` is base00 rather than `reset` because status.lua reads
+            # it as a *foreground*: `ui.Span(sep_left.close):fg(style.alt:bg())`
+            # draws the transition out of the size segment. A `reset` there is
+            # the default text colour, which is a base05 bar in the middle of
+            # the bar. base00 is the same value foot.nix gives the terminal
+            # background, so it renders as nothing.
             mode = {
               normal_main = {
                 fg = colors.base00;
@@ -83,7 +92,7 @@ _: {
               };
               normal_alt = {
                 fg = colors.base0D;
-                bg = "reset";
+                bg = colors.base00;
               };
               select_main = {
                 fg = colors.base00;
@@ -92,7 +101,7 @@ _: {
               };
               select_alt = {
                 fg = colors.base0B;
-                bg = "reset";
+                bg = colors.base00;
               };
               unset_main = {
                 fg = colors.base00;
@@ -101,7 +110,7 @@ _: {
               };
               unset_alt = {
                 fg = colors.base08;
-                bg = "reset";
+                bg = colors.base00;
               };
             };
 
