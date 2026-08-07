@@ -117,12 +117,16 @@ _: {
                 (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m menus:wallpapers\")")
               ];
             }
+          ]
+          ++ lib.optionals (config.powerMenu.command != "") [
             {
               _args = [
                 "${mainMod} + Z"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- wleave\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ${config.powerMenu.command}\")")
               ];
             }
+          ]
+          ++ [
             {
               _args = [
                 "Print"

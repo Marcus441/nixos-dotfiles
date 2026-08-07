@@ -1,8 +1,20 @@
 _: {
   # reads config.lib.stylix.colors
-  aspectRequires.apps = ["stylix"];
+  aspectRequires.wleave = ["stylix"];
 
-  flake.modules.homeManager.apps = [
+  flake.modules.homeManager.core = [
+    (
+      {lib, ...}: {
+        options.powerMenu.command = lib.mkOption {
+          type = lib.types.str;
+          default = "";
+          description = "Command opening a power menu, bare of any session launcher prefix. Empty when no aspect provides one.";
+        };
+      }
+    )
+  ];
+
+  flake.modules.homeManager.wleave = [
     (
       {
         config,
@@ -12,6 +24,8 @@ _: {
       }: let
         inherit (config.lib.stylix.colors) base00 base01 base02 base05 base07 base08 base09 base0A base0C base0D base0E;
       in {
+        powerMenu.command = "wleave";
+
         programs.wleave = {
           enable = true;
           settings = {
@@ -19,18 +33,18 @@ _: {
             close-on-lost-focus = true;
             show-keybinds = true;
             no-version-info = true;
+
+            # The session owns lock and logout; the rest is systemd, which every
+            # host has. A button whose action no aspect supplies is omitted
+            # rather than rendered dead.
             buttons =
-              [
-                {
-                  label = "lock";
-                  action = "hyprlock";
-                  text = "Lock";
-                  keybind = "l";
-                  icon = "${pkgs.wleave}/share/wleave/icons/lock.svg";
-                }
-              ]
-              # The session owns how it ends. Omitted rather than rendered dead
-              # where no session provides one.
+              lib.optional (config.lock.command != "") {
+                label = "lock";
+                action = config.lock.command;
+                text = "Lock";
+                keybind = "l";
+                icon = "${pkgs.wleave}/share/wleave/icons/lock.svg";
+              }
               ++ lib.optional (config.logout.command != "") {
                 label = "logout";
                 action = config.logout.command;

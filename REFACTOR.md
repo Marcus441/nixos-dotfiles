@@ -24,7 +24,7 @@ work is — the plan is otherwise stateless, and a fresh session will start at t
 
 - [x] **Step 1** — `mako` moves to `core`
 - [x] **Step 2** — `thunar` becomes an aspect
-- [ ] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
+- [x] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
 - [ ] **Step 4** — `waybar` becomes an aspect; `bar.toggle`; dwl's bar patch becomes conditional
 - [ ] **Step 5** — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
 - [ ] **Step 6** — `terminal.argv`, provided from `core`
@@ -154,7 +154,7 @@ someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, n
   | --- | --- | --- | --- |
   | 1 mako → core | **changed** | identical | identical |
   | 2 thunar aspect | **changed** | **changed** | **changed** |
-  | 3 wleave aspect | identical | **changes** | **changes** |
+  | 3 wleave aspect | identical | **changed** | **changed** |
   | 4 waybar aspect | identical | **changes** | **changes** |
   | 5 walker/wmenu | **changes** | **changes** | **changes** |
   | 6 terminal.argv | **changes** | **changes** | **changes** |
@@ -314,7 +314,38 @@ dead defaults, same class, wrong program.
 - `hyprland-binds.nix` and `waybar.nix:130` read `config.powerMenu.command` and omit their
   entries when empty.
 
-**Expect:** swift5 identical, gpc and UM790pro change.
+**Measured:** as predicted. swift5 byte-identical on both classes, every NixOS toplevel
+identical, no closure moved. gpc and UM790pro differ in three generated files, all from the
+one substitution: `wleave/layout.json` and `waybar/config` swap `hyprlock` for
+`loginctl lock-session`, and `waybar.service`'s reload trigger follows its config. That
+`hyprland.lua` did *not* change is the useful signal — `$mod+Z` renders the same string
+through `powerMenu.command` as it did hardcoded.
+
+A sixth role option, `logout.command`, landed first in `a71c6ef`. The five-role table above
+is the list of roles this plan *converts*, not the permitted set — `lock.command` predates
+the plan and is absent from it too.
+
+**Accepted risk.** Locking now routes `loginctl lock-session` → logind → hypridle's
+`lock_cmd`, where both readers previously ran `hyprlock` directly. If hypridle is not
+running, logind sets `LockedHint` and returns success while nothing locks. The same
+dependency already existed for hypridle's own idle timeout; this extends it to the two
+user-initiated paths. Confirm on the switched machine:
+
+```bash
+systemctl --user status hypridle && loginctl lock-session
+```
+
+**Carry into Step 4.** `waybar.nix`'s `network.on-click` invokes `hyprctl` *and* `footclient`
+by bare name, and the bar also declares `hyprland/window`, `hyprland/workspaces` and
+`targets = ["wayland-session@hyprland.desktop.target"]`. A `waybar` aspect a dwl host can
+take must answer all of those, or Step 4 reopens the defect class it exists to close. The
+footclient half is Step 6's `terminal.argv`.
+
+**Carry into Step 5.** Two no-provider conventions now coexist: `lock`, `logout` and
+`powerMenu` default empty and omit the entry, while `launcher.argv` is about to become
+strict so zero providers is a hard error. Both are deliberate — a missing button is visible,
+a missing `$mod+D` is not — but say which roles get which, so a later reader does not
+"fix" the inconsistency.
 
 ## Step 4 — `waybar` becomes an aspect; `bar.toggle`
 
