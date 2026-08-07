@@ -22,12 +22,12 @@ _: {
           "x-scheme-handler/webcal" = "firefox.desktop";
 
           # PDF
-          "application/acrobat" = "zathura.desktop";
-          "application/pdf" = "zathura.desktop";
-          "application/vnd.pdf" = "zathura.desktop";
-          "application/x-pdf" = "zathura.desktop";
-          "text/pdf" = "zathura.desktop";
-          "text/x-pdf" = "zathura.desktop";
+          "application/acrobat" = "org.pwmt.zathura.desktop";
+          "application/pdf" = "org.pwmt.zathura.desktop";
+          "application/vnd.pdf" = "org.pwmt.zathura.desktop";
+          "application/x-pdf" = "org.pwmt.zathura.desktop";
+          "text/pdf" = "org.pwmt.zathura.desktop";
+          "text/x-pdf" = "org.pwmt.zathura.desktop";
 
           # Images
           "image/gif" = "mpv.desktop";
@@ -58,15 +58,15 @@ _: {
           "audio/x-m4a" = "mpv.desktop";
 
           # Code/Text
-          "application/json" = "neovim.desktop";
-          "application/toml" = "neovim.desktop";
-          "application/x-shellscript" = "neovim.desktop";
-          "application/x-yaml" = "neovim.desktop";
-          "application/x-zerosize" = "neovim.desktop";
-          "text/plain" = "neovim.desktop";
-          "text/x-python" = "neovim.desktop";
-          "text/x-script.python" = "neovim.desktop";
-          "text/x-shellscript" = "neovim.desktop";
+          "application/json" = "nvim.desktop";
+          "application/toml" = "nvim.desktop";
+          "application/x-shellscript" = "nvim.desktop";
+          "application/x-yaml" = "nvim.desktop";
+          "application/x-zerosize" = "nvim.desktop";
+          "text/plain" = "nvim.desktop";
+          "text/x-python" = "nvim.desktop";
+          "text/x-script.python" = "nvim.desktop";
+          "text/x-shellscript" = "nvim.desktop";
 
           # Terminal
           "x-scheme-handler/terminal" = "footclient.desktop";
