@@ -12,7 +12,6 @@
           base16Scheme = theme;
           polarity = "dark";
           targets = {
-            hyprlock.enable = true;
             yazi.enable = true;
           };
         };
