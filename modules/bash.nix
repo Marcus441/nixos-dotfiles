@@ -61,7 +61,7 @@ _: {
             __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "''${HOSTNAME:-$(hostname)}" "$PWD"; }
 
             # Prompt: cwd + git branch + active dev environment (devenv / nix
-            # devshell / python venv) + white "$", using the base24 palette
+            # devshell / python venv) + a "$" sigil, using the base24 palette
             # (./colors.nix). Replaced starship in step 1.2; no external prompt
             # program.
             __prompt() {
@@ -76,7 +76,10 @@ _: {
               PS1='\[\e[1;38;2;${rgb colors.base0D}m\]\w\[\e[0m\]'
               [[ -n $branch ]] && PS1+=" \[\e[38;2;${rgb colors.base0E}m\]git:$branch\[\e[0m\]"
               [[ -n $env ]] && PS1+=" \[\e[38;2;${rgb colors.base0C}m\]($env)\[\e[0m\]"
-              PS1+=' \[\e[1;38;2;${rgb colors.base05}m\]\$\[\e[0m\] '
+              # base03, not bold base05: base05 is the colour of the command
+              # being typed, so the sigil was the loudest thing on the line and
+              # the same hue as the text it was meant to separate from.
+              PS1+=' \[\e[38;2;${rgb colors.base03}m\]\$\[\e[0m\] '
             }
             case "$PROMPT_COMMAND" in
               *__prompt*) ;;
