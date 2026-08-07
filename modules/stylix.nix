@@ -12,7 +12,6 @@
           base16Scheme = theme;
           polarity = "dark";
           targets = {
-            bat.enable = true;
             hyprlock.enable = true;
             lazygit.enable = true;
             tmux.enable = true;
