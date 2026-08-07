@@ -438,6 +438,84 @@ in §13 was re-run rather than trusted — it flags eight files now, not nine, a
 **Expect:** the closure loses stylix and its base16-schemes dependency on gpc and UM790pro.
 That is the measurement that says the project is done.
 
+**Correction: the line counts above understate what that commit contains.** The icon table was
+deleted from `_yazi/style.nix` while the commit was being assembled, and `git add -A` swept it
+in. So `theme.toml` fell 3786 → **89**, not 3412, and `f9a7f32` is the icon commit as well as
+the stylix commit. The claim that the diff has no added lines still holds.
+
+---
+
+## After — yazi minimised
+
+Not a step of this plan; a consequence of it. With stylix gone there was nothing left in
+`_yazi/` that yazi's own preset did not already say, so both files went and what survives is
+inlined in `modules/yazi.nix`. 498 lines across three files → 204 in one.
+
+**Most of what was deleted had never done anything.** `_yazi/yazi.nix` was `{settings = {…};}`
+and `yazi.nix` assigned it to `programs.yazi.settings`, so every key landed a level too deep —
+`yazi.toml` was 354 lines of `[settings.mgr]`, `[settings.preview]`, `[settings.tasks]`, none
+of which yazi reads. It was also a verbatim copy of yazi's defaults under the pre-26 section
+name (`manager`, not `mgr`), so even at the right depth it would have been a no-op. The one
+line that was *not* inert-by-redundancy went with it: `plugin.prepend_fetchers` registers the
+git plugin's status column, and nested under `[settings]` it never registered. **Deleting the
+file turned the git column on for the first time.** `yazi.toml` is now nine lines and all nine
+are load-bearing.
+
+**The preset names colours correctly and composes them badly, and those are different
+claims.** Step 6 established the first — the UI is ANSI, so foot's palette decides — and it
+still holds. What it does not cover is contrast, because a name says nothing about what it is
+put next to. Three of the four overrides are that:
+
+- `mode.normal_main` is preset `bg = "blue"` with no `fg`, so base05 text sits on base0D. Both
+  are light; the mode indicator was the least readable thing on screen. `normal_alt` is
+  `fg = "blue", bg = "gray"` — base0D on base06, worse.
+- `status.progress_normal` and `progress_error` paint on solid `black` and `red` blocks, which
+  under this palette is base11 and base08 — two panels that are not the background behind them.
+- `mgr.border_style` is `gray`, ANSI 7, which `foot.nix` maps to base06 — a border brighter
+  than the text it frames. base0D instead, matching tmux's active pane border. The popup
+  frames (`confirm`, `cmp`, `input`, `pick`, `spot`, `tasks`) follow it so the frames read as
+  one surface.
+
+The status line is written in tmux's vocabulary deliberately: transparent behind everything,
+one reversed chip, colour carried by the foreground. `tmux.nix`'s `status-left` is
+`fg=thm_bg,bg=thm_blue,bold`, and `mode.normal_main` is now the same three values.
+
+**`bg = "reset"`, not an omitted key.** A partial `theme.toml` merges onto the preset, so a
+background is only cleared by naming one; `reset` is the preset's own spelling for the
+terminal default (`mgr.find_position` uses it). Every inline table this file touches is
+restated in full for the same reason — that makes the result independent of how deep yazi's
+merge goes, which is the one thing about it that is not measured here.
+
+**The fourth override is not a colour.** `indicator.preview` is preset `underline = true`, and
+an underline crosses the descenders of the filenames it marks. `bg = base02` carries the same
+"last hovered here" information and leaves the glyphs alone, and it puts the preview pane a
+step below the two `reversed = true` panes rather than level with them in a different idiom.
+
+**Directory icons were the one place the preset is hex, not ANSI.** `icon.dirs` is 14
+named-folder rules at `#ff9800`/`#00bcd4`/`#03a9f4`, and `icon.conds` colours the fallbacks at
+`#03a9f4`. A rule with no `fg` takes the file's own colour, and `filetype` rules are ANSI
+names, so dropping `fg` is what hands directories back to the palette. `dirs = []` removes the
+14; `conds` is restated as its 12 rules minus the colours, because a list is replaced rather
+than merged. The glyphs are unchanged — the ask was terminal colours, not different icons.
+Files keep the devicon hex in `icon.files` and `icon.exts`, which is what the shelved
+`icons-brew` decision is about.
+
+### Measured
+
+- **All six targets build; swift5 byte-identical with an empty closure diff.** It does not take
+  `apps`, which is the containment check.
+- **The theme parses, and the check that says so bites.** `yazi --debug` reads and validates
+  `theme.toml`; appending `fg = "notacolour"` makes it a hard startup error at that line, and
+  the file as generated loads clean. So `underline = false`, `bg = "reset"` and `dirs = []` all
+  deserialise rather than being ignored.
+- **Section-level merge confirmed at runtime, not assumed.** A Lua probe in `init.lua` reads
+  `th.mgr.cwd`, which this file never sets — a partial `[mgr]` does not wipe the preset's other
+  keys. `th.icon` is not exposed to Lua, so the `dirs = []` replacement is documented behaviour
+  and prior measurement, not re-measured here.
+- **gpc and UM790pro lose three plugins from the closure** — `full-border`, `lazygit`,
+  `smart-enter` — and nothing else. `full-border` leaving is why `border_style` now shows on
+  the plain `│` divider.
+
 ---
 
 ## Not now
