@@ -124,7 +124,8 @@ is `core`. Do not make every package an aspect: files already give you per-tool
 granularity, and per-tool *selection* only turns each host into a duplicated manifest.
 
 **A bad name is cheap to fix.** Renaming `suckless` to `dwl` in place left all six targets
-byte-identical (`REFACTOR.md` Step 4, measured against a predicted *changes* on all three
+byte-identical (the previous refactor plan's Step 4 — that plan is in git history; step
+numbers below refer to it, not to the current `REFACTOR.md` — measured against a predicted *changes* on all three
 hosts). The name itself does not reach a store path — only its *position* in a host's
 aspect list does (§5). So a name that has started to lie should be corrected, not kept for
 fear of a rebuild.
@@ -451,7 +452,7 @@ evaluation to reach a value, importing a module file by path to call a function 
 ## 9. Hazards
 
 - **Aspect elements are `types.deferredModule`.** They were `types.raw` until Step 1 of
-  `REFACTOR.md`, on the grounds that `deferredModule` had been measured to move store
+  the previous refactor plan, on the grounds that `deferredModule` had been measured to move store
   paths. **That did not reproduce.** On the flattened tree, switching the element type left
   all six targets byte-identical: empty `diff-closures`, no diff under `home-files`, no diff
   under `/etc`. Nothing is claimed here about why the two measurements disagree — the

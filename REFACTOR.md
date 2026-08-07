@@ -1,63 +1,142 @@
-# Refactor Plan: close the §12 divergences
+# Refactor Plan: roles as aspects, intents as options
 
-`CLAUDE.md` defines the invariants and lists, in §12, the places this repo does not yet
-satisfy them. **That list is the backlog. This file is the order.** Its item numbers are
-stable identities — a closed item is deleted and the rest keep their numbers — so the
-§12.x citations below stay valid as the list shrinks.
+`CLAUDE.md` holds the invariants. Do not restate them here — read them there. This document
+only says what to do next, in what sequence, and how to know it worked.
 
-Do not restate the invariants here — read them there. This document only says what to do
-next, in what sequence, and how to know it worked.
-
-The Dendritic migration and the typed-monitor work are finished; the byte-identity
-baseline is retired and `../dotfiles-old` is gone. Earlier plans are in git history:
+**The previous plan is finished and has been replaced.** Steps 0–7 of it closed §12 items
+1–6; the structural invariants in §1 now hold. That plan, with its per-step measurements,
+is in git history:
 
 ```bash
 git log --oneline --all -- REFACTOR.md
 ```
 
-## Progress
-
-Update this list in the commit that completes each step. It is the only record of where
-the work is — the plan is otherwise stateless, and a fresh session will start at the top.
-
-- [x] **Step 0** — flatten the directory tree (`8b28361`), six targets byte-identical
-- [x] **Step 1** — re-test `deferredModule`: it holds, six targets byte-identical
-- [x] **Step 2** — `extraSpecialArgs` → `_module.args`, six targets byte-identical
-- [x] **Step 3** — theming becomes an axis; §12.3 and §12.4 closed
-- [x] **Step 4** — `hyprland` and `dwl` aspects; `suckless` gone, six targets identical
-- [x] **Step 5** — `gaming` and `nvidia`; §12.6 closed
-- [x] **Step 6** — surface the `_` trees; §12.5 closed
-- [x] **Step 7** — retire the archetype names, create `laptop`; §12.2 closed
-- [ ] Step 8 — darwin groundwork *(intent aspects done ahead of it; the rest needs a Mac)*
+Three later commits this plan builds on directly: `4137d7a` typed the host record,
+`bf52982` added `aspectRequires` and the generator check that enforces it, and `f7d40f4`
+introduced the first role option, `fileManager.command`.
 
 ---
 
-## Target state
+## Progress
 
-**Reached after step 7**, except `mbp`. What the host files actually say now:
+Update this list in the commit that completes each step. It is the only record of where the
+work is — the plan is otherwise stateless, and a fresh session will start at the top.
 
-```nix
-swift5   = ["dev" "core" "laptop" "dwl" "palette"];
-gpc      = ["core" "gaming" "nvidia" "hyprland" "stylix" "apps"];
-UM790pro = ["dev" "core" "hyprland" "stylix" "apps"];
-mbp      = ["core" "laptop" "dev" "aerospace" "stylix"];   # planned
+- [ ] **Step 1** — `mako` moves to `core`
+- [ ] **Step 2** — `thunar` becomes an aspect
+- [ ] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
+- [ ] **Step 4** — `waybar` becomes an aspect; `bar.toggle`; dwl's bar patch becomes conditional
+- [ ] **Step 5** — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
+- [ ] **Step 6** — `terminal.argv`, provided from `core`
+
+---
+
+## The principle
+
+Two mechanisms, applied by a single test:
+
+- **Does a host refuse it?** → an **aspect**. §3's existing test, unchanged.
+- **Do two implementations answer the same question?** → an **option namespace** in `core`,
+  set by whichever aspect provides it.
+
+A role gets both when both apply.
+
+**Two things claiming one job is an error.** This falls out of the second mechanism at no
+cost: a single-valued option with two definitions is a module-system conflict, and because
+aspect elements are `deferredModule` (§9) the error names the files rather than reporting
+`<unknown-file>` twice:
+
+```
+error: The option `terminal.argv' has conflicting definition values:
+  - In `.../modules/foot.nix': [ "/nix/store/…/footclient" ]
+  - In `.../modules/ghostty.nix': [ "/nix/store/…/ghostty" ]
 ```
 
-Every name there is a decision some host makes differently. `core` is what nobody opts out
-of. `maximal` and `suckless` are gone, which is what §12.2 was about.
+**This constrains claiming the role, not installing the package.** Nothing stops a second
+terminal appearing in `home.packages`; the error fires only when two things both claim to
+*be* the terminal. That is the intended line — trying a second terminal is legitimate, two
+things silently fighting over `$mod+Return` is not.
 
-Two deviations from the list this section originally targeted, both deliberate:
+---
 
-- **`dev` still precedes `core`** on swift5 and UM790pro. The target wrote `core` first,
-  but swapping them reorders two aspects for cosmetics, and aspect order reaches derivation
-  hashes. Left alone.
-- **`gpc` takes `apps`.** This was flagged as an open question — a gaming rig may not want
-  thunderbird — and the answer here is only "status quo": `maximal` → `apps` was a rename,
-  and dropping the aspect from gpc is a behavioural change someone should choose on
-  purpose. Still open, now as a preference rather than a refactor step.
+## Role inventory
 
-The other flagged question, whether `dev` on a gaming rig is absent or untested, is
-likewise untouched: gpc still does not take it.
+| Role | Intent option | Provider | Aspect today | Proposed aspect | Refused by |
+| --- | --- | --- | --- | --- | --- |
+| launcher | `launcher.argv` *(exists)* | walker | `apps` | **`walker`** | swift5 |
+| launcher | ” | wmenu | set inline in `dwl` | **`wmenu`** | gpc, UM790pro |
+| bar | **`bar.toggle`** *(new)* | waybar | `hyprland` | **`waybar`** | swift5 |
+| bar | ” | dwl built-in | `dwl` (C patch) | stays in `dwl` | — |
+| file manager | `fileManager.command` *(done, `f7d40f4`)* | thunar | `apps` | **`thunar`** | swift5 |
+| power menu | **`powerMenu.command`** *(new)* | wleave | `apps` | **`wleave`** | swift5 |
+| terminal | **`terminal.argv`** *(new)* | foot | `core` | stays `core` | nobody |
+| notifications | none — §7 says no intent | mako | `palette`+`stylix`+`laptop` | **moves to `core`** | nobody |
+| browser | none — see *Deliberately absent* | firefox | `core` | stays `core` | nobody |
+
+Net: **five new aspects** — `walker`, `wmenu`, `waybar`, `wleave`, `thunar` — taking the
+repo from ten to fifteen.
+
+### Three roles deliberately get no aspect
+
+§3's test is "does some host say no". These three fail it, and inventing a name anyway
+would be exactly the per-tool selection §3 warns turns each host into a duplicated
+manifest.
+
+- **mako.** Every host has it today, via `palette` *or* `stylix`. It does not earn an
+  aspect; it earns *escape from theming*. `dwl.nix`'s session autostart invokes `mako` by
+  bare name, so today a dwl host taking neither theming aspect gets no notification daemon
+  — a capability made conditional on a theming regime. Moving it to `core` fixes that
+  without adding a name.
+- **foot, firefox.** Single implementations nobody refuses. `foot` gets the *option* so
+  consumers stop hardcoding it; both stay in `core`. If ghostty ever arrives as an aspect,
+  taking it produces the conflict error above, and *that* is the moment foot earns its own
+  aspect.
+
+### Deliberately absent
+
+- **`browser.command`.** Nothing binds a browser key, so the option would have a setter and
+  no reader — precisely what §7 warns against. Add it when something reads it.
+- **A `bar` aspect distinct from `waybar`.** The dwl built-in bar is compiled into dwl; it
+  is not separable from the `dwl` aspect and does not want a name of its own.
+
+---
+
+## Semantics: strict, not `mkDefault`
+
+Sessions stop setting role options. `launcher.nix`'s `hyprland` and `dwl` branches both go
+away; `walker` and `wmenu` set `launcher.argv` themselves.
+
+| Case | Result |
+| --- | --- |
+| Two providers | module-system conflict, naming both files |
+| Zero providers | `option used but not defined` |
+| Session opinion | none — the host list is the only statement |
+
+`mkDefault` is rejected on purpose: it is the mechanism for silently resolving exactly what
+this plan wants to be loud. Do not reach for it to make a step build.
+
+**Known weakness, accepted.** The zero-provider error names the option but not the host, and
+`aspectRequires` cannot express "needs one of {walker, wmenu}". The alternative is a
+`roleProviders` count in the generator. Accept the weaker error for now; revisit only if it
+actually bites.
+
+---
+
+## Resulting host files
+
+```nix
+swift5   = ["dev" "core" "laptop" "dwl" "wmenu" "palette"];                    # 5 → 6
+gpc      = ["core" "gaming" "nvidia" "hyprland" "waybar" "walker" "wleave"
+            "thunar" "stylix" "apps"];                                          # 6 → 10
+UM790pro = ["dev" "core" "hyprland" "waybar" "walker" "wleave" "thunar"
+            "stylix" "apps"];                                                   # 5 → 9
+```
+
+The case that motivated the plan becomes expressible for the first time:
+
+```nix
+someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, no wmenu
+```
 
 ---
 
@@ -65,71 +144,55 @@ likewise untouched: gpc still does not take it.
 
 `CLAUDE.md` §9, §10 and §13 apply in full. The ones that bite hardest here:
 
-- **`swift5` is a control only where a step says so.** It is *not* a blanket stop
-  condition — Steps 3, 4, 6, 7 and 8 change swift5 by design. Each step states its own
-  expectation, and only these two are byte-identity controls:
+- **This is not a byte-identical refactor.** Every host moves. Files changing aspect change
+  `buildEnv` order (§5), and several steps are behavioural besides. `verify.sh` is used here
+  to *explain* diffs, not to demand zero — a different discipline from the commits that
+  preceded this plan, where byte-identity was the pass condition. Each step below states its
+  own expectation; treat a deviation from that as the signal.
 
   | Step | swift5 | gpc | UM790pro |
   | --- | --- | --- | --- |
-  | 0 paths | identical | identical | identical |
-  | 1 deferredModule | identical *(measured; "may move" was allowed)* | identical | identical |
-  | 2 `_module.args` | identical | identical | identical |
-  | 3 theming | **changes** | **changes** | **changes** |
-  | 4 sessions | identical *(predicted "changes")* | identical | identical |
-  | 5 gaming/nvidia | identical | **changes** (nixos) | identical |
-  | 6 surface `_` | identical | **changes** | **changes** *(surfacing was free; see below)* |
-  | 7 rename aspects | **changes** | **changes** | **changes** *(home only; both toplevels identical)* |
+  | 1 mako → core | **changes** | **changes** | **changes** |
+  | 2 thunar aspect | identical | **changes** | **changes** |
+  | 3 wleave aspect | identical | **changes** | **changes** |
+  | 4 waybar aspect | identical | **changes** | **changes** |
+  | 5 walker/wmenu | **changes** | **changes** | **changes** |
+  | 6 terminal.argv | **changes** | **changes** | **changes** |
 
-  Treat a deviation from that column as the signal, not "swift5 moved".
-
-- **Aspect order in a host list is load-bearing.** It sets module merge order, which
-  reaches derivation hashes. When splitting one aspect into two, put the new names where
-  the old one sat so the split is a partition, not a reordering.
+- **Aspect order in a host list is load-bearing.** It sets module merge order, which reaches
+  derivation hashes. When splitting one aspect into two, put the new names where the old one
+  sat so the split is a partition, not a reordering.
 - **What reaches store paths is the relative order of files contributing to the *same*
-  aspect.** `import-tree` walks depth-first, per-directory alphabetical (see `CLAUDE.md`
-  §5). But `home.packages` is the concatenation over the aspect list, so interleaving files
-  of *different* aspects is invisible — the aspect list already separated them.
-
-  Step 0 measured both sides. Relocating ~70 files was byte-identical, because a total
-  flatten preserves within-aspect relative order. Renaming `monitors.nix` →
-  `dwl-monitors.nix` moved its package from position 1 to 11, because it changed that
-  file's rank among its own aspect's siblings.
-
-  **A partial move is therefore not automatically free** — but step 6 measured this
-  particular one at zero. Surfacing `_hyprland/*.nix` into `modules/` moved 21 files
-  relative to aspect siblings that were already flat, *and* replaced the tree's
-  hand-written import order (binds, hyprland, monitors, core, animations, rules) with
-  alphabetical discovery order, and all six targets stayed byte-identical. What actually
-  moved gpc and UM790pro in step 6 was the membership change in 6d, not any of the moves.
-
-  So the reasoning that predicted **changes** here was sound and the conclusion was still
-  wrong: within-aspect rank only reaches the output when two files contribute to the same
-  list-valued option, and these did not. Measure.
-
-  Step 1 could have invalidated all of this — if `deferredModule` keyed on `_file`,
-  directory moves would become hash-moving. It stuck, and the re-measurement says the model
-  survives: `modules/monitors.nix` → `modules/monitors/monitors.nix`, a move that changes
-  `_file` while preserving walk position, left swift5 byte-identical. So a **position-
-  preserving** move is still free.
-
-  That is one data point and it is narrow. It says nothing about moves that *change*
-  position, which is exactly what Step 6 does. Measure rather than predict regardless, since
-  discovery order is not strictly positional (`CLAUDE.md` §5).
-- **Declare before you reference.** The generator rejects an aspect name that resolves in
-  no class, so a commit that adds a name to a host list before the declaring file exists
-  will not evaluate. Land the file first, or both in one commit — otherwise a bisect
-  lands on a broken tree.
-- **One concern per commit.** These steps move store paths by design; small commits are
-  what make a bisect possible.
-- **The human switches and confirms before the next step** for every step marked
-  **changes** above. This is not restated per-step; absence is not permission.
+  aspect.** `import-tree` walks depth-first, per-directory alphabetical (§5). `home.packages`
+  is the concatenation over the aspect list, so interleaving files of *different* aspects is
+  invisible — the aspect list already separated them. Within-aspect rank only reaches the
+  output when two files contribute to the same list-valued option. Measure rather than
+  predict; the previous plan recorded three occasions where sound reasoning about this
+  reached the wrong conclusion.
+- **Declare before you reference.** The generator rejects an aspect name that resolves in no
+  class, so a commit adding a name to a host list before the declaring file exists will not
+  evaluate. Land the file first, or both in one commit — otherwise a bisect lands on a
+  broken tree.
+- **`aspectRequires` moves with the file.** A file carrying `aspectRequires.<aspect>` that
+  changes aspect must change its requirement key in the same edit, or the requirement
+  silently attaches to an aspect that no longer reads stylix. Steps 2–5 all move such files.
+- **One concern per commit.** These steps move store paths by design; small commits are what
+  make a bisect possible.
+- **The human switches and confirms before the next step.** Every step here is marked
+  **changes** for at least one host. This is not restated per-step; absence is not
+  permission.
 
 ### Verification
 
-`./scripts/verify.sh build` must report 6 OK before every commit. Then prove nothing
-changed but order:
+`./scripts/verify.sh build` must report 6 OK before every commit. Then compare against the
+previous commit — `verify.sh` takes a git ref and manages its own worktree:
 
-Run this as one block — every command below depends on `$h`:
+```bash
+./scripts/verify.sh HEAD~1
+```
+
+That compares output paths only. When a step is expected to change them, the question is
+*what* changed, which needs the deeper diff:
 
 ```bash
 git worktree add ../dotfiles-prev <previous-commit>
@@ -142,8 +205,8 @@ for h in swift5 gpc UM790pro; do
   new=$(nix build --no-link --print-out-paths \
         ".#homeConfigurations.\"marcus@$h\".activationPackage")
 
-  nix store diff-closures "$old" "$new"          # must be EMPTY
-  diff -rq "$old/home-files" "$new/home-files"   # only intended files
+  nix store diff-closures "$old" "$new"          # which packages moved
+  diff -rq "$old/home-files" "$new/home-files"   # which generated files moved
 
   # diff-closures alone is NOT sufficient: a module that vanishes while setting
   # only config values adds no package, so the closure is unchanged.
@@ -158,431 +221,184 @@ done
 git worktree remove ../dotfiles-prev
 ```
 
-Empty `diff-closures` means no package was added, removed or version-changed. `diff -rq`
-naming only files you meant to touch means no generated config drifted. The `grep -v`
-drops dangling-symlink noise, which is expected and not a real difference.
+The `grep -v` drops dangling-symlink noise, which is expected and not a real difference.
+
+### When paths differ for boring reasons
+
+A step marked **changes** should still be *explained*. These are the innocent causes;
+anything outside them deserves a second look before the commit.
+
+- **`buildEnv` order.** A file moving between aspects changes where its packages land in the
+  concatenation over the host's aspect list. `nix store diff-closures` prints nothing —
+  same packages, same versions — while the output path differs. This is the expected
+  signature of Steps 2–5.
+- **A generated config gaining or losing a line.** `diff -rq` names the file;
+  `diff` it directly. A keybind that disappears because its provider is absent is the
+  intended behaviour of this plan, not a regression.
+- **Theming reaching a program it did not reach before.** Moving a file between `palette`,
+  `stylix` and `core` changes which programs stylix's explicit target list covers (§9). Step
+  1 does this to mako deliberately.
+
+Not innocent, and worth stopping for: a package appearing or disappearing from
+`diff-closures` that the step did not intend, a version change, or a diff on a host the step
+predicted would be identical.
 
 ---
 
-## Step 0 — Flatten the directory tree (§12.3)
+## Step 1 — `mako` moves to `core`
 
-**First, because a total flatten is free and may not stay that way.** *(Done — `8b28361`.)*
+Smallest, independent of everything else, and a good canary for the diff-explaining
+workflow.
 
-`modules/home/` and `modules/nixos/` were the first row of `CLAUDE.md` §11's anti-pattern
-table — paths encoding class. `modules/maximal/` and `modules/suckless/` encoded a host
-archetype. Under Invariant 4 none of them meant anything, but an agent reading the tree as
-a schema would have reproduced them.
+`mako.nix` declares `homeManager.laptop`, `homeManager.palette` and `homeManager.stylix`.
+Notifications are a capability every host wants; the theming split is about *how mako
+looks*, not *whether it exists*.
 
-The original rationale here was that *renames* are free. **That was wrong**, and Step 0 is
-where it was caught: it rested on renaming `modules/jq.nix`, a file that sets only
-`programs.jq.enable` and so contributes nothing positional to `home.packages`. A null
-experiment.
+- Move the daemon's existence and its shared settings to `core`.
+- Keep the two theming regimes where they are: `palette` and `stylix` continue to set
+  colours only.
+- The battery rule (`de9094b`) follows the battery, so it stays in `laptop`.
 
-What is true is narrower and was enough: a *total* flatten preserves within-aspect relative
-order, so it costs nothing, while Step 1 may make even directory moves hash-moving. The
-reorganisation was worth buying at zero rather than at an unknown price — but see the
-ground rules for what that does and does not license.
+Closes the audit finding that `dwl.nix`'s autostart invokes `mako` by bare name from a
+theming aspect.
 
-Do **not** change any aspect membership: this step is a pure rename, so that any path
-movement is unambiguous evidence of something you did not expect.
+**Expect:** all three hosts change. Watch for stylix theming mako differently once the
+daemon is declared in `core` — §9's warning about moving a themed program between aspects
+applies directly.
 
-### Target layout
+## Step 2 — `thunar` becomes an aspect
 
-```
-modules/
-  aspects.nix                      # was lib/aspects.nix
-  hosts/{generator,swift5,gpc,UM790pro}.nix   # generator was lib/mk-hosts.nix
-  display/{monitor-option,render}.nix
-  font/ mako/ bash/ packages/      # concerns currently split across buckets
-  _hyprland/ _waybar/ _walker/ _yazi/ _thunderbird/ _discord/ _opencode/
-  _pkgs/ _dormant/
-  <concern>.nix                    # ~50 single-file concerns, flat
-```
+`fileManager.command` already exists (`f7d40f4`), so this is purely the aspect move.
 
-**`_`-prefixed trees keep their underscores.** Dropping them would surface ~21 modules and
-change all six targets inside a step whose entire verification is byte-identity. Surfacing
-is Step 6.
+- `thunar.nix`'s `nixos.apps` and `homeManager.apps` contributions become `nixos.thunar` and
+  `homeManager.thunar`. The `homeManager.core` option declaration stays in `core`.
+- Add `thunar` to gpc and UM790pro, positioned where `apps` sits so the split is a partition.
+- `mime.nix:8` sets `"inode/directory" = "thunar.desktop"` from `core`, which swift5 already
+  carries with no thunar behind it. Move that association into `thunar.nix`. The same file
+  names `vesktop.desktop` and `thunderbird.desktop`, both `apps` — fix those in the same
+  commit or state why not.
 
-**`lib/` disappears.** `CLAUDE.md` §4 blesses `lib/mk-hosts.nix` while §11 forbids `lib/`
-directories; moving the two files resolves the contradiction without amending either. The
-generator belongs with the host schema it enforces, and `generator.nix` is obviously not a
-hostname, so §6's "add `modules/hosts/<hostname>.nix`" recipe stays unambiguous.
+**Expect:** swift5 identical, gpc and UM790pro change.
 
-### The four collision directories, and what becomes of them
+## Step 3 — `wleave` becomes an aspect; `powerMenu.command`
 
-A flat rename collides on four basenames — which is `§12.4` surfacing as a filename clash,
-not an obstacle. Each gets a directory here, but they do **not** share a fate, and the
-difference matters:
+- Declare `options.powerMenu.command` in `core`; `wleave.nix` sets it.
+- `wleave.nix` moves from `homeManager.apps` to `homeManager.wleave`.
+- `wleave.nix:24` hardcodes `hyprlock` and `:31` hardcodes `hyprctl dispatch`, both from the
+  `apps` aspect while only `hyprland` installs them. Replace the lock action with
+  `config.lock.command`, which `lock.nix` already publishes and `hypridle.nix` already reads.
+  Omit the button when it is empty rather than rendering a dead one.
+- `hyprland-binds.nix` and `waybar.nix:130` read `config.powerMenu.command` and omit their
+  entries when empty.
 
-| Directory | Fate |
-| --- | --- |
-| `font/` | **collapses** to `font.nix` in Step 3 — one concern, three theming audiences |
-| `mako/` | **collapses** to `mako.nix` in Step 3 — same |
-| `bash/` | **collapses** in Step 3, minus its `profileExtra`, which is the uwsm session autostart and leaves for `hyprland` in Step 4 |
-| `packages/` | **dissolves.** Not a concern — a junk drawer. `packages` names no decision and no capability, so §3 would reject it as an aspect name and it is no better as a file name. Its contents redistribute to real concerns in Steps 6–7. |
+**Expect:** swift5 identical, gpc and UM790pro change.
 
-`packages/` exists only to keep Step 0 mechanical. Do not let it survive because it
-outlived a step that was about exactly this.
+## Step 4 — `waybar` becomes an aspect; `bar.toggle`
 
-### Why flat
+The largest step. Both sessions already bind `$mod+B` to "toggle the bar" by completely
+different means — `hyprland-binds.nix:39` shells out to `systemctl --user`, `dwl.nix:154`
+compiles `togglebar` into C. That is §3's intent/implementation split exactly.
 
-Not because the pattern demands it — Invariant 4 says paths carry no *meaning*, not that
-they must be flat, and grouping for navigation is explicitly fine. Fifty files in one
-directory is a navigation cost being chosen, not a tax.
-
-The reason is timing: **the right taxonomy is not knowable until `maximal` dissolves in
-Step 7.** Grouping now means grouping with the archetype structure still in your head, and
-you would be encoding the thing this refactor exists to remove. Defer it.
-
-Regrouping later was expected to cost one hash-moving commit if `deferredModule` stuck. It
-stuck and that cost did not appear: a position-preserving grouping move measured free (see
-the ground rules). A regroup that *reorders* files within an aspect is still a hash-moving
-commit — which the harness verifies fine, but accept that knowingly rather than discover it.
-
-**The test for any grouping, then or now:** a directory is safe when its name would be a
-*bad aspect name* and the files inside span *more than one aspect*. `font/` passes — bad
-aspect name, spans core/stylix/palette. A `system/` directory for the sixteen `nixos.core`
-files fails both: every file is nixos-core, so the path predicts class and membership
-exactly, which is `modules/nixos/` under another name.
-
-**After this step, every path named in Steps 1–8 is obsolete** — including the two named
-in Steps 1 and 2. Those steps describe files by concern; resolve them by content.
-
-- Verify: all six targets byte-identical. Also a free rehearsal of the harness before
-  anything semantic moves.
-
-## Step 1 — Re-test `deferredModule`
-
-**Second, because it improves the diagnostics for every step after it.** *(Done — it holds.
-`modules/aspects.nix` now uses `deferredModule`; all six targets came out byte-identical,
-and `modules/stylix.nix`, the repo's only multi-element declaration, kept both elements.
-The measured before/after conflict message is in `CLAUDE.md` §9.)*
-
-This placement is a deliberate trade, not an obvious ordering. Step 1 is the only step
-whose outcome is unknown, and it sits *before* Step 2 proves the harness works — so if it
-goes badly you spend the run's most confusing debugging first. The alternative, 0 → 2 → 1,
-lets a pure no-op validate `verify.sh` before anything uncertain. It was rejected because
-Step 2 rewrites ten files, and `deferredModule`'s file-naming in error messages is exactly
-what makes that legible when it goes wrong. If Step 1 stalls, do Step 2 first and come
-back — nothing depends on the order.
-
-Aspect elements are `types.raw`, so option conflicts report `<unknown-file>` twice instead
-of naming files. Across 105 files that is a real tax, and the next seven steps are exactly
-the kind of work that provokes conflicts. `deferredModule` restores `_file`.
-
-`raw` was chosen under the Phase 2 byte-identity constraint, which no longer exists. So
-this is now a measurement, not a rule.
-
-Change the element type in the file declaring the `flake.modules` option (Step 0 moved it
-to `modules/aspects.nix`) and look for **two different
-failures**, not one:
-
-1. **Store paths move.** Expected and acceptable.
-2. **Modules silently disappear.** This is the real risk. One *hypothesis* is that
-   `setDefaultModuleLocation` stamps every element of a list with the same `_file`, which
-   becomes the module key, so a multi-element aspect list declared in one file could
-   collide and lose elements. Anonymous modules normally get index-disambiguated keys, so
-   this may not be the mechanism — treat it as a thing to look for, not an explanation.
-
-**Counting `builtins.length config.flake.modules.homeManager.<aspect>` does not detect
-this.** That list is the same length either way; any dropping happens later, inside the
-guest evaluation, when Home Manager collects and deduplicates. The detection is the full
-verification block above — `diff-closures`, `diff -rq` on `home-files`, **and** the `/etc`
-diff on all three NixOS targets. Run all three parts.
-
-Only multi-element aspect lists declared in a single file are at risk. Enumerate them
-first so you know where to look:
-
-```bash
-grep -rn "flake\.modules\.[a-zA-Z]*\.[a-zA-Z0-9_-]* = \[" --include=*.nix modules/
-```
-
-If it holds, keep it and update `CLAUDE.md` §9. If elements vanish, revert and record in
-§9 what actually happened — which is more than is known today either way.
-
-## Step 2 — `extraSpecialArgs` → `_module.args` (§12.1)
-
-*(Done — §12.1 closed. Six targets byte-identical, so the harness is sound.)*
-
-Closes Invariant 5. ~10 files take `monitors`, `sensitivity`, `hostname`, `user` or
-`homeStateVersion` as module arguments.
-
-The generator injects them instead, as an ordinary module in the host's list:
-
-```nix
-modules = [ {_module.args = {inherit monitors hostname user; /* ... */ };} ] ++ aspects;
-```
-
-Consumers do not change — they still receive the same argument names. Only the channel
-changes.
-
-Two things to watch:
-
-- A module contributing only `_module.args` adds nothing to any list-valued option, so it
-  should not reorder anything. Confirmed, not assumed: the home injection was added as a
-  **new first element** of the modules list and all six targets stayed byte-identical.
-- **Nothing may use these to compute `imports`.** That is infinite recursion, not an error
-  (`CLAUDE.md` §8). Grep for `imports` in the ten consumers before starting. This caught a
-  real one: `modules/home-manager.nix` computed `imports` from the `inputs` module arg.
-  `inputs` was never in §12.1's list, but Invariant 5 forbids the channel it arrived on, so
-  it and the two other `inputs` consumers moved to closure first, as a separate commit.
-
-- Verify: all six targets byte-identical.
-
-**This is the harness test.** Step 2 changes only the channel a value arrives through, so
-its output must be identical. If anything drifts here, the fault is in `verify.sh`, the
-generator, or your understanding of the module system — not in the change. Diagnose it
-before going near Step 3, where drift is expected and would hide the same bug.
-
-## Step 3 — Theming becomes an axis (§12.3, §12.4)
-
-*(Done — both items closed. `modules/font.nix` now declares `core`, `palette` and `stylix`
-in one file and is the §2 exemplar; `modules/mako.nix` declares two. Only the membership
-commit moved store paths; the rename, the host-fact move and the collapse were each
-byte-identical. `suckless` survives this step — dwl and the wlr-randr monitor script are
-still in it, and it ends in Step 4.)*
-
-**The step that demonstrates the pattern, and it moves no files.**
-
-Today `font` is split across three files and `mako` across two, because the aspect can say
-*which host archetype* but not *who does the theming*. Introduce `stylix` and `palette` as
-aspects; hosts take exactly one.
-
-The stylix file declares `flake.modules.homeManager.stylix`; the former suckless theming
-files — font, gtk, cursor, qt, mako — declare `palette`. Step 0 already put them at
-concern-named paths, so this step changes membership only.
-
-Then collapse the duplicates into the one-file form from `CLAUDE.md` §2:
-
-- `font` — one file declaring `core` (the option), `stylix`, and `palette`.
-- `mako` — one file declaring `stylix` and `palette`.
-- Rename the option namespace `suckless.font` → `desktop.font`. An option in `core` named
-  after an aspect is the clearest single symptom of §12.2.
-
-`suckless.font.size = 20` on the maximal hosts is not theming — it is a HiDPI fact about
-those two machines. Push it to the host record and deliver it via Step 2's `_module.args`.
-
-- Verify: 6 OK. All three hosts change. `diff-closures` must still be empty — the packages
-  are the same, only which aspect contributes them changes.
-
-## Step 4 — `hyprland` and `dwl` aspects (§12.2)
-
-*(Done. `suckless` no longer exists; `maximal` survives as the app set and §12.2 is
-narrowed to it. All six targets stayed byte-identical, against a predicted **changes** on
-all three — an aspect name does not reach the output, and neither renaming `suckless` to
-`dwl` in place nor inserting `hyprland` ahead of `stylix` reordered anything measurable.
-Because byte-identity can equally mean "the modules went nowhere", it was checked
-positively: gpc evaluates hyprland home+nixos and waybar enabled with uwsm in
-`profileExtra`, swift5's `profileExtra` is empty.*
-
-*Two things landed here that the plan filed elsewhere: the `bash/` collapse, which step 0's
-table assigned to step 3, and a follow-up commit correcting text that named the dead
-aspect — that one does move swift5, since two of the strings are generated output.*
-
-*No shared-session aspect was created. Nothing is duplicated between the two sessions:
-the overlap — wl-clipboard, cliphist, brightnessctl — already sits in `core` (`brightnessctl`
-no longer does: step 7 moved it to `hyprland` **and** `laptop`), and dwl
-carries its own portal config while Hyprland gets portals from `programs.hyprland`. The
-`tiling` option namespace in §3 is still unbuilt; dwl's mod key is a `#define` in a C
-patch and it has no gaps at all, so there is no shared value to lift yet. Step 6 is better
-placed, once `_hyprland`'s files are real modules.)*
-
-Split the session out of `maximal` and `suckless`. Step 0 already moved these files to
-concern-named paths, so **this step changes membership only** — do not rename anything, or
-the interesting diff disappears under moves.
-
-The Hyprland session file declares `flake.modules.nixos.hyprland` and
-`flake.modules.homeManager.hyprland`; the dwl half of the dwl file declares `dwl`.
-
-Place the new names where the old ones sat — `["core" "hyprland" "maximal"]` — so this is a
-partition.
-
-Anything genuinely shared between the two sessions (locking, notifications, portals,
-clipboard) becomes its own aspect rather than being duplicated. Anything portable in
-*intent* (gaps, mod key, keybinding philosophy) becomes an option namespace consumed by
-both, per `CLAUDE.md` §3 — **not** one aspect that branches internally.
-
-Decide during this step, by what each thing is actually coupled to:
-
-- **waybar** is hard-coupled to Hyprland (`hyprland/workspaces`, `hyprland/window`,
-  `wayland-session@hyprland.desktop.target`). It moves.
-- **the uwsm autostart** — the `uwsm check may-start` / `uwsm start default` block in the
-  maximal bash file — is session startup wearing shell clothing. It moves.
-- **thunar** is coupled only by a uwsm slice; **packages.nix** is partly Hyprland tooling.
-  Leave both, revisit in Step 6.
-
-**`suckless` ends here.** Its seven files are fully consumed by Steps 3 and 4 — font, gtk,
-cursor, qt and mako to `palette`; dwl and the wlr-randr monitor script to `dwl`. Delete the
-aspect name and remove it from swift5's list in this step. If anything is left over, it is
-a member you have not classified — do not leave the name alive to hold it.
-
-## Step 5 — `gaming` and `nvidia` (§12.6)
-
-*(Done — §12.6 closed, and the verification matched this step's prediction exactly.
-mangohud and protonup-ng moved into `gaming` as well: they were the whole of gpc's
-`packages` escape hatch, so the field is now the same empty stub swift5 carries. gpc's
-`nixos` block is down to hostname and stateVersion.)*
-
-The clearest latent aspects in the repo: nvidia drivers, steam, gamescope and gamemode are
-inline in gpc's host `nixos` block. That is reusable configuration written as host-local —
-a second nvidia machine means copy-paste.
-
-Lift them into `modules/gaming.nix` and `modules/nvidia.nix`, add both to gpc's aspect
-list. `nixpkgs.config.allowUnfree` moves to `core`; it is not a gaming fact.
-
-Small, self-contained, and the first step that makes a host file read as an archetype.
-
-- Verify: swift5 and UM790pro byte-identical; gpc's nixos target moves, home does not.
-
-## Step 6 — Surface the `_` trees (§12.5)
-
-*(Done — §12.5 closed. 21 modules surfaced across five trees; the `_module.args.render`
-bridge is gone. Nine files keep their underscore and all nine are sanctioned uses:
-`_pkgs/ocr-copy.nix` is callPackage'd, and `_walker/*`, `_yazi/*` and `_wallpapers.nix`
-are value-imported data. `_dormant/ghostty` is still there — dormant code is a sanctioned
-use too, so deleting it stays a judgement call rather than a divergence.*
-
-*Session config files needed a `hyprland-` prefix: `hyprland.nix` and `monitors.nix`
-already existed at the top level, which is what a flat namespace costs. The trap this step
-carries did not fire — nothing Hyprland-specific escaped into a top-level `let`, and
-swift5 building byte-identical is the evidence.)*
-
-~21 ordinary modules are hidden inside `_hyprland`, `_waybar`, `_thunderbird`, `_discord`,
-`_opencode` for no reason beyond the boundary having been drawn around whole subtrees.
-Each becomes a discovered file declaring its own aspect membership.
-
-Stays hidden, correctly: the seven value-imported data files (`_walker`, `_yazi`,
-`hyprpaper/wallpapers.nix`), `_pkgs/ocr-copy.nix`, and `_dormant/ghostty` — consider
-deleting that last one outright.
-
-Once `_hyprland`'s files are flake-parts modules they can read `flake.lib.monitors`
-directly, so the `_module.args.render` bridge disappears.
-
-Assets need no underscore at all — `import-tree` collects only `.nix`.
-
-**Watch the file body, not the aspect contents.** A surfaced file is evaluated for every
-host at the flake-parts level, even though the modules *inside* its aspect list stay lazy.
-Anything Hyprland-specific pulled into a `let` at the top of the file — a package
-reference, an `inputs.hyprland` attribute — now evaluates on swift5 too. Keep such
-references inside the aspect list where laziness protects them.
-
-## Step 7 — Retire the archetype names, create `laptop` (§12.2)
-
-*(Done — §12.2 closed, and `modules/packages/` dissolved with it. Three things went
-against the letter of this step, each measured first:*
-
-- *`power-profiles-daemon` and `upower` stayed in `core`. waybar runs a battery module on
-  both Hyprland desktops, which is the status tooling this step warns about. Taking only
-  the unambiguous members leaves `laptop` at one setting, which the step explicitly allows.*
-- *`brightnessctl` went to `hyprland` **and** `laptop`, not `laptop` alone. hypridle and the
-  Hyprland binds call it by bare name, so laptop-only would have silently broken brightness
-  control on gpc and UM790pro.*
-- *swift5's wifi powersave moved into `laptop`, but UM790pro's explicit `false` stayed in
-  its host file. Measured: the NixOS default is already false, so that line documents
-  intent rather than changing behaviour.*
-
-*`modules/common-packages.nix` — five nixos packages with no concern between them — is the
-same defect as `packages/` and survives. It is not in §12, so closing it is a choice, not a
-ratchet obligation. **It was closed anyway** in `317abf5`: the five went to the concerns
-that own them, staying in `environment.systemPackages` rather than moving to the user
-profile, which is recorded as an accepted choice in `CLAUDE.md` §13.)*
-
-Two halves, both finishing the archetype story.
-
-**`maximal` → `apps`.** Whatever survives Steps 3, 4 and 6 is the heavy app set. Decide
-then whether `gpc` takes it — a gaming rig may not want thunderbird.
-
-**Create `laptop`.** The target state names it on swift5 and mbp, and nothing has created
-it yet. It gathers what is currently scattered:
-
-- `networking.networkmanager.wifi.powersave` — set `true` on swift5 and `false` on
-  UM790pro from their host files, so it is a genuine per-host difference, not a constant;
-- `power-profiles-daemon` and `upower`, currently in `core` where the gaming rig and the
-  dev box also get them;
-- `brightnessctl`, currently in core packages, used by hypridle's dim-on-idle.
-
-Be careful splitting `power.nix`: a desktop losing `upower` may break status tooling that
-assumes it. If in doubt leave it in `core` and take only the unambiguous members — an
-aspect that is too small is recoverable, a broken suspend path on the primary machine is
-not.
-
-At this point `CLAUDE.md` §12 items 1–6 are closed and every host file reads as an
-archetype.
-
-## Step 8 — Darwin groundwork (§12.7)
-
-Only once the above is done, and only when there is a Mac to test on.
-
-**The last bullet is already done**, pulled forward because it needs no Mac: `launcher`,
-`screenshot`, `clipboard` and `lock` are option namespaces in `core`, set by `hyprland`
-and `dwl` and read by their binds. Adding `aerospace` later means setting the same four
-options, not finding every hard-coded command. `notifications` was considered and
-rejected — see `CLAUDE.md` §7 for why an intent with only one implementation is ceremony.
-
-That commit was byte-identical on all six targets, dwl's compiled binary included, so the
-vocabulary cost nothing to introduce. What remains below genuinely needs hardware.
-
-- Add `aarch64-darwin` to `systems`. `perSystem` evaluates for *every* entry, unlike
-  aspect contents (`CLAUDE.md` §7), so every Linux-only output must be excluded —
-  **by attribute, not by value**:
+- Declare `options.bar.toggle` in `core`, default `""`.
+- `waybar.nix`, `waybar-style.nix` and `waybar-scripts.nix` move from `homeManager.hyprland`
+  to `homeManager.waybar`; `waybar.nix` sets `bar.toggle`.
+- `hyprland-binds.nix` renders the `$mod+B` bind only when `bar.toggle != ""`.
+- `dwl.nix` compiles its bar patch only when no external bar is present:
 
   ```nix
-  # right: the attribute does not exist on darwin, so the RHS is never evaluated
-  packages = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-    foo = pkgs.someLinuxOnlyThing;
-  };
-
-  # wrong: mkIf gates the value, but pkgs.someLinuxOnlyThing still evaluates
-  packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux pkgs.someLinuxOnlyThing;
+  patches = (old.patches or []) ++ lib.optional (config.bar.toggle == "") barPatch;
   ```
 
-  Same eval-time versus config-time distinction as `CLAUDE.md` §9; this is the one place
-  it bites hardest.
-- Add `mkDarwin` to the generator alongside `makeSystem` and `mkHome`.
-- Standalone Home Manager is the asset here: the same home aspects activate on macOS with
-  no NixOS underneath.
-- ~~Name the intent aspects~~ — done ahead of this step; see above.
+  and drops the `togglebar` bind at `dwl.nix:154` in the same condition. A dwl host taking
+  `waybar` compiles without the patch and binds `$mod+B` to the option instead.
+
+This branch is on a *capability*, not on compositor identity, so §3's prohibition on an
+aspect branching between dwl and Hyprland does not apply.
+
+**Expect:** swift5 identical, gpc and UM790pro change. Note `waybar.nix:8` currently targets
+`wayland-session@hyprland.desktop.target`, which hard-codes the desktop-entry id; converging
+it onto `graphical-session.target` belongs in this step or immediately after.
+
+## Step 5 — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
+
+Do this last. It is the step with the conflict semantics, and Steps 1–4 will have proven the
+pattern.
+
+- `walker.nix` moves from `homeManager.apps` to `homeManager.walker` and sets
+  `launcher.argv = ["walker"]`. Its `aspectRequires.apps = ["stylix"]` becomes
+  `aspectRequires.walker`.
+- A new `wmenu` aspect takes the wmenu setter currently inline in `launcher.nix`'s `dwl`
+  branch, including `config.wmenu.flags`.
+- `launcher.nix` keeps only the `core` option declaration. Both session branches go.
+- `clipboard.nix:25` sets `clipboard.history = "walker -m clipboard"` from `hyprland`;
+  that setter moves to the `walker` aspect. The `$mod+Tab` and `$mod+W` binds in
+  `hyprland-binds.nix` name walker directly and need the same treatment or a reader guard.
+- `hyprpaper-picker.nix` writes `elephant/menus/wallpapers.lua` from `hyprland` for a backend
+  only walker supplies — it moves too, or gains a guard.
+
+**Expect:** all three hosts change. This is where the "two launchers is an error" property
+first becomes real; verify it by adding both `walker` and `wmenu` to a scratch host and
+confirming the conflict names both files.
+
+## Step 6 — `terminal.argv`, provided from `core`
+
+Independent of Steps 1–5; can slot anywhere after Step 1.
+
+`hyprland-binds.nix:12-13` holds `terminal` and `terminalFallback` as bare `let` bindings;
+`dwl.nix:25-26` interpolates foot's store path for the same two roles.
+
+- Declare `options.terminal.argv` and `terminal.fallbackArgv` in `core`, with
+  `terminal.command` as the read-only shell rendering, mirroring `launcher`.
+- `foot.nix` sets both, by store path — `${pkgs.foot}/bin/footclient` and
+  `${pkgs.foot}/bin/foot`.
+- Both sessions read them. dwl uses the argv form directly in its C array; hyprland renders
+  `uwsm app -- ${terminal.command}`.
+
+Using a store path rather than the bare `footclient` removes a `PATH` dependency, which §3
+prefers where the consumer can hold a path.
+
+**Expect:** all three hosts change — the generated `hyprland.lua` and `config.h` both gain
+store paths where they had bare names.
+
+---
+
+## Not now
+
+**Darwin is parked.** `systems` stays `["x86_64-linux"]` and `mbp` remains planned rather
+than present; `CLAUDE.md` §12 item 7 records the divergence and its §7 guidance on class
+placement still stands. Nothing in this plan should be shaped around a Mac that does not
+exist.
+
+One consequence to record rather than act on: every role option in this plan is set by a
+Linux aspect, so an `mbp` taking one of these aspects would set a role option with no darwin
+provider behind it — the dead-bind failure this plan exists to remove. Whoever picks darwin
+back up starts there.
+
+Also parked, and deliberately not steps:
+
+- **`_class` enforcement on aspect elements.** Investigated and rejected: the aspect
+  attribute path is the only statement of intent, so a stamp derived from it cannot disagree
+  with itself. Stamping via `deferredModuleWith { staticModules }` produced an identical
+  unhelpful error and moved all six store paths.
+- **Whether `apps` survives.** After Steps 2–5 it holds neovim, tmux, discord, thunderbird,
+  opencode and bat. That is a genuine bundle, but "the extra applications" is close to the
+  magnitude naming §3 rejects. Revisit once the roles are out of it, not before.
+- **Overlays reaching Home Manager.** Changing `pkgs` for home configs moves every home
+  store path; its own project, with its own switch cycle.
+- **Quickshell.** Waybar and walker stay.
 
 ---
 
 ## Done means
 
-**All of the following now hold, checked rather than assumed.** The ten aspect names in the
-repo are `apps core dev dwl gaming hyprland laptop nvidia palette stylix` — every one a
-decision some host makes differently. **Sixteen** files declare more than one aspect or
-class — `bash`, `brightnessctl`, `clipboard`, `dwl`, `font`, `git`, `gtk`, `hyprland`,
-`launcher`, `lock`, `mako`, `neovim`, `net`, `nix`, `screenshot`, `xdg` — against 91 that
-declare any. This said "ten" until the intent aspects (`clipboard`, `launcher`, `lock`,
-`screenshot`, `xdg`) landed after it was written, and it had missed `git.nix` besides.
-`CLAUDE.md` §2 carries the current count; recount there rather than trusting this line.
-
-Nine files remain under `/_`, all non-modules: `_pkgs/ocr-copy.nix` is callPackage'd,
-`_walker/*`, `_yazi/*` and `_wallpapers.nix` are value-imported data, and
-`_dormant/ghostty` is dormant code.
-
-`CLAUDE.md` §12 lists only item 7, and:
-
-- no `specialArgs` or `extraSpecialArgs` anywhere;
-- at least one file contributing to two aspects, and no concern split across files
-  because of a bucket;
-- no aspect named for a magnitude or a host archetype — `maximal` and `suckless` are both
-  gone, not merely unused;
-- **no directory named for a class or an archetype** — no `modules/home/`,
-  `modules/nixos/`, `modules/maximal/`, `modules/suckless/`, and no `lib/`.
-  `CLAUDE.md` §11 row one;
-- **no `packages` concern** — neither `modules/packages.nix` nor `modules/packages/`.
-  A package list is not a decision; its members belong with the concerns that want them;
-- `/_` only on non-modules;
-- every host file readable as "what this machine is".
-
-Update §12 in the same commit that closes each item. It is a ratchet, not a ledger.
-
----
-
-## Out of scope
-
-- Quickshell. Waybar and walker stay.
-- `_class` enforcement on aspect elements (issue #3 item 1). Item 2, typing the host
-  record, is done.
-- Overlays reaching Home Manager. Changing `pkgs` for home configs moves every home store
-  path; its own project, with its own switch cycle.
+- Five new aspects exist — `walker`, `wmenu`, `waybar`, `wleave`, `thunar` — and each is
+  refused by at least one host.
+- `mako` is in `core`; no capability is conditional on a theming regime.
+- No role is named by a bare `let` binding in a session's config. `launcher`, `bar`,
+  `terminal`, `fileManager` and `powerMenu` are options in `core`, set by providers and read
+  by sessions.
+- A host taking two providers of one role fails to evaluate, with an error naming both
+  files. Verified by scratch host, not asserted.
+- A dwl host can take `walker` and `waybar`, and a Hyprland host can take neither.
+- No bare-name tool invocation crosses from an aspect that does not install it — the audit's
+  P2 class is closed, not just its thunar instance.
