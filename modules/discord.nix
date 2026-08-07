@@ -9,6 +9,10 @@ _: {
         config,
         ...
       }: {
+        # equibop ships equibop.desktop; the association still named
+        # vesktop.desktop, which nothing here installs.
+        xdg.mimeApps.defaultApplications."x-scheme-handler/discord" = "equibop.desktop";
+
         home = {
           packages = with pkgs; [equibop];
           file = {

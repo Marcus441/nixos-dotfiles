@@ -15,11 +15,17 @@ _: {
     )
   ];
 
-  flake.modules.homeManager.apps = [
-    {fileManager.command = "thunar";}
+  flake.modules.homeManager.thunar = [
+    {
+      fileManager.command = "thunar";
+
+      # The default followed the option: `core` pointed every host at
+      # thunar.desktop, including the one with no thunar installed.
+      xdg.mimeApps.defaultApplications."inode/directory" = "thunar.desktop";
+    }
   ];
 
-  flake.modules.nixos.apps = [
+  flake.modules.nixos.thunar = [
     (
       {pkgs, ...}: {
         programs = {

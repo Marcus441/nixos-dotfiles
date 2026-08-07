@@ -3,10 +3,10 @@ _: {
     {
       xdg.mimeApps = {
         enable = true;
+        # An association for a program this aspect does not install is a dead
+        # default, so an association lives with the aspect that installs its
+        # program. What is left here is `core`'s own.
         defaultApplications = {
-          # File Browser
-          "inode/directory" = "thunar.desktop";
-
           # Browser
           "application/x-extension-htm" = "firefox.desktop";
           "application/x-extension-html" = "firefox.desktop";
@@ -28,14 +28,6 @@ _: {
           "application/x-pdf" = "zathura.desktop";
           "text/pdf" = "zathura.desktop";
           "text/x-pdf" = "zathura.desktop";
-
-          # Email
-          "message/rfc822" = "thunderbird.desktop";
-          "x-scheme-handler/mailto" = "thunderbird.desktop";
-          "x-scheme-handler/mid" = "thunderbird.desktop";
-
-          # Discord
-          "x-scheme-handler/discord" = "vesktop.desktop";
 
           # Images
           "image/gif" = "mpv.desktop";

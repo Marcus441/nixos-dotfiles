@@ -23,7 +23,7 @@ Update this list in the commit that completes each step. It is the only record o
 work is — the plan is otherwise stateless, and a fresh session will start at the top.
 
 - [x] **Step 1** — `mako` moves to `core`
-- [ ] **Step 2** — `thunar` becomes an aspect
+- [x] **Step 2** — `thunar` becomes an aspect
 - [ ] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
 - [ ] **Step 4** — `waybar` becomes an aspect; `bar.toggle`; dwl's bar patch becomes conditional
 - [ ] **Step 5** — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
@@ -153,7 +153,7 @@ someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, n
   | Step | swift5 | gpc | UM790pro |
   | --- | --- | --- | --- |
   | 1 mako → core | **changed** | identical | identical |
-  | 2 thunar aspect | identical | **changes** | **changes** |
+  | 2 thunar aspect | **changed** | **changed** | **changed** |
   | 3 wleave aspect | identical | **changes** | **changes** |
   | 4 waybar aspect | identical | **changes** | **changes** |
   | 5 walker/wmenu | **changes** | **changes** | **changes** |
@@ -290,7 +290,18 @@ tracks the `stylix` aspect's explicit target list, which no host's list changed.
   names `vesktop.desktop` and `thunderbird.desktop`, both `apps` — fix those in the same
   commit or state why not.
 
-**Expect:** swift5 identical, gpc and UM790pro change.
+**Measured:** all three changed, and swift5 most of all — the prediction that it would be
+identical was wrong for a reason worth keeping. Every NixOS toplevel is byte-identical and
+no host's closure moved; the only diff is `mimeapps.list`, where swift5 sheds the six
+associations naming programs it never installed. Removing those is the step's point, so a
+swift5 diff here is the success signal rather than a leak.
+
+The `apps` associations moved too, and the discord one was also wrong: it named
+`vesktop.desktop` while `discord.nix` installs equibop.
+
+**Left for its own commit:** the entries still in `mime.nix` name `zathura.desktop` and
+`neovim.desktop`; the profile ships `org.pwmt.zathura.desktop` and `nvim.desktop`. Fifteen
+dead defaults, same class, wrong program.
 
 ## Step 3 — `wleave` becomes an aspect; `powerMenu.command`
 

@@ -2,6 +2,12 @@ _: {
   flake.modules.homeManager.apps = [
     (
       {pkgs, ...}: {
+        xdg.mimeApps.defaultApplications = {
+          "message/rfc822" = "thunderbird.desktop";
+          "x-scheme-handler/mailto" = "thunderbird.desktop";
+          "x-scheme-handler/mid" = "thunderbird.desktop";
+        };
+
         programs.thunderbird = {
           enable = true;
           package = pkgs.thunderbird-latest;

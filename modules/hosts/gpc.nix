@@ -3,7 +3,7 @@ _: {
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["core" "gaming" "nvidia" "hyprland" "stylix" "apps"];
+    aspects = ["core" "gaming" "nvidia" "hyprland" "thunar" "stylix" "apps"];
 
     fontSize = 20;
 
