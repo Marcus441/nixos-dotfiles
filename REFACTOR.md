@@ -345,7 +345,16 @@ Measured against yazi 26.5.6's compiled-in preset theme, extracted from the bina
 - **The UI is ANSI, not hex.** The preset's `mgr`, `mode`, `pick`, `input`, `tasks`, `help`,
   `cmp`, `status` and `filetype` sections contain **zero** hex values — every colour is a name
   (`blue`, `gray`, `reversed`), so they resolve through foot's sixteen, which already come
-  from `desktop.colors`. Same argument as bat. Partial themes deep-merge onto the preset: a
+  from `desktop.colors`.
+
+  **This is not the argument that failed for bat**, and the difference is the whole reason it
+  still stands. bat's `base16` theme means *base09* and spells it "ANSI 9", so it breaks the
+  moment a base24 palette puts base12 there. Yazi's preset means *blue* and spells it "blue" —
+  it asserts nothing about which base slot that is, so whatever foot calls blue is the right
+  answer by construction. A theme naming terminal colours is safe; a theme naming palette
+  slots through terminal colours is not.
+
+  Partial themes deep-merge onto the preset: a
   27-character `theme.toml` loads clean, and `fg = "notacolour"` is a parse error, so the
   acceptance is real and not silent ignoring. Deleting the empty UI stubs is therefore
   *removal*, not porting. The preset's `filetype` rules are also richer than stylix's — orphan,
