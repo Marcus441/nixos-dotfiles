@@ -1,6 +1,6 @@
 _: {
-  # One concern, three audiences: every host needs the definition, palette
-  # installs the fonts itself, stylix hands the same definition to stylix.
+  # One concern, two audiences: every host needs the definition and the fonts,
+  # and stylix hands the same definition to the targets it still themes.
   flake.modules.homeManager.core = [
     (
       {
@@ -29,24 +29,29 @@ _: {
         };
       }
     )
-  ];
 
-  flake.modules.homeManager.palette = [
     (
       {pkgs, ...}: {
-        config = {
-          home.packages = [
-            pkgs.nerd-fonts.iosevka-term
-            pkgs.noto-fonts
-            pkgs.noto-fonts-color-emoji
-            pkgs.dejavu_fonts
-          ];
-          fonts.fontconfig.enable = true;
-        };
+        # The union of what the two theming regimes installed. Which fonts a
+        # machine has is not a theming decision -- a missing glyph is a missing
+        # glyph under either palette.
+        home.packages = with pkgs; [
+          dejavu_fonts
+          font-awesome
+          inter
+          nerd-fonts.iosevka-term
+          nerd-fonts.symbols-only
+          noto-fonts
+          noto-fonts-color-emoji
+          noto-fonts-lgc-plus
+        ];
+        fonts.fontconfig.enable = true;
       }
     )
   ];
 
+  # Names only: stylix reads these for the targets it still themes, and the
+  # packages above are what actually put them on disk. Goes with stylix.
   flake.modules.homeManager.stylix = [
     (
       {
@@ -54,15 +59,6 @@ _: {
         pkgs,
         ...
       }: {
-        home.packages = with pkgs; [
-          font-awesome
-          nerd-fonts.iosevka-term
-          nerd-fonts.symbols-only
-          noto-fonts
-          noto-fonts-color-emoji
-          noto-fonts-lgc-plus
-        ];
-
         stylix.fonts = {
           monospace = {
             name = config.desktop.font.name;

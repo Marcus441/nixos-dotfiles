@@ -88,7 +88,7 @@ Two consequences worth stating before touching anything:
 Update this list in the commit that completes each step.
 
 - [x] **Step 1** — colour readers move to `desktop.colors`; every stylix `aspectRequires` dissolves
-- [ ] **Step 2** — fonts to `core`
+- [x] **Step 2** — fonts to `core`
 - [ ] **Step 3** — cursor and icons to `core` *(the one decision — see below)*
 - [ ] **Step 4** — gtk and qt to `core`
 - [ ] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
@@ -163,14 +163,24 @@ lives in `core` and every host takes `core`. The only requirement left is
 ## Step 2 — fonts to `core`
 
 `font.nix` already declares `desktop.font` in `core` and installs different package sets per
-regime. Unify: one list in `core`, `stylix.fonts` deleted.
+regime. Unify the **packages** into `core`, as their union — which fonts a machine has is not
+a theming decision, and a missing glyph is a missing glyph under either palette.
 
-The union is the safe direction — stylix hosts have `font-awesome`, `symbols-only`, `inter`
-and `noto-fonts-lgc-plus` that swift5 does not, and swift5 has `dejavu_fonts` they do not.
-Dropping any of them is a separate decision, not this step's.
+**`stylix.fonts` stays, deliberately, and goes at Step 7.** Deleting it here would have been
+the obvious reading of "unify fonts", and it would have regressed the desktops: stylix still
+themes gtk, qt, mako and hyprlock, and those targets read `stylix.fonts` for their font names.
+Removing it while they are still enabled falls back to stylix's own defaults until Step 4
+moves gtk and qt out. The same trap applies to `stylix.icons` — see Step 3.
 
-**Expect:** swift5 and the desktops both change — swift5 gains packages, the desktops lose
-`stylix.fonts` config. Check `fontconfig` output and that `foot`'s rendered font is unchanged.
+**Measured:** swift5 gains `font-awesome` and `nerd-fonts-symbols-only`; UM790pro gains
+`dejavu-fonts`. Nothing else moved in either closure, and no other generated file changed.
+
+**The desktops had no home-manager fontconfig at all.** `fonts.fontconfig.enable` was set
+only under `palette`, so `.config/fontconfig/` appears on UM790pro for the first time in this
+step — it is *new*, not modified. stylix never enabled it, which means the profile's font
+directories were reaching fontconfig by whatever the system provided rather than by anything
+this repo said. Making the two hosts agree is the point of the project, so this is the change
+working; note it because it is the sort of diff that reads as an accident.
 
 ## Step 3 — cursor and icons to `core`
 
