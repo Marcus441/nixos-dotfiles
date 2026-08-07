@@ -1,9 +1,11 @@
-{...}: {
+_: {
   hosts.swift5 = {
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "suckless"];
+    aspects = ["dev" "core" "laptop" "dwl"];
+
+    fontSize = 16;
 
     hardware = ../../hosts/swift5/hardware-configuration.nix;
 
@@ -30,8 +32,6 @@
       networking.hostName = hostname;
 
       system.stateVersion = stateVersion;
-
-      networking.networkmanager.wifi.powersave = true;
     };
   };
 }

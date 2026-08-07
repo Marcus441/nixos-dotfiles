@@ -1,0 +1,46 @@
+_: {
+  flake.modules.homeManager.core = [
+    (
+      {lib, ...}: {
+        # base24 "Kanagawa Dragon" palette, written out rather than generated:
+        # one source of colour that every host has and every consumer reads.
+        # The leading '#' is load-bearing: consumers either strip it or paste it
+        # raw, so a value without one is silently right in some files and
+        # silently wrong in others. The type makes it a build failure instead.
+        options.desktop.colors = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
+          description = "base24 colour palette (hex, with leading '#').";
+        };
+
+        config.desktop.colors = {
+          base00 = "#181616";
+          base01 = "#282727";
+          base02 = "#393836";
+          base03 = "#625e5a";
+          base04 = "#737c73";
+          base05 = "#c5c9c5";
+          base06 = "#c8c093";
+          base07 = "#c5c9c5";
+
+          base08 = "#c4746e";
+          base09 = "#b6927b";
+          base0A = "#c4b28a";
+          base0B = "#8a9a7b";
+          base0C = "#8ea4a2";
+          base0D = "#8ba4b0";
+          base0E = "#a292a3";
+          base0F = "#b98d7b";
+
+          base10 = "#12120f";
+          base11 = "#0d0c0c";
+          base12 = "#e46876";
+          base13 = "#e6c384";
+          base14 = "#87a987";
+          base15 = "#7aa89f";
+          base16 = "#7fb4ca";
+          base17 = "#938aa9";
+        };
+      }
+    )
+  ];
+}
