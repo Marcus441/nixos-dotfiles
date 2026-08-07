@@ -90,7 +90,7 @@ Update this list in the commit that completes each step.
 - [x] **Step 1** — colour readers move to `desktop.colors`; every stylix `aspectRequires` dissolves
 - [x] **Step 2** — fonts to `core`
 - [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
-- [ ] **Step 4** — gtk and qt to `core`, taking the icon theme with them
+- [x] **Step 4** — gtk and qt to `core`, taking the icon theme with them
 - [ ] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
 - [ ] **Step 6** — bat, lazygit, tmux, yazi, zathura, hyprlock themed from the palette
 - [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
@@ -219,9 +219,34 @@ store paths when that file itself lists a package.
 ## Step 4 — gtk and qt to `core`
 
 `gtk.nix` (both classes) and `qt.nix` are `palette`-only and hand-written already. Move both
-to `core`, drop `stylix.targets.gtk` and `.qt`, and carry over the pieces `stylix.nix` sets
-directly: `dconf` `color-scheme = "prefer-dark"` and the gtk3/gtk4
-`gtk-application-prefer-dark-theme`.
+to `core`, drop `stylix.targets.gtk`, `.qt` and `icons`, and delete `stylix.nix`'s own `dconf`
+and `gtk` blocks — `gtk.nix` carries the same settings.
+
+**GTK keeps its palette; Qt does not.** Reading stylix's generated `gtk.css` before deleting
+the target — which is the recipe this plan prescribes — showed 89 lines of nothing but
+`@define-color` mappings from base00–base0F. That is precisely "apps pull from the colour
+palette", so it is written by hand in `gtk.nix` from `desktop.colors` rather than lost.
+**swift5 gains it**: it had `Adwaita-dark` with no palette colours at all, and now has both.
+
+Qt is the opposite case and the one real loss. stylix drove it through Kvantum with a
+generated `Base16Kvantum` theme (an SVG plus a `.kvconfig`), which is not reproducible by
+hand at sane cost. Qt falls back to `adwaita-dark` via `qt.platformTheme` — what swift5 has
+had all along. Qt apps on the desktops will look different: standard dark rather than
+kanagawa-tinted. Accepted; revisit only if a Qt app actually looks wrong.
+
+**Two deliberate departures from stylix's output**, both corrections rather than translation
+errors, and stated here because everything else in this project claims to be a translation:
+
+- `warning_color` was base0E (purple). It is base0A (yellow) now. A purple warning was a
+  quirk of stylix's base16 mapping, not a decision anyone made.
+- `dark_1`–`dark_5` were all base05 — `#c5c9c5`, a *light* grey, under names libadwaita hands
+  to apps wanting dark shades. They are base01/base00 now.
+
+**Measured:** swift5 gains `gtk.css` in both toolkit versions and nothing else — no closure
+change beyond the two new files. UM790pro loses Kvantum, qt5ct and qt6ct along with their
+Qt5 tooling (about 30 MiB), gains `gnome-themes-extra`, `adwaita-qt` and `gtk+`, and its
+`settings.ini` moves `gtk-theme-name` adw-gtk3 → Adwaita-dark and `gtk-font-name` Inter 12 →
+Inter 11. The font size is `gtk.nix`'s own long-standing choice, not a new one.
 
 ## Step 5 — mako drops its stylix branch, and `palette` leaves swift5
 

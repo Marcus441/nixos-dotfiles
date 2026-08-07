@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.palette = [
+  flake.modules.homeManager.core = [
     {
       qt = {
         enable = true;
