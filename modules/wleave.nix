@@ -6,6 +6,7 @@ _: {
     (
       {
         config,
+        lib,
         pkgs,
         ...
       }: let
@@ -18,50 +19,55 @@ _: {
             close-on-lost-focus = true;
             show-keybinds = true;
             no-version-info = true;
-            buttons = [
-              {
-                label = "lock";
-                action = "hyprlock";
-                text = "Lock";
-                keybind = "l";
-                icon = "${pkgs.wleave}/share/wleave/icons/lock.svg";
-              }
-              {
+            buttons =
+              [
+                {
+                  label = "lock";
+                  action = "hyprlock";
+                  text = "Lock";
+                  keybind = "l";
+                  icon = "${pkgs.wleave}/share/wleave/icons/lock.svg";
+                }
+              ]
+              # The session owns how it ends. Omitted rather than rendered dead
+              # where no session provides one.
+              ++ lib.optional (config.logout.command != "") {
                 label = "logout";
-                action = "hyprctl dispatch 'hl.dsp.exit()'";
+                action = config.logout.command;
                 text = "Logout";
                 keybind = "e";
                 icon = "${pkgs.wleave}/share/wleave/icons/logout.svg";
               }
-              {
-                label = "suspend";
-                action = "systemctl suspend";
-                text = "Suspend";
-                keybind = "u";
-                icon = "${pkgs.wleave}/share/wleave/icons/suspend.svg";
-              }
-              {
-                label = "hibernate";
-                action = "systemctl hibernate";
-                text = "Hibernate";
-                keybind = "h";
-                icon = "${pkgs.wleave}/share/wleave/icons/hibernate.svg";
-              }
-              {
-                label = "shutdown";
-                action = "systemctl poweroff";
-                text = "Shutdown";
-                keybind = "s";
-                icon = "${pkgs.wleave}/share/wleave/icons/shutdown.svg";
-              }
-              {
-                label = "reboot";
-                action = "systemctl reboot";
-                text = "Reboot";
-                keybind = "r";
-                icon = "${pkgs.wleave}/share/wleave/icons/reboot.svg";
-              }
-            ];
+              ++ [
+                {
+                  label = "suspend";
+                  action = "systemctl suspend";
+                  text = "Suspend";
+                  keybind = "u";
+                  icon = "${pkgs.wleave}/share/wleave/icons/suspend.svg";
+                }
+                {
+                  label = "hibernate";
+                  action = "systemctl hibernate";
+                  text = "Hibernate";
+                  keybind = "h";
+                  icon = "${pkgs.wleave}/share/wleave/icons/hibernate.svg";
+                }
+                {
+                  label = "shutdown";
+                  action = "systemctl poweroff";
+                  text = "Shutdown";
+                  keybind = "s";
+                  icon = "${pkgs.wleave}/share/wleave/icons/shutdown.svg";
+                }
+                {
+                  label = "reboot";
+                  action = "systemctl reboot";
+                  text = "Reboot";
+                  keybind = "r";
+                  icon = "${pkgs.wleave}/share/wleave/icons/reboot.svg";
+                }
+              ];
           };
           style = ''
             * {
