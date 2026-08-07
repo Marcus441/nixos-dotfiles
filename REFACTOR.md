@@ -26,7 +26,7 @@ work is — the plan is otherwise stateless, and a fresh session will start at t
 - [x] **Step 2** — `thunar` becomes an aspect
 - [x] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
 - [~] **Step 4** — `waybar` becomes an aspect; `bar.toggle` **done**; dwl's bar patch **deferred**, see below
-- [ ] **Step 5** — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
+- [x] **Step 5** — the launcher moves to the session that binds it. **No new aspects** — see below
 - [ ] **Step 6** — `terminal.argv`, provided from `core`
 
 ---
@@ -63,8 +63,8 @@ things silently fighting over `$mod+Return` is not.
 
 | Role | Intent option | Provider | Aspect today | Proposed aspect | Refused by |
 | --- | --- | --- | --- | --- | --- |
-| launcher | `launcher.argv` *(exists)* | walker | `apps` | **`walker`** | swift5 |
-| launcher | ” | wmenu | set inline in `dwl` | **`wmenu`** | gpc, UM790pro |
+| launcher | `launcher.argv` *(exists)* | walker | `apps` | ~~`walker`~~ → **`hyprland`** | — |
+| launcher | ” | wmenu | set inline in `dwl` | ~~`wmenu`~~ → stays **`dwl`** | — |
 | bar | **`bar.toggle`** *(new)* | waybar | `hyprland` | **`waybar`** | swift5 |
 | bar | ” | dwl built-in | `dwl` (C patch) | stays in `dwl` | — |
 | file manager | `fileManager.command` *(done, `f7d40f4`)* | thunar | `apps` | **`thunar`** | swift5 |
@@ -73,8 +73,9 @@ things silently fighting over `$mod+Return` is not.
 | notifications | none — §7 says no intent | mako | `palette`+`stylix`+`laptop` | **moves to `core`** | nobody |
 | browser | none — see *Deliberately absent* | firefox | `core` | stays `core` | nobody |
 
-Net: **five new aspects** — `walker`, `wmenu`, `waybar`, `wleave`, `thunar` — taking the
-repo from ten to fifteen.
+Planned as **five new aspects**. **Three landed** — `waybar`, `wleave`, `thunar`. The two
+launchers did not: no host refuses one, so §3's test fails and they belong in the session
+that binds the key. Step 5 records the reasoning.
 
 ### Three roles deliberately get no aspect
 
@@ -103,40 +104,43 @@ manifest.
 
 ## Semantics: strict, not `mkDefault`
 
-Sessions stop setting role options. `launcher.nix`'s `hyprland` and `dwl` branches both go
-away; `walker` and `wmenu` set `launcher.argv` themselves.
-
-| Case | Result |
-| --- | --- |
-| Two providers | module-system conflict, naming both files |
-| Zero providers | `option used but not defined` |
-| Session opinion | none — the host list is the only statement |
+A role option is set by the file that provides the role, not by the session file that reads
+it. `launcher.nix` and `clipboard.nix` declare; `walker.nix` and `wmenu.nix` set.
 
 `mkDefault` is rejected on purpose: it is the mechanism for silently resolving exactly what
 this plan wants to be loud. Do not reach for it to make a step build.
 
-**Known weakness, accepted.** The zero-provider error names the option but not the host, and
-`aspectRequires` cannot express "needs one of {walker, wmenu}". The alternative is a
-`roleProviders` count in the generator. Accept the weaker error for now; revisit only if it
-actually bites.
+**The type system gives less than this section originally claimed.** Both halves were
+measured in Step 5 and both were wrong:
+
+| Case | Claimed | Actual |
+| --- | --- | --- |
+| Two providers | conflict naming both files | true for `str`; **`listOf` concatenates**, so two `launcher.argv` providers merge into one wrong argv. `lib.types.unique` is the mechanism that delivers the claim |
+| Zero providers | `option used but not defined` | **`listOf` carries an `emptyValue`**, so it is `[]` and the bind renders `exec_cmd("")`. `types.nonEmptyListOf` has no `emptyValue` and would error |
+
+Neither bites today: every role option has exactly one provider by construction, because
+`hyprland` and `dwl` are mutually exclusive and each carries its own. Read the table before
+relying on the conflict property for a *new* role — a single-valued `str` gets it for free,
+a `listOf` does not.
 
 ---
 
 ## Resulting host files
 
-```nix
-swift5   = ["dev" "core" "laptop" "dwl" "wmenu" "palette"];                    # 5 → 6
-gpc      = ["core" "gaming" "nvidia" "hyprland" "waybar" "walker" "wleave"
-            "thunar" "stylix" "apps"];                                          # 6 → 10
-UM790pro = ["dev" "core" "hyprland" "waybar" "walker" "wleave" "thunar"
-            "stylix" "apps"];                                                   # 5 → 9
-```
-
-The case that motivated the plan becomes expressible for the first time:
+As landed, after Step 5:
 
 ```nix
-someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, no wmenu
+swift5   = ["dev" "core" "laptop" "dwl" "palette"];                             # 5 → 5
+gpc      = ["core" "gaming" "nvidia" "hyprland" "waybar" "wleave"
+            "thunar" "stylix" "apps"];                                          # 6 → 9
+UM790pro = ["dev" "core" "hyprland" "waybar" "wleave" "thunar"
+            "stylix" "apps"];                                                   # 5 → 8
 ```
+
+The case that motivated the plan — `["core" "dwl" "walker" "waybar" "palette"]` — is **not**
+expressible, and is no longer a goal. Step 4 gave it up for waybar (four blockers, none of
+them the aspect name) and Step 5 gave it up for the launcher (no host refuses one). What the
+plan did buy is the role options: nothing binds a session-specific command directly any more.
 
 ---
 
@@ -156,7 +160,7 @@ someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, n
   | 2 thunar aspect | **changed** | **changed** | **changed** |
   | 3 wleave aspect | identical | **changed** | **changed** |
   | 4 waybar aspect | identical | identical | identical |
-  | 5 walker/wmenu | **changes** | **changes** | **changes** |
+  | 5 walker/wmenu | **changed** | **changed** | **changed** |
   | 6 terminal.argv | **changes** | **changes** | **changes** |
 
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which reaches
@@ -423,7 +427,60 @@ systemctl --user list-dependencies graphical-session.target
 systemctl --user show waybar.service -p WantedBy -p After -p PartOf
 ```
 
-## Step 5 — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
+## Step 5 — the launcher moves to the session that binds it
+
+Written as "`walker` and `wmenu` become aspects; `launcher.argv` becomes strict". **It did
+not land that way, and the original text is kept below the rule so the reasoning is
+auditable.** Both premises turned out to be wrong.
+
+What landed:
+
+- `walker.nix` moves from `homeManager.apps` to `homeManager.hyprland` and sets
+  `launcher.argv = ["walker"]` and `clipboard.history = "walker -m clipboard"`. Its
+  `aspectRequires.apps = ["stylix"]` becomes `aspectRequires.hyprland`.
+- `wmenu.nix` stays in `homeManager.dwl` and takes the two setters that were inline in
+  `launcher.nix` and `clipboard.nix`, plus `pkgs.wmenu` out of `dwl.nix`'s package list.
+- `launcher.nix` and `clipboard.nix` keep only their `core` option declarations.
+- walker's two cachix substituters move from `nixos.apps` to `nixos.hyprland`, beside the
+  thing they cache. `cachix.nix` keeps danth's, which is stylix's, and moves it to
+  `nixos.stylix` for the same reason.
+
+**Why no aspects.** A launcher is not refused by any host that could use it: every Hyprland
+host wants walker and every dwl host wants wmenu. §3's test — "an aspect earns its existence
+when some host says no" — therefore fails, and a `walker` aspect that every `hyprland` host
+takes is a name that never discriminates. The gain the plan wanted from the aspects was
+`["core" "dwl" "walker" …]`, and that was already given up in Step 4 for waybar. So the
+concern belongs *in* the session, and what Step 5 is actually worth is smaller and real:
+**walker was in `apps`, which is the wrong owner.** A host taking `apps` without `hyprland`
+got a launcher nothing bound; a host taking `hyprland` without `apps` bound a key to a
+launcher it had not installed.
+
+**Two mechanism findings, both measured, both contradicting this document.**
+
+1. *A `listOf` option cannot be made strict by dropping its default.* `types.listOf` carries
+   an `emptyValue`, so an argv nothing defines evaluates to `[]`, and `$mod+D` renders
+   `exec_cmd("")` — the dead bind, arriving silently through the mechanism meant to prevent
+   it. `types.nonEmptyListOf` has no `emptyValue` and would give the promised error.
+2. *`listOf` merges by concatenation, not conflict.* Two providers of `launcher.argv` do not
+   collide — they produce `["walker" "/nix/store/…/wmenu-run" …]`, a live and wrong bind. The
+   throwaway host that "proved" the conflict actually failed on `clipboard.history`, which is
+   a `str`. Had the plan's aspects landed, its headline property would have rested on both
+   providers happening to also claim the clipboard role. `lib.types.unique` is the mechanism
+   that would deliver what the plan describes.
+
+Neither bites now — `hyprland` and `dwl` are mutually exclusive, so there is exactly one
+provider by construction — but the semantics table near the top of this document describes a
+guarantee the type system was never going to give.
+
+**Measured:** all three changed, all innocently. `diff-closures` empty everywhere; gpc and
+UM790pro have no `home-files` diff at all, just `buildEnv` order from walker changing aspect,
+and their `nix.conf` reorders the five substituters without losing one. swift5's only diff is
+the `home-manager-path` hash embedded in `10-hm-fonts.conf`, from wmenu moving within `dwl`.
+`hyprland.lua` is unchanged.
+
+---
+
+*Original text, superseded:*
 
 Do this last. It is the step with the conflict semantics, and Steps 1–4 will have proven the
 pattern.
@@ -439,10 +496,6 @@ pattern.
   `hyprland-binds.nix` name walker directly and need the same treatment or a reader guard.
 - `hyprpaper-picker.nix` writes `elephant/menus/wallpapers.lua` from `hyprland` for a backend
   only walker supplies — it moves too, or gains a guard.
-
-**Expect:** all three hosts change. This is where the "two launchers is an error" property
-first becomes real; verify it by adding both `walker` and `wmenu` to a scratch host and
-confirming the conflict names both files.
 
 ## Step 6 — `terminal.argv`, provided from `core`
 
@@ -501,14 +554,17 @@ Also parked, and deliberately not steps:
 
 ## Done means
 
-- Five new aspects exist — `walker`, `wmenu`, `waybar`, `wleave`, `thunar` — and each is
-  refused by at least one host.
+- Three new aspects exist — `waybar`, `wleave`, `thunar` — and each is refused by swift5.
+  The two launchers were tested against §3 and failed it; they live in their session.
 - `mako` is in `core`; no capability is conditional on a theming regime.
 - No role is named by a bare `let` binding in a session's config. `launcher`, `bar`,
-  `terminal`, `fileManager` and `powerMenu` are options in `core`, set by providers and read
-  by sessions.
-- A host taking two providers of one role fails to evaluate, with an error naming both
-  files. Verified by scratch host, not asserted.
-- A dwl host can take `walker` and `waybar`, and a Hyprland host can take neither.
+  `fileManager`, `powerMenu`, `lock` and `logout` are options in `core`, set by providers
+  and read by sessions. `terminal` is Step 6.
+- Every option a session reads but does not itself provide is either guarded or required:
+  `bar.toggle`, `fileManager.command` and `powerMenu.command` omit their entry when empty,
+  and `aspectRequires` rejects the aspect combinations that cannot work.
+- ~~A dwl host can take `walker` and `waybar`.~~ **Abandoned, deliberately.** Steps 4 and 5
+  each found the aspect name was the smallest part of the problem. Both are recorded under
+  *Not now* with their real blockers.
 - No bare-name tool invocation crosses from an aspect that does not install it — the audit's
   P2 class is closed, not just its thunar instance.

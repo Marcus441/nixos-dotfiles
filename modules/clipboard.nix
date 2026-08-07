@@ -21,24 +21,6 @@ _: {
     )
   ];
 
-  flake.modules.homeManager.hyprland = [
-    {clipboard.history = "walker -m clipboard";}
-  ];
-
-  flake.modules.homeManager.dwl = [
-    (
-      {
-        config,
-        pkgs,
-        lib,
-        ...
-      }: let
-        cliphist = "${pkgs.cliphist}/bin/cliphist";
-        wmenu = "${pkgs.wmenu}/bin/wmenu";
-        wlCopy = "${pkgs.wl-clipboard}/bin/wl-copy";
-      in {
-        clipboard.history = "${cliphist} list | ${wmenu} ${lib.escapeShellArgs config.wmenu.flags} | ${cliphist} decode | ${wlCopy}";
-      }
-    )
-  ];
+  # The picker renders through the same menu program as the launcher, so the
+  # aspect that provides one provides the other -- walker.nix and wmenu.nix.
 }

@@ -1,16 +1,13 @@
 _: {
-  flake.modules.nixos.apps = [
+  # danth is stylix's. Walker's two live with walker, in hyprland -- a cache in
+  # the aspect that does not build the thing is either a dead substituter or a
+  # source build, depending on which way the host list falls.
+  flake.modules.nixos.stylix = [
     {
       nix.settings = {
-        extra-substituters = [
-          "https://danth.cachix.org"
-          "https://walker.cachix.org"
-          "https://walker-git.cachix.org"
-        ];
+        extra-substituters = ["https://danth.cachix.org"];
         extra-trusted-public-keys = [
           "danth.cachix.org-1:1ow3ZHcCp6ujnzcK/FPR0gqMMoWijV9foAPvCliY0bQ="
-          "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
-          "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
         ];
       };
     }

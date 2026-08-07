@@ -145,7 +145,7 @@ Instead: the portable part is an **option namespace**, the implementations are *
 aspects**. `modules/launcher.nix` is the worked example — one file, three memberships:
 
 ```nix
-# modules/launcher.nix — portable intent, per-session implementation
+# modules/launcher.nix — the intent, and nothing else
 {
   flake.modules.homeManager.core = [
     ({config, lib, ...}: {
@@ -153,9 +153,13 @@ aspects**. `modules/launcher.nix` is the worked example — one file, three memb
       # plus `launcher.command`, readOnly, = lib.escapeShellArgs config.launcher.argv
     })
   ];
+}
 
-  flake.modules.homeManager.hyprland = [ {launcher.argv = ["walker"];} ];
+# modules/walker.nix — the provider names itself, in the session that binds the key
+{ flake.modules.homeManager.hyprland = [ {launcher.argv = ["walker"];} ]; }
 
+# modules/wmenu.nix
+{
   flake.modules.homeManager.dwl = [
     ({config, pkgs, ...}: {
       launcher.argv = ["${pkgs.wmenu}/bin/wmenu-run"] ++ config.wmenu.flags;
@@ -166,6 +170,11 @@ aspects**. `modules/launcher.nix` is the worked example — one file, three memb
 
 Hosts take `hyprland` **or** `dwl`, and both set the same option. §7 explains why the
 shape is `argv` and not a string.
+
+The setters sit in the provider's file, not in `launcher.nix`. That is the difference
+between a file that owns an *intent* and one that owns a *program*: `launcher.nix` would
+otherwise have to be edited every time a launcher changed, which is Inv. 3 inverted — one
+file editing three features rather than three files editing one.
 
 **The shared namespace is sometimes empty, and zero shared aspects is a valid outcome.**
 This section used to sketch a `tiling` namespace carrying gaps and a mod key. It was never

@@ -26,20 +26,4 @@ _: {
       }
     )
   ];
-
-  flake.modules.homeManager.hyprland = [
-    {launcher.argv = ["walker"];}
-  ];
-
-  flake.modules.homeManager.dwl = [
-    (
-      {
-        config,
-        pkgs,
-        ...
-      }: {
-        launcher.argv = ["${pkgs.wmenu}/bin/wmenu-run"] ++ config.wmenu.flags;
-      }
-    )
-  ];
 }

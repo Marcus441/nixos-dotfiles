@@ -1,11 +1,32 @@
 {inputs, ...}: {
   # _walker/style.nix reads config.lib.stylix.colors
-  aspectRequires.apps = ["stylix"];
+  aspectRequires.hyprland = ["stylix"];
 
-  flake.modules.homeManager.apps = [
+  # The launcher belongs to the session that binds a key to it, not to "the
+  # extra applications". Both roles it fills are named here rather than in
+  # hyprland-binds.nix, so swapping launcher is one file.
+  flake.modules.nixos.hyprland = [
+    {
+      nix.settings = {
+        extra-substituters = [
+          "https://walker.cachix.org"
+          "https://walker-git.cachix.org"
+        ];
+        extra-trusted-public-keys = [
+          "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
+          "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+        ];
+      };
+    }
+  ];
+
+  flake.modules.homeManager.hyprland = [
     inputs.walker.homeManagerModules.default
     (
       {config, ...}: {
+        launcher.argv = ["walker"];
+        clipboard.history = "walker -m clipboard";
+
         programs.walker = {
           enable = true;
           runAsService = true;

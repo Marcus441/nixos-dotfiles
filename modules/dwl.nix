@@ -237,7 +237,6 @@ _: {
       in {
         home.packages = [
           dwl-suckless
-          pkgs.wmenu # super+d launcher
           pkgs.wl-clipboard
           ocr-copy # super+c
           pkgs.grim
