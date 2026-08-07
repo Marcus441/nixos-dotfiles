@@ -1,11 +1,11 @@
-{config}: ''
-  @define-color base00 #${config.lib.stylix.colors.base00};
-  @define-color base01 #${config.lib.stylix.colors.base01};
-  @define-color base02 #${config.lib.stylix.colors.base02};
-  @define-color base03 #${config.lib.stylix.colors.base03};
-  @define-color base05 #${config.lib.stylix.colors.base05};
-  @define-color base0D #${config.lib.stylix.colors.base0D};
-  @define-color base08 #${config.lib.stylix.colors.base08};
+{colors}: ''
+  @define-color base00 #${colors.base00};
+  @define-color base01 #${colors.base01};
+  @define-color base02 #${colors.base02};
+  @define-color base03 #${colors.base03};
+  @define-color base05 #${colors.base05};
+  @define-color base0D #${colors.base0D};
+  @define-color base08 #${colors.base08};
 
   /* =========================================
      RESET

@@ -346,13 +346,17 @@ attribute name, so they cannot drift; it rejects a `hostname` that disagrees wit
 attribute, aspect names that resolve in no class, and an aspect list that leaves an
 `aspectRequires` entry unmet.
 
-**When an aspect reads another aspect's options, say so where the reading happens.**
-`hyprland` and `apps` read `config.lib.stylix.colors`, so a host taking either without
-`stylix` dies with `attribute 'stylix' missing` pointing into a guest module and naming
-neither the host nor the aspect. The seven files that do the reading each declare
-`aspectRequires.<aspect> = ["stylix"];` beside their membership, and the generator rejects
-a host that leaves one unmet. Declaring it in the file that creates the dependency is what
-keeps it from drifting — a central table would not know when a file stops reading stylix.
+**When an aspect depends on another aspect, say so where the dependency is created.**
+`waybar` reads Hyprland's IPC — `hyprland/window`, `hyprland/workspaces`, `hyprctl` — so a
+host taking it without `hyprland` would get a bar with three dead modules. `waybar.nix`
+declares `aspectRequires.waybar = ["hyprland"];` beside its membership, and the generator
+rejects a host that leaves it unmet. Declaring it in the file that creates the dependency is
+what keeps it from drifting — a central table would not know when a file stops reading.
+
+Seven files once declared `aspectRequires.<aspect> = ["stylix"];` because they read
+`config.lib.stylix.colors`. None do: the palette moved to `core`, and a value every host has
+cannot create a cross-aspect dependency. That is the shape to aim for — a requirement is a
+last resort, and moving the thing being read into `core` removes it outright.
 
 ### Add a package or overlay
 

@@ -1,7 +1,4 @@
 {inputs, ...}: {
-  # _walker/style.nix reads config.lib.stylix.colors
-  aspectRequires.hyprland = ["stylix"];
-
   # The launcher belongs to the session that binds a key to it, not to "the
   # extra applications". Both roles it fills are named here rather than in
   # hyprland-binds.nix, so swapping launcher is one file.
@@ -23,7 +20,11 @@
   flake.modules.homeManager.hyprland = [
     inputs.walker.homeManagerModules.default
     (
-      {config, ...}: {
+      {
+        config,
+        lib,
+        ...
+      }: {
         launcher.argv = ["walker"];
         clipboard.history = "walker -m clipboard";
 
@@ -99,7 +100,7 @@
           };
 
           themes."custom" = {
-            style = import ./_walker/style.nix {inherit config;};
+            style = import ./_walker/style.nix {colors = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;};
             layouts = {
               "layout" = import ./_walker/layout.nix;
               "item_calc" = import ./_walker/item_calc.nix;

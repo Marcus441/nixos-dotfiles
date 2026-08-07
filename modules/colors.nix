@@ -4,8 +4,11 @@ _: {
       {lib, ...}: {
         # base24 "Kanagawa Dragon" palette, defined explicitly so it does not
         # depend on stylix, which not every host carries.
+        # The leading '#' is load-bearing: consumers either strip it or paste it
+        # raw, so a value without one is silently right in some files and
+        # silently wrong in others. The type makes it a build failure instead.
         options.desktop.colors = lib.mkOption {
-          type = lib.types.attrsOf lib.types.str;
+          type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           description = "base24 colour palette (hex, with leading '#').";
         };
 

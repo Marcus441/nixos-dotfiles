@@ -1,12 +1,13 @@
 _: {
-  # reads config.lib.stylix.colors
-  aspectRequires.waybar = ["stylix"];
-
   flake.modules.homeManager.waybar = [
     (
-      {config, ...}: let
+      {
+        config,
+        lib,
+        ...
+      }: let
         inherit
-          (config.lib.stylix.colors)
+          (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors)
           base00
           base01
           base02

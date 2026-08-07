@@ -1,15 +1,13 @@
 _: {
-  # reads config.lib.stylix.colors
-  aspectRequires.hyprland = ["stylix"];
-
   flake.modules.homeManager.hyprland = [
     (
       {
         sensitivity,
         config,
+        lib,
         ...
       }: let
-        c = config.lib.stylix.colors;
+        c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
       in {
         wayland.windowManager.hyprland.settings = {
           config = {

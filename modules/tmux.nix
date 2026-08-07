@@ -1,11 +1,12 @@
 _: {
-  # reads config.lib.stylix.colors
-  aspectRequires.apps = ["stylix"];
-
   flake.modules.homeManager.apps = [
     (
-      {config, ...}: let
-        c = config.lib.stylix.colors;
+      {
+        config,
+        lib,
+        ...
+      }: let
+        c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
         thm_bg = "#${c.base00}";
         thm_gray = "#${c.base03}";
         thm_blue = "#${c.base0D}";

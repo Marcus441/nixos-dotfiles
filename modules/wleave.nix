@@ -1,7 +1,4 @@
 _: {
-  # reads config.lib.stylix.colors
-  aspectRequires.wleave = ["stylix"];
-
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {
@@ -22,7 +19,7 @@ _: {
         pkgs,
         ...
       }: let
-        inherit (config.lib.stylix.colors) base00 base01 base02 base05 base07 base08 base09 base0A base0C base0D base0E;
+        inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base05 base07 base08 base09 base0A base0C base0D base0E;
       in {
         powerMenu.command = "wleave";
 

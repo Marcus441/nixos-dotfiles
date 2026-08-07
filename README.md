@@ -163,9 +163,9 @@ and no profile to pick.
    `homeConfigurations."marcus@<hostname>"` from the attribute name, so they
    cannot drift apart. It rejects a `hostname` that disagrees with its attribute,
    an aspect name that resolves in no class, and an aspect list that leaves an
-   `aspectRequires` entry unmet — `hyprland` and `apps` read stylix's colours, so
-   a host taking either without `stylix` is refused by name instead of dying
-   inside a guest module.
+   `aspectRequires` entry unmet — `waybar` reads Hyprland's IPC, so a host taking
+   it without `hyprland` is refused by name instead of building a bar with dead
+   modules.
 
 4. **Build before switching.** Flakes only see tracked files, so stage first:
 
