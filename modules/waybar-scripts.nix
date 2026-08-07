@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.waybar = [
     ({pkgs, ...}: let
       jq = "${pkgs.jq}/bin/jq";
       curl = "${pkgs.curl}/bin/curl";

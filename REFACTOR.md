@@ -25,7 +25,7 @@ work is — the plan is otherwise stateless, and a fresh session will start at t
 - [x] **Step 1** — `mako` moves to `core`
 - [x] **Step 2** — `thunar` becomes an aspect
 - [x] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
-- [ ] **Step 4** — `waybar` becomes an aspect; `bar.toggle`; dwl's bar patch becomes conditional
+- [~] **Step 4** — `waybar` becomes an aspect; `bar.toggle` **done**; dwl's bar patch **deferred**, see below
 - [ ] **Step 5** — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
 - [ ] **Step 6** — `terminal.argv`, provided from `core`
 
@@ -155,7 +155,7 @@ someone = ["core" "dwl" "walker" "waybar" "palette"];   # dwl, walker, waybar, n
   | 1 mako → core | **changed** | identical | identical |
   | 2 thunar aspect | **changed** | **changed** | **changed** |
   | 3 wleave aspect | identical | **changed** | **changed** |
-  | 4 waybar aspect | identical | **changes** | **changes** |
+  | 4 waybar aspect | identical | identical | identical |
   | 5 walker/wmenu | **changes** | **changes** | **changes** |
   | 6 terminal.argv | **changes** | **changes** | **changes** |
 
@@ -369,9 +369,59 @@ compiles `togglebar` into C. That is §3's intent/implementation split exactly.
 This branch is on a *capability*, not on compositor identity, so §3's prohibition on an
 aspect branching between dwl and Hyprland does not apply.
 
-**Expect:** swift5 identical, gpc and UM790pro change. Note `waybar.nix:8` currently targets
-`wayland-session@hyprland.desktop.target`, which hard-codes the desktop-entry id; converging
-it onto `graphical-session.target` belongs in this step or immediately after.
+**Measured:** all six targets byte-identical. The prediction failed the same way Step 1's
+did, and for the same reason: waybar's package enters `home.packages` from home-manager's own
+module, not from an aspect file, so moving the three files between aspects touches no shared
+list-valued option. Twice now. Stop predicting movement from a file changing aspect unless
+that file lists the package itself.
+
+The guard's false branch is not exercised by any host — gpc and UM790pro take both
+`hyprland` and `waybar`, swift5 takes neither — so byte-identity says nothing about it.
+Checked instead with a throwaway host: `["core" "hyprland" "stylix"]` leaves `bar.toggle`
+empty and renders no `$mod+B` bind at all, rather than `exec_cmd("")`.
+
+**`waybar` is Hyprland-only, and now says so.** It reads `hyprland/window` and
+`hyprland/workspaces`, shells out to `hyprctl`, and binds a systemd target only
+uwsm-under-Hyprland creates, so `aspectRequires.waybar = ["hyprland"]` is declared beside
+the reading. `["core" "dwl" "waybar" "palette"]` is rejected by name, verified on a
+throwaway host, rather than evaluating into a bar with three dead modules.
+
+### Deferred out of Step 4
+
+**dwl's conditional bar patch.** The plan's one-line `lib.optional` is wrong about the size.
+The patch rewrites `config.def.h`'s schema, not just the binds: with it come `showbar`,
+`topbar`, `fonts[]`, `colors[][3]`, `static char *tags[]`, `togglebar`, the
+`enum { ClkTagBar, … }`, and a `Button` row that carries a leading click field; without it,
+`bordercolor`/`focuscolor`/`urgentcolor` floats, `#define TAGCOUNT (9)`, and three-field
+`Button` rows. `dwl.nix` generates against the patched schema in five regions, so the
+unpatched case is a second `configH`, not a conditional list element.
+
+And the patch is the smallest of four blockers on "a dwl host takes waybar":
+
+1. the second `config.h`;
+2. the dwl session is a plain `writeShellScript` with no `graphical-session.target`, so
+   home-manager's systemd user units never activate under it — `bar.toggle`'s
+   `systemctl --user start waybar` has nothing to start;
+3. `hyprland/window` and `hyprland/workspaces` have no dwl equivalent by rename — waybar's
+   dwl support is `dwl/tags` + `dwl/window`, fed from dwl's status stdout, which
+   `dwl.nix:282` currently fills with a `date` loop;
+4. `network.on-click` shells out to `hyprctl`; Step 6 fixes only its `footclient` half.
+
+That is a session rework across three or four commits, not the tail of this one. **A dwl
+host taking `waybar` moves to *Not now*.** `bar.toggle` still earns its keep: it removes the
+hardcoded systemctl string from the binds file and makes the bind conditional, which is what
+Step 4 was actually for.
+
+**`waybar.nix`'s systemd target.** Still `wayland-session@hyprland.desktop.target`.
+Converging onto `graphical-session.target` drops a hardcoded desktop-entry id but does not
+help the dwl case — blocker 2 above is the reason, and this does not touch it. It is the one
+part of Step 4 that changes generated output, so it wants its own commit and a check on the
+running machine first:
+
+```bash
+systemctl --user list-dependencies graphical-session.target
+systemctl --user show waybar.service -p WantedBy -p After -p PartOf
+```
 
 ## Step 5 — `walker` and `wmenu` become aspects; `launcher.argv` becomes strict
 
@@ -440,6 +490,12 @@ Also parked, and deliberately not steps:
 - **Overlays reaching Home Manager.** Changing `pkgs` for home configs moves every home
   store path; its own project, with its own switch cycle.
 - **Quickshell.** Waybar and walker stay.
+- **A dwl host taking `waybar`.** Four blockers, listed under Step 4. `aspectRequires.waybar
+  = ["hyprland"]` states the current truth until they are cleared.
+- **Retiring stylix.** Intended, and it reshapes several things this plan touches: fonts,
+  app colours and cursors move to hand-managed settings in `core` reading the palette, which
+  would empty the `stylix` aspect and dissolve every `aspectRequires.<a> = ["stylix"]` in the
+  tree. Its own project — but do not invest in stylix-shaped structure meanwhile.
 
 ---
 

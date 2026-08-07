@@ -44,8 +44,11 @@ in it.
 | Aspect | Meaning |
 | --- | --- |
 | `core` | Everything no host opts out of |
-| `hyprland` | Hyprland session: waybar, hypridle, hyprlock, hyprpaper |
+| `hyprland` | Hyprland session: hypridle, hyprlock, hyprpaper |
 | `dwl` | dwl session: a patched dwl, wmenu |
+| `waybar` | The bar. Hyprland-only today — it reads Hyprland's IPC |
+| `wleave` | The power menu |
+| `thunar` | The file manager |
 | `stylix` | Theming driven by stylix from a base16 scheme |
 | `palette` | Theming from a hand-carried base24 palette, no stylix |
 | `apps` | The heavy app set: thunderbird, discord, obs, kdenlive, yazi |

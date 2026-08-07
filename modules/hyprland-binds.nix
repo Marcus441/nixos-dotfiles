@@ -33,12 +33,18 @@ _: {
                 (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm stop\")")
               ];
             }
+          ]
+          # dwl toggles its compiled-in bar itself, so the option is empty there
+          # and the bind is absent rather than dead.
+          ++ lib.optionals (config.bar.toggle != "") [
             {
               _args = [
                 "${mainMod} + B"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"systemctl --user is-active --quiet waybar && systemctl --user stop waybar || systemctl --user start waybar\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.bar.toggle}\")")
               ];
             }
+          ]
+          ++ [
             {
               _args = [
                 "${mainMod} + C"

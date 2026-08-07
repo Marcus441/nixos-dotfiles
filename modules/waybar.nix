@@ -1,5 +1,23 @@
 _: {
-  flake.modules.homeManager.hyprland = [
+  # The bar reads hyprland/window and hyprland/workspaces, shells out to
+  # hyprctl, and binds a systemd target only uwsm-under-Hyprland creates. Made
+  # explicit so a dwl host is rejected rather than handed three dead modules;
+  # lifting it is a session rework, not a rename (REFACTOR.md, Step 4).
+  aspectRequires.waybar = ["hyprland"];
+
+  flake.modules.homeManager.core = [
+    (
+      {lib, ...}: {
+        options.bar.toggle = lib.mkOption {
+          type = lib.types.str;
+          default = "";
+          description = "Shell command that shows or hides the bar. Empty when no aspect provides an external one; a compositor with a built-in bar toggles it itself.";
+        };
+      }
+    )
+  ];
+
+  flake.modules.homeManager.waybar = [
     (
       {
         config,
@@ -21,6 +39,8 @@ _: {
             };
         };
       in {
+        bar.toggle = "systemctl --user is-active --quiet waybar && systemctl --user stop waybar || systemctl --user start waybar";
+
         programs.waybar = {
           enable = true;
           systemd = {

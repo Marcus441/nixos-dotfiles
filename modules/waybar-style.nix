@@ -1,8 +1,8 @@
 _: {
   # reads config.lib.stylix.colors
-  aspectRequires.hyprland = ["stylix"];
+  aspectRequires.waybar = ["stylix"];
 
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.waybar = [
     (
       {config, ...}: let
         inherit
