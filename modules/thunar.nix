@@ -1,4 +1,24 @@
 _: {
+  # The $mod+E bind used to name `thunar` from inside the hyprland aspect while
+  # only `apps` put it on PATH, so a hyprland host without apps got a bind that
+  # silently did nothing. The aspect that installs the tool now names it, and
+  # hyprland renders whatever it finds -- or omits the bind entirely.
+  flake.modules.homeManager.core = [
+    (
+      {lib, ...}: {
+        options.fileManager.command = lib.mkOption {
+          type = lib.types.str;
+          default = "";
+          description = "Command opening a file-manager window, bare of any session launcher prefix. Empty when no aspect provides one.";
+        };
+      }
+    )
+  ];
+
+  flake.modules.homeManager.apps = [
+    {fileManager.command = "thunar";}
+  ];
+
   flake.modules.nixos.apps = [
     (
       {pkgs, ...}: {
