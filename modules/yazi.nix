@@ -7,7 +7,7 @@ _: {
         ...
       }: let
         settings = import ./_yazi/yazi.nix;
-        theme = import ./_yazi/style.nix {inherit config;};
+        theme = import ./_yazi/style.nix {inherit config pkgs;};
       in {
         programs.yazi = {
           enable = true;

@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   flavor = {
     dark = "";
     light = "";
@@ -10,6 +14,14 @@
     };
     tab_width = 1;
     border_symbol = "│";
+
+    # Preview highlighting is syntect, not ANSI, so it needs the palette handed
+    # to it as hex -- the one place yazi cannot follow the terminal.
+    # mkForce until the stylix target goes; it still sets this too.
+    syntect_theme = pkgs.lib.mkForce "${import ./tmTheme.nix {
+      inherit pkgs;
+      colors = config.desktop.colors;
+    }}";
   };
   mode = {};
   indicator.padding = {

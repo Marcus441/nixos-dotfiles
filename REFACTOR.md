@@ -92,7 +92,8 @@ Update this list in the commit that completes each step.
 - [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
 - [x] **Step 4** — gtk and qt to `core`, taking the icon theme with them
 - [x] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
-- [~] **Step 6** — bat, lazygit, tmux, zathura, hyprlock **done**; **yazi** is the last target
+- [~] **Step 6** — bat, lazygit, tmux, zathura, hyprlock **done**; yazi's syntect theme **done**,
+      its UI and icon table are the remainder (icons shelved for `icons-brew`)
 - [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
 
 ---
@@ -326,13 +327,46 @@ time, and it changed the answer three times out of five:
   have existed. Giving the lock screen palette colours is a real visual change and is
   deliberately *not* smuggled into a commit about removing a dependency.
 
-**yazi is what is left, and it is the only genuinely large one.** Its generated `theme.toml`
-is 3786 lines, but that number is misleading: `_yazi/style.nix` already owns every
-`[[icon.*]]` and `[[filetype.rules]]` entry, and most of those hex values are the devicon
-palette (TypeScript blue, Rust orange) rather than anything base16. What stylix actually
-fills are the UI sections `_yazi/style.nix` leaves empty — `mode`, `pick`, `input`, `help`,
-`completion`, `indicator`, and parts of `mgr` and `status`. Roughly forty keys, all
-base16-derived. Extract them from the generated file, map each to a palette slot, and diff.
+**yazi is what is left, and it splits into three pieces that are not equally hard.**
+
+Measured against yazi 26.5.6's compiled-in preset theme, extracted from the binary:
+
+- **The UI is ANSI, not hex.** The preset's `mgr`, `mode`, `pick`, `input`, `tasks`, `help`,
+  `cmp`, `status` and `filetype` sections contain **zero** hex values — every colour is a name
+  (`blue`, `gray`, `reversed`), so they resolve through foot's sixteen, which already come
+  from `desktop.colors`. Same argument as bat. Partial themes deep-merge onto the preset: a
+  27-character `theme.toml` loads clean, and `fg = "notacolour"` is a parse error, so the
+  acceptance is real and not silent ignoring. Deleting the empty UI stubs is therefore
+  *removal*, not porting. The preset's `filetype` rules are also richer than stylix's — orphan,
+  exec and dummy entries that stylix omits.
+- **The icon table is a stale copy of yazi's own.** 669 rules in `_yazi/style.nix` against 725
+  in the preset; 636 byte-identical, **zero** unique to us, 56 missing. The 33 that differ are
+  14 `dirs` and 11 `conds` with `fg` stripped, plus 8 colours from an older devicons vintage
+  (`go` `#519aba` vs upstream `#00add8`). Shelved: the `icons-brew` plugin is the intended
+  replacement, so this waits for that decision rather than being solved here.
+- **`syntect_theme` is the only part with no ANSI fallback** — done, see below.
+
+**Stylix writes a `[completion]` table that does not exist in yazi 26.5.6.** The section was
+renamed `[cmp]`; stylix emits both. Not an argument that decides anything, but it is the
+complaint that motivated this plan, appearing in this repo's own generated output.
+
+### Measured — the syntect theme
+
+`modules/_yazi/tmTheme.nix` renders the base16 tmTheme (bat's template, which is what stylix
+was using) through `lib.generators.toPlist` from `config.desktop.colors`, and
+`_yazi/style.nix` hands it to `mgr.syntect_theme`. 44 scope rules and 8 global keys as a Nix
+data table, ~110 lines instead of 540 of XML.
+
+- **Semantically identical to what stylix generated.** Both files normalise to 44 rules with
+  the same scope→colour mapping and the same 8-key global dict; only metadata and plist key
+  order differ. The generated `theme.toml` changes by exactly one line, the path.
+- **Verified it parses, not just that it builds.** Loaded through bat's custom-theme path
+  (bat and yazi both highlight with syntect) and rendered a `.nix` file: every colour emitted
+  is a palette slot — base03 comments, base0B strings, base0E keywords, base09 constants,
+  base05 text.
+- **`syntect_theme` needs `mkForce` until Step 7**, because stylix's yazi target still sets
+  it. The force comes out with the target, exactly as lazygit's did.
+- swift5 byte-identical; gpc and UM790pro swap one tmTheme for another in the closure.
 
 ## Step 7 — delete stylix
 
