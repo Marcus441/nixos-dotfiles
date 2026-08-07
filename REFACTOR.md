@@ -92,7 +92,7 @@ Update this list in the commit that completes each step.
 - [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
 - [x] **Step 4** — gtk and qt to `core`, taking the icon theme with them
 - [x] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
-- [ ] **Step 6** — bat, lazygit, tmux, yazi, zathura, hyprlock themed from the palette
+- [~] **Step 6** — bat, lazygit, tmux, zathura, hyprlock **done**; **yazi** is the last target
 - [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
 
 ---
@@ -302,11 +302,37 @@ cat $old/home-files/.config/bat/config          # or the relevant path
 `tmux` and `yazi` already have hand-written style files (`tmux.nix` reads colours directly,
 `_yazi/style.nix` exists), so those two are closer to done than the list suggests.
 
-**`hyprlock` may be a near-no-op, or may not be** — read before writing. `hyprlock.nix:53-55`
-applies `lib.mkForce` to `background`, `label` and `input-field`, so whatever stylix
-contributes to those three is already discarded on gpc and UM790pro. Whether anything of its
-target survives elsewhere (`general`, colour strings) is *not* measured. `cat` the generated
-`hyprlock.conf` before deleting the target; that file is the specification.
+**Measured, five of six done.** Reading the generated file first was the right rule every
+time, and it changed the answer three times out of five:
+
+| Program | Outcome |
+| --- | --- |
+| `zathura` | 20 settings written by hand; **swift5 gains all of them**, it had none |
+| `bat` | no hand-written theme at all — see below |
+| `lazygit` | eight colours, generated `config.yml` **byte-identical** |
+| `tmux` | one sourced file, but **four settings were surviving it** |
+| `hyprlock` | the target was **already dead**; removing it changed nothing |
+
+- **bat needed no theme.** stylix generated a `base16-stylix.tmTheme`; bat ships a `base16`
+  theme that renders through ANSI 0–15, and `foot.nix` already sets those sixteen from
+  `desktop.colors`. So highlighting follows the palette with no generated file, and keeps
+  following it if the palette changes. Fewer moving parts than before stylix was involved.
+- **tmux was the near-miss.** Its target contributed one `source-file` line, and `tmux.nix`'s
+  own `extraConfig` overrides most of what that file sets — so "redundant" was the obvious
+  conclusion. Reading it showed four settings nothing else touched: the prefix+q pane
+  numbers, and the bell and activity styles. Assuming would have deleted them silently.
+- **hyprlock runs on its own defaults.** `hyprlock.nix` mkForces every list stylix
+  contributes to, so the generated conf has had no colours in it for as long as those forces
+  have existed. Giving the lock screen palette colours is a real visual change and is
+  deliberately *not* smuggled into a commit about removing a dependency.
+
+**yazi is what is left, and it is the only genuinely large one.** Its generated `theme.toml`
+is 3786 lines, but that number is misleading: `_yazi/style.nix` already owns every
+`[[icon.*]]` and `[[filetype.rules]]` entry, and most of those hex values are the devicon
+palette (TypeScript blue, Rust orange) rather than anything base16. What stylix actually
+fills are the UI sections `_yazi/style.nix` leaves empty — `mode`, `pick`, `input`, `help`,
+`completion`, `indicator`, and parts of `mgr` and `status`. Roughly forty keys, all
+base16-derived. Extract them from the generated file, map each to a palette slot, and diff.
 
 ## Step 7 — delete stylix
 
