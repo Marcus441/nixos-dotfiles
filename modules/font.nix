@@ -1,6 +1,6 @@
 _: {
-  # One concern, two audiences: every host needs the definition and the fonts,
-  # and stylix hands the same definition to the targets it still themes.
+  # The option is what other files read; the packages are what put the fonts on
+  # disk. Both belong to every host, so both are core.
   flake.modules.homeManager.core = [
     (
       {
@@ -46,37 +46,6 @@ _: {
           noto-fonts-lgc-plus
         ];
         fonts.fontconfig.enable = true;
-      }
-    )
-  ];
-
-  # Names only: stylix reads these for the targets it still themes, and the
-  # packages above are what actually put them on disk. Goes with stylix.
-  flake.modules.homeManager.stylix = [
-    (
-      {
-        config,
-        pkgs,
-        ...
-      }: {
-        stylix.fonts = {
-          monospace = {
-            name = config.desktop.font.name;
-            package = pkgs.nerd-fonts.iosevka-term;
-          };
-          sansSerif = {
-            name = "Inter";
-            package = pkgs.inter;
-          };
-          serif = {
-            name = "Noto Serif";
-            package = pkgs.noto-fonts;
-          };
-          emoji = {
-            name = "Noto Color Emoji";
-            package = pkgs.noto-fonts-color-emoji;
-          };
-        };
       }
     )
   ];

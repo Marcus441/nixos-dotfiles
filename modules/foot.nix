@@ -52,9 +52,9 @@ _: {
         };
 
         # Shared terminal for all hosts: the explicit base24 palette below is the
-        # single source of terminal colours everywhere. stylix must NOT theme
-        # foot on the stylix hosts — see stylix.targets.foot.enable = false in
-        # ./stylix.nix.
+        # single source of terminal colours everywhere. Programs that render
+        # through ANSI inherit it from here -- but see tmtheme.nix for the two
+        # that must not.
         config.programs.foot = {
           enable = true;
           # Daemon mode: terminals spawn as footclient against this server. The

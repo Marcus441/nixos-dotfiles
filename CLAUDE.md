@@ -67,16 +67,14 @@ asking "which folder does this belong in" — ask "what does this concern contri
 whom".
 
 ```nix
-# modules/font.nix — one concern, two audiences, one file
+# modules/thunar.nix — one concern, two aspects, both classes, one file
 {
   flake.modules.homeManager.core = [
-    { options.desktop.font = { /* name, size */ }; }
-    { home.packages = [ /* fonts */ ]; fonts.fontconfig.enable = true; }
+    { options.fileManager.command = { /* the intent every session binds */ }; }
   ];
 
-  flake.modules.homeManager.stylix = [
-    ({config, ...}: { stylix.fonts.monospace.name = config.desktop.font.name; })
-  ];
+  flake.modules.homeManager.thunar = [ { fileManager.command = "thunar"; } ];
+  flake.modules.nixos.thunar = [ { programs.thunar.enable = true; /* + the daemon */ } ];
 }
 ```
 
@@ -85,25 +83,32 @@ machine **is**.
 
 ### Read these before writing a new file
 
-- `modules/font.nix` — the sketch above, as an actual file: `core` declares the option and
-  installs the fonts, `stylix` hands the same option to the targets it still themes. One
-  concern, two audiences. **This is the file to copy.**
-- `modules/thunar.nix` — `core` declares `fileManager.command`, `thunar` sets it and the
-  `nixos` half installs the daemon. One concern, two aspects, both classes.
+- `modules/thunar.nix` — the sketch above, as an actual file: `core` declares
+  `fileManager.command`, `thunar` sets it and the `nixos` half installs the daemon. One
+  concern, two aspects, both classes. **This is the file to copy.**
+- `modules/tmtheme.nix` — declares `desktop.syntaxTheme` in `core` and renders it from the
+  palette; `bat.nix` and `_yazi/style.nix` read it. The provider/consumer split of §3 in its
+  smallest form.
 - `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
   Nothing about its location says which. Invariant 4, demonstrated.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
   `homeManager` in one file. Invariant 3, half-demonstrated.
 
-**Sixteen files declare more than one aspect or more than one class.** Counted over
-`modules/` excluding `/_`, by `flake.modules.<class>.<aspect>` occurrences: 91 files
-declare at least one, and 16 declare two or more — `bash`, `brightnessctl`, `clipboard`,
-`dwl`, `font`, `git`, `gtk`, `hyprland`, `launcher`, `lock`, `mako`, `neovim`, `net`,
-`nix`, `screenshot`, `xdg`. The other 75 contribute to exactly one.
+**Eighteen files declare more than one aspect or more than one class.** Counted over
+`modules/` excluding `/_`, by distinct `flake.modules.<class>.<aspect>` occurrences: 92 files
+declare at least one, and 18 declare two or more — `bash`, `brightnessctl`, `dwl`, `git`,
+`gtk`, `hyprland`, `lock`, `logout`, `mako`, `neovim`, `net`, `nix`, `screenshot`, `thunar`,
+`walker`, `waybar`, `wleave`, `xdg`. The other 74 contribute to exactly one.
 
 So the single-aspect file is the majority but not the model. Copying an arbitrary
-neighbour reproduces the majority; the sixteen above are where the second direction of the
+neighbour reproduces the majority; the eighteen above are where the second direction of the
 merge is actually demonstrated. Check §12 before treating any file as an example.
+
+Note what is *not* on that list any more: `font`, `launcher` and `clipboard` each declare one
+aspect now. They lost their second membership when the thing on the other side went away —
+`launcher` and `clipboard` when the setters moved into the sessions that own them, `font`
+when stylix went. A file dropping to one aspect is not a regression; it means the concern
+turned out to have one audience after all.
 
 ---
 
@@ -111,7 +116,7 @@ merge is actually demonstrated. Check §12 before treating any file as an exampl
 
 An aspect is a **decision or a capability**, never a magnitude and never a host class.
 
-- Good: `hyprland`, `dwl`, `gaming`, `nvidia`, `laptop`, `dev`, `stylix`.
+- Good: `hyprland`, `dwl`, `gaming`, `nvidia`, `laptop`, `dev`.
 - Bad: `maximal`, `minimal`, `heavy`, `extras` — magnitude names rot the first time you
   want one member without the others, and then the name lies.
 - Bad: `desktop-machine`, `workstation` — that is a host archetype, not a concern. The
@@ -140,7 +145,8 @@ implementations — both files would declare the same attribute and merge into a
 taking it.
 
 Instead: the portable part is an **option namespace**, the implementations are **separate
-aspects**. `modules/launcher.nix` is the worked example — one file, three memberships:
+aspects**. `modules/launcher.nix` is the worked example — the intent in `core`, and each
+implementation setting it from the file that owns the program:
 
 ```nix
 # modules/launcher.nix — the intent, and nothing else
@@ -238,10 +244,11 @@ directory. Creating one is a structural regression — say so instead of doing i
 
 Grouping for navigation is fine — Invariant 4 says paths carry no *meaning*, not that they
 must be flat. **A directory is safe when its name would be a bad aspect name and the files
-inside span more than one aspect.** `font/` passes: `font` names no decision, and its files
-serve core and stylix. A `system/` directory holding every `nixos.core` file fails
-both halves — the path would predict class and membership exactly, which is `nixos/` under
-another name.
+inside span more than one aspect.** No directory in the tree exercises that today —
+`discord/` and `opencode/` hold assets rather than modules, `display/` holds one file, and
+`hosts/` is the wiring. A hypothetical `font/` would pass, because `font` names no decision.
+A `system/` directory holding every `nixos.core` file fails both halves — the path would
+predict class and membership exactly, which is `nixos/` under another name.
 
 Host files declare archetype and machine facts only:
 
@@ -251,7 +258,7 @@ Host files declare archetype and machine facts only:
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["core" "hyprland" "stylix" "gaming" "nvidia"];
+    aspects = ["core" "hyprland" "gaming" "nvidia"];
 
     hardware = ../../hosts/gpc/hardware-configuration.nix;
     monitors = [ { name = "DisplayPort-1"; width = 2560; height = 1440; refresh = 144; } ];
@@ -481,19 +488,18 @@ evaluation to reach a value, importing a module file by path to call a function 
   Provenance across the 98 files `import-tree` loads, which is the whole reason for it.
 
   The risk this was tested for is elements *vanishing* — a multi-element aspect list
-  declared in one file could in principle lose members. Two files declare one:
-  `modules/stylix.nix` and `modules/walker.nix`, each pairing a flake input's module with
-  a local one, and all four elements survived. Note that
+  declared in one file could in principle lose members. `modules/walker.nix` is the case
+  that remains: it pairs a flake input's module with a local one, and both elements
+  survived. (`modules/stylix.nix` was the other, and is gone.) Note that
   `builtins.length config.flake.modules.…` does **not** detect this; the byte-identity
   block in §10 does. Re-run all three parts of it if you change the element type again.
 - **`config` shadowing** inside `flake.modules.*` — see §8.
-- **Stylix themes what it detects.** The stylix aspect sets `autoEnable = false` with an
-  explicit target list, so a program is themed only if named. Moving a themed program
-  between aspects can therefore change its appearance in either direction: into a
-  stylix-carrying host it may get themed and silently override an explicit palette; out of
-  one it may lose theming entirely. When a program carries its own colours, set
-  `stylix.targets.<name>.enable = false` explicitly rather than relying on it not being
-  listed. `foot` is the worked example.
+- **ANSI is not free just because foot sets it from the palette.** A program that names
+  terminal colours (`blue`, `gray`) inherits the palette correctly, because it asserts
+  nothing about which slot that is. A program asking for *the base16 theme* asserts that
+  ANSI 9 holds base09 — and `foot.nix` puts base12 there, because that is what base24 calls
+  bright red. bat rendered numbers in the wrong colour for exactly this reason until it was
+  moved onto `desktop.syntaxTheme`. Check which kind you have before reaching for ANSI.
 - **Every *file* is evaluated once**, at the flake-parts level — so a syntax or eval error
   anywhere breaks every host. But an **aspect's contents are only evaluated by hosts that
   take it**: a `throw` inside `apps` does not break swift5. Verified, not assumed.
@@ -505,8 +511,8 @@ evaluation to reach a value, importing a module file by path to call a function 
   this gives "path does not exist" for files visibly on disk.
 - **Never switch.** No `nixos-rebuild switch`, no `nh os switch`, no `home-manager switch`.
   Build only — the human switches.
-- **Build on `UM790pro`.** Building the Hyprland closures on `swift5` drags Hyprland and
-  the stylix chain onto the laptop.
+- **Build on `UM790pro`.** Building the Hyprland closures on `swift5` drags the whole
+  Hyprland chain onto the laptop.
 
 ---
 
@@ -555,7 +561,7 @@ done
 git worktree remove ../dotfiles-prev
 ```
 
-`swift5` takes neither Hyprland nor stylix, so it is a useful control *for work on those* —
+`swift5` takes neither Hyprland nor `apps`, so it is a useful control *for work on those* —
 a swift5 path that moves during Hyprland work means the change leaked. It is not a blanket
 stop condition: plenty of legitimate changes move all three. Know which you are doing.
 
@@ -599,8 +605,8 @@ config.flake.modules.homeManager.hyprland
 
 Every row above is a prohibition, so read together they suggest no directory is ever
 allowed. They are not the whole rule. The positive half: **a directory is fine when its
-name would be a bad aspect name and its contents span several aspects** (§4). `font/`
-passes on both halves; `hyprland/` fails on both, because the name is a good aspect name
+name would be a bad aspect name and its contents span several aspects** (§4). A `font/`
+would pass on both halves; `hyprland/` fails on both, because the name is a good aspect name
 and every file in it would belong to that one aspect.
 
 ---
@@ -648,11 +654,11 @@ are safe to cite. `REFACTOR.md` cites them.
   file that assigns `flake.modules.<class>.<aspect>` more than once and proposes collapsing
   it to `flake = { modules.homeManager.core = …; }`. That is the wrong direction here: it
   buries the aspect name a level deeper and makes parallel declarations read as one thing
-  with parts. The nine files it flags are the six §2 exemplars — `bash`, `clipboard`,
-  `font`, `launcher`, `mako`, `screenshot` — plus the three
-  `hosts/*/hardware-configuration.nix`, which §4 says never to edit. It is silent on all 75
-  single-aspect files, so its signal is inverted: it flags the best files and the untouchable
-  ones. Measured twice — applying it to `bash.nix` produced exactly that nesting and dropped
+  with parts. The eight files it flags are `bash`, `screenshot`, `thunar` and `wmenu` —
+  §2 exemplars, every one — plus `gtk` (which it flags for a repeated `gtk4` key, not for
+  this pattern) and the three `hosts/*/hardware-configuration.nix`, which §4 says never to
+  edit. It is silent on all 74 single-aspect files, so its signal is inverted: it flags the
+  best files and the untouchable ones. Measured twice — applying it to `bash.nix` produced exactly that nesting and dropped
   the file's only rationale comment, and splitting mako's battery rule into a third aspect
   *raised* the count. **An accepted choice, not a divergence**, deliberately absent from §12.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`, `easy-hosts`) without

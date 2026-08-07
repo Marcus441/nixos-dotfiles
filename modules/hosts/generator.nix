@@ -36,7 +36,7 @@
     aspects;
 
   # `aspectRequires` merges from the files that read another aspect's options
-  # (aspects.nix). Without this the failure is `attribute 'stylix' missing`
+  # (aspects.nix). Without this the failure is `attribute 'hyprland' missing`
   # pointing at a line in a guest module, naming neither the host nor the aspect
   # that is actually missing.
   unmetRequires = aspects:

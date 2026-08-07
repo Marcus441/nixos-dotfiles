@@ -15,7 +15,7 @@ _: {
 
                 # `default` rather than a colour: the selected line keeps the
                 # terminal's own background, so the cursor line does not fight
-                # foot's. This needed mkForce while stylix set it.
+                # foot's.
                 selectedLineBgColor = ["default"];
 
                 activeBorderColor = [colors.base0D "bold"];

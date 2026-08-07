@@ -2,8 +2,8 @@ _: {
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {
-        # base24 "Kanagawa Dragon" palette, defined explicitly so it does not
-        # depend on stylix, which not every host carries.
+        # base24 "Kanagawa Dragon" palette, written out rather than generated:
+        # one source of colour that every host has and every consumer reads.
         # The leading '#' is load-bearing: consumers either strip it or paste it
         # raw, so a value without one is silently right in some files and
         # silently wrong in others. The type makes it a build failure instead.

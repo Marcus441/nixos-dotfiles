@@ -92,9 +92,8 @@ Update this list in the commit that completes each step.
 - [x] **Step 3** — cursor to `core`, DMZ-Black fleet-wide. Icons deferred to Step 4
 - [x] **Step 4** — gtk and qt to `core`, taking the icon theme with them
 - [x] **Step 5** — mako drops its stylix branch; `palette` is now empty and leaves swift5
-- [~] **Step 6** — bat, lazygit, tmux, zathura, hyprlock **done**; yazi's syntect theme **done**,
-      its UI and icon table are the remainder (icons shelved for `icons-brew`)
-- [ ] **Step 7** — delete stylix: the module, the input, the aspect, the host entries
+- [x] **Step 6** — all six programs off stylix; yazi's UI went with the target in Step 7
+- [x] **Step 7** — stylix deleted: the module, the input, the cache, the aspect, the host entries
 
 ---
 
@@ -407,6 +406,34 @@ consumer, so nothing references the derivation and its closure is unchanged.
   describe a dependency that no longer exists. §9's hazard is replaced by its successor:
   nothing themes a program unless a file in this repo says so, which is the property this
   project buys.
+
+### Measured — done
+
+**Step 7 turned out to be the yazi UI step as well.** Deleting `stylix.nix` removed
+`yazi.enable`, and the UI sections `_yazi/style.nix` had been leaving empty then merged onto
+yazi's preset. Nothing was ported; the stubs were deleted and the preset showed through. The
+generated `theme.toml` fell from 3786 lines to 3412, and every section that changed was a
+*removal* — the diff has no added lines at all. `[completion]`, the table stylix emitted that
+yazi 26.5.6 does not have, went with it.
+
+- **swift5 byte-identical, empty closure diff.** It never carried stylix, and nothing it takes
+  moved.
+- **gpc and UM790pro:** `~/.config/stylix` and the generated `base16-kanagawa-dragon.{html,json}`
+  are gone from the closure; `nix.conf` loses the `danth.cachix.org` substituter. That is the
+  whole of the system-side change.
+- **`flake.lock` lost the input and its eleven transitive pins, and moved nothing else.** The
+  diff is 280 deletions against one insertion, and the insertion is a `systems_4` → `systems_3`
+  renumbering.
+- **The aspect count fell from thirteen to twelve, not eleven.** The plan predicted `stylix`
+  and `palette` leaving together; `palette` had already gone at Step 5, so Step 7 removed one.
+
+Prose that named stylix was corrected in the same pass, and correcting it surfaced drift that
+predated this project: §2's exemplar counts were stale from the roles refactor (16 files → 18,
+and `font`, `launcher` and `clipboard` have each dropped to one aspect), §3 still called
+`launcher.nix` "three memberships", and §4's `font/` directory example describes a directory
+that has never existed. The counts are now derived rather than remembered, and the statix list
+in §13 was re-run rather than trusted — it flags eight files now, not nine, and one of them
+(`gtk`) for an unrelated repeated key.
 
 **Expect:** the closure loses stylix and its base16-schemes dependency on gpc and UM790pro.
 That is the measurement that says the project is done.

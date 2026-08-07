@@ -28,8 +28,8 @@ original project's licensing. You can find a copy of the license in the
 | Host | Machine | Session | Aspects |
 | --- | --- | --- | --- |
 | `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl` |
-| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland waybar wleave thunar stylix apps` |
-| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar wleave thunar stylix apps` |
+| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland waybar wleave thunar apps` |
+| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar wleave thunar apps` |
 
 Six build targets: three `nixosConfigurations.<host>` and three
 `homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
@@ -49,7 +49,6 @@ in it.
 | `waybar` | The bar. Hyprland-only today — it reads Hyprland's IPC |
 | `wleave` | The power menu |
 | `thunar` | The file manager |
-| `stylix` | Theming driven by stylix from a base16 scheme |
 | `apps` | The heavy app set: thunderbird, discord, obs, kdenlive, yazi |
 | `dev` | Docker, qemu, aarch64 binfmt, ccache |
 | `gaming` | Steam and gamemode |
@@ -124,7 +123,7 @@ and no profile to pick.
 
        # What this machine is. Order is load-bearing: it sets module merge
        # order, which reaches derivation hashes.
-       aspects = ["core" "hyprland" "stylix" "apps"];
+       aspects = ["core" "hyprland" "apps"];
 
        fontSize = 12;
        hardware = ../../hosts/<hostname>/hardware-configuration.nix;
