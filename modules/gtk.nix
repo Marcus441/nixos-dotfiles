@@ -35,7 +35,7 @@ _: {
   ];
 
   # Registers the ca.desrt.dconf D-Bus service so the dconf settings above can
-  # be applied. Maximal gets this implicitly via programs.thunar.
+  # be applied.
   flake.modules.nixos.palette = [
     {
       programs.dconf.enable = true;
