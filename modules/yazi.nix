@@ -4,10 +4,11 @@ _: {
       {
         pkgs,
         config,
+        lib,
         ...
       }: let
         settings = import ./_yazi/yazi.nix;
-        theme = import ./_yazi/style.nix {inherit config pkgs;};
+        theme = import ./_yazi/style.nix {inherit config lib;};
       in {
         programs.yazi = {
           enable = true;

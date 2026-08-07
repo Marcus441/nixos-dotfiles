@@ -309,15 +309,26 @@ time, and it changed the answer three times out of five:
 | Program | Outcome |
 | --- | --- |
 | `zathura` | 20 settings written by hand; **swift5 gains all of them**, it had none |
-| `bat` | no hand-written theme at all — see below |
+| `bat` | first tried ANSI, which was **wrong**; now shares yazi's tmTheme — see below |
 | `lazygit` | eight colours, generated `config.yml` **byte-identical** |
 | `tmux` | one sourced file, but **four settings were surviving it** |
 | `hyprlock` | the target was **already dead**; removing it changed nothing |
 
-- **bat needed no theme.** stylix generated a `base16-stylix.tmTheme`; bat ships a `base16`
-  theme that renders through ANSI 0–15, and `foot.nix` already sets those sixteen from
-  `desktop.colors`. So highlighting follows the palette with no generated file, and keeps
-  following it if the palette changes. Fewer moving parts than before stylix was involved.
+- **bat's ANSI shortcut was wrong, and the palette is why.** The first attempt replaced
+  stylix's `base16-stylix.tmTheme` with bat's built-in `base16`, on the argument that it
+  renders through ANSI 0–15 and `foot.nix` sets those from `desktop.colors` — no generated
+  file, and it follows the palette for free. Correct as far as it goes, and it does not go far
+  enough: **base16 and base24 disagree about what the bright slots hold.** base16's convention
+  puts base09 in ANSI 9; `foot.nix` maps `bright1` to base12, because that is what base24 says
+  bright red is. Rendering a `.nix` file through `--theme=base16` shows it — `42` comes out as
+  `38;5;9`, which foot paints `#e46876` bright red, where the theme means base09 `#b6927b`.
+  Plain text is off too: `37` is `regular7`, which foot maps to base06, not base05.
+
+  So bat now reads the same tmTheme yazi's preview does. The rule this teaches is narrower
+  than "prefer ANSI": **ANSI is only free when the palette's own terminal mapping agrees with
+  the theme's convention**, and a base24 palette driving a base16 theme does not. Programs
+  that name their own colours (tmux, zathura, lazygit) are unaffected; it is only the ones
+  that ask for "the base16 theme" that inherit the disagreement.
 - **tmux was the near-miss.** Its target contributed one `source-file` line, and `tmux.nix`'s
   own `extraConfig` overrides most of what that file sets — so "redundant" was the obvious
   conclusion. Reading it showed four settings nothing else touched: the prefix+q pane
@@ -352,18 +363,25 @@ complaint that motivated this plan, appearing in this repo's own generated outpu
 
 ### Measured — the syntect theme
 
-`modules/_yazi/tmTheme.nix` renders the base16 tmTheme (bat's template, which is what stylix
-was using) through `lib.generators.toPlist` from `config.desktop.colors`, and
-`_yazi/style.nix` hands it to `mgr.syntect_theme`. 44 scope rules and 8 global keys as a Nix
-data table, ~110 lines instead of 540 of XML.
+`modules/tmtheme.nix` renders the base16 tmTheme (bat's template, which is what stylix was
+using) through `lib.generators.toPlist` from `config.desktop.colors`. 44 scope rules and 8
+global keys as a Nix data table, ~110 lines instead of 540 of XML.
+
+**It is `desktop.syntaxTheme` in `core`, read by two files.** It started as
+`_yazi/tmTheme.nix` and moved out the moment bat needed it too — a path under `_yazi/` would
+have said the theme belongs to yazi, and it belongs to syntect. Same shape as
+`launcher.command` and `fileManager.command`: an option namespace in `core`, one setter, and
+consumers that name it. `_yazi/style.nix` reads it for `mgr.syntect_theme`, `bat.nix` reads it
+for `programs.bat.themes`. Declaring it in `core` cost swift5 nothing — it takes neither
+consumer, so nothing references the derivation and its closure is unchanged.
 
 - **Semantically identical to what stylix generated.** Both files normalise to 44 rules with
   the same scope→colour mapping and the same 8-key global dict; only metadata and plist key
   order differ. The generated `theme.toml` changes by exactly one line, the path.
-- **Verified it parses, not just that it builds.** Loaded through bat's custom-theme path
-  (bat and yazi both highlight with syntect) and rendered a `.nix` file: every colour emitted
-  is a palette slot — base03 comments, base0B strings, base0E keywords, base09 constants,
-  base05 text.
+- **Verified it parses, not just that it builds.** Built bat's cache from the generated
+  `.config/bat` and rendered a `.nix` file through it: every colour emitted is a palette slot —
+  base03 comments, base0B strings, base0E keywords, base09 constants, base05 text. That is
+  also the check that caught the ANSI mistake above, by rendering the same file both ways.
 - **`syntect_theme` needs `mkForce` until Step 7**, because stylix's yazi target still sets
   it. The force comes out with the target, exactly as lazygit's did.
 - swift5 byte-identical; gpc and UM790pro swap one tmTheme for another in the closure.
