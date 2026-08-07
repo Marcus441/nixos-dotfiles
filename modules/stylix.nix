@@ -13,7 +13,6 @@
           polarity = "dark";
           targets = {
             hyprlock.enable = true;
-            lazygit.enable = true;
             tmux.enable = true;
             yazi.enable = true;
           };
