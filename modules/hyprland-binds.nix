@@ -7,10 +7,8 @@ _: {
         ...
       }: let
         mainMod = "SUPER";
-        # footclient needs the foot server (core/foot.nix, step 1.4); the SHIFT
-        # variant below spawns plain foot as a fallback if the server is down.
-        terminal = "uwsm app -- footclient";
-        terminalFallback = "uwsm app -- foot";
+        terminal = "uwsm app -- ${config.terminal.command}";
+        terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
       in {
         wayland.windowManager.hyprland.settings.bind =
           [

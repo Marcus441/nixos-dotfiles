@@ -4,6 +4,7 @@ _: {
       {
         config,
         lib,
+        pkgs,
         ...
       }: let
         inherit (config.desktop) font colors;
@@ -13,11 +14,48 @@ _: {
 
         strip = c: lib.removePrefix "#" c;
       in {
+        # `argv` for the same reason as `launcher` (§3): dwl's binds are a C argv
+        # array, Hyprland's are shell strings. The fallback is a role of its own
+        # because every spawn point needs one -- footclient is useless if the
+        # server is down, which is precisely when you want a terminal.
+        options.terminal = {
+          argv = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Program and arguments that open a terminal.";
+          };
+
+          fallbackArgv = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Terminal that does not depend on a running server.";
+          };
+
+          command = lib.mkOption {
+            type = lib.types.str;
+            readOnly = true;
+            default = lib.escapeShellArgs config.terminal.argv;
+            description = "`argv` as a shell command.";
+          };
+
+          fallbackCommand = lib.mkOption {
+            type = lib.types.str;
+            readOnly = true;
+            default = lib.escapeShellArgs config.terminal.fallbackArgv;
+            description = "`fallbackArgv` as a shell command.";
+          };
+        };
+
+        # By store path, not bare name: the consumers can hold a path, and §3
+        # prefers that where they can.
+        config.terminal = {
+          argv = ["${pkgs.foot}/bin/footclient"];
+          fallbackArgv = ["${pkgs.foot}/bin/foot"];
+        };
+
         # Shared terminal for all hosts: the explicit base24 palette below is the
         # single source of terminal colours everywhere. stylix must NOT theme
         # foot on the stylix hosts — see stylix.targets.foot.enable = false in
         # ./stylix.nix.
-        programs.foot = {
+        config.programs.foot = {
           enable = true;
           # Daemon mode: terminals spawn as footclient against this server. The
           # systemd unit binds to graphical-session.target, which uwsm activates

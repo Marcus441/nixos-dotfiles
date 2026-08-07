@@ -64,9 +64,11 @@ the editor and the shell are `core` — every host gets them regardless of
 session.
 
 `hyprland` and `dwl` are mutually exclusive, as are `stylix` and `palette`.
-Portable intents — `launcher`, `screenshot`, `clipboard`, `lock` — are option
-namespaces set by whichever session aspect a host takes, so nothing binds a
-session-specific command directly.
+Portable intents — `launcher`, `terminal`, `screenshot`, `clipboard`, `lock`,
+`logout`, `bar`, `fileManager`, `powerMenu` — are option namespaces in `core`,
+set by whichever aspect provides the thing, so nothing binds a session-specific
+command directly. A bind whose intent no aspect supplies is omitted rather than
+rendered dead.
 
 ## Layout
 

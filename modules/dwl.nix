@@ -14,16 +14,15 @@ _: {
 
         ocr-copy = pkgs.callPackage ./_pkgs/ocr-copy.nix {};
 
-        # dwl's binds are a C argv array, so the launcher intent arrives as argv
-        # rather than through its shell rendering.
-        menuArgvC = lib.concatMapStringsSep ", " (a: ''"${a}"'') config.launcher.argv;
+        # dwl's binds are a C argv array, so the intents arrive as argv rather
+        # than through their shell renderings.
+        argvC = lib.concatMapStringsSep ", " (a: ''"${a}"'');
+        menuArgvC = argvC config.launcher.argv;
 
         # The intent options hold shell commands; SHCMD embeds them in a C string
         # literal, which is the only place that quoting has to be re-done.
         cEsc = lib.replaceStrings [''\'' ''"''] [''\\'' ''\"''];
 
-        foot = "${pkgs.foot}/bin/foot";
-        footclient = "${pkgs.foot}/bin/footclient";
         wpctl = "${pkgs.wireplumber}/bin/wpctl";
         brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
         playerctl = "${pkgs.playerctl}/bin/playerctl";
@@ -120,8 +119,8 @@ _: {
           /* commands (absolute store paths; keysyms are matched case-insensitively) */
           /* footclient against the foot server started in the session autostart
              below (step 1.4); termfbcmd spawns plain foot if the server is down. */
-          static const char *termcmd[]      = { "${footclient}", NULL };
-          static const char *termfbcmd[]    = { "${foot}", NULL };
+          static const char *termcmd[]      = { ${argvC config.terminal.argv}, NULL };
+          static const char *termfbcmd[]    = { ${argvC config.terminal.fallbackArgv}, NULL };
           static const char *menucmd[]      = { ${menuArgvC}, NULL };
           static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
           static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };

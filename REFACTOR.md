@@ -27,7 +27,7 @@ work is — the plan is otherwise stateless, and a fresh session will start at t
 - [x] **Step 3** — `wleave` becomes an aspect; `powerMenu.command`
 - [~] **Step 4** — `waybar` becomes an aspect; `bar.toggle` **done**; dwl's bar patch **deferred**, see below
 - [x] **Step 5** — the launcher moves to the session that binds it. **No new aspects** — see below
-- [ ] **Step 6** — `terminal.argv`, provided from `core`
+- [x] **Step 6** — `terminal.argv`, provided from `core`
 
 ---
 
@@ -161,7 +161,7 @@ plan did buy is the role options: nothing binds a session-specific command direc
   | 3 wleave aspect | identical | **changed** | **changed** |
   | 4 waybar aspect | identical | identical | identical |
   | 5 walker/wmenu | **changed** | **changed** | **changed** |
-  | 6 terminal.argv | **changes** | **changes** | **changes** |
+  | 6 terminal.argv | identical | **changed** | **changed** |
 
 - **Aspect order in a host list is load-bearing.** It sets module merge order, which reaches
   derivation hashes. When splitting one aspect into two, put the new names where the old one
@@ -514,8 +514,20 @@ Independent of Steps 1–5; can slot anywhere after Step 1.
 Using a store path rather than the bare `footclient` removes a `PATH` dependency, which §3
 prefers where the consumer can hold a path.
 
-**Expect:** all three hosts change — the generated `hyprland.lua` and `config.h` both gain
-store paths where they had bare names.
+**Measured:** swift5 byte-identical, gpc and UM790pro changed. The prediction that all three
+would move assumed dwl's `config.h` gained store paths; it already had them — `dwl.nix`
+interpolated `${pkgs.foot}/bin/…` directly, so routing the same value through the option
+renders the identical C array. Only the two Hyprland hosts had bare names to lose, and they
+lose exactly three: `$mod+Return`, `$mod+SHIFT+Return`, and waybar's `nmtui` click.
+`diff-closures` is empty — foot was already in the closure — and no NixOS toplevel moved.
+
+`terminal.fallbackArgv` is a role in its own right rather than a variant of the first: every
+spawn point needs it, because footclient is useless exactly when the server is down.
+
+`dwl.nix`'s session autostart still starts `mako` and `foot --server` by bare name, and that
+is deliberate — the script loads the home profile onto `PATH` first. Pinning store paths
+there would put a *system*-evaluated foot in the closure while the client comes from the home
+profile, so a nixpkgs skew would have the server and client disagree. Left alone.
 
 ---
 
