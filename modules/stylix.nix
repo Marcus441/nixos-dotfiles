@@ -17,7 +17,6 @@
             lazygit.enable = true;
             tmux.enable = true;
             yazi.enable = true;
-            zathura.enable = true;
           };
         };
       }
