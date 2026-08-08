@@ -83,13 +83,10 @@ class. The single-aspect file is the majority but not the model — copying an
 arbitrary neighbour reproduces the majority and misses the second direction of
 the merge. Check §12 before treating any file as an example.
 
-> **Recount when a file gains or loses a membership** — these two numbers go
-> stale silently, and nothing in the build checks them:
-> ```bash
-> for f in $(find modules -name '*.nix' ! -path '*/_*'); do
->   grep -ohE 'flake\.modules\.[a-zA-Z]+\.[a-zA-Z0-9_-]+' "$f" | sort -u | wc -l
-> done | awk '$1>=2' | wc -l      # drop the awk for the 94
-> ```
+> **Recount when a file gains or loses a membership** — these two numbers
+> go stale silently, and nothing in the build checks them. Run
+> `scripts/recount-aspects.sh` and update the "21 of 94" figure above if it
+> has changed.
 
 > **Note on `deferredModule`:** The dendritic README warns against using *only*
 > flake-parts' built-in `flake.modules` without declaring typed options (the
