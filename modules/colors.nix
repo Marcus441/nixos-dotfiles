@@ -1,7 +1,11 @@
 _: {
   flake.modules.homeManager.core = [
     (
-      {lib, ...}: {
+      {
+        config,
+        lib,
+        ...
+      }: {
         # base24 "Kanagawa Dragon" palette, written out rather than generated:
         # one source of colour that every host has and every consumer reads.
         # The leading '#' is load-bearing: consumers either strip it or paste it
@@ -10,6 +14,17 @@ _: {
         options.desktop.colors = lib.mkOption {
           type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           description = "base24 colour palette (hex, with leading '#').";
+        };
+
+        # One source of colour, two renderings. base10-base17 are the base24
+        # extension, so "base0" selects exactly the low sixteen. Anything that
+        # speaks ANSI reads this; only a consumer that needs an extension slot
+        # reads `colors` (§9).
+        options.desktop.colors16 = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
+          readOnly = true;
+          default = lib.filterAttrs (n: _: lib.hasPrefix "base0" n) config.desktop.colors;
+          description = "the base16 subset of `desktop.colors`.";
         };
 
         config.desktop.colors = {
