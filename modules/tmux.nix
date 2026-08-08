@@ -6,7 +6,7 @@ _: {
         lib,
         ...
       }: let
-        c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
+        c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors16;
         thm_bg = "#${c.base00}";
         thm_surface = "#${c.base01}";
         thm_gray = "#${c.base03}";

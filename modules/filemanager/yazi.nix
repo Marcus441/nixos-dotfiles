@@ -56,7 +56,7 @@ _: {
         config,
         ...
       }: let
-        inherit (config.desktop) colors;
+        inherit (config.desktop) colors16;
       in {
         programs.yazi = {
           enable = true;
@@ -81,7 +81,7 @@ _: {
 
           # Only what the preset gets wrong for this palette. Everything absent
           # here is yazi's own, which names ANSI colours and so already reads
-          # `desktop.colors` through foot.
+          # `desktop.colors16` through foot.
           #
           # A partial theme merges onto the preset, so a background is only
           # cleared by naming one. Which name depends on whether anything reads
@@ -96,17 +96,17 @@ _: {
               tab_width = 1;
               syntect_theme = "${config.desktop.syntaxTheme}";
 
-              # Preset `gray` is ANSI 7, which foot maps to base06 -- brighter
-              # than the text it frames.
-              border_style.fg = colors.base0D;
+              # Preset `gray` is ANSI 7, which the base16 mapping makes base05
+              # -- the exact colour of the text it is meant to frame.
+              border_style.fg = colors16.base0D;
             };
 
-            confirm.border.fg = colors.base0D;
-            cmp.border.fg = colors.base0D;
-            input.border.fg = colors.base0D;
-            pick.border.fg = colors.base0D;
-            spot.border.fg = colors.base0D;
-            tasks.border.fg = colors.base0D;
+            confirm.border.fg = colors16.base0D;
+            cmp.border.fg = colors16.base0D;
+            input.border.fg = colors16.base0D;
+            pick.border.fg = colors16.base0D;
+            spot.border.fg = colors16.base0D;
+            tasks.border.fg = colors16.base0D;
 
             indicator = {
               padding = {
@@ -120,7 +120,7 @@ _: {
               # the glyphs alone.
               preview = {
                 underline = false;
-                bg = colors.base02;
+                bg = colors16.base02;
               };
             };
 
@@ -136,31 +136,31 @@ _: {
             # background, so it renders as nothing.
             mode = {
               normal_main = {
-                fg = colors.base00;
-                bg = colors.base0D;
+                fg = colors16.base00;
+                bg = colors16.base0D;
                 bold = true;
               };
               normal_alt = {
-                fg = colors.base0D;
-                bg = colors.base00;
+                fg = colors16.base0D;
+                bg = colors16.base00;
               };
               select_main = {
-                fg = colors.base00;
-                bg = colors.base0B;
+                fg = colors16.base00;
+                bg = colors16.base0B;
                 bold = true;
               };
               select_alt = {
-                fg = colors.base0B;
-                bg = colors.base00;
+                fg = colors16.base0B;
+                bg = colors16.base00;
               };
               unset_main = {
-                fg = colors.base00;
-                bg = colors.base08;
+                fg = colors16.base00;
+                bg = colors16.base08;
                 bold = true;
               };
               unset_alt = {
-                fg = colors.base08;
-                bg = colors.base00;
+                fg = colors16.base08;
+                bg = colors16.base00;
               };
             };
 
@@ -176,11 +176,11 @@ _: {
 
               # Preset paints these on solid `black` and `red` blocks.
               progress_normal = {
-                fg = colors.base0D;
+                fg = colors16.base0D;
                 bg = "reset";
               };
               progress_error = {
-                fg = colors.base08;
+                fg = colors16.base08;
                 bg = "reset";
               };
             };
