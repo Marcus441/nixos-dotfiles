@@ -300,9 +300,14 @@ nested evaluation, importing a module file by path to call a function.
   provenance across all files `import-tree` loads. Re-run §10's full check if
   you change the element type again.
 - **`config` shadowing** inside `flake.modules.*` — see §8.
-- **ANSI is not free just because foot sets it from the palette.** A program
-  asking for *the base16 theme* asserts that ANSI 9 holds base09 — `foot.nix`
-  puts base12 there (base24 bright red). Check which kind you have.
+- **ANSI carries base16; base24 is only reachable as hex.** `foot.nix` renders
+  the standard base16 slot mapping from `desktop.colors16` (the `base0*` subset
+  of `desktop.colors`), so a program asking for *the base16 theme* now gets
+  what it asserts — ANSI 9 is base09. The corollary is that `base10`–`base17`
+  cannot travel through ANSI at all: a consumer wanting one reads
+  `desktop.colors` and hands over hex, which is why `qt.nix` does. The reason
+  `bat.nix` and `filemanager/yazi.nix` share `desktop.syntaxTheme` is
+  unchanged: syntect takes a tmTheme, not ANSI.
 - **`reset` is a value that only survives being drawn.** yazi's status bar
   reads colours back and transposes them. Check whether anything reads a colour
   back before choosing one.
