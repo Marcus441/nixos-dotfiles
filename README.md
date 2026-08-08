@@ -90,7 +90,7 @@ host by name instead.
 
 ```
 flake.nix                    inputs + mkFlake + import-tree. Rarely touched.
-statix.toml                  lint config; see CLAUDE.md §13 for the one refusal
+statix.toml                  lint config; see .claude/rules/settled-decisions.md
 modules/
   aspects.nix                declares the flake.modules and aspectRequires options
   hosts/generator.nix        builds both output sets from each host record
@@ -239,7 +239,8 @@ nix flake check                              # cheap eval sweep
 For structural changes, prove nothing moved but order. Compare-mode checks out
 the baseline ref itself and cleans up after; `./scripts/verify.sh HEAD` on a
 clean tree is a no-op that must report 6 PASS, which tests the harness rather
-than the change. `CLAUDE.md` §10 carries the full recipe.
+than the change. `.claude/rules/structural-verification.md` carries the full
+recipe.
 
 ## Contributions
 
