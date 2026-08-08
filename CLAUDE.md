@@ -96,14 +96,14 @@ machine **is**.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
   `homeManager` in one file. Invariant 3, half-demonstrated.
 
-**Eighteen files declare more than one aspect or more than one class.** Counted over
-`modules/` excluding `/_`, by distinct `flake.modules.<class>.<aspect>` occurrences: 92 files
-declare at least one, and 18 declare two or more — `bash`, `brightnessctl`, `dwl`, `git`,
-`gtk`, `hyprland`, `lock`, `logout`, `mako`, `neovim`, `net`, `nix`, `screenshot`, `thunar`,
-`walker`, `waybar`, `wleave`, `xdg`. The other 74 contribute to exactly one.
+**Nineteen files declare more than one aspect or more than one class.** Counted over
+`modules/` excluding `/_`, by distinct `flake.modules.<class>.<aspect>` occurrences: 93 files
+declare at least one, and 19 declare two or more — `bash`, `brightnessctl`, `dwl`, `dwl-bar`,
+`git`, `gtk`, `hyprland`, `lock`, `logout`, `mako`, `neovim`, `net`, `nix`, `screenshot`,
+`thunar`, `walker`, `waybar`, `wleave`, `xdg`. The other 74 contribute to exactly one.
 
 So the single-aspect file is the majority but not the model. Copying an arbitrary
-neighbour reproduces the majority; the eighteen above are where the second direction of the
+neighbour reproduces the majority; the nineteen above are where the second direction of the
 merge is actually demonstrated. Check §12 before treating any file as an example.
 
 Note what is *not* on that list any more: `font`, `launcher` and `clipboard` each declare one
@@ -275,11 +275,13 @@ navigation and is fine.
 **`core` does not count toward "several aspects".** Every host takes `core`, so a `core`
 block is not a discriminating membership — if an `options.*` declaration in `core` made a
 directory multi-aspect, almost anything would qualify, `hyprland/` included. Count only
-aspects some host declines. This is what keeps `filemanager/` (`thunar`, `apps`, plus
-`core`) apart from a `bar/` holding only the three `waybar*` files, which would be `waybar`
-plus a `core` option declaration and so is the flat case. Directories in the tree today:
-`filemanager/` is the intent case; `discord/` and `opencode/` hold assets rather than
-modules; `display/` holds one file; `hosts/` is the wiring.
+aspects some host declines. `bar/` is the worked case, because it was both things in turn:
+holding only the three `waybar*` files it was `waybar` plus a `core` option declaration, so
+it was the flat case and was left flat. `dwl-bar.nix` landing beside them made it two
+declining aspects and the directory legal — the same files, the same name, a different
+answer. Directories in the tree today: `filemanager/` and `bar/` span declining aspects;
+`discord/` and `opencode/` hold assets rather than modules; `display/` holds one file;
+`hosts/` is the wiring.
 
 Host files declare archetype and machine facts only:
 
@@ -546,6 +548,13 @@ evaluation to reach a value, importing a module file by path to call a function 
   `lib.mkIf pkgs.stdenv.isLinux { ... pkgs.grim ... }` still evaluates `pkgs.grim`. Guard
   the reference, not just the config, or split the file. This does **not** mean a
   Linux-only reference in an aspect `mbp` never takes needs guarding — it doesn't.
+- **An interpolation at column 0 reindents a whole generated file.** `''` strips the least
+  indentation of any line, and a line beginning `${...}` has none — so splicing a block in
+  at the left margin sets the strip depth to zero and every other line keeps its source
+  indentation. `dwl.nix` renders `config.h` from five such blocks and keeps all five at the
+  literal's own indent, which puts them at column 0 of the *output*; the one spliced inside
+  an array carries its two spaces in the string. The failure is silent — a valid file that
+  is wrong throughout, not an error.
 - **`git add -A` before every `nix` command.** Flakes see only tracked files; skipping
   this gives "path does not exist" for files visibly on disk.
 - **Never switch.** No `nixos-rebuild switch`, no `nh os switch`, no `home-manager switch`.
@@ -710,13 +719,25 @@ are safe to cite.
 - **Deliberately deferred — do not propose these unasked.** Quickshell (waybar and walker
   stay); a dwl host taking `waybar` or `walker`, which has four blockers recorded in the
   structural plan in git history. Darwin is the same kind of decision but is tracked as §12
-  item 7, because it is a gap rather than a preference. dwl's conditional bar patch has
-  left this list — it was asked for, and is `todo.md`'s branch 2.
+  item 7, because it is a gap rather than a preference. dwl's conditional bar patch has left
+  this list: it was asked for and is built, as the `dwl-bar` aspect.
 - **Waybar's opt-in shape is finished; do not re-propose it.** `waybar` and `wleave` are
   already separate aspects that only `gpc` and `UM790pro` take, `aspectRequires.waybar =
   ["hyprland"]` rejects a dwl host outright rather than handing it three dead modules, and
   `waybar.nix` already embeds wleave as `custom/power`, gated on `powerMenu.command` so the
   button is omitted rather than rendered dead. Nothing about this needs building.
+- **dwl's bar is `dwl-bar`, and its shape is settled.** `dwl.nix` declares `dwl.bar`,
+  `dwl.patches` and `dwl.buildInputs` in `homeManager.dwl` and `dwl.statusCommand` in
+  `nixos.dwl`; `bar/dwl-bar.nix` sets all four and declares `aspectRequires.dwl-bar =
+  ["dwl"]`. The boolean is not redundant with `patches != []` — an unrelated patch appended
+  by some later file would not imply a bar — and it is not §11's "one aspect that branches
+  internally", because the branch is between two builds of one compositor and the decision
+  arrives from a sibling aspect the host lists. `statusCommand` stays in `nixos.dwl` rather
+  than `core` for §7's `notifications` reason: one setter, one reader, both dwl-only.
+  **The failure mode is silent by construction** — a `dwl` host without `dwl-bar` builds a
+  working bar-less dwl, which is the feature, so nothing will alarm if the aspect is ever
+  dropped by accident. `nix eval '.#homeConfigurations."marcus@swift5".config.dwl.bar'`
+  is the cheap check.
 - **Finished plans go to git history, and nothing in the tree cites a plan file.** Cite a
   §-number here or a commit hash instead. `REFACTOR.md` was replaced wholesale three times
   and each replacement silently broke every pointer at it — by the time it was retired, all

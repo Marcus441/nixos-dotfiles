@@ -1,6 +1,32 @@
 _: {
   flake.modules.homeManager.dwl = [
     (
+      {lib, ...}: {
+        options.dwl = {
+          # dwl is configured at compile time, so a patch that adds symbols and
+          # the config.h that must define them are one decision, not two.
+          bar = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = "Whether the compiled dwl has a bar. Selects which symbols config.h defines: showbar/fonts/tags[]/colors[][3] against upstream's bordercolor/focuscolor/urgentcolor and TAGCOUNT.";
+          };
+
+          patches = lib.mkOption {
+            type = lib.types.listOf lib.types.path;
+            default = [];
+            description = "Applied to nixpkgs' dwl before config.h is copied in.";
+          };
+
+          buildInputs = lib.mkOption {
+            type = lib.types.listOf lib.types.package;
+            default = [];
+            description = "Extra buildInputs the patches need.";
+          };
+        };
+      }
+    )
+
+    (
       {
         pkgs,
         lib,
@@ -8,6 +34,7 @@ _: {
         ...
       }: let
         inherit (config.desktop) colors font;
+        hasBar = config.dwl.bar;
 
         # #rrggbb -> 0xrrggbbff for dwl's colour tables.
         toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
@@ -27,6 +54,71 @@ _: {
         brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
         playerctl = "${pkgs.playerctl}/bin/playerctl";
 
+        # The bar patch does not only add symbols, it replaces some: upstream's
+        # three border colours become one `colors[][3]`, `TAGCOUNT` becomes
+        # `tags[]`, and `Button` grows a click-region field. So these are traded
+        # rather than omitted, and an unpatched dwl compiled against the other
+        # branch fails at the compiler, not at runtime.
+        #
+        # Each lands at column 0 of the generated file, so none may be spliced in
+        # at column 0 *here*: an interpolation with no literal indent before it
+        # would set the enclosing `''` block's strip depth to zero and indent the
+        # whole file. `toggleBarKey` sits inside an array, so it carries the two
+        # spaces `''` would otherwise have stripped.
+        barAppearance = lib.optionalString hasBar ''
+          static const int showbar                   = 1;  /* 0 means no bar */
+          static const int topbar                    = 1;  /* 0 means bottom bar */
+          static const char *fonts[]                 = {"${font.name}:size=10"};
+        '';
+
+        colorTable =
+          if hasBar
+          then ''
+            /* base24 colours: foreground, background, border. Borders stay muted
+               greys: unfocused sinks toward the background (base01), focused lifts a
+               shade above it (base03). */
+            static uint32_t colors[][3] = {
+              [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
+              [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base02}, ${toBar colors.base03} },
+              [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
+            };''
+          else ''
+            /* base24 borders, same roles as the bar's colour table: unfocused sinks
+               toward the background (base01), focused lifts a shade above it (base03). */
+            static const float bordercolor[]           = COLOR(${toBar colors.base01});
+            static const float focuscolor[]            = COLOR(${toBar colors.base03});
+            static const float urgentcolor[]           = COLOR(${toBar colors.base08});'';
+
+        tagging =
+          if hasBar
+          then ''static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };''
+          else "#define TAGCOUNT (9) /* must be no greater than 31 */";
+
+        toggleBarKey = lib.optionalString hasBar "  { MODKEY,                    XKB_KEY_b,      togglebar,        {0} },                /* super+b       -> toggle bar */";
+
+        buttons =
+          if hasBar
+          then ''
+            static const Button buttons[] = {
+              { ClkLtSymbol, 0,      BTN_LEFT,   setlayout,      {.v = &layouts[0]} },
+              { ClkLtSymbol, 0,      BTN_RIGHT,  setlayout,      {.v = &layouts[2]} },
+              { ClkTitle,    0,      BTN_MIDDLE, zoom,           {0} },
+              { ClkStatus,   0,      BTN_MIDDLE, spawn,          {.v = termcmd} },
+              { ClkClient,   MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
+              { ClkClient,   MODKEY, BTN_MIDDLE, togglefloating, {0} },
+              { ClkClient,   MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+              { ClkTagBar,   0,      BTN_LEFT,   view,           {0} },
+              { ClkTagBar,   0,      BTN_RIGHT,  toggleview,     {0} },
+              { ClkTagBar,   MODKEY, BTN_LEFT,   tag,            {0} },
+              { ClkTagBar,   MODKEY, BTN_RIGHT,  toggletag,      {0} },
+            };''
+          else ''
+            static const Button buttons[] = {
+              { MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
+              { MODKEY, BTN_MIDDLE, togglefloating, {0} },
+              { MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+            };'';
+
         configH = pkgs.writeText "dwl-config.h" ''
           /* Generated by home-manager (modules/dwl.nix) -- do not edit. */
 
@@ -40,24 +132,14 @@ _: {
           static const int sloppyfocus               = 1;  /* focus follows mouse */
           static const int bypass_surface_visibility = 0;
           static const unsigned int borderpx         = 1;  /* border pixel of windows */
-          static const int showbar                   = 1;  /* 0 means no bar */
-          static const int topbar                    = 1;  /* 0 means bottom bar */
-          static const char *fonts[]                 = {"${font.name}:size=10"};
-          static const float rootcolor[]             = COLOR(${toBar colors.base00});
+          ${barAppearance}static const float rootcolor[]             = COLOR(${toBar colors.base00});
           /* Set the alpha to zero to restore the old (pre xdg-protocol) behaviour. */
           static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
 
-          /* base24 colours: foreground, background, border. Borders stay muted
-             greys: unfocused sinks toward the background (base01), focused lifts a
-             shade above it (base03). */
-          static uint32_t colors[][3] = {
-            [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
-            [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base02}, ${toBar colors.base03} },
-            [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
-          };
+          ${colorTable}
 
           /* tagging */
-          static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+          ${tagging}
 
           /* logging */
           static int log_level = WLR_ERROR;
@@ -150,7 +232,7 @@ _: {
             { MODKEY,                    XKB_KEY_q,      killclient,       {0} },                /* super+q       -> close      */
             { MODKEY,                    XKB_KEY_f,      togglefloating,   {0} },                /* super+f       -> float      */
             { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_f,      togglefullscreen, {0} },                /* super+shift+f -> fullscreen */
-            { MODKEY,                    XKB_KEY_b,      togglebar,        {0} },                /* super+b       -> toggle bar */
+          ${toggleBarKey}
             { MODKEY,                    XKB_KEY_j,      focusstack,       {.i = +1} },          /* super+j       -> focus next */
             { MODKEY,                    XKB_KEY_k,      focusstack,       {.i = -1} },          /* super+k       -> focus prev */
             { MODKEY,                    XKB_KEY_h,      setmfact,         {.f = -0.05f} },      /* super+h       -> shrink     */
@@ -202,30 +284,12 @@ _: {
             CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
           };
 
-          static const Button buttons[] = {
-            { ClkLtSymbol, 0,      BTN_LEFT,   setlayout,      {.v = &layouts[0]} },
-            { ClkLtSymbol, 0,      BTN_RIGHT,  setlayout,      {.v = &layouts[2]} },
-            { ClkTitle,    0,      BTN_MIDDLE, zoom,           {0} },
-            { ClkStatus,   0,      BTN_MIDDLE, spawn,          {.v = termcmd} },
-            { ClkClient,   MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
-            { ClkClient,   MODKEY, BTN_MIDDLE, togglefloating, {0} },
-            { ClkClient,   MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
-            { ClkTagBar,   0,      BTN_LEFT,   view,           {0} },
-            { ClkTagBar,   0,      BTN_RIGHT,  toggleview,     {0} },
-            { ClkTagBar,   MODKEY, BTN_LEFT,   tag,            {0} },
-            { ClkTagBar,   MODKEY, BTN_RIGHT,  toggletag,      {0} },
-          };
+          ${buttons}
         '';
 
-        barPatch = pkgs.fetchpatch {
-          name = "dwl-bar.patch";
-          url = "https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/bar/bar.patch";
-          hash = "sha256-guW5Gan9jg5S8O7F/LfvQpUJy7Cgs8ly89peL7YazeI=";
-        };
-
         dwl-suckless = pkgs.dwl.overrideAttrs (old: {
-          patches = (old.patches or []) ++ [barPatch];
-          buildInputs = (old.buildInputs or []) ++ [pkgs.fcft pkgs.libdrm];
+          patches = (old.patches or []) ++ config.dwl.patches;
+          buildInputs = (old.buildInputs or []) ++ config.dwl.buildInputs;
 
           postPatch =
             (old.postPatch or "")
@@ -247,7 +311,22 @@ _: {
 
   flake.modules.nixos.dwl = [
     (
-      {pkgs, ...}: let
+      {lib, ...}: {
+        options.dwl.statusCommand = lib.mkOption {
+          type = lib.types.str;
+          default = "";
+          description = "Shell command whose stdout dwl reads as bar status. Empty when the compositor was built without a bar, in which case the session does not pipe into it at all.";
+        };
+      }
+    )
+
+    (
+      {
+        pkgs,
+        lib,
+        config,
+        ...
+      }: let
         wallpaper = pkgs.fetchFromGitHub {
           owner = "Marcus441";
           repo = "walls";
@@ -256,6 +335,13 @@ _: {
           sparseCheckout = ["walled_tiers/4k/aerial/satellite_dishes_on_a_building.jpg"];
         };
         wallpaperImage = "${wallpaper}/walled_tiers/4k/aerial/satellite_dishes_on_a_building.jpg";
+
+        # An unpatched dwl reads nothing from stdin, so the pipe is dropped
+        # rather than fed from /dev/null: a status producer with no consumer is
+        # a loop running forever for nobody.
+        statusFeed =
+          lib.optionalString (config.dwl.statusCommand != "")
+          "{ ${config.dwl.statusCommand}; } | ";
 
         # dwl is compiled-and-configured in the dwl *home* aspect (its config
         # is compile-time), so the session launches the user's ~/.nix-profile copy.
@@ -272,12 +358,12 @@ _: {
 
           # dwl's -s autostart runs once the compositor is up (so WAYLAND_DISPLAY is
           # set): apply the host monitor layout, paint the wallpaper, then start the
-          # notification daemon. dwl reads its bar status from stdin; feed a clock.
-          # foot --server backs the footclient keybind (step 1.4); the dwl session
-          # is a plain script (no graphical-session.target), so the home-manager
-          # foot systemd unit never activates here and the server starts manually,
-          # like mako below.
-          { while :; do date '+%a %d %b  %H:%M'; sleep 30; done; } | dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &'
+          # notification daemon. The leading pipe, if any, is the bar's status feed
+          # (the dwl-bar aspect). foot --server backs the footclient keybind; the
+          # dwl session is a plain script (no graphical-session.target), so the
+          # home-manager foot systemd unit never activates here and the server
+          # starts manually, like mako below.
+          ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &'
         '';
 
         dwl-desktop = pkgs.writeTextFile {

@@ -48,36 +48,39 @@ Foundation: branches 2 and 4 add files that want somewhere to live.
 
 ---
 
-## 2. `feat/dwl-bar` — the bar patch as its own aspect  **structural**
+## 2. `feat/dwl-bar` — the bar patch as its own aspect  **structural**  ✅
 
 Mirrors `waybar`→`hyprland`. Listed under CLAUDE.md §13 "deliberately deferred"; this
 branch is the ask that lifts that.
 
-- [ ] **Create `modules/bar/` in this branch**, carried over from branch 1: move the three
-      `waybar*.nix` in alongside the new `dwl-bar.nix`. With two declining aspects
+- [x] **`modules/bar/` created in this branch**, carried over from branch 1: the three
+      `waybar*.nix` moved in alongside the new `dwl-bar.nix`. With two declining aspects
       (`waybar`, `dwl-bar`) inside, the directory passes §4 — which it did not on its own.
-      Do the move in a separate commit from the feature so the §5 measurement is readable.
-- [ ] `modules/bar/dwl-bar.nix`, declaring `flake.modules.homeManager.dwl-bar` and
+      Moved in its own commit, measured 6/6 identical.
+- [x] `modules/bar/dwl-bar.nix`, declaring `flake.modules.homeManager.dwl-bar` and
       `flake.modules.nixos.dwl-bar`, plus `aspectRequires.dwl-bar = ["dwl"];`.
-- [ ] Move the `barPatch` fetch and the `buildInputs` it needs (`fcft`, `libdrm`) out of
-      `modules/dwl.nix` into the new file. `dwl.nix` declares an option the new aspect
-      appends to — `dwl.patches` / `dwl.buildInputs` — and builds the derivation from it.
-      Declared in the `dwl` aspect, not `core`: `aspectRequires` is what makes that safe.
-- [ ] `config.h` is generated, so `showbar`, `topbar`, `fonts[]`, the `colors[][3]` table
-      and the `togglebar` keybind and `ClkLtSymbol`/`ClkTagBar`/`ClkStatus` buttons must
-      all become conditional on the bar being present. Unpatched dwl does not define those
-      symbols — this is a compile failure, not a runtime one.
-- [ ] **The session script is the trap.** `dwl.nix`'s `dwl-session` pipes a `date` loop
-      into `dwl -s …` because the bar reads status from stdin. That is in the *nixos* half,
-      which cannot read homeManager config — so `nixos.dwl-bar` must set a nixos-side
-      option that `nixos.dwl` renders. One file, two classes, same as `thunar.nix`.
-- [ ] `swift5.aspects`: insert `"dwl-bar"` adjacent to `"dwl"` so the split is a partition,
-      not a reorder (§5).
-- [ ] **§10 byte-identity block.** `swift5` *will* move — it gains an aspect. `gpc` and
-      `UM790pro` must not: they take neither aspect, so any movement there is a leak.
+- [x] The `barPatch` fetch and its `fcft`/`libdrm` buildInputs moved into the new file;
+      `dwl.nix` declares `dwl.patches` / `dwl.buildInputs` in the `dwl` aspect and builds
+      the derivation from them.
+- [x] `config.h` is conditional — but on **more** than this list predicted. The patch does
+      not only *add* symbols, it replaces them: `bordercolor`/`focuscolor`/`urgentcolor`
+      become `colors[][3]`, `#define TAGCOUNT (9)` becomes `tags[]`, and `Button` grows a
+      click-region field so the whole array changes shape, not just its rows. Five blocks
+      trade on `dwl.bar` rather than four being omitted.
+- [x] **The session script trap**, as described: `nixos.dwl` declares `dwl.statusCommand`
+      and renders the pipe from it; `nixos.dwl-bar` sets the `date` loop. Empty on an
+      unpatched dwl, and the pipe is dropped rather than fed from `/dev/null`.
+- [x] `swift5.aspects`: `"dwl-bar"` inserted after `"dwl"`.
+- [x] **Measured.** swift5's homeConfiguration is *byte-identical* — a stronger result than
+      this list predicted, and it proves the bar-on `config.h` renders unchanged. swift5's
+      nixos toplevel differs only in a rewritten comment inside `dwl-session` (empty
+      `diff-closures`, command line byte-identical). `gpc` and `UM790pro` identical on both
+      classes, so nothing leaked.
+- [x] Removing `"dwl-bar"` compiles unpatched dwl-0.8: no `togglebar` bind, upstream
+      `Button` array, `TAGCOUNT`, no status pipe. The generator rejects `dwl-bar` without
+      `dwl` by name.
 
-**Done when:** `swift5` builds with `dwl-bar` and, with it removed from the aspect list,
-still builds — an unpatched dwl with no bar and no dead binds.
+**Done:** the bar is an aspect; swift5 builds with it and without it.
 
 ---
 
