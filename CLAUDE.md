@@ -78,9 +78,18 @@ Two independent axes: the unit of **concern** is the *file*; the unit of
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos`
   and `homeManager` in one file.
 
-Twenty files declare more than one aspect or class (listed in §2 of the full
-doc). The single-aspect file is the majority but not the model. Check §12
-before treating any file as an example.
+**21 of the 94 files that declare an aspect declare more than one** aspect or
+class. The single-aspect file is the majority but not the model — copying an
+arbitrary neighbour reproduces the majority and misses the second direction of
+the merge. Check §12 before treating any file as an example.
+
+> **Recount when a file gains or loses a membership** — these two numbers go
+> stale silently, and nothing in the build checks them:
+> ```bash
+> for f in $(find modules -name '*.nix' ! -path '*/_*'); do
+>   grep -ohE 'flake\.modules\.[a-zA-Z]+\.[a-zA-Z0-9_-]+' "$f" | sort -u | wc -l
+> done | awk '$1>=2' | wc -l      # drop the awk for the 94
+> ```
 
 > **Note on `deferredModule`:** The dendritic README warns against using *only*
 > flake-parts' built-in `flake.modules` without declaring typed options (the
