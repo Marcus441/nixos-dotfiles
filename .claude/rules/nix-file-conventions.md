@@ -54,7 +54,7 @@ Two independent axes: the unit of **concern** is the *file*; the unit of
 
 - `modules/filemanager/thunar.nix` — one concern, two aspects, both classes.
   **This is the file to copy.**
-- `modules/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
+- `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
   in `core`, read by `bat.nix` and `yazi.nix`.
 - `modules/ccache.nix` — declares `dev` beside files declaring `core`. Nothing
   about its location says which. Inv. 4 demonstrated.

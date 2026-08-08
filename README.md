@@ -65,7 +65,8 @@ session.
 
 `hyprland` and `dwl` are mutually exclusive, and each pairs with its own bar.
 Theming is not an aspect: colours, fonts and the cursor live in `core`, so every
-host is themed the same way. The palette is base24 Kanagawa Dragon, rendered
+host is themed the same way — `modules/theme/` is navigation, and every file in
+it declares `core`. The palette is base24 Kanagawa Dragon, rendered
 twice — `desktop.colors` for anything taking hex, and `desktop.colors16`, its
 `base00`–`base0F` subset, for anything that reaches a terminal. ANSI has sixteen
 slots and cannot carry the extension, so a program asking for *the base16 theme*
@@ -96,8 +97,11 @@ modules/
   hosts/record.nix           the typed host record the generator consumes
   hosts/<hostname>.nix       what the machine IS: aspects + machine facts
   bar/                       waybar and dwl-bar
-  display/                   monitor renderers
+  cli/                       terminal tools, across core and apps
+  display/                   monitor geometry and the renderers that consume it
   filemanager/               thunar and yazi
+  media/                     players, viewers and editors
+  theme/                     colours, fonts, cursor, GTK and Qt
   <concern>.nix              one concern; declares its own aspect membership
   <intent>/                  implementations of one intent, in different aspects
 hosts/<hostname>/            hardware-configuration.nix only (machine-generated)

@@ -1,5 +1,5 @@
 ---
-paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,modules/*theme*.nix"
+paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/*theme*.nix"
 ---
 
 # Theming hazards — colours and syntax themes
@@ -18,5 +18,5 @@ paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,modules/*theme*.nix"
 
 ## Where the options are declared
 
-- `modules/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
+- `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
   in `core`, read by `bat.nix` and `yazi.nix`.
