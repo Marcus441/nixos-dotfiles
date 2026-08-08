@@ -133,10 +133,8 @@ file that owns the concern. Zero shared aspects is a valid outcome.
 
 ### `windowTags`: many setters, one reader
 
-`windowTags.<tag> = [<class regex>]` in `core`, appended to by every file that
-installs a window, read by `hyprland-rules.nix`. The namespace is in `core`
-because `core` files set it and would otherwise fail on swift5. A dwl host
-carries the value with no reader — measured: swift5 builds byte-identical.
+See `.claude/rules/window-tags.md` (auto-loaded when editing
+`modules/hyprland-rules.nix`, `modules/dwl.nix`, `modules/hyprland.nix`).
 
 ### A tool invoked by bare name must be installed by every aspect that invokes it
 
@@ -259,14 +257,9 @@ option namespaces in `core`, set by `hyprland` and `dwl`. `notifications` is
 deliberately **not** one — mako serves both sessions from one file and nothing
 invokes it by command.
 
-**`perSystem` is where platform breakage bites early.** Adding `aarch64-darwin`
-to `systems` will immediately fail any Linux-only `perSystem.packages`. Exclude
-by attribute, not by value — `mkIf` gates the value but still evaluates it:
-
-```nix
-packages = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux { foo = …; };  # right
-packages.foo = lib.mkIf pkgs.stdenv.hostPlatform.isLinux …;                  # wrong
-```
+**`perSystem` is where platform breakage bites early.** See
+`.claude/rules/perSystem-platform.md` (auto-loaded when editing `flake.nix`,
+`modules/hosts/*.nix`, `modules/aspects.nix`).
 
 ---
 
@@ -300,17 +293,9 @@ nested evaluation, importing a module file by path to call a function.
   provenance across all files `import-tree` loads. Re-run §10's full check if
   you change the element type again.
 - **`config` shadowing** inside `flake.modules.*` — see §8.
-- **ANSI carries base16; base24 is only reachable as hex.** `foot.nix` renders
-  the standard base16 slot mapping from `desktop.colors16` (the `base0*` subset
-  of `desktop.colors`), so a program asking for *the base16 theme* now gets
-  what it asserts — ANSI 9 is base09. The corollary is that `base10`–`base17`
-  cannot travel through ANSI at all: a consumer wanting one reads
-  `desktop.colors` and hands over hex, which is why `qt.nix` does. The reason
-  `bat.nix` and `filemanager/yazi.nix` share `desktop.syntaxTheme` is
-  unchanged: syntect takes a tmTheme, not ANSI.
-- **`reset` is a value that only survives being drawn.** yazi's status bar
-  reads colours back and transposes them. Check whether anything reads a colour
-  back before choosing one.
+- **Colour hazards** (base16 vs base24 over ANSI, `reset`): see
+  `.claude/rules/theming-hazards.md` (auto-loaded when editing `foot.nix`,
+  `qt.nix`, `bat.nix`, `yazi.nix`, `modules/*theme*.nix`).
 - **Every *file* is evaluated once** — a syntax error anywhere breaks every
   host. But an **aspect's contents are only evaluated by hosts that take it.**
 - **Eval-time vs config-time.** `lib.mkIf pkgs.stdenv.isLinux { … pkgs.grim … }`
@@ -335,31 +320,9 @@ nix flake check                  # cheap eval sweep
 
 `nixos-rebuild build` covers only three of six targets. Use `verify.sh`.
 
-For structural changes, prove nothing changed but order:
-
-```bash
-git worktree add ../dotfiles-prev <previous-commit>
-
-for h in swift5 gpc UM790pro; do
-  echo "=== $h ==="
-  old=$(nix build --no-link --print-out-paths \
-        "../dotfiles-prev#homeConfigurations.\"marcus@$h\".activationPackage")
-  new=$(nix build --no-link --print-out-paths \
-        ".#homeConfigurations.\"marcus@$h\".activationPackage")
-  nix store diff-closures "$old" "$new"          # must be EMPTY
-  diff -rq "$old/home-files" "$new/home-files"   # only intended files
-
-  oldt=$(nix build --no-link --print-out-paths \
-         "../dotfiles-prev#nixosConfigurations.$h.config.system.build.toplevel")
-  newt=$(nix build --no-link --print-out-paths \
-         ".#nixosConfigurations.$h.config.system.build.toplevel")
-  diff -rq "$oldt/etc" "$newt/etc" 2>&1 | grep -v "^diff:.*No such file"
-done
-
-git worktree remove ../dotfiles-prev
-```
-
-`swift5` takes neither Hyprland nor `apps` — a useful control for work on those.
+For structural verification, run `scripts/verify.sh <ref>`. The full
+diff-closures recipe is in `.claude/rules/structural-verification.md`
+(auto-loaded when editing `scripts/`).
 
 **Bisect eval errors** by temporarily renaming a file to `_name.nix` —
 `import-tree` skips it. Halve the tree until the build recovers. Undo before
