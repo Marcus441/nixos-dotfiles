@@ -8,9 +8,12 @@ _: {
       }: let
         inherit (config.desktop) colors;
 
-        # libadwaita reads these names; Adwaita-dark supplies the widget shapes
-        # and this supplies the colours, so GTK apps follow the palette rather
-        # than shipping a second one. Replaces the gtk.css stylix generated.
+        # These are libadwaita's colour names. Stock Adwaita-dark's GTK3 sheet is
+        # an @import of gtk-contained-dark.css, which uses the GTK3-era names
+        # (theme_bg_color, borders, ...) and shares none of these -- so under it
+        # every line below was inert for GTK3, which is most of the fleet's apps.
+        # adw-gtk3-dark is libadwaita's stylesheet ported to GTK3, so one palette
+        # now reaches both toolkits.
         paletteCss = ''
           @define-color accent_color ${colors.base0D};
           @define-color accent_bg_color ${colors.base0D};
@@ -113,8 +116,8 @@ _: {
           gtk4.extraCss = paletteCss;
 
           theme = {
-            name = "Adwaita-dark";
-            package = pkgs.gnome-themes-extra;
+            name = "adw-gtk3-dark";
+            package = pkgs.adw-gtk3;
           };
 
           iconTheme = {
