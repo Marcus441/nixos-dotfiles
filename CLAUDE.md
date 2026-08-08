@@ -395,6 +395,14 @@ identities — closed items are deleted and survivors keep their numbers.
 
 ## 13. Working style
 
+- **Before committing a structural change**, self-check against §1
+  (invariants) and §11 (anti-patterns). If a change would violate an
+  invariant, stop and say so — do not silently bend the rule. Structural =
+  moving/renaming/regrouping files, adding/splitting/renaming aspects,
+  changing a host's aspect list, editing the generator or `aspects.nix`.
+- **Verify with `scripts/verify.sh`** (§10). For structural changes, run the
+  diff-closures recipe to prove nothing changed but order. Do not claim a
+  config builds without having built it.
 - **Small, single-concern commits.** Rationale in the commit message, not
   comments. Terse comments — explain *why*, never *what*.
 - **Prefer adding a file to editing one**, especially when extending an aspect.
