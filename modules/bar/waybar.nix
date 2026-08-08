@@ -129,7 +129,6 @@ _: {
                   tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
                   tooltip-format-disconnected = "Disconnected";
                   interval = 3;
-                  on-click = "hyprctl dispatch \"hl.dsp.exec_cmd(\\\"${config.terminal.command} nmtui\\\", { float = true, size = {1200, 800}, center = true })\"";
                 };
 
                 battery = {
