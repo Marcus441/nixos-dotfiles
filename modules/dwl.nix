@@ -157,7 +157,7 @@ _: {
             { "[M]",   monocle },
           };
 
-          /* monitors: runtime layout is applied by dwl-monitors (./monitors.nix) */
+          /* monitors: runtime layout is applied by dwl-monitors (./display/monitors.nix) */
           static const MonitorRule monrules[] = {
             /* name  mfact  nmaster  scale  layout       rotate/reflect              x   y */
             { NULL,  0.55f, 1,       1,     &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1 },

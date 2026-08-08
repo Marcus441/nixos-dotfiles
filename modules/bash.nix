@@ -62,7 +62,7 @@ _: {
 
             # Prompt: cwd + git branch + active dev environment (devenv / nix
             # devshell / python venv) + a "$" sigil, using the base24 palette
-            # (./colors.nix). Replaced starship in step 1.2; no external prompt
+            # (./theme/colors.nix). Replaced starship in step 1.2; no external prompt
             # program.
             __prompt() {
               # Must be the first statement: anything else overwrites $?.
@@ -92,7 +92,7 @@ _: {
               *) PROMPT_COMMAND="__prompt;__osc7_cwd''${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
             esac
 
-            # Coloured man pages, using the base24 Kanagawa Dragon palette (./colors.nix)
+            # Coloured man pages, using the base24 Kanagawa Dragon palette (./theme/colors.nix)
             # via less' termcap hooks (truecolor escapes). Colour scheme adapted from
             # https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf
             export GROFF_NO_SGR=1
