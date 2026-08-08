@@ -90,19 +90,32 @@ Replaces the one centralised `tag-floating-by-class` regex in `hyprland-rules.ni
 namespace each app's own file appends to. §3's intent/implementation split, applied to
 window rules.
 
-- [ ] `modules/window-tags.nix` declares in `core`:
+- [x] `modules/window-tags.nix` declares in `core`:
       `windowTags = attrsOf (listOf str)` — tag name → list of class regexes.
       `core`, not `hyprland`, so an app file can append without its aspect depending on a
-      compositor. A dwl host that sets it and has no reader is inert, which is the point.
-- [ ] `hyprland-rules.nix` renders `config.windowTags` into the `tag = "+<name>"` rules and
-      keeps the behaviour rules (`float`/`center`/`size`) keyed on the tag.
-- [ ] `filemanager/thunar.nix` appends `windowTags.floating = ["^(thunar|Thunar)$"]` inside
-      the `thunar` aspect — the aspect that installs the app is the one that describes it.
-      Same for the pavucontrol / blueman / xdg-desktop-portal-gtk entries, each in the file
-      that owns the program.
-- [ ] Keep `thunar-no-anim` with thunar too; it is the same concern.
-- [ ] Note in CLAUDE.md that `dwl.nix`'s `rules[]` array is the second implementation this
-      namespace was shaped for, even though this branch does not write it.
+      compositor. A dwl host that sets it and has no reader is inert — measured, swift5 is
+      byte-identical on both classes.
+- [x] `hyprland-rules.nix` renders `config.windowTags` into the `tag = "+<name>"` rules and
+      keeps the behaviour rules (`float`/`center`/`size`) keyed on the tag. One rule per
+      regex rather than one alternation: the regexes arrive from separate files, so joining
+      them would need a grouping no contributing file can see it needs. `lib.unique` per tag,
+      so two files naming the same window emit one rule.
+- [x] `filemanager/thunar.nix` appends inside the `thunar` aspect; pavucontrol in `media.nix`
+      (`core`, where it is installed), blueman in `bluetooth.nix` — which gains a
+      `homeManager.core` block and so becomes the twentieth two-class file in §2 — and
+      xdg-desktop-portal-gtk in `hyprland.nix`.
+- [x] **Tag kept as `floating-window`, not renamed to `floating`.** A tag name is rendered
+      output, which is §3's stated exception to "a bad name is cheap to fix" — renaming would
+      change `hyprctl clients`, i.e. this branch's own done-condition.
+- [x] `thunar-no-anim` kept with thunar, as a second tag rather than a moved window rule.
+      Moving the rule verbatim would have an app aspect writing
+      `wayland.windowManager.hyprland.settings`, which is the coupling this branch removes.
+- [x] Noted in CLAUDE.md §3 that `dwl.nix`'s `rules[]` is the second implementation this was
+      shaped for — and that it would *translate* rather than consume, since dwl matches
+      `app_id` by substring and its `tags` are workspace bitmasks.
+- [x] **Measured.** `./scripts/verify.sh main`: swift5 identical on both classes, all three
+      nixos toplevels identical, `gpc` and `UM790pro` home differ in exactly one file
+      (`.config/hypr/hyprland.lua`) with empty `diff-closures`.
 
 Deliberately **not** doing launch-time `hyprctl dispatch tagwindow`: it makes the rule
 race the window and only fires for windows *we* spawn. Declarative rules are decentralised
