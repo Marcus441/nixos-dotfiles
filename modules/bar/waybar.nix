@@ -92,12 +92,6 @@ _: {
                     "5" = [];
                   };
                 };
-                "custom/weather" = {
-                  format = "{}";
-                  return-type = "json";
-                  exec = "$HOME/.config/waybar/scripts/weather.sh";
-                  interval = 60;
-                };
 
                 clock = {
                   format = "{:%A %H:%M}";
