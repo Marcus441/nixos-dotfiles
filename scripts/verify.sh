@@ -120,8 +120,10 @@ for h in "${HOSTS[@]}"; do
       if command -v nvd >/dev/null; then
         nvd diff "$old" "$new" | sed 's/^/    /'
       fi
-      echo "  if this looks innocent, check REFACTOR.md ->"
-      echo "  'When paths differ for boring reasons'"
+      echo "  innocent: an empty diff-closures with a differing path is buildEnv"
+      echo "  order, from a file changing rank within its aspect (CLAUDE.md 5)."
+      echo "  Not innocent: a version change, an unintended package, or a diff"
+      echo "  on a host the change predicted would be identical."
     fi
   done < <(targets "$h")
 done

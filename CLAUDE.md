@@ -127,8 +127,8 @@ is `core`. Do not make every package an aspect: files already give you per-tool
 granularity, and per-tool *selection* only turns each host into a duplicated manifest.
 
 **A bad name is cheap to fix.** Renaming `suckless` to `dwl` in place left all six targets
-byte-identical (the previous refactor plan's Step 4 — that plan is in git history; step
-numbers below refer to it, not to the current `REFACTOR.md` — measured against a predicted *changes* on all three
+byte-identical (the structural plan's Step 4 — that plan is in git history, and step
+numbers below refer to it — measured against a predicted *changes* on all three
 hosts). The name itself does not reach a store path — only its *position* in a host's
 aspect list does (§5). So a name that has started to lie should be corrected, not kept for
 fear of a rebuild.
@@ -500,6 +500,14 @@ evaluation to reach a value, importing a module file by path to call a function 
   ANSI 9 holds base09 — and `foot.nix` puts base12 there, because that is what base24 calls
   bright red. bat rendered numbers in the wrong colour for exactly this reason until it was
   moved onto `desktop.syntaxTheme`. Check which kind you have before reaching for ANSI.
+- **A colour correct in one role is wrong the moment something reads it in another.** yazi's
+  status bar is Lua: `status.lua` draws each powerline separator by taking the *next*
+  segment's background and using it as a foreground — `:fg(style.alt:bg())`. Under
+  `bg = "reset"` that resolves to the terminal's default *foreground*, base05, putting a
+  bright bar mid-status-line; base00 makes the separator vanish while the segment still
+  reads as transparent. `progress_normal` keeps `reset` because `progress.lua` passes it to
+  `gauge_style` and nothing transposes it. **`reset` is a value that only survives being
+  drawn.** Check whether anything reads a colour back before choosing one.
 - **Every *file* is evaluated once**, at the flake-parts level — so a syntax or eval error
   anywhere breaks every host. But an **aspect's contents are only evaluated by hosts that
   take it**: a `throw` inside `apps` does not break swift5. Verified, not assumed.
@@ -615,15 +623,17 @@ and every file in it would belong to that one aspect.
 
 **This is a ratchet, not a ledger:** if a task touches a file listed here, migrate that
 file in the same change, or state plainly why not. Nothing below is grandfathered, and the
-count is supposed to fall. See `REFACTOR.md`.
+count is supposed to fall.
 
-Steps 0–7 of that plan closed items 1–6, so the structural invariants in §1 now hold and
-the exemplars in §2 are real files rather than sketches. What is left is a platform gap,
-not a pattern violation.
+Two finished plans closed items 1–6 — the structural one that made aspects replace the
+directory tree, and the one that retired stylix in favour of the palette. Both are in git
+history with their per-step measurements (`git log --oneline --all -- REFACTOR.md`). So the
+structural invariants in §1 now hold and the exemplars in §2 are real files rather than
+sketches. What is left is a platform gap, not a pattern violation.
 
 **Item numbers are stable identities, not positions.** A closed item is deleted and the
 survivors keep their numbers, so this list does not necessarily start at 1 and its numbers
-are safe to cite. `REFACTOR.md` cites them.
+are safe to cite.
 
 7. **No darwin.** `systems = ["x86_64-linux"]`; `mbp` is planned, not present.
 
@@ -663,6 +673,15 @@ are safe to cite. `REFACTOR.md` cites them.
   *raised* the count. **An accepted choice, not a divergence**, deliberately absent from §12.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`, `easy-hosts`) without
   being asked. This repo depends on `flake-parts` and `import-tree` only.
+- **Deliberately deferred — do not propose these unasked.** Quickshell (waybar and walker
+  stay); a dwl host taking `waybar` or `walker`, which has four blockers recorded in the
+  structural plan in git history; and dwl's conditional bar patch. Darwin is the same kind
+  of decision but is tracked as §12 item 7, because it is a gap rather than a preference.
+- **Finished plans go to git history, and nothing in the tree cites a plan file.** Cite a
+  §-number here or a commit hash instead. `REFACTOR.md` was replaced wholesale three times
+  and each replacement silently broke every pointer at it — by the time it was retired, all
+  three in-tree citations named sections that no longer existed. Section numbers are stable
+  by §12's rule; a filename is not.
 - **Unresolved — ask rather than inventing a convention:** secrets management (sops-nix vs
   agenix, and where the aspect boundary sits), and whether custom packages should be flake
   outputs, overlay entries, or both. No canonical dendritic answer exists; configs in the
