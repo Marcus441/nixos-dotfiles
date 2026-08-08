@@ -27,9 +27,9 @@ original project's licensing. You can find a copy of the license in the
 
 | Host | Machine | Session | Aspects |
 | --- | --- | --- | --- |
-| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl` |
+| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl dwl-bar` |
 | `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland waybar wleave thunar apps` |
-| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar wleave thunar apps` |
+| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar thunar apps` |
 
 Six build targets: three `nixosConfigurations.<host>` and three
 `homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
@@ -46,9 +46,11 @@ in it.
 | `core` | Everything no host opts out of |
 | `hyprland` | Hyprland session: hypridle, hyprlock, hyprpaper |
 | `dwl` | dwl session: a patched dwl, wmenu |
-| `waybar` | The bar. Hyprland-only today — it reads Hyprland's IPC |
+| `dwl-bar` | dwl's bar: the patch that draws it and the status pipe that feeds it |
+| `waybar` | Hyprland's bar — it reads Hyprland's IPC |
 | `wleave` | The power menu |
-| `thunar` | The file manager |
+| `thunar` | Thunar as the file manager |
+| `yazi` | yazi as the file manager instead — the program itself is in `apps` |
 | `apps` | The heavy app set: thunderbird, discord, obs, kdenlive, yazi |
 | `dev` | Docker, qemu, aarch64 binfmt, ccache |
 | `gaming` | Steam and gamemode |
@@ -61,13 +63,27 @@ aspect is recoverable where a broken power path is not. The terminal (`foot`),
 the editor and the shell are `core` — every host gets them regardless of
 session.
 
-`hyprland` and `dwl` are mutually exclusive. Theming is not an aspect: colours,
-fonts and the cursor live in `core`, so every host is themed the same way.
+`hyprland` and `dwl` are mutually exclusive, and each pairs with its own bar.
+Theming is not an aspect: colours, fonts and the cursor live in `core`, so every
+host is themed the same way. The palette is base24 Kanagawa Dragon, rendered
+twice — `desktop.colors` for anything taking hex, and `desktop.colors16`, its
+`base00`–`base0F` subset, for anything that reaches a terminal. ANSI has sixteen
+slots and cannot carry the extension, so a program asking for *the base16 theme*
+gets exactly what it assumes.
+
 Portable intents — `launcher`, `terminal`, `screenshot`, `clipboard`, `lock`,
 `logout`, `bar`, `fileManager`, `powerMenu` — are option namespaces in `core`,
 set by whichever aspect provides the thing, so nothing binds a session-specific
 command directly. A bind whose intent no aspect supplies is omitted rather than
-rendered dead.
+rendered dead. `windowTags` runs the same idea backwards: every file that
+installs a window appends its own class regexes, and the Hyprland rules are the
+only reader, so a dwl host carries the value inertly.
+
+Three aspects require another, declared in the file that creates the dependency
+rather than in a central table: `waybar` needs `hyprland`, `dwl-bar` needs `dwl`,
+and `yazi` needs `apps` — the role without the program resolves to a real but
+unconfigured binary, which is worse than an error. The generator refuses the
+host by name instead.
 
 ## Layout
 
@@ -79,7 +95,9 @@ modules/
   hosts/generator.nix        builds both output sets from each host record
   hosts/record.nix           the typed host record the generator consumes
   hosts/<hostname>.nix       what the machine IS: aspects + machine facts
+  bar/                       waybar and dwl-bar
   display/                   monitor renderers
+  filemanager/               thunar and yazi
   <concern>.nix              one concern; declares its own aspect membership
   <intent>/                  implementations of one intent, in different aspects
 hosts/<hostname>/            hardware-configuration.nix only (machine-generated)
@@ -163,9 +181,7 @@ and no profile to pick.
    `homeConfigurations."marcus@<hostname>"` from the attribute name, so they
    cannot drift apart. It rejects a `hostname` that disagrees with its attribute,
    an aspect name that resolves in no class, and an aspect list that leaves an
-   `aspectRequires` entry unmet — `waybar` reads Hyprland's IPC, so a host taking
-   it without `hyprland` is refused by name instead of building a bar with dead
-   modules.
+   `aspectRequires` entry unmet (the three above).
 
 4. **Build before switching.** Flakes only see tracked files, so stage first:
 
