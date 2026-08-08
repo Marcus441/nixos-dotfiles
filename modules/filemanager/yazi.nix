@@ -1,4 +1,54 @@
 _: {
+  # The program is `apps`; the *role* is its own aspect, so a host can install
+  # yazi without making it the thing $mod+E opens. `thunar` and `yazi` both set
+  # `fileManager.command`, so taking both is a conflict naming both files --
+  # the same shape as walker/wmenu under `launcher.argv` (§3).
+  flake.modules.homeManager.yazi = [
+    (
+      {
+        config,
+        lib,
+        ...
+      }: let
+        # A TUI file manager has to carry its own terminal. Composed at argv
+        # level and rendered once, because `terminal.command` is already
+        # escaped and appending to it would escape twice.
+        #
+        # Bound rather than read back through `config.fileManager.command`: the
+        # merged option is what a `mkForce` elsewhere would win, and then an
+        # entry named Yazi execs thunar.
+        command = lib.escapeShellArgs (
+          config.terminal.argv ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
+        );
+      in {
+        fileManager.command = command;
+
+        xdg = {
+          # yazi ships no .desktop file. `Terminal = true` would hand the spawn
+          # to whatever terminal the launching app guesses at; the entry names
+          # the same one the bind does instead.
+          desktopEntries.yazi = {
+            name = "Yazi";
+            genericName = "File Manager";
+            icon = "system-file-manager";
+            exec = "${command} %f";
+            terminal = false;
+            startupNotify = false;
+            categories = ["System" "FileTools" "FileManager"];
+            mimeType = ["inode/directory"];
+          };
+
+          mimeApps.defaultApplications."inode/directory" = "yazi.desktop";
+        };
+      }
+    )
+  ];
+
+  # `finalPackage` is declared outside `mkIf cfg.enable`, so a host taking
+  # `yazi` without `apps` would silently get an unconfigured pkgs.yazi rather
+  # than an error. This turns that into a rejection naming the aspect.
+  aspectRequires.yazi = ["apps"];
+
   flake.modules.homeManager.apps = [
     (
       {

@@ -15,9 +15,6 @@ Nothing here is started until the branch above it is merged.
 4. Squash-merge the PR, `git switch main && git pull`.
 5. **Stop and ask for `/clear`** before starting the next branch.
 
-Structural branches (1, 2, 3, 4) go through the `dendritic-reviewer` subagent *before* the
-commit — CLAUDE.md §13.
-
 ---
 
 ## 1. `refactor/feature-dirs` — navigation directories  **structural**  ✅
@@ -126,29 +123,37 @@ before, and `gpc`'s rendered `hyprland.lua` diff is confined to rule ordering.
 
 ---
 
-## 4. `feat/yazi-filemanager` — yazi as an alternative file manager  **structural**
+## 4. `feat/yazi-filemanager` — yazi as an alternative file manager  **structural**  ✅
 
 `modules/filemanager/yazi.nix` already exists and is fully themed; it declares `apps` and
 sets no `fileManager.command`. This branch gives it the role.
 
-- [ ] Split the file: the program config stays where it is; a new `yazi` aspect sets
-      `fileManager.command`. `thunar` and `yazi` then both set the same option, so a host
-      taking both is a merge conflict — correct, and the same shape as
-      `walker`/`wmenu` under `launcher.argv` (§3).
-- [ ] `fileManager.command` must open a terminal: read `config.terminal.command`
-      (declared in `foot.nix`) rather than naming foot. `footclient yazi`, with the same
-      server-down caveat every other spawn point has.
-- [ ] `xdg.mimeApps.defaultApplications."inode/directory"` — **open question**:
-      `programs.yazi` ships no `.desktop` file, so this needs a `makeDesktopItem` with
-      `Terminal=false` and an `Exec` that spawns the terminal itself. Resolve on the branch;
-      if it turns out ugly, leave the mime default unset and say so in CLAUDE.md rather
-      than pointing it at a desktop entry that does not exist.
-- [ ] No host changes. `gpc` and `UM790pro` keep `thunar`; `yazi` is available for
-      `swift5`, which today has no file manager at all.
+- [x] Split by **aspect, not by file**: `yazi.nix` keeps `programs.yazi` in `apps` and gains
+      a `yazi` block setting `fileManager.command`. One concern, two aspects, one file —
+      `thunar.nix`'s shape. Splitting into two files would have put the program and the
+      thing that makes it the file manager in separate files, which is the Inv. 3 defect.
+- [x] `fileManager.command` composed from `config.terminal.argv` and rendered once with
+      `escapeShellArgs` — `terminal.command` is already escaped, so appending would escape
+      twice. Store paths, not bare names (§3): `…/footclient …/yazi`. Server-down caveat
+      as predicted; a `.desktop` entry has nowhere to put a fallback `Exec`.
+- [x] **Open question resolved: a desktop entry, not a punt.** `xdg.desktopEntries.yazi`
+      routes through `makeDesktopItem` into `home.packages`, so no direct `makeDesktopItem`
+      call. `Terminal = false` with a self-spawning `Exec`, because `Terminal = true` hands
+      the spawn to whatever terminal the launching app guesses at. Clean enough that
+      leaving the mime default unset was not warranted.
+- [x] `aspectRequires.yazi = ["apps"]` — **not predicted by this list.** home-manager
+      declares `programs.yazi.finalPackage` *outside* `mkIf cfg.enable`, so `yazi` without
+      `apps` resolves to a real but unconfigured `pkgs.yazi`: no theme, no git plugin, no
+      error. The requirement turns that into a rejection naming the aspect.
+- [x] No host changes. `gpc` and `UM790pro` keep `thunar`; `yazi` is available but unlisted.
+- [x] **Measured, and the measurement is deliberately not the six-target one.** No host
+      takes `yazi`, so §9 means nothing evaluates the aspect — `verify.sh main` is 6/6
+      identical and that result is vacuous on its own. Forced on instead: swift5+`apps`
+      renders the entry and `inode/directory=yazi.desktop`; swift5 without `apps` is
+      rejected by name; gpc alongside `thunar` fails quoting both filenames.
 
-**Done when:** all six targets build unchanged, and adding `"yazi"` to a host that already
-has `"thunar"` fails the build with both filenames named (this is what `deferredModule`
-buys — §9).
+**Done:** the role is an aspect, unreachable until a host lists it. The conflict names
+`filemanager/yazi.nix` and `filemanager/thunar.nix` — what `deferredModule` buys (§9).
 
 ---
 
