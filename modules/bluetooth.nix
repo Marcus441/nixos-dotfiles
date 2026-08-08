@@ -11,7 +11,7 @@ _: {
 
   flake.modules.homeManager.core = [
     {
-      windowTags.floating-window = ["^(.blueman-manager-wrapped)$"];
+      windowTags.floating-window = ["^(blueman-manager)$"];
     }
   ];
 }
