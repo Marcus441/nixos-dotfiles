@@ -15,9 +15,6 @@ Nothing here is started until the branch above it is merged.
 4. Squash-merge the PR, `git switch main && git pull`.
 5. **Stop and ask for `/clear`** before starting the next branch.
 
-Structural branches (1, 2, 3, 4) go through the `dendritic-reviewer` subagent *before* the
-commit — CLAUDE.md §13.
-
 ---
 
 ## 1. `refactor/feature-dirs` — navigation directories  **structural**  ✅
