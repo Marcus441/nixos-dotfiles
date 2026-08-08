@@ -31,8 +31,10 @@ User is `marcus`. Six build targets today: three
    configuration logic. Edited only to add an input.
 3. **One file = one concern, across every class and every aspect it touches.** If adding
    one feature means editing three files, the decomposition is wrong.
-4. **File paths carry no meaning.** A path never encodes a class, a host, an aspect, or a
-   "type". Paths are navigation; membership is declared in the file. Files move freely.
+4. **File paths carry no system-meaning.** A path never encodes a class, a host, an aspect,
+   or a "type" — the module system does not read it. Paths are for the author's navigation;
+   membership is declared in the file. Files move freely, and directories are navigation,
+   not structure.
 5. **No `specialArgs` / `extraSpecialArgs`.** Static values cross by closure over the
    flake-parts `config`; host-varying values arrive as `_module.args` injected by the host
    wiring. See §8.
@@ -67,7 +69,7 @@ asking "which folder does this belong in" — ask "what does this concern contri
 whom".
 
 ```nix
-# modules/thunar.nix — one concern, two aspects, both classes, one file
+# modules/filemanager/thunar.nix — one concern, two aspects, both classes, one file
 {
   flake.modules.homeManager.core = [
     { options.fileManager.command = { /* the intent every session binds */ }; }
@@ -83,12 +85,12 @@ machine **is**.
 
 ### Read these before writing a new file
 
-- `modules/thunar.nix` — the sketch above, as an actual file: `core` declares
+- `modules/filemanager/thunar.nix` — the sketch above, as an actual file: `core` declares
   `fileManager.command`, `thunar` sets it and the `nixos` half installs the daemon. One
   concern, two aspects, both classes. **This is the file to copy.**
 - `modules/tmtheme.nix` — declares `desktop.syntaxTheme` in `core` and renders it from the
-  palette; `bat.nix` and `yazi.nix` read it. The provider/consumer split of §3 in its
-  smallest form.
+  palette; `bat.nix` and `filemanager/yazi.nix` read it. The provider/consumer split of §3
+  in its smallest form.
 - `modules/ccache.nix` — declares `dev` while sitting beside files that declare `core`.
   Nothing about its location says which. Invariant 4, demonstrated.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
@@ -232,6 +234,7 @@ modules/
   hosts/<hostname>.nix       # what this machine IS: archetype aspects + machine facts
   display/                   # monitor renderers (flake.lib.monitors)
   <concern>.nix              # a concern; declares its own aspect membership
+  <intent>/                  # implementations of one intent, in different aspects
   <concern>/                 # assets a concern reads; import-tree collects only .nix
   **/_*                      # ignored by import-tree (`/_` anywhere in the path)
 ```
@@ -239,16 +242,44 @@ modules/
 The `/_` filter is `hasInfix "/_"`, a literal substring test on the full path — which is
 exactly the "anywhere in the path" rule above. Ordering is §5.
 
-There is **no** `nixos/`, `home/`, `darwin/`, `pkgs/`, `overlays/`, or `profiles/`
-directory. Creating one is a structural regression — say so instead of doing it.
+Directories that encode class — `nixos/`, `home/`, `darwin/` — are the one real
+prohibition: the path would predict which `flake.modules.<class>` every file inside
+declares, which is Invariant 4 inverted. `pkgs/`, `overlays/` and `profiles/` are also
+prohibited, but for a different reason: they break feature closure by separating a
+derivation from the config that consumes it (§6). Say so if a change would create one.
 
-Grouping for navigation is fine — Invariant 4 says paths carry no *meaning*, not that they
-must be flat. **A directory is safe when its name would be a bad aspect name and the files
-inside span more than one aspect.** No directory in the tree exercises that today —
-`discord/` and `opencode/` hold assets rather than modules, `display/` holds one file, and
-`hosts/` is the wiring. A hypothetical `font/` would pass, because `font` names no decision.
-A `system/` directory holding every `nixos.core` file fails both halves — the path would
-predict class and membership exactly, which is `nixos/` under another name.
+**Beyond those, directories are for human navigation, not a gated structure.** The
+dendritic pattern's position is that paths convey meaning only to the author — Invariant 4
+says paths carry no *system-meaning*, not that the tree must be flat. A directory is
+worthwhile when it makes the tree easier to navigate; it becomes a problem only when its
+name predicts the aspect or class of every file inside, because then the path is doing the
+membership's job. A hypothetical `font/` would be fine, because `font` names no decision. A
+`system/` directory holding every `nixos.core` file would not, because the path predicts
+class and membership exactly — which is `nixos/` under another name.
+
+**This is deliberately weaker than the rule it replaced,** which was conjunctive: safe when
+the name would be a *bad aspect name* **and** the files span several aspects. The first
+clause is dropped, and dropping it is the whole change. It ruled out exactly the directory
+worth having — `filemanager/`, holding `thunar.nix` and `yazi.nix`, is named after the
+`fileManager.command` intent those two files diverge over (§3), so `fileManager` is a
+*good* name and the old rule forbade it. That gets the risk backwards. An intent-namespace
+directory holding the implementations of that intent is the safest kind: the name is
+precisely what the files have in common, and implementations of one intent are by
+construction different aspects, so the path predicts nothing.
+
+**When in doubt, ask whether the directory name is doing the aspect system's job.** If
+every file inside declares the same aspect, the directory is redundant with the aspect name
+and the files should be flat. If the files span several aspects, the directory is pure
+navigation and is fine.
+
+**`core` does not count toward "several aspects".** Every host takes `core`, so a `core`
+block is not a discriminating membership — if an `options.*` declaration in `core` made a
+directory multi-aspect, almost anything would qualify, `hyprland/` included. Count only
+aspects some host declines. This is what keeps `filemanager/` (`thunar`, `apps`, plus
+`core`) apart from a `bar/` holding only the three `waybar*` files, which would be `waybar`
+plus a `core` option declaration and so is the flat case. Directories in the tree today:
+`filemanager/` is the intent case; `discord/` and `opencode/` hold assets rather than
+modules; `display/` holds one file; `hosts/` is the wiring.
 
 Host files declare archetype and machine facts only:
 
@@ -611,11 +642,14 @@ config.flake.modules.homeManager.hyprland
 | Aspect reading `config.networking.hostName` | Aspects are host-agnostic (Inv. 7) |
 | Editing three files to add one feature | The concern is wrongly decomposed (Inv. 3) — but see §3: one file installing the same tool into several aspects is not this |
 
-Every row above is a prohibition, so read together they suggest no directory is ever
-allowed. They are not the whole rule. The positive half: **a directory is fine when its
-name would be a bad aspect name and its contents span several aspects** (§4). A `font/`
-would pass on both halves; `hyprland/` fails on both, because the name is a good aspect name
-and every file in it would belong to that one aspect.
+Four rows are about paths: the first three — class-encoding, closure-breaking and
+helper-library directories — plus `_` as a grouping mechanism (§4: `/_` is for non-modules
+only). The rest of the table is module-system mistakes, not directory structure.
+**Directories for navigation are otherwise permitted** (§4); the question is only whether
+the directory name is doing the aspect system's job. A `font/` is navigation, and so is
+`filemanager/`, which holds two implementations of one intent. `hyprland/` is not: it is
+redundant with the `hyprland` aspect name, and all seven files in it declare that one
+aspect — `hyprland.nix` adds a second *class*, which is not a second aspect.
 
 ---
 
@@ -675,8 +709,14 @@ are safe to cite.
   being asked. This repo depends on `flake-parts` and `import-tree` only.
 - **Deliberately deferred — do not propose these unasked.** Quickshell (waybar and walker
   stay); a dwl host taking `waybar` or `walker`, which has four blockers recorded in the
-  structural plan in git history; and dwl's conditional bar patch. Darwin is the same kind
-  of decision but is tracked as §12 item 7, because it is a gap rather than a preference.
+  structural plan in git history. Darwin is the same kind of decision but is tracked as §12
+  item 7, because it is a gap rather than a preference. dwl's conditional bar patch has
+  left this list — it was asked for, and is `todo.md`'s branch 2.
+- **Waybar's opt-in shape is finished; do not re-propose it.** `waybar` and `wleave` are
+  already separate aspects that only `gpc` and `UM790pro` take, `aspectRequires.waybar =
+  ["hyprland"]` rejects a dwl host outright rather than handing it three dead modules, and
+  `waybar.nix` already embeds wleave as `custom/power`, gated on `powerMenu.command` so the
+  button is omitted rather than rendered dead. Nothing about this needs building.
 - **Finished plans go to git history, and nothing in the tree cites a plan file.** Cite a
   §-number here or a commit hash instead. `REFACTOR.md` was replaced wholesale three times
   and each replacement silently broke every pointer at it — by the time it was retired, all

@@ -81,6 +81,7 @@ modules/
   hosts/<hostname>.nix       what the machine IS: aspects + machine facts
   display/                   monitor renderers
   <concern>.nix              one concern; declares its own aspect membership
+  <intent>/                  implementations of one intent, in different aspects
 hosts/<hostname>/            hardware-configuration.nix only (machine-generated)
 scripts/verify.sh            builds or compares all six targets
 ```
