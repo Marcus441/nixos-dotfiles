@@ -121,9 +121,13 @@ and no profile to pick.
    then clone this repository:
 
    ```bash
-   git clone https://github.com/Marcus441/nixos-dotfiles.git ~/dotfiles/flake
-   cd ~/dotfiles/flake
+   git clone https://github.com/Marcus441/nixos-dotfiles.git ~/.dotfiles/flake
+   cd ~/.dotfiles/flake
    ```
+
+   The location is load-bearing: `modules/nh.nix` points `programs.nh.flake` at
+   `/home/<user>/.dotfiles/flake`, so `nh os switch` finds nothing if the tree
+   lives anywhere else.
 
 2. **Drop in the hardware config.** This is the one machine-generated file, and
    it is never edited by hand:

@@ -4,7 +4,7 @@ _: {
       {user, ...}: {
         programs.nh = {
           enable = true;
-          flake = "/home/${user}/dotfiles/flake";
+          flake = "/home/${user}/.dotfiles/flake";
           clean = {
             enable = true;
             dates = "weekly";
