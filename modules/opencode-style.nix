@@ -7,7 +7,7 @@ _: {
         ...
       }: let
         inherit
-          (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors)
+          (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors16)
           base00
           base01
           base02

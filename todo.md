@@ -161,27 +161,44 @@ sets no `fileManager.command`. This branch gives it the role.
 
 Widest blast radius, so last. Every terminal colour on every host moves.
 
-- [ ] `modules/colors.nix` gains `desktop.colors16`, `readOnly`, derived as the
+- [x] `modules/colors.nix` gains `desktop.colors16`, `readOnly`, derived as the
       `base00`–`base0F` subset of `desktop.colors`. One source of colour; two renderings.
-- [ ] `foot.nix` remaps `colors-dark` to the base16 convention:
+      `lib.filterAttrs` on the `base0` prefix rather than a second list of sixteen names:
+      the extension slots are `base10`–`base17`, so the prefix *is* the subset.
+- [x] `foot.nix` remaps `colors-dark` to the base16 convention:
       `regular0-7 = base00 08 0B 0A 0D 0E 0C 05`, `bright0-7 = base03 08 0B 0A 0D 0E 0C 07`.
       This is the point of the branch — ANSI 9 becomes base09, which is what every
-      base16-aware TUI already assumes.
-- [ ] Move the TUI consumers onto `colors16`: `tmux.nix`, `bat.nix`, `filemanager/yazi.nix`,
-      `opencode-style.nix`.
-- [ ] Leave `gtk.nix`, `qt.nix`, `waybar-style.nix`, `wleave.nix`, `dwl.nix`, `discord.nix`
+      base16-aware TUI already assumes. **Eight slots move**, not the whole table:
+      `regular0`, `regular7` and `bright1`–`bright6`. `foot.nix` reads `colors16` too, so
+      the retired mapping is now unreachable rather than merely not-written.
+- [x] Move the TUI consumers onto `colors16`: `tmux.nix`, `filemanager/yazi.nix`,
+      `opencode-style.nix`. **`bat.nix` reads no colour** — the list overcounted. What it
+      had was a comment blaming the slot-9 collision for its tmTheme; that reason is gone
+      and the comment now gives the one that stands (syntect takes hex).
+- [x] Leave `gtk.nix`, `qt.nix`, `waybar-style.nix`, `wleave.nix`, `dwl.nix`, `discord.nix`
       and `walker.nix` on the full `desktop.colors`. `qt.nix` reads `base10` for its shadow role and
       `foot`'s old mapping read `base11`–`base17`; those slots only exist in base24.
-- [ ] **Retire the §9 hazard.** "ANSI is not free just because foot sets it from the
+      **After this branch `qt.nix` is the only file reading an extension slot at all** —
+      `base10`, once. base24 now earns its place through one shadow colour.
+- [x] **Retire the §9 hazard.** "ANSI is not free just because foot sets it from the
       palette" exists because base12 sat in slot 9. Once it does not, rewrite that bullet —
       do not delete it, since the *reason* bat and yazi share `desktop.syntaxTheme` is
-      unchanged (syntect takes hex, not ANSI).
-- [ ] Keep `tmtheme.nix` as-is. It is already rendered from base00–base0F and is already
+      unchanged (syntect takes hex, not ANSI). Rewritten around the corollary: base24 is
+      now reachable *only* as hex.
+- [x] Keep `tmtheme.nix` as-is. It is already rendered from base00–base0F and is already
       correct; switching it to `colors16` is a no-op that would move store paths for
       nothing.
-- [ ] **Visual check, not just a build.** Expect terminal brights to lose the base24 punch
+- [x] **Measured.** `./scripts/verify.sh main`: three nixos toplevels identical, all three
+      homeConfigurations differ, `diff-closures` empty on each, and the sole `home-files`
+      diff on every host is `.config/foot/foot.ini` — eight lines, exactly the eight slots
+      above. That is the proof the `colors16` moves are pure typing: had any of them
+      rendered differently, another file would appear here.
+- [x] **Visual check, not just a build.** Expect terminal brights to lose the base24 punch
       (`base12` red → `base08`). Look at `bat`, `btop`, `lazygit`, `yazi` and `neovim`
       before merging; this is the one branch where a clean build proves very little.
+      Also worth a look: `regular7` was base06 (warm cream), now base05 — `fastfetch`'s
+      `outputColor = "white"` and yazi's preset `gray` both land on it.
+      Done on `UM790pro`; the muted brights are accepted, not tolerated.
 
-**Done when:** built and *looked at* on `UM790pro`, and CLAUDE.md §9 reflects the new
-mapping.
+**Done:** ANSI means base16 on every host. base24 survives as hex, for one shadow colour
+in `qt.nix`.

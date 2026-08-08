@@ -7,7 +7,7 @@ _: {
         pkgs,
         ...
       }: let
-        inherit (config.desktop) font colors;
+        inherit (config.desktop) font colors16;
         fontStr =
           "${font.name}:size=${toString font.size}"
           + lib.optionalString (!font.ligatures) ":fontfeatures=-calt,-liga,-clig,-dlig";
@@ -51,10 +51,10 @@ _: {
           fallbackArgv = ["${pkgs.foot}/bin/foot"];
         };
 
-        # Shared terminal for all hosts: the explicit base24 palette below is the
-        # single source of terminal colours everywhere. Programs that render
-        # through ANSI inherit it from here -- but see tmtheme.nix for the two
-        # that must not.
+        # Shared terminal for all hosts: the base16 mapping below is the single
+        # source of terminal colours everywhere. Programs that render through
+        # ANSI inherit it from here -- but see tmtheme.nix for the two that
+        # must not.
         config.programs.foot = {
           enable = true;
           # Daemon mode: terminals spawn as footclient against this server. The
@@ -73,35 +73,39 @@ _: {
             scrollback.lines = 10000;
             mouse.hide-when-typing = "yes";
 
-            # base24 terminal mapping (./colors.nix): brights from base12-17,
-            # extended colours 16/17 from base09/base0F.
+            # The standard base16 slot mapping, not a base24 one. A TUI asking
+            # for "the base16 theme" asserts ANSI 9 is base09; the brights used
+            # to come from base12-17 and that assertion was false, so anything
+            # reading a colour by number was quietly off by a slot. The cost is
+            # that regular and bright now differ only in 0 and 7 -- the punch
+            # base24 bought is deliberately gone.
             colors-dark = {
-              foreground = strip colors.base05;
-              background = strip colors.base00;
+              foreground = strip colors16.base05;
+              background = strip colors16.base00;
 
-              selection-foreground = strip colors.base06;
-              selection-background = strip colors.base02;
+              selection-foreground = strip colors16.base06;
+              selection-background = strip colors16.base02;
 
-              regular0 = strip colors.base11;
-              regular1 = strip colors.base08;
-              regular2 = strip colors.base0B;
-              regular3 = strip colors.base0A;
-              regular4 = strip colors.base0D;
-              regular5 = strip colors.base0E;
-              regular6 = strip colors.base0C;
-              regular7 = strip colors.base06;
+              regular0 = strip colors16.base00;
+              regular1 = strip colors16.base08;
+              regular2 = strip colors16.base0B;
+              regular3 = strip colors16.base0A;
+              regular4 = strip colors16.base0D;
+              regular5 = strip colors16.base0E;
+              regular6 = strip colors16.base0C;
+              regular7 = strip colors16.base05;
 
-              bright0 = strip colors.base03;
-              bright1 = strip colors.base12;
-              bright2 = strip colors.base14;
-              bright3 = strip colors.base13;
-              bright4 = strip colors.base16;
-              bright5 = strip colors.base17;
-              bright6 = strip colors.base15;
-              bright7 = strip colors.base07;
+              bright0 = strip colors16.base03;
+              bright1 = strip colors16.base08;
+              bright2 = strip colors16.base0B;
+              bright3 = strip colors16.base0A;
+              bright4 = strip colors16.base0D;
+              bright5 = strip colors16.base0E;
+              bright6 = strip colors16.base0C;
+              bright7 = strip colors16.base07;
 
-              "16" = strip colors.base09;
-              "17" = strip colors.base0F;
+              "16" = strip colors16.base09;
+              "17" = strip colors16.base0F;
             };
           };
         };

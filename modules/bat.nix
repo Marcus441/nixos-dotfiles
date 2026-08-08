@@ -10,10 +10,11 @@ _: {
           enable = true;
           extraPackages = with pkgs.bat-extras; [batdiff batman batgrep];
 
-          # Not bat's built-in `base16`: it renders through ANSI, and foot's
-          # base24 mapping puts base12 in slot 9 where base16 expects base09, so
-          # numbers came out bright red. Sharing yazi's tmTheme fixes that and
-          # makes the same file highlight the same in both.
+          # Not bat's built-in `base16`: it renders through ANSI, so it would
+          # carry whichever sixteen colours the terminal happened to hold, and
+          # a pager reached through `less` is not always ours. The tmTheme is
+          # hex, and sharing yazi's makes the same file highlight the same in
+          # both.
           themes.kanagawa-dragon.src = config.desktop.syntaxTheme;
           config.theme = "kanagawa-dragon";
         };
