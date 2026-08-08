@@ -56,7 +56,6 @@ _: {
             border: none;
           }
           #workspaces button {
-            all: unset;
             min-width: 24px;
             padding: 2px 4px;
             margin: 4px 2px;
