@@ -96,14 +96,15 @@ machine **is**.
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos` and
   `homeManager` in one file. Invariant 3, half-demonstrated.
 
-**Nineteen files declare more than one aspect or more than one class.** Counted over
-`modules/` excluding `/_`, by distinct `flake.modules.<class>.<aspect>` occurrences: 93 files
-declare at least one, and 19 declare two or more — `bash`, `brightnessctl`, `dwl`, `dwl-bar`,
-`git`, `gtk`, `hyprland`, `lock`, `logout`, `mako`, `neovim`, `net`, `nix`, `screenshot`,
-`thunar`, `walker`, `waybar`, `wleave`, `xdg`. The other 74 contribute to exactly one.
+**Twenty files declare more than one aspect or more than one class.** Counted over
+`modules/` excluding `/_`, by distinct `flake.modules.<class>.<aspect>` occurrences: 94 files
+declare at least one, and 20 declare two or more — `bash`, `bluetooth`, `brightnessctl`,
+`dwl`, `dwl-bar`, `git`, `gtk`, `hyprland`, `lock`, `logout`, `mako`, `neovim`, `net`, `nix`,
+`screenshot`, `thunar`, `walker`, `waybar`, `wleave`, `xdg`. The other 74 contribute to
+exactly one.
 
 So the single-aspect file is the majority but not the model. Copying an arbitrary
-neighbour reproduces the majority; the nineteen above are where the second direction of the
+neighbour reproduces the majority; the twenty above are where the second direction of the
 merge is actually demonstrated. Check §12 before treating any file as an example.
 
 Note what is *not* on that list any more: `font`, `launcher` and `clipboard` each declare one
@@ -192,6 +193,35 @@ one file that owns the concern, as `clipboard.nix`, `lock.nix` and `screenshot.n
 Name an intent when two implementations actually diverge over a value. Naming one to
 complete a set gives an option with no setter and no reader — see §7 on why
 `notifications` is deliberately not an intent.
+
+### `windowTags` inverts the arrow: many setters, one reader
+
+`launcher.argv` has one setter per session and one reader per bind. `modules/window-tags.nix`
+runs the other way — `windowTags.<tag> = [<class regex>]` in `core`, appended to by every
+file that installs a window worth describing (`filemanager/thunar.nix`, `media.nix`,
+`bluetooth.nix`, `hyprland.nix`), and read by exactly one file, `hyprland-rules.nix`, which
+renders the tagging rules and keys the behaviour (`float`/`center`/`size`, `no_anim`) on the
+tag. It replaced a single centralised regex alternation naming four apps none of which the
+file owned.
+
+The split is: **which windows** belongs to the file that installs the app; **what a tag
+means** belongs to the session. So the namespace is in `core` — not `hyprland` — because
+`media.nix` and `bluetooth.nix` set it from `core` and would otherwise fail on swift5 with
+"option does not exist". A dwl host carries the value with no reader, which is the point and
+is measured: swift5 builds byte-identical.
+
+`dwl.nix`'s `rules[]` array is the second implementation this was shaped for, though this
+branch did not write it. It would **translate**, not consume: the values are Hyprland `class`
+regexes, while dwl matches `app_id` by substring and its own `tags` are workspace bitmasks.
+`floating-window` maps onto dwl's `isfloating`; `no-anim` has nothing to map onto, since dwl
+animates nothing.
+
+**Both halves fail silently**, the same way §13 says a missing `dwl-bar` does. A typo'd key
+renders a tag rule no behaviour reads; a behaviour rule keyed on a tag nobody sets never
+fires. Neither breaks a build — an assertion was considered and rejected, because scoping it
+to the tags `hyprland-rules.nix` implements would break hyprland hosts the moment a second
+session's file sets a tag of its own. The cheap check is
+`nix eval '.#homeConfigurations."marcus@gpc".config.windowTags'`.
 
 ### A tool invoked by bare name must be installed by every aspect that invokes it
 
@@ -347,7 +377,11 @@ among its own aspect's siblings. It is also why a *partial* move is not automati
 **Treat it as a working model, not a mechanism.** Three measurements bound it:
 
 - A controlled probe produced a definition order the model does not predict, so discovery
-  order is not strictly positional.
+  order is not strictly positional. `windowTags` measured the same thing on a merged list:
+  four files append to it, and the rendered order came out the *reverse* of gpc's aspect
+  list, `core` entries reverse-discovery within that. So do not derive a stable identifier
+  from a merged list's index — `hyprland-rules.nix` names its rules `tag-<name>-<n>` and
+  one new contributor renumbers rules the change never touched.
 - A *position-preserving* move is free even though it changes `_file`:
   `modules/monitors.nix` → `modules/monitors/monitors.nix` left swift5 byte-identical
   (re-measured after §9's `deferredModule` change).
@@ -436,7 +470,8 @@ NixOS underneath. Do not convert it to `home-manager.nixosModules.home-manager`.
 Cross-platform intents are named so the Mac is cheap later: `launcher`, `screenshot`,
 `clipboard` and `lock` are option namespaces in `core`, set by `hyprland` and `dwl` and
 read by their binds (§3). A darwin session implements them by setting the same options —
-that is the whole point of the indirection.
+that is the whole point of the indirection. `windowTags` is in `core` too but runs the
+other way round — many app files set it, one session reads it (§3).
 
 `notifications` is deliberately **not** one: mako already serves both sessions from a
 single file and nothing invokes it by command, so the option would have no setter and no

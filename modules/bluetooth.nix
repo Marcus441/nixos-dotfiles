@@ -8,4 +8,10 @@ _: {
       services.blueman.enable = true;
     }
   ];
+
+  flake.modules.homeManager.core = [
+    {
+      windowTags.floating-window = ["^(.blueman-manager-wrapped)$"];
+    }
+  ];
 }

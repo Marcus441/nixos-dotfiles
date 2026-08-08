@@ -19,6 +19,11 @@ _: {
     {
       fileManager.command = "thunar";
 
+      windowTags = {
+        floating-window = ["^(thunar|Thunar)$"];
+        no-anim = ["^(thunar|Thunar)$"];
+      };
+
       # The default followed the option: `core` pointed every host at
       # thunar.desktop, including the one with no thunar installed.
       xdg.mimeApps.defaultApplications."inode/directory" = "thunar.desktop";
