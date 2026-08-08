@@ -193,11 +193,12 @@ Widest blast radius, so last. Every terminal colour on every host moves.
       diff on every host is `.config/foot/foot.ini` — eight lines, exactly the eight slots
       above. That is the proof the `colors16` moves are pure typing: had any of them
       rendered differently, another file would appear here.
-- [ ] **Visual check, not just a build.** Expect terminal brights to lose the base24 punch
+- [x] **Visual check, not just a build.** Expect terminal brights to lose the base24 punch
       (`base12` red → `base08`). Look at `bat`, `btop`, `lazygit`, `yazi` and `neovim`
       before merging; this is the one branch where a clean build proves very little.
       Also worth a look: `regular7` was base06 (warm cream), now base05 — `fastfetch`'s
       `outputColor = "white"` and yazi's preset `gray` both land on it.
+      Done on `UM790pro`; the muted brights are accepted, not tolerated.
 
-**Done when:** built and *looked at* on `UM790pro`, and CLAUDE.md §9 reflects the new
-mapping.
+**Done:** ANSI means base16 on every host. base24 survives as hex, for one shadow colour
+in `qt.nix`.
