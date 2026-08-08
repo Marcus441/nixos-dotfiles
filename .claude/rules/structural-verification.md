@@ -4,6 +4,11 @@ paths: "scripts/*"
 
 # Structural verification — the diff-closures recipe
 
+**The ordering model is a working model, not a mechanism.** Measurements have
+produced results it does not predict (e.g. `windowTags` rendered in reverse of
+aspect list order). A position-preserving move is free even though it changes
+`_file`. Measure with the recipe below; do not predict.
+
 For structural changes, prove nothing changed but order:
 
 ```bash
