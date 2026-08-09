@@ -83,6 +83,24 @@ home-manager's sd-switch see a changed unit and restart it; pointed at
 `%h/.config` instead, the unit never changes and an edited menu keeps rendering
 the old one until reboot.
 
+<a id="wleave-toggle"></a>
+## `wleave.nix` — the bind toggles, because a resident wleave will not
+
+**Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
+resident instance grows one layer surface per keypress, and `app/mod.rs` guards
+close-on-lost-focus with `&& !service_mode`, so none of them close. Before the
+service the second half hid the first — the older window died as the newer took
+focus. `powerMenu.command` is therefore a script: restart the unit if a wleave
+layer is mapped, activate if none is. Restarting is the only close available
+from outside, since a layer surface is not a window a compositor can shut.
+
+**Breaks** *Silently, and only under a held key.* `StartLimitIntervalSec = 0` is
+what keeps the toggle from tripping systemd's default five-starts-in-ten-seconds
+limit and leaving the unit dead with no menu at all. The detection string is
+`namespace: wleave` from `hyprctl layers`; `hyprctl` is called by bare name
+because the running compositor is what provides it, and the branch is skipped
+where there is none.
+
 <a id="hyprland-rules-regex"></a>
 ## `hyprland-rules.nix` — one rule per regex, not one alternation
 

@@ -20,8 +20,17 @@ _: {
         ...
       }: let
         inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base03 base05 base08 base09 base0A base0C base0D base0E;
+
+        # load-bearing: docs/decisions/sessions.md#wleave-toggle
+        toggle = pkgs.writeShellScript "wleave-toggle" ''
+          if hyprctl layers 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q 'namespace: wleave'; then
+            exec systemctl --user restart wleave.service
+          fi
+
+          exec ${pkgs.wleave}/bin/wleave
+        '';
       in {
-        powerMenu.command = "wleave";
+        powerMenu.command = "${toggle}";
 
         # load-bearing: docs/decisions/sessions.md#wleave-service
         systemd.user.services.wleave = {
@@ -29,6 +38,8 @@ _: {
             Description = "wleave power menu, resident so that opening it costs nothing";
             PartOf = ["graphical-session.target"];
             After = ["graphical-session.target"];
+            # load-bearing: docs/decisions/sessions.md#wleave-toggle
+            StartLimitIntervalSec = 0;
           };
 
           Install.WantedBy = ["graphical-session.target"];
