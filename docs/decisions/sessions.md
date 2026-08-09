@@ -71,6 +71,18 @@ absence. wleave is GTK4 (`libgtk-4`, `libadwaita-1`, `gtk4-layer-shell`), not
 GTK3, so the properties it accepts are GTK4's; check against that library
 before adding one.
 
+<a id="wleave-service"></a>
+## `wleave.nix` — the unit names the config files it is already reading
+
+**Why** wleave is a `gio` application run with `--service`: it holds itself
+alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
+unchanged. Upstream warns that the resident instance owns the configuration
+until it restarts.
+**Breaks** *Silently.* Passing `--layout`/`--css` by store path is what makes
+home-manager's sd-switch see a changed unit and restart it; pointed at
+`%h/.config` instead, the unit never changes and an edited menu keeps rendering
+the old one until reboot.
+
 <a id="hyprland-rules-regex"></a>
 ## `hyprland-rules.nix` — one rule per regex, not one alternation
 

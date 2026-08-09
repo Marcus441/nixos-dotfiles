@@ -23,6 +23,27 @@ _: {
       in {
         powerMenu.command = "wleave";
 
+        # load-bearing: docs/decisions/sessions.md#wleave-service
+        systemd.user.services.wleave = {
+          Unit = {
+            Description = "wleave power menu, resident so that opening it costs nothing";
+            PartOf = ["graphical-session.target"];
+            After = ["graphical-session.target"];
+          };
+
+          Install.WantedBy = ["graphical-session.target"];
+
+          Service = {
+            ExecStart = lib.concatStringsSep " " [
+              "${pkgs.wleave}/bin/wleave"
+              "--service"
+              "--layout ${config.xdg.configFile."wleave/layout.json".source}"
+              "--css ${config.xdg.configFile."wleave/style.css".source}"
+            ];
+            Restart = "on-failure";
+          };
+        };
+
         programs.wleave = {
           enable = true;
           settings = {
