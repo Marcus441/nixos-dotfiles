@@ -1,10 +1,7 @@
 {inputs, ...}: {
   flake.modules.homeManager.apps = [
     (
-      {
-        pkgs,
-        ...
-      }: let
+      {pkgs, ...}: let
         inherit (pkgs.stdenv.hostPlatform) system;
         neovim = inputs.neovim-config.packages.${system};
       in {
