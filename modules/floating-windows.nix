@@ -12,7 +12,7 @@ _: {
         ...
       }: {
         # Options rather than bare strings: the spawn side has to name the
-        # app-id it launches under (see foot.nix's `terminal.floatingArgv`), and
+        # app-id it launches under (see foot.nix's `terminal.transientArgv`), and
         # a literal repeated there and in the rule below is two places to change
         # one convention.
         options.floatingWindow = {

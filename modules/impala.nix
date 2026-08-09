@@ -25,10 +25,10 @@ _: {
         # author, so NM's own state can disagree until it resyncs.
         #
         # A TUI has to carry its own terminal. Composed at argv level and
-        # rendered once, because `terminal.floatingCommand` is already escaped
+        # rendered once, because `terminal.transientCommand` is already escaped
         # and appending to it would escape twice.
         networkManager.command = lib.escapeShellArgs (
-          config.terminal.floatingArgv ++ ["${pkgs.impala}/bin/impala"]
+          config.terminal.transientArgv ++ ["${pkgs.impala}/bin/impala"]
         );
 
         home.packages = [pkgs.impala];

@@ -29,14 +29,14 @@ _: {
             description = "Terminal that does not depend on a running server.";
           };
 
-          # The intent is "a terminal for a TUI you open, act in and close" --
-          # not "a floating terminal". Only a session with a floating concept
-          # renders it as one; the default is the plain terminal, so a spawn
-          # point reads this without asserting anything about the session.
-          floatingArgv = lib.mkOption {
+          # Named for the lifecycle, not the geometry: a TUI you open, act in
+          # and close. dwl renders that as a tile and Hyprland as a floating
+          # window, so neither answer belongs in the name -- a spawn point reads
+          # this without asserting anything about the session.
+          transientArgv = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = config.terminal.argv;
-            description = "Terminal for a transient TUI. A session that floats windows sets this to carry its floating app-id; elsewhere it is `argv`.";
+            description = "Terminal for a TUI opened, used and closed in one sitting. A session renders that however it likes; the default is `argv`.";
           };
 
           command = lib.mkOption {
@@ -53,11 +53,11 @@ _: {
             description = "`fallbackArgv` as a shell command.";
           };
 
-          floatingCommand = lib.mkOption {
+          transientCommand = lib.mkOption {
             type = lib.types.str;
             readOnly = true;
-            default = lib.escapeShellArgs config.terminal.floatingArgv;
-            description = "`floatingArgv` as a shell command.";
+            default = lib.escapeShellArgs config.terminal.transientArgv;
+            description = "`transientArgv` as a shell command.";
           };
         };
 
@@ -130,8 +130,8 @@ _: {
     )
   ];
 
-  # The floating variant is Hyprland's alone. dwl tiles by design -- there is no
-  # floating concept there to opt into, so `floatingArgv` keeps its plain
+  # The floating answer is Hyprland's alone. dwl tiles by design -- there is no
+  # floating concept there to opt into, so `transientArgv` keeps its plain
   # default and a TUI spawned under dwl asserts nothing about its window.
   #
   # Split from ./floating-windows.nix because the two halves are different
@@ -139,7 +139,7 @@ _: {
   flake.modules.homeManager.hyprland = [
     (
       {config, ...}: {
-        terminal.floatingArgv = config.terminal.argv ++ ["--app-id" config.floatingWindow.term];
+        terminal.transientArgv = config.terminal.argv ++ ["--app-id" config.floatingWindow.term];
       }
     )
   ];
