@@ -68,6 +68,16 @@ it with none to spare. Three fifths lands on 12pt there.
 change to `floating-size`, to a host's `fontSize`, or to this fraction moves the
 row count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
 
+<a id="btop-presets"></a>
+## `cli/btop.nix` — the two presets exist so `--preset` can mean something
+
+**Why** btop has no flag for "start on the memory view". Preset 0 is its
+built-in all-boxes layout and config presets are numbered from 1, so the string
+defines 1 = processor + processes and 2 = memory + processes — the two states
+the bar's readouts click into.
+**Breaks** Reordering or shortening the string re-points `systemMonitor.command`
+and `systemMonitor.memoryCommand` at whatever now sits at that index, silently.
+
 <a id="impala-argv"></a>
 ## `impala.nix` — impala over NetworkManager's iwd
 
