@@ -57,9 +57,7 @@ _: {
         colorTable =
           if hasBar
           then ''
-            /* base24 colours: foreground, background, border. Borders stay muted
-               greys: unfocused sinks toward the background (base01), focused lifts a
-               shade above it (base03). */
+            /* foreground, background, border */
             static uint32_t colors[][3] = {
               [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
               [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base02}, ${toBar colors.base03} },
@@ -181,9 +179,8 @@ _: {
           /* helper for spawning shell commands in the pre dwm-5.0 fashion */
           #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-          /* commands (absolute store paths; keysyms are matched case-insensitively) */
-          /* footclient against the foot server started in the session autostart
-             below (step 1.4); termfbcmd spawns plain foot if the server is down. */
+          /* commands: absolute store paths; termcmd is footclient, termfbcmd
+             plain foot for when the server is down */
           static const char *termcmd[]      = { ${argvC config.terminal.argv}, NULL };
           static const char *termfbcmd[]    = { ${argvC config.terminal.fallbackArgv}, NULL };
           static const char *menucmd[]      = { ${menuArgvC}, NULL };
