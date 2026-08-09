@@ -1,4 +1,7 @@
-{colors}: ''
+{
+  colors,
+  font,
+}: ''
   @define-color base00 #${colors.base00};
   @define-color base01 #${colors.base01};
   @define-color base02 #${colors.base02};
@@ -12,15 +15,15 @@
      ========================================= */
   * {
     all: unset;
-    font-family: 'Inter', 'Symbols Nerd Font Mono', sans-serif;
+    font-family: '${font}', 'Symbols Nerd Font Mono', monospace;
     font-size: 18px;
     color: @base05;
   }
 
   popover {
-    background: alpha(@base01, 0.7);
-    border: 1px solid alpha(@base0D, 0.15);
-    border-radius: 12px;
+    background: @base00;
+    border: 1px solid @base02;
+    border-radius: 0;
     padding: 8px;
   }
 
@@ -29,12 +32,13 @@
   .large-icons { -gtk-icon-size: 32px; }
 
   /* =========================================
-     OUTER WRAPPER — rounded
+     OUTER WRAPPER — opaque, square, accent border
+     (mako's idiom: 2px @base0D around a @base00 surface)
      ========================================= */
   .box-wrapper {
-    background: alpha(@base00, 0.55);
-    border: 1px solid alpha(@base0D, 0.15);
-    border-radius: 16px;
+    background: @base00;
+    border: 2px solid @base0D;
+    border-radius: 0;
     box-shadow: none;
     padding: 0;
     overflow: hidden;
@@ -46,13 +50,12 @@
   .search-container {
     background: transparent;
     padding: 14px 18px;
-    border-bottom: 1px solid alpha(@base0D, 0.1);
+    border-bottom: 1px solid @base01;
   }
 
   .search-icon {
     color: @base0D;
     -gtk-icon-size: 22px;
-    opacity: 0.85;
   }
 
   .input {
@@ -64,12 +67,12 @@
   }
 
   .input placeholder {
-    opacity: 0.35;
-    color: @base05;
+    color: @base03;
   }
 
   .input selection {
-    background: alpha(@base0D, 0.3);
+    background: @base0D;
+    color: @base00;
   }
 
   .input:focus,
@@ -90,14 +93,13 @@
 
   .list {
     color: @base05;
-    padding: 4px 0;
+    padding: 0;
   }
 
   .placeholder,
   .elephant-hint {
-    color: @base05;
+    color: @base03;
     font-size: 13px;
-    opacity: 0.35;
     padding: 20px;
   }
 
@@ -109,14 +111,15 @@
 
   .item-box {
     padding: 6px 14px;
-    border-radius: 8px;
+    border-radius: 0;
     min-height: 44px;
   }
 
+  /* A quiet fill, not the accent -- waybar's inactive-workspace chip. */
   child:selected .item-box,
   row:selected .item-box {
-    background: alpha(@base0D, 0.12);
-    border-radius: 8px;
+    background: @base02;
+    border-radius: 0;
   }
 
   .item-text-box {
@@ -128,7 +131,7 @@
 
   .item-subtext {
     font-size: 14px;
-    opacity: 0.45;
+    color: @base03;
   }
 
   .item-image-text {
@@ -136,11 +139,18 @@
   }
 
   .item-quick-activation {
-    background: alpha(@base02, 0.4);
+    background: @base02;
+    color: @base05;
     border-radius: 0;
     padding: 4px 8px;
     font-size: 11px;
-    opacity: 0.5;
+  }
+
+  /* Would vanish into the selected row, which is @base02 itself. */
+  child:selected .item-quick-activation,
+  row:selected .item-quick-activation {
+    background: @base03;
+    color: @base00;
   }
 
   /* =========================================
@@ -148,7 +158,7 @@
      ========================================= */
   .preview {
     color: @base05;
-    border: none;
+    border-left: 1px solid @base01;
     border-radius: 0;
   }
 
@@ -171,8 +181,7 @@
 
   .calc .item-subtext {
     font-size: 13px;
-    opacity: 0.4;
-    color: @base05;
+    color: @base03;
   }
 
   /* =========================================
@@ -201,7 +210,7 @@
      BLUETOOTH
      ========================================= */
   .bluetooth.disconnected {
-    opacity: 0.5;
+    color: @base03;
   }
 
   /* =========================================
@@ -209,7 +218,7 @@
      ========================================= */
   .providerlist .item-subtext {
     font-size: unset;
-    opacity: 0.75;
+    color: @base03;
   }
 
   /* =========================================
@@ -243,7 +252,7 @@
   .error {
     padding: 10px 14px;
     background: @base08;
-    color: @base05;
+    color: @base00;
   }
 
   /* =========================================
@@ -257,17 +266,21 @@
   .wallpaper-preview {
     min-height: 120px;
     min-width: 180px;
-    border: 1px solid alpha(@base0D, 0.15);
+    border: 1px solid @base02;
   }
 
   .wallpaper-label {
     font-size: 12px;
-    opacity: 0.75;
+    color: @base03;
     padding-top: 6px;
   }
 
   child:selected .wallpaper-item {
-    background: alpha(@base0D, 0.2);
+    background: @base02;
+  }
+
+  child:selected .wallpaper-label {
+    color: @base05;
   }
 
   /* =========================================
