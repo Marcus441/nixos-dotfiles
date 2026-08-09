@@ -81,6 +81,8 @@ _: {
             * {
               font-family: "Inter", "Symbols Nerd Font Mono";
               font-weight: bold;
+              transition: none;
+              animation: none;
             }
             window {
               background-color: #${base00};
@@ -97,8 +99,6 @@ _: {
               margin: 15px;
               padding: 40px;
               font-size: 18px;
-              transition: background-color 0.15s ease,
-                          border-color 0.15s ease;
             }
             button:hover,
             button:focus,

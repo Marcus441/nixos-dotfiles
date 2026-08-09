@@ -58,6 +58,19 @@ and thunar have none, and xdg-desktop-portal-gtk is D-Bus activated with no
 spawn site. Those four match their real class, which floats **every** instance.
 Accepted — a title match or a rename wrapper both break silently instead.
 
+<a id="wleave-no-anim"></a>
+## `wleave.nix` — appearing instantly takes a rule and a stylesheet, not one
+
+**Why** Two animators, neither of which is wleave: Hyprland fades the layer
+surface in, and libadwaita transitions the button that keyboard focus lands on.
+The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
+`*` kills the second. wleave itself ships no CSS animation at all.
+**Breaks** Fixing one leaves the other. Deleting our own `transition` from
+`button` does not reach libadwaita's — the reset has to be an override, not an
+absence. wleave is GTK4 (`libgtk-4`, `libadwaita-1`, `gtk4-layer-shell`), not
+GTK3, so the properties it accepts are GTK4's; check against that library
+before adding one.
+
 <a id="hyprland-rules-regex"></a>
 ## `hyprland-rules.nix` — one rule per regex, not one alternation
 
