@@ -183,7 +183,8 @@ identities — closed items are deleted and survivors keep their numbers.
   store path. **Label what the block produces; never argue for a value.** A
   label lets a reader skip the block — worth it where the syntax hides the
   output, as PS1 escapes do. **Two lines is the cap:** needing a third means it
-  is an argument, and arguments belong in `docs/`.
+  is an argument, and arguments belong in `docs/`. A PostToolUse hook enforces
+  the cap across `#`, `//` and `/* */`.
 - **No unrequested changes.** No package bumps, no deprecation fixes, no
   reformatting files the current task doesn't touch.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`,
