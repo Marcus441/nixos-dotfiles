@@ -19,7 +19,7 @@ _: {
         pkgs,
         ...
       }: let
-        inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base05 base07 base08 base09 base0A base0C base0D base0E;
+        inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base03 base05 base08 base09 base0A base0C base0D base0E;
       in {
         powerMenu.command = "wleave";
 
@@ -84,25 +84,32 @@ _: {
             * {
               font-family: "Inter", "Symbols Nerd Font Mono";
               font-weight: bold;
-              transition: all 0.2s ease;
             }
             window {
-              background-color: rgba(0, 0, 0, 0.85);
+              background-color: #${base00};
             }
+            /* adw-gtk3 gives buttons a radius, a gradient and a shadow.
+               None of it survives contact with the flat palette. */
             button {
               color: #${base05};
               background-color: #${base01};
-              border: 2px solid #${base00};
+              background-image: none;
+              box-shadow: none;
+              border: 1px solid #${base02};
+              border-radius: 0;
               margin: 15px;
               padding: 40px;
               font-size: 18px;
+              transition: background-color 0.15s ease,
+                          border-color 0.15s ease;
             }
             button:hover,
             button:focus,
             button:active {
               background-color: #${base02};
-              color: #${base07};
-              border-color: #${base02};
+              border-color: #${base03};
+              background-image: none;
+              box-shadow: none;
             }
             #lock     { color: #${base0D}; }
             #logout   { color: #${base0C}; }
