@@ -59,6 +59,10 @@ _: {
                 modules-right =
                   [
                     "tray"
+                    "cpu"
+                    "custom/cputemp"
+                    "memory"
+                    "disk"
                     "battery"
                     "bluetooth"
                     "network"

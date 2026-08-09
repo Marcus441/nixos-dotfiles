@@ -17,6 +17,7 @@ Inv. 3 working, not a violation.
 | `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
 | `powerMenu.command` | `wleave.nix` | `wleave.nix` (`wleave`) |
 | `networkManager.command` | `impala.nix` | `impala.nix` (`impala`) |
+| `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/waybar.nix` | `bar/waybar.nix` (`waybar`) |
 
 `launcher` is the only one with a file to itself, because wmenu and walker

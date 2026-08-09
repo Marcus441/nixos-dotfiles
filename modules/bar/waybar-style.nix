@@ -90,6 +90,22 @@ _: {
             font-weight: 400;
             margin: 0 4px;
           }
+          #cpu,
+          #custom-cputemp,
+          #memory,
+          #disk {
+            color: #${base05};
+            font-weight: 400;
+            margin: 0 6px;
+          }
+          #cpu.warning,
+          #custom-cputemp.warning,
+          #memory.warning,
+          #disk.warning   { color: #${base0A}; }
+          #cpu.critical,
+          #custom-cputemp.critical,
+          #memory.critical,
+          #disk.critical  { color: #${base08}; }
           #tray                   { margin-right: 12px; }
           #tray > .passive         { -gtk-icon-effect: dim; }
           #tray > .needs-attention {
