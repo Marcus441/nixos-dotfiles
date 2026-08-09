@@ -333,13 +333,8 @@ _: {
           export XDG_CURRENT_DESKTOP=dwl
           export XDG_SESSION_TYPE=wayland
 
-          # dwl's -s autostart runs once the compositor is up (so WAYLAND_DISPLAY is
-          # set): apply the host monitor layout, paint the wallpaper, then start the
-          # notification daemon. The leading pipe, if any, is the bar's status feed
-          # (the dwl-bar aspect). foot --server backs the footclient keybind; the
-          # dwl session is a plain script (no graphical-session.target), so the
-          # home-manager foot systemd unit never activates here and the server
-          # starts manually, like mako below.
+          # -s autostart, once the compositor is up: monitor layout, wallpaper,
+          # notifications, foot server. Leading pipe is the bar's status feed.
           ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &'
         '';
 

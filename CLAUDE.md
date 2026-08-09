@@ -178,9 +178,12 @@ identities — closed items are deleted and survivors keep their numbers.
   in `docs/` — `conventions/` for what recurs across files, `decisions/` for
   why one file made its call — and **changing a decision means changing its
   entry in the same commit**. A register that drifts is worse than none.
-- **Text inside a `''` block is not a comment — it is content.** A `#` there
-  ships into the generated bashrc, tmux.conf or C header, so removing one moves
-  a store path. Comment that text as you would the file it becomes.
+- **Text inside a `''` block is content, not a comment.** A `#` there ships into
+  the generated bashrc, tmux.conf or C header, so adding or removing one moves a
+  store path. **Label what the block produces; never argue for a value.** A
+  label lets a reader skip the block — worth it where the syntax hides the
+  output, as PS1 escapes do. **Two lines is the cap:** needing a third means it
+  is an argument, and arguments belong in `docs/`.
 - **No unrequested changes.** No package bumps, no deprecation fixes, no
   reformatting files the current task doesn't touch.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`,

@@ -106,9 +106,7 @@ _: {
             set -g mode-style "bg=${thm_blue},fg=${thm_bg}"
             setw -g clock-mode-colour "${thm_blue}"
 
-            # The status line above sets its colours inline, so these are the
-            # states it cannot reach: prefix+q pane numbers, and a window
-            # flagging a bell or activity.
+            # States the inline status line cannot reach: pane numbers, bell.
             set -g display-panes-active-colour "${thm_dim}"
             set -g display-panes-colour "${thm_surface}"
             setw -g window-status-bell-style "fg=${thm_bg},bg=${thm_red}"
