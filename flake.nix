@@ -2,7 +2,6 @@
   description = "My system configuration";
 
   inputs = {
-    elephant.url = "github:abenz1267/elephant";
     flake-parts.url = "github:hercules-ci/flake-parts";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -14,10 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    walker = {
-      url = "github:abenz1267/walker";
-      inputs.elephant.follows = "elephant";
-    };
   };
 
   outputs = inputs:
