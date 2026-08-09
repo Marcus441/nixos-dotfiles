@@ -57,9 +57,7 @@ _: {
             __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "''${HOSTNAME:-$(hostname)}" "$PWD"; }
 
             # Prompt: cwd + git branch + active dev environment (devenv / nix
-            # devshell / python venv) + a "$" sigil, using the base24 palette
-            # (./theme/colors.nix). Replaced starship in step 1.2; no external prompt
-            # program.
+            # devshell / python venv) + a "$" sigil, in the base24 palette.
             __prompt() {
               # Must be the first statement: anything else overwrites $?.
               local code=$?
@@ -88,19 +86,18 @@ _: {
               *) PROMPT_COMMAND="__prompt;__osc7_cwd''${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
             esac
 
-            # Coloured man pages, using the base24 Kanagawa Dragon palette (./theme/colors.nix)
-            # via less' termcap hooks (truecolor escapes). Colour scheme adapted from
+            # Coloured man pages via less' termcap hooks. Scheme adapted from
             # https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf
             export GROFF_NO_SGR=1
-            export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'                              # blink       -> bold red
-            export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base08}m'                              # bold        -> bold red   (headings, commands)
-            export LESS_TERMCAP_me=$'\e[0m'                                                        # reset
-            export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m'   # standout -> dark on yellow (status/search)
-            export LESS_TERMCAP_se=$'\e[0m'                                                        # reset standout
-            export LESS_TERMCAP_us=$'\e[4;1;38;2;${rgb colors.base0B}m'                            # underline   -> bold green  (args, options)
-            export LESS_TERMCAP_ue=$'\e[0m'                                                        # reset underline
-            export LESS_TERMCAP_mr=$'\e[7m'                                                        # reverse     -> inverse
-            export LESS_TERMCAP_mh=$'\e[2m'                                                        # half-bright -> dim
+            export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'
+            export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base08}m'
+            export LESS_TERMCAP_me=$'\e[0m'
+            export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m'
+            export LESS_TERMCAP_se=$'\e[0m'
+            export LESS_TERMCAP_us=$'\e[4;1;38;2;${rgb colors.base0B}m'
+            export LESS_TERMCAP_ue=$'\e[0m'
+            export LESS_TERMCAP_mr=$'\e[7m'
+            export LESS_TERMCAP_mh=$'\e[2m'
           '';
         };
       }
