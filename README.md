@@ -13,15 +13,58 @@ covers getting a machine running.
 
 ## Inspiration and Attribution
 
-This project is heavily derived from concepts and ideas found in
-[nixos-config-reborn](https://github.com/Andrey0189/nixos-config-reborn) by
-**@Andrey0189**. Their YouTube guides and repository were extremely helpful in
-my own configuration.
+The pattern is not mine, and neither is most of the reasoning behind it. What
+each source actually contributed:
 
-As this configuration builds upon their foundational work, it is also licensed
-under the **GNU General Public License v3.0 (GPL-3.0)**, in accordance with the
-original project's licensing. You can find a copy of the license in the
-`LICENSE` file within this repository.
+**[mightyiam/dendritic](https://github.com/mightyiam/dendritic)** — the
+canonical specification, by **mightyiam** (Rodrigo Morales). Invariants 1–4 in
+`CLAUDE.md` are its rules restated: one file per feature across every
+configuration that feature touches, lower-level modules held as
+`deferredModule` *option values* rather than imported from paths, and file paths
+that name a feature without encoding a class or a host. Its own caveat — the
+pattern is "not a religion, law or a mandate" — is why `CLAUDE.md` §8 tracks
+where this repo diverges instead of pretending it doesn't.
+
+**[The Dendritic Pattern — NixOS
+Discourse](https://discourse.nixos.org/t/the-dendritic-pattern/61271)** —
+mightyiam's announcement thread. The point taken from it is that every file is a
+*flake-parts* module, not merely a NixOS one; that is what lets a single file
+declare both a `nixos` and a `homeManager` membership, which is the shape of
+nearly every file under `modules/`. vic's `rdesk.nix` in that thread is the
+example those files follow. The thread's recurring complaint — that lazy
+evaluation makes this read as black magic — is why `CLAUDE.md` opens with a
+mental model rather than a file tour.
+
+**[Doc-Steve/dendritic-design-with-flake-parts](https://github.com/Doc-Steve/dendritic-design-with-flake-parts)**
+— a guide by **Doc-Steve** that extends the pattern with a catalog of reusable
+*Aspect* shapes. This is where the vocabulary of aspects comes from, and its
+Collector and Constants shapes are what `windowTags` and the `desktop.colors`
+palette turned into here: many files writing one value, one file reading it.
+
+**[import-tree](https://github.com/vic/import-tree)** — the auto-import library,
+by **vic** (pinned in `flake.nix` from its `denful/import-tree` location).
+`flake.nix` is a manifest only because this exists. Its rule that paths
+containing `/_` are skipped — `hasInfix "/_"` against the full path — is the
+only way anything under `modules/` escapes auto-discovery, which is what
+`modules/_pkgs`, `modules/_walker` and `modules/_dormant` all depend on.
+
+**[Search for best dotfiles structure: Dendritic
+edition](https://discourse.nixos.org/t/search-for-best-dotfiles-structure-dendritic-edition/75134)**
+— the counterweight thread, where people report living with the pattern:
+complexity outgrowing the configuration it serves, fuzzy-finding by filename
+getting worse, and NixOS and home-manager configurations becoming hard to
+decouple. That last one shaped two choices here — Home Manager stays
+**standalone**, and `verify.sh` builds all six targets rather than trusting
+`nixos-rebuild` to cover them. The alternatives raised there (`flake-aspects`,
+`den`, `flake-fhs`, `unify`) are deliberately not used; this repo stays on
+flake-parts and import-tree.
+
+**[nixos-config-reborn](https://github.com/Andrey0189/nixos-config-reborn)** by
+**@Andrey0189** — where this configuration began, and how I learned most of what
+it does. Very little of that structure survived the dendritic refactor, but the
+code is descended from it, so this repository remains licensed under the **GNU
+General Public License v3.0 (GPL-3.0)** in accordance with the original. A copy
+is in `LICENSE`.
 
 ## Hosts
 
@@ -88,7 +131,7 @@ host by name instead.
 
 ## Layout
 
-```
+```text
 flake.nix                    inputs + mkFlake + import-tree. Rarely touched.
 statix.toml                  lint config; see .claude/rules/settled-decisions.md
 modules/
