@@ -8,9 +8,10 @@ _: {
         ...
       }: let
         inherit (config.desktop) font colors16;
-        fontStr =
-          "${font.name}:size=${toString font.size}"
+        fontAt = size:
+          "${font.name}:size=${toString size}"
           + lib.optionalString (!font.ligatures) ":fontfeatures=-calt,-liga,-clig,-dlig";
+        fontStr = fontAt font.size;
 
         strip = c: lib.removePrefix "#" c;
       in {
@@ -30,6 +31,13 @@ _: {
             type = lib.types.listOf lib.types.str;
             default = config.terminal.argv;
             description = "Terminal for a TUI opened, used and closed in one sitting. A session renders that however it likes; the default is `argv`.";
+          };
+
+          compactArgv = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            # load-bearing: docs/decisions/terminal.md#foot-compact
+            default = config.terminal.transientArgv ++ ["--override" "main.font=${fontAt (font.size * 3 / 5)}"];
+            description = "`transientArgv` at a font size chosen so a TUI needing 24 rows fits a session's floating window.";
           };
 
           command = lib.mkOption {

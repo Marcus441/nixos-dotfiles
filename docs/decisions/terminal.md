@@ -57,6 +57,17 @@ escaped, so appending would escape twice.
 through the middle of the bar. base00 is foot's terminal background, so it
 renders as nothing.
 
+<a id="foot-compact"></a>
+## `foot.nix` — `compactArgv` is three fifths of the host font size
+
+**Why** Measured on UM790pro, against Hyprland's `floating-size` rule of
+`1200 600`: 20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses
+to start under 24x60, so the full size misses it by seven rows and 14pt clears
+it with none to spare. Three fifths lands on 12pt there.
+**Breaks** btop exits with "Terminal size too small" rather than opening. Any
+change to `floating-size`, to a host's `fontSize`, or to this fraction moves the
+row count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
+
 <a id="impala-argv"></a>
 ## `impala.nix` — impala over NetworkManager's iwd
 
