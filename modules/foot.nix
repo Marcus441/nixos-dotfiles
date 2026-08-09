@@ -29,6 +29,11 @@ _: {
             description = "Terminal that does not depend on a running server.";
           };
 
+          floatingArgv = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Terminal carrying the `floatingWindow.term` app-id, for a TUI that wants a window rather than a tile.";
+          };
+
           command = lib.mkOption {
             type = lib.types.str;
             readOnly = true;
@@ -42,6 +47,13 @@ _: {
             default = lib.escapeShellArgs config.terminal.fallbackArgv;
             description = "`fallbackArgv` as a shell command.";
           };
+
+          floatingCommand = lib.mkOption {
+            type = lib.types.str;
+            readOnly = true;
+            default = lib.escapeShellArgs config.terminal.floatingArgv;
+            description = "`floatingArgv` as a shell command.";
+          };
         };
 
         # By store path, not bare name: the consumers can hold a path, and §3
@@ -49,6 +61,13 @@ _: {
         config.terminal = {
           argv = ["${pkgs.foot}/bin/footclient"];
           fallbackArgv = ["${pkgs.foot}/bin/foot"];
+
+          # foot is the one window this config floats that can name itself, so
+          # the convention in ./floating-windows.nix is reachable here and
+          # nowhere else. Set unconditionally rather than per session: an app-id
+          # only means something to a session carrying a rule for it, so under
+          # dwl this tiles like any other terminal.
+          floatingArgv = config.terminal.argv ++ ["--app-id" config.floatingWindow.term];
         };
 
         # Shared terminal for all hosts: the base16 mapping below is the single
