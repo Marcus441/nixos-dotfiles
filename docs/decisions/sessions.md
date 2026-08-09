@@ -58,6 +58,49 @@ and thunar have none, and xdg-desktop-portal-gtk is D-Bus activated with no
 spawn site. Those four match their real class, which floats **every** instance.
 Accepted — a title match or a rename wrapper both break silently instead.
 
+<a id="wleave-no-anim"></a>
+## `wleave.nix` — appearing instantly takes a rule and a stylesheet, not one
+
+**Why** Two animators, neither of which is wleave: Hyprland fades the layer
+surface in, and libadwaita transitions the button that keyboard focus lands on.
+The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
+`*` kills the second. wleave itself ships no CSS animation at all.
+**Breaks** Fixing one leaves the other. Deleting our own `transition` from
+`button` does not reach libadwaita's — the reset has to be an override, not an
+absence. wleave is GTK4 (`libgtk-4`, `libadwaita-1`, `gtk4-layer-shell`), not
+GTK3, so the properties it accepts are GTK4's; check against that library
+before adding one.
+
+<a id="wleave-service"></a>
+## `wleave.nix` — the unit names the config files it is already reading
+
+**Why** wleave is a `gio` application run with `--service`: it holds itself
+alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
+unchanged. Upstream warns that the resident instance owns the configuration
+until it restarts.
+**Breaks** *Silently.* Passing `--layout`/`--css` by store path is what makes
+home-manager's sd-switch see a changed unit and restart it; pointed at
+`%h/.config` instead, the unit never changes and an edited menu keeps rendering
+the old one until reboot.
+
+<a id="wleave-toggle"></a>
+## `wleave.nix` — the bind toggles, because a resident wleave will not
+
+**Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
+resident instance grows one layer surface per keypress, and `app/mod.rs` guards
+close-on-lost-focus with `&& !service_mode`, so none of them close. Before the
+service the second half hid the first — the older window died as the newer took
+focus. `powerMenu.command` is therefore a script: restart the unit if a wleave
+layer is mapped, activate if none is. Restarting is the only close available
+from outside, since a layer surface is not a window a compositor can shut.
+
+**Breaks** *Silently, and only under a held key.* `StartLimitIntervalSec = 0` is
+what keeps the toggle from tripping systemd's default five-starts-in-ten-seconds
+limit and leaving the unit dead with no menu at all. The detection string is
+`namespace: wleave` from `hyprctl layers`; `hyprctl` is called by bare name
+because the running compositor is what provides it, and the branch is skipped
+where there is none.
+
 <a id="hyprland-rules-regex"></a>
 ## `hyprland-rules.nix` — one rule per regex, not one alternation
 
