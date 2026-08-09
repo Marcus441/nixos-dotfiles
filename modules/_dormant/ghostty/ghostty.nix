@@ -3,7 +3,6 @@
     enable = true;
     systemd.enable = true;
     settings = {
-      # Window
       window-padding-x = 8;
       window-padding-y = 8;
       window-inherit-working-directory = true;
@@ -14,48 +13,38 @@
       gtk-toolbar-style = "flat";
       resize-overlay = "never";
 
-      # Font
       font-size = 20;
 
-      # Cursor
       cursor-style = "block";
       cursor-style-blink = false;
-      # custom-shader = "/home/${user}/dotfiles/flake/home-manager/modules/ghostty/cursor_smear.glsl";
 
-      # Splits & Tabs
       unfocused-split-opacity = 0.8;
       split-inherit-working-directory = true;
       tab-inherit-working-directory = true;
 
-      # Mouse
       mouse-hide-while-typing = true;
       mouse-scroll-multiplier = 0.95;
       focus-follows-mouse = false;
       copy-on-select = true;
 
-      # Shell & Input
       shell-integration-features = "no-cursor,ssh-env,ssh-terminfo,sudo,title";
       async-backend = "epoll";
 
-      # Misc
       scrollback-limit = 50000;
       confirm-close-surface = false;
       app-notifications = "no-clipboard-copy";
 
       keybind = [
-        # Create splits
         "ctrl+shift+left=new_split:left"
         "ctrl+shift+down=new_split:down"
         "ctrl+shift+up=new_split:up"
         "ctrl+shift+right=new_split:right"
 
-        # Split navigation
         "ctrl+left=goto_split:left"
         "ctrl+down=goto_split:down"
         "ctrl+up=goto_split:up"
         "ctrl+right=goto_split:right"
 
-        # Tab Navigation
         "ctrl+1=goto_tab:1"
         "ctrl+2=goto_tab:2"
         "ctrl+3=goto_tab:3"
@@ -67,7 +56,6 @@
         "ctrl+9=goto_tab:9"
         "ctrl+0=goto_tab:10"
 
-        # Standard Tab controls
         "ctrl+shift+t=new_tab"
         "ctrl+shift+o=toggle_tab_overview"
       ];

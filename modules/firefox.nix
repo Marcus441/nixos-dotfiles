@@ -55,32 +55,16 @@ _: {
               };
             };
 
-            # ── DNS-over-HTTPS ───────────────────────────────────────
-            # Left OFF by default: on NixOS you very likely run a local or
-            # split-horizon resolver (systemd-resolved, dnscrypt, .local mDNS,
-            # VPN DNS), and forcing DoH here would bypass it. If you DON'T,
-            # uncomment to encrypt DNS against your ISP. Mullvad = no logs.
-            #
-            # DNSOverHTTPS = {
-            #   Enabled = true;
-            #   ProviderURL = "https://dns.mullvad.net/dns-query";
-            #   Fallback = true;      # fall back to system DNS if DoH fails
-            #   Locked = false;
-            # };
-
             ExtensionSettings = {
-              # Australian English Dictionary
               "AussieDic@dictionaries.addons.mozilla.org" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/australian-english-dictionary/latest.xpi";
               };
-              # uBlock Origin
               "uBlock0@raymondhill.net" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
                 settings = {
                   selectedFilterLists = [
-                    # uBlock defaults
                     "ublock-filters"
                     "ublock-badware"
                     "ublock-privacy"
@@ -94,12 +78,10 @@ _: {
                 };
               };
 
-              # SponsorBlock
               "sponsorBlocker@ajay.app" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
                 settings = {
-                  # "skip", "mute-segment", "full", or "ignore" per category
                   segmentSeverity = {
                     sponsor = "skip";
                     selfpromo = "skip";
@@ -114,37 +96,31 @@ _: {
                 };
               };
 
-              # Unhook
               "myallychou@gmail.com" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-recommended-videos/latest.xpi";
               };
 
-              # Refined GitHub
               "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/refined-github-/latest.xpi";
               };
 
-              # File Icon for GitHub, GitLab and Bitbucket
               "{85860b32-02a8-431a-b2b1-40fbd64c9c69}" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/github-file-icons/latest.xpi";
               };
 
-              # Kagi
               "search@kagi.com" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/kagi-search-for-firefox/latest.xpi";
               };
 
-              # Bitwarden
               "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
               };
 
-              # Dark Reader
               "addon@darkreader.org" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
@@ -156,7 +132,6 @@ _: {
             id = 0;
             isDefault = true;
 
-            # ── Search ───────────────────────────────────────────────
             search = {
               force = true;
               default = "Kagi";
@@ -233,7 +208,6 @@ _: {
                   ];
                   definedAliases = ["@hm"];
                 };
-                # Hide everything else
                 "google".metaData.hidden = true;
                 "bing".metaData.hidden = true;
                 "amazon".metaData.hidden = true;
@@ -354,24 +328,20 @@ _: {
 
               "extensions.autoDisableScopes" = 0;
 
-              # ── UI density & chrome ──────────────────────────────
               "browser.uidensity" = 1;
               "browser.compactmode.show" = true;
               "browser.toolbars.bookmarks.visibility" = "newtab";
               "browser.tabs.firefox-view" = false;
 
-              # ── Tabs ─────────────────────────────────────────────
               "browser.ctrlTab.sortByRecentlyUsed" = true;
               "browser.tabs.hoverPreview.enabled" = true;
               "browser.tabs.loadBookmarksInTabs" = true;
               "browser.tabs.closeTabByDblclick" = true;
 
-              # ── URL bar & find ───────────────────────────────────
               "browser.urlbar.suggest.calculator" = true;
               "browser.urlbar.unitConversion.enabled" = true;
               "findbar.highlightAll" = true;
 
-              # ── Annoyance fixes ──────────────────────────────────
               "browser.download.alwaysOpenPanel" = false;
               "browser.translations.automaticallyPopup" = false;
               "cookiebanners.service.mode" = 2;

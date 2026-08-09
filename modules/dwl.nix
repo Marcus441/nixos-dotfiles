@@ -3,8 +3,6 @@ _: {
     (
       {lib, ...}: {
         options.dwl = {
-          # dwl is configured at compile time, so a patch that adds symbols and
-          # the config.h that must define them are one decision, not two.
           bar = lib.mkOption {
             type = lib.types.bool;
             default = false;
@@ -36,35 +34,20 @@ _: {
         inherit (config.desktop) colors font;
         hasBar = config.dwl.bar;
 
-        # #rrggbb -> 0xrrggbbff for dwl's colour tables.
         toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
 
         ocr-copy = pkgs.callPackage ./_pkgs/ocr-copy.nix {};
 
-        # dwl's binds are a C argv array, so the intents arrive as argv rather
-        # than through their shell renderings.
         argvC = lib.concatMapStringsSep ", " (a: ''"${a}"'');
         menuArgvC = argvC config.launcher.argv;
 
-        # The intent options hold shell commands; SHCMD embeds them in a C string
-        # literal, which is the only place that quoting has to be re-done.
         cEsc = lib.replaceStrings [''\'' ''"''] [''\\'' ''\"''];
 
         wpctl = "${pkgs.wireplumber}/bin/wpctl";
         brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
         playerctl = "${pkgs.playerctl}/bin/playerctl";
 
-        # The bar patch does not only add symbols, it replaces some: upstream's
-        # three border colours become one `colors[][3]`, `TAGCOUNT` becomes
-        # `tags[]`, and `Button` grows a click-region field. So these are traded
-        # rather than omitted, and an unpatched dwl compiled against the other
-        # branch fails at the compiler, not at runtime.
-        #
-        # Each lands at column 0 of the generated file, so none may be spliced in
-        # at column 0 *here*: an interpolation with no literal indent before it
-        # would set the enclosing `''` block's strip depth to zero and indent the
-        # whole file. `toggleBarKey` sits inside an array, so it carries the two
-        # spaces `''` would otherwise have stripped.
+        # load-bearing: docs/decisions/sessions.md#dwl-column0
         barAppearance = lib.optionalString hasBar ''
           static const int showbar                   = 1;  /* 0 means no bar */
           static const int topbar                    = 1;  /* 0 means bottom bar */
@@ -301,7 +284,7 @@ _: {
         home.packages = [
           dwl-suckless
           pkgs.wl-clipboard
-          ocr-copy # super+c
+          ocr-copy
           pkgs.grim
           pkgs.slurp
         ];
@@ -336,17 +319,11 @@ _: {
         };
         wallpaperImage = "${wallpaper}/walled_tiers/4k/aerial/satellite_dishes_on_a_building.jpg";
 
-        # An unpatched dwl reads nothing from stdin, so the pipe is dropped
-        # rather than fed from /dev/null: a status producer with no consumer is
-        # a loop running forever for nobody.
         statusFeed =
           lib.optionalString (config.dwl.statusCommand != "")
           "{ ${config.dwl.statusCommand}; } | ";
 
-        # dwl is compiled-and-configured in the dwl *home* aspect (its config
-        # is compile-time), so the session launches the user's ~/.nix-profile copy.
-        # Running `home-manager switch` for the dwl aspect is therefore a
-        # prerequisite -- which you need anyway to get bash/foot/fonts/dwl-monitors.
+        # load-bearing: docs/decisions/sessions.md#dwl-session
         dwl-session = pkgs.writeShellScript "dwl-session" ''
           # Load the home-manager session environment (PATH, XDG_DATA_DIRS so that
           # wmenu finds .desktop files and dbus finds the mako service, etc.).
@@ -379,12 +356,8 @@ _: {
           passthru.providedSessions = ["dwl"];
         };
       in {
-        # Register the dwl session with the display manager (the ly aspect).
         services.displayManager.sessionPackages = [dwl-desktop];
 
-        # Portals: wlr backend gives screenshot/screencast (grim/pipewire) on any
-        # wlroots compositor incl. dwl; gtk backend covers file choosers + settings.
-        # The wrapper exports XDG_CURRENT_DESKTOP=dwl, so this `dwl` config applies.
         xdg.portal = {
           enable = true;
           wlr.enable = true;

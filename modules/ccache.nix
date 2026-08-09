@@ -1,7 +1,6 @@
 _: {
   flake.modules.homeManager.dev = [
     (
-      # ccache + CMake launcher env for out-of-nix C/C++ builds.
       {pkgs, ...}: {
         home = {
           packages = with pkgs; [ccache];

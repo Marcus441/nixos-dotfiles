@@ -6,20 +6,12 @@ _: {
         lib,
         ...
       }: {
-        # base24 "Kanagawa Dragon" palette, written out rather than generated:
-        # one source of colour that every host has and every consumer reads.
-        # The leading '#' is load-bearing: consumers either strip it or paste it
-        # raw, so a value without one is silently right in some files and
-        # silently wrong in others. The type makes it a build failure instead.
+        # load-bearing: docs/decisions/theming.md#colors-hash
         options.desktop.colors = lib.mkOption {
           type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           description = "base24 colour palette (hex, with leading '#').";
         };
 
-        # One source of colour, two renderings. base10-base17 are the base24
-        # extension, so "base0" selects exactly the low sixteen. Anything that
-        # speaks ANSI reads this; only a consumer that needs an extension slot
-        # reads `colors` (§9).
         options.desktop.colors16 = lib.mkOption {
           type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           readOnly = true;

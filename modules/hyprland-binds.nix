@@ -12,7 +12,6 @@ _: {
       in {
         wayland.windowManager.hyprland.settings.bind =
           [
-            # --- General ---
             {
               _args = [
                 "${mainMod} + SHIFT + C"
@@ -32,8 +31,6 @@ _: {
               ];
             }
           ]
-          # dwl toggles its compiled-in bar itself, so the option is empty there
-          # and the bind is absent rather than dead.
           ++ lib.optionals (config.bar.toggle != "") [
             {
               _args = [
@@ -56,8 +53,6 @@ _: {
               ];
             }
           ]
-          # Omitted rather than rendered empty: a host taking hyprland without the
-          # aspect that supplies a file manager gets no bind, not a dead one.
           ++ lib.optionals (config.fileManager.command != "") [
             {
               _args = [
@@ -138,7 +133,6 @@ _: {
               ];
             }
 
-            # --- Focus movement ---
             {
               _args = [
                 "${mainMod} + H"
@@ -164,7 +158,6 @@ _: {
               ];
             }
 
-            # --- Window swapping ---
             {
               _args = [
                 "${mainMod} + SHIFT + H"
@@ -190,7 +183,6 @@ _: {
               ];
             }
 
-            # --- Workspace switching (Refactored to hl.dsp.focus) ---
             {_args = ["${mainMod} + 1" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 1 })")];}
             {_args = ["${mainMod} + 2" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 2 })")];}
             {_args = ["${mainMod} + 3" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 3 })")];}
@@ -201,7 +193,6 @@ _: {
             {_args = ["${mainMod} + 8" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 8 })")];}
             {_args = ["${mainMod} + 9" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 9 })")];}
 
-            # --- Move windows to workspaces (Refactored to hl.dsp.window.move) ---
             {_args = ["${mainMod} + SHIFT + 1" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 1 })")];}
             {_args = ["${mainMod} + SHIFT + 2" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 2 })")];}
             {_args = ["${mainMod} + SHIFT + 3" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 3 })")];}
@@ -212,7 +203,6 @@ _: {
             {_args = ["${mainMod} + SHIFT + 8" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 8 })")];}
             {_args = ["${mainMod} + SHIFT + 9" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 9 })")];}
 
-            # --- Scratchpad ---
             {
               _args = [
                 "${mainMod} + 0"
@@ -226,7 +216,6 @@ _: {
               ];
             }
 
-            # --- Mouse binds ---
             {
               _args = [
                 "${mainMod} + mouse:272"
@@ -242,7 +231,6 @@ _: {
               ];
             }
 
-            # --- Volume / brightness ---
             {
               _args = [
                 "XF86AudioRaiseVolume"
@@ -304,7 +292,6 @@ _: {
               ];
             }
 
-            # --- Audio playback ---
             {
               _args = [
                 "XF86AudioNext"

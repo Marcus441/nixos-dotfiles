@@ -15,8 +15,6 @@ _: {
         tui = {
           theme = "nix";
           keybinds = {
-            # Optional: customize keybindings
-            # leader = "alt+b";
           };
           scroll = {
             history = 10000;
@@ -66,7 +64,6 @@ _: {
             Types: fix, feat, docs, style, refactor, test, chore, perf, ci, revert
           '';
           explain = "Explain the selected code block in simple terms for a junior developer.";
-          # Add more useful commands
           refactor = ''
             # Refactoring Assistant
             Analyze the selected code and suggest improvements for:
@@ -76,16 +73,6 @@ _: {
             Provide before/after comparisons.
           '';
         };
-
-        # web = {
-        #   enable = false;
-        #   # Use environmentFile for secrets in production
-        #   # environmentFile = /run/secrets/opencode-web;
-        #   extraArgs = [
-        #     "--hostname" "127.0.0.1"
-        #     "--port" "4096"
-        #   ];
-        # };
       };
     }
   ];

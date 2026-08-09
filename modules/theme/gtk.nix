@@ -8,12 +8,7 @@ _: {
       }: let
         inherit (config.desktop) colors;
 
-        # These are libadwaita's colour names. Stock Adwaita-dark's GTK3 sheet is
-        # an @import of gtk-contained-dark.css, which uses the GTK3-era names
-        # (theme_bg_color, borders, ...) and shares none of these -- so under it
-        # every line below was inert for GTK3, which is most of the fleet's apps.
-        # adw-gtk3-dark is libadwaita's stylesheet ported to GTK3, so one palette
-        # now reaches both toolkits.
+        # load-bearing: docs/decisions/theming.md#gtk-adw
         paletteCss = ''
           @define-color accent_color ${colors.base0D};
           @define-color accent_bg_color ${colors.base0D};
@@ -144,8 +139,6 @@ _: {
     )
   ];
 
-  # Registers the ca.desrt.dconf D-Bus service so the dconf settings above can
-  # be applied.
   flake.modules.nixos.core = [
     {
       programs.dconf.enable = true;

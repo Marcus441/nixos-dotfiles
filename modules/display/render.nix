@@ -1,8 +1,6 @@
 {lib, ...}: {
   flake.lib.monitors = rec {
-    # Hyprland resolves `desc:` against EDID, which survives a monitor moving
-    # port. wlr-randr and dwl have no equivalent, so they always take the
-    # connector.
+    # load-bearing: docs/decisions/display-and-boot.md#render-identify
     identify = m:
       if m.description != null
       then "desc:${m.description}"
@@ -25,8 +23,6 @@
         --scale ${toString m.scale} --on
     '';
 
-    # For a module's `assertions`. Monitors are only ever read by home modules,
-    # so this is where a bad layout gets caught.
     assertionsFor = hostname: ms: let
       names = map (m: m.name) ms;
       descriptions = lib.filter (d: d != null) (map (m: m.description) ms);

@@ -1,0 +1,80 @@
+# Terminal and TUIs
+
+foot, and the programs that have to carry a terminal with them.
+
+<a id="foot-server"></a>
+## `foot.nix` — daemon mode, and why every spawn point keeps a fallback
+
+**Why** Terminals spawn as `footclient` against a foot server. uwsm activates
+the unit on Hyprland; the dwl session is a plain script and starts the server
+from its own autostart.
+**Breaks** footclient is useless if the server is down — exactly when you want a
+terminal. The plain-`foot` fallback is a role of its own.
+
+<a id="foot-transient"></a>
+## `foot.nix` — `transientArgv` is named for the lifecycle
+
+**Why** A TUI you open, act in, and close. dwl tiles it, Hyprland floats it, so
+neither answer belongs in the name.
+**Breaks** Naming it `floatingArgv` would make a spawn point assert a window
+behaviour dwl rejects.
+
+<a id="foot-base16"></a>
+## `foot.nix` — the base16 slot mapping, not a base24 one
+
+**Why** A TUI asking for "the base16 theme" asserts ANSI 9 is base09. The
+brights used to come from base12–base17, so that assertion was false.
+**Breaks** *Silently.* Anything reading a colour by number was off by a slot.
+The cost is that regular and bright now differ only in slots 0 and 7.
+
+## `filemanager/yazi.nix` — the program is `apps`, the role is its own aspect
+
+**Why** So a host can install yazi without making it what `$mod+E` opens.
+**Breaks** `thunar` and `yazi` both set `fileManager.command`, so taking both is
+a conflict naming both files.
+
+<a id="yazi-requires"></a>
+## `filemanager/yazi.nix` — `aspectRequires.yazi = ["apps"]`
+
+**Why** `finalPackage` is declared outside `mkIf cfg.enable`.
+**Breaks** *Silently.* Without it, a host taking `yazi` without `apps` gets an
+unconfigured `pkgs.yazi` rather than an error.
+
+<a id="yazi-command"></a>
+## `filemanager/yazi.nix` — the command is bound, not read back
+
+**Why** Composed at argv level and rendered once — `transientCommand` is already
+escaped, so appending would escape twice.
+**Breaks** *Silently.* Reading back through `config.fileManager.command` means a
+`mkForce` elsewhere wins, and an entry named "Yazi" execs thunar.
+
+<a id="yazi-reset"></a>
+## `filemanager/yazi.nix` — `mode._alt.bg` is `base00`, not `reset`
+
+**Why** `status.lua` reads that background back as a *foreground*:
+`ui.Span(sep_left.close):fg(style.alt:bg())`.
+**Breaks** *Silently.* A `reset` there is the default text colour — a base05 bar
+through the middle of the bar. base00 is foot's terminal background, so it
+renders as nothing.
+
+<a id="impala-argv"></a>
+## `impala.nix` — impala over NetworkManager's iwd
+
+**Why** `net.nix` runs NetworkManager with `wifi.backend = "iwd"`, so both talk
+to the same daemon.
+**Breaks** A connection impala makes is one NetworkManager did not author, so
+NM's state can disagree until it resyncs.
+
+<a id="thunar-daemon"></a>
+## `filemanager/thunar.nix` — the drop-in adds `[Install]` and no `ExecStart`
+
+**Why** thunar ships `thunar.service` with no `[Install]`, so systemd starts it
+lazily and the first window pays the startup cost.
+**Breaks** NixOS merges this as a drop-in *over* the packaged unit, and a second
+`ExecStart=` on a non-oneshot service makes systemd refuse to load it.
+
+## `filemanager/thunar.nix` — the directory association moved out of `core`
+
+**Why** The default followed the option.
+**Breaks** `core` used to point every host at `thunar.desktop`, including the
+one with no thunar installed.

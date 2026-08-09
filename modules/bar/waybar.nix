@@ -1,8 +1,5 @@
 _: {
-  # The bar reads hyprland/window and hyprland/workspaces, shells out to
-  # hyprctl, and binds a systemd target only uwsm-under-Hyprland creates. Made
-  # explicit so a dwl host is rejected rather than handed three dead modules;
-  # lifting it is a session rework, not a rename.
+  # load-bearing: docs/decisions/sessions.md#waybar-requires
   aspectRequires.waybar = ["hyprland"];
 
   flake.modules.homeManager.core = [
@@ -24,9 +21,6 @@ _: {
         lib,
         ...
       }: let
-        # Omitted rather than rendered empty: without a power menu the button
-        # would open nothing, and without a locker the right-click would do
-        # nothing.
         powerModule = lib.optionalAttrs (config.powerMenu.command != "") {
           "custom/power" =
             {
@@ -125,8 +119,6 @@ _: {
                     tooltip-format-disconnected = "Disconnected";
                     interval = 3;
                   }
-                  # Omitted rather than rendered empty, as with the power
-                  # button: without a provider the click would open nothing.
                   // lib.optionalAttrs (config.networkManager.command != "") {
                     on-click = "uwsm app -- ${config.networkManager.command}";
                   };

@@ -4,8 +4,7 @@ _: {
       {config, ...}: let
         inherit (config.desktop) colors;
 
-        # girara parses through gdk_rgba_parse, which takes #rrggbbaa -- so the
-        # two highlights get their transparency without a second colour format.
+        # load-bearing: docs/decisions/theming.md#zathura-alpha
         translucent = c: "${c}80";
       in {
         programs.zathura = {
@@ -42,7 +41,6 @@ _: {
             highlight-color = translucent colors.base0A;
             highlight-active-color = translucent colors.base0D;
 
-            # `i` recolors a light PDF to the palette rather than inverting it.
             recolor-lightcolor = colors.base00;
             recolor-darkcolor = colors.base06;
           };

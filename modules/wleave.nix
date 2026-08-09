@@ -31,9 +31,6 @@ _: {
             show-keybinds = true;
             no-version-info = true;
 
-            # The session owns lock and logout; the rest is systemd, which every
-            # host has. A button whose action no aspect supplies is omitted
-            # rather than rendered dead.
             buttons =
               lib.optional (config.lock.command != "") {
                 label = "lock";

@@ -6,9 +6,7 @@ _: {
         lib,
         ...
       }: let
-        # One rule per regex rather than one alternation: the regexes arrive from
-        # separate files, so joining them would mean wrapping each in a group the
-        # contributing file cannot see it needs.
+        # load-bearing: docs/decisions/sessions.md#hyprland-rules-regex
         tagRules = lib.concatLists (
           lib.mapAttrsToList (
             tag: classes:
@@ -17,8 +15,6 @@ _: {
                 match = {inherit class;};
                 tag = "+${tag}";
               })
-              # Two files naming the same window would otherwise each emit a
-              # rule adding the same tag.
               (lib.unique classes)
           )
           config.windowTags
@@ -27,13 +23,11 @@ _: {
         wayland.windowManager.hyprland.settings = {
           window_rule =
             [
-              # Maximize suppression
               {
                 name = "suppress-maximize";
                 match = {class = ".*";};
                 suppress_event = "maximize";
               }
-              # Fix blank unclickable Xwayland components
               {
                 name = "no-focus-empty-xwayland";
                 match = {
@@ -46,7 +40,6 @@ _: {
                 };
                 no_focus = true;
               }
-              # Xwaylandvideobridge
               {
                 name = "xwvb";
                 match = {class = "^(xwaylandvideobridge)$";};
@@ -59,7 +52,6 @@ _: {
               }
             ]
             ++ tagRules
-            # Apply behaviors onto custom matching window tags
             ++ [
               {
                 name = "floating-float";
@@ -81,7 +73,6 @@ _: {
                 match = {tag = "no-anim";};
                 no_anim = true;
               }
-              # Smart gaps (Zero constraints when single window matches tiled criteria)
               {
                 name = "no-gaps-wtv1";
                 match = {

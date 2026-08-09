@@ -1,7 +1,4 @@
 _: {
-  # `core`, not `hyprland`: the file that installs an app describes its windows,
-  # and that file must not acquire a dependency on a compositor to do it. A host
-  # whose session reads nothing carries the value inertly.
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {

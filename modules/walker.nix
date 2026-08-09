@@ -1,7 +1,4 @@
 _: {
-  # The launcher belongs to the session that binds a key to it, not to "the
-  # extra applications". Both roles it fills are named here rather than in
-  # hyprland-binds.nix, so swapping launcher is one file.
   flake.modules.homeManager.hyprland = [
     {
       launcher.argv = ["walker"];
@@ -11,8 +8,7 @@ _: {
         enable = true;
         systemd.enable = true;
 
-        # `theme` is not set here: walker-style.nix owns the theme and the
-        # module derives `settings.theme` from its name.
+        # load-bearing: docs/decisions/theming.md#walker-style
         settings = {
           force_keyboard_focus = true;
           selection_wrap = true;

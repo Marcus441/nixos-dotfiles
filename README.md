@@ -9,7 +9,9 @@ no profile directories and no per-class trees — a host is a short list of aspe
 names, and adding a feature means adding one file.
 
 `CLAUDE.md` is the authority on the pattern and its invariants. This file only
-covers getting a machine running.
+covers getting a machine running. [`docs/`](docs/) holds the reasoning:
+[`conventions/`](docs/conventions) for the patterns that recur across files,
+[`decisions/`](docs/decisions) for why an individual file made the call it made.
 
 ## Inspiration and Attribution
 

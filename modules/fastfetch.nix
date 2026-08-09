@@ -70,7 +70,6 @@ _: {
 
             "break"
 
-            # --- Environment (Magenta) ---
             {
               type = "shell";
               key = " Shell";
@@ -89,7 +88,6 @@ _: {
 
             "break"
 
-            # --- Hardware (Green) ---
             {
               type = "cpu";
               key = " CPU";

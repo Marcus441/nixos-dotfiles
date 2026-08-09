@@ -39,18 +39,13 @@ _: {
           settings = {inherit fontStyle foreground;};
         };
       in {
-        # bat and yazi's file preview both highlight with syntect, which takes a
-        # tmTheme and not ANSI -- the one place the palette has to be handed over
-        # as hex. One theme so the same file looks the same in both.
+        # load-bearing: docs/decisions/theming.md#tmtheme
         options.desktop.syntaxTheme = lib.mkOption {
           type = lib.types.path;
           readOnly = true;
           description = "syntect theme rendered from desktop.colors.";
         };
 
-        # The base16 tmTheme template (bat's assets/themes/base16.tmTheme, MIT,
-        # (c) 2018-2023 bat-developers) as data, rendered to plist by nixpkgs
-        # rather than carried as 540 lines of XML.
         config.desktop.syntaxTheme = pkgs.writeText "kanagawa-dragon.tmTheme" (
           lib.generators.toPlist {escape = true;} {
             name = "Kanagawa Dragon";
@@ -58,7 +53,6 @@ _: {
             colorSpaceName = "sRGB";
 
             settings = [
-              # No scope: the editor chrome syntect draws around the buffer.
               {
                 settings = {
                   background = base00;
@@ -113,9 +107,6 @@ _: {
               (on "Deprecated" "invalid.deprecated" base0F base05)
               (on "Unimplemented" "invalid.unimplemented" base03 base05)
 
-              # `none` matches nothing. Upstream carries these to record which
-              # slot each kind would take if a grammar ever scoped it; kept for
-              # the same reason.
               (fg "Delimiters" "none" base05)
               (fg "Floats" "none" base09)
               (fg "Boolean" "none" base09)

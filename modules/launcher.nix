@@ -1,7 +1,4 @@
 _: {
-  # Portable intent, per-session implementation (§3). `argv` rather than a bare
-  # string because dwl's binds are a C argv array while Hyprland's are shell
-  # strings; `command` is the shell rendering of the same value.
   flake.modules.homeManager.core = [
     (
       {

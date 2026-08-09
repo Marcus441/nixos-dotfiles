@@ -1,5 +1,4 @@
 _: {
-  # Compositor-agnostic: both sessions bind a clipboard-history key.
   flake.modules.homeManager.core = [
     (
       {
@@ -20,7 +19,4 @@ _: {
       }
     )
   ];
-
-  # The picker renders through the same menu program as the launcher, so the
-  # aspect that provides one provides the other -- walker.nix and wmenu.nix.
 }

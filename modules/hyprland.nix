@@ -10,8 +10,6 @@ _: {
           portalPackage = null;
         };
 
-        # GTK file choosers and settings. dwl declares its portals on the nixos
-        # side instead, via xdg.portal.extraPortals.
         home.packages = [pkgs.xdg-desktop-portal-gtk];
 
         windowTags.floating-window = ["^(xdg-desktop-portal-gtk)$"];

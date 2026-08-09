@@ -1,7 +1,4 @@
 _: {
-  # Two intents render through wmenu: the launcher (wmenu-run) and the clipboard
-  # picker (wmenu). Its theming is therefore neither intent's business, so it is
-  # an option both of them read.
   flake.modules.homeManager.dwl = [
     (
       {
@@ -20,8 +17,6 @@ _: {
           description = "Flags themed to match dwl's bar schemes; vertical, 10 lines.";
         };
 
-        # Both roles hold the store path, so wmenu is only on PATH for the
-        # human. dwl compiles the argv straight into its C keybind array.
         config.home.packages = [pkgs.wmenu];
 
         config.launcher.argv = ["${pkgs.wmenu}/bin/wmenu-run"] ++ config.wmenu.flags;

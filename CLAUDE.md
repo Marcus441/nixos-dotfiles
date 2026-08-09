@@ -170,8 +170,17 @@ identities — closed items are deleted and survivors keep their numbers.
   generator or `aspects.nix`.
 - **Prefer adding a file to editing one**, especially when extending an aspect.
   Do not add an enable flag; split into two files and let hosts differ by aspect.
-- **Small, single-concern commits.** Rationale in the commit message, not
-  comments. Terse comments — explain *why*, never *what*.
+- **Small, single-concern commits.** Rationale in the commit message.
+- **A `.nix` file gets one kind of comment, and only one.** A one-line
+  `# load-bearing: docs/decisions/<area>.md#anchor`, at a value whose change
+  breaks something non-obviously. Nothing else: no section banners, no
+  restating the line below, no commented-out alternatives. The reasoning goes
+  in `docs/` — `conventions/` for what recurs across files, `decisions/` for
+  why one file made its call — and **changing a decision means changing its
+  entry in the same commit**. A register that drifts is worse than none.
+- **Text inside a `''` block is not a comment — it is content.** A `#` there
+  ships into the generated bashrc, tmux.conf or C header, so removing one moves
+  a store path. Comment that text as you would the file it becomes.
 - **No unrequested changes.** No package bumps, no deprecation fixes, no
   reformatting files the current task doesn't touch.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`,

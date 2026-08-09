@@ -1,6 +1,4 @@
 _: {
-  # Setting `theme` at all overrides `services.walker.settings.theme` with its
-  # name, so the launcher file names no theme.
   flake.modules.homeManager.hyprland = [
     (
       {

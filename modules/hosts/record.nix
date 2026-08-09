@@ -42,8 +42,7 @@
       };
     };
   });
-  # No freeformType: an unrecognised field is a typo, and the strict pattern in
-  # the generator can only report it as a missing argument at the far end.
+  # load-bearing: docs/decisions/wiring.md#record-strict
   host = lib.types.submodule {
     options = {
       hostname = lib.mkOption {
@@ -75,8 +74,6 @@
         default = [];
       };
 
-      # Pointer sensitivity is not a display property; it shared monitors.nix
-      # only because that file was really a per-host input/output bag.
       input.sensitivity = lib.mkOption {
         type = lib.types.number;
         default = 0;
@@ -88,10 +85,7 @@
         description = "Machine-specific system packages that no aspect owns.";
       };
 
-      # No default, unlike `packages`: every host sets networking.hostName and
-      # system.stateVersion here and nowhere else, so a default makes an omission
-      # build a machine called "nixos" at whatever stateVersion nixpkgs defaults
-      # to. Measured, not assumed.
+      # load-bearing: docs/decisions/wiring.md#record-nixos
       nixos = lib.mkOption {
         type = lib.types.deferredModule;
         description = "Machine facts with nowhere else to sit -- hostname, stateVersion, quirks of this box.";

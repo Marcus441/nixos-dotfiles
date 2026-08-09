@@ -8,7 +8,6 @@ _: {
       }: let
         inherit (config.desktop) colors;
 
-        # hex ("#rrggbb") -> "r;g;b" for ANSI truecolor escapes.
         hexPair = s: let
           digit = c:
             {
@@ -39,9 +38,6 @@ _: {
           h = lib.removePrefix "#" hex;
         in "${toString (hexPair (builtins.substring 0 2 h))};${toString (hexPair (builtins.substring 2 2 h))};${toString (hexPair (builtins.substring 4 2 h))}";
       in {
-        # Shared bash config for every host. fzf (Ctrl+R) and zoxide live here in
-        # core, direnv in the apps aspect; all three wire themselves into bash
-        # automatically via their default bash integration.
         programs.bash = {
           enable = true;
 
@@ -145,8 +141,6 @@ _: {
     }
   ];
 
-  # Session startup wearing shell clothing: the login shell is only the channel,
-  # the decision is Hyprland.
   flake.modules.homeManager.hyprland = [
     {
       programs.bash.profileExtra = ''

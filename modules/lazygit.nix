@@ -13,9 +13,7 @@ _: {
               theme = {
                 lightTheme = false;
 
-                # `default` rather than a colour: the selected line keeps the
-                # terminal's own background, so the cursor line does not fight
-                # foot's.
+                # load-bearing: docs/decisions/theming.md#lazygit
                 selectedLineBgColor = ["default"];
 
                 activeBorderColor = [colors.base0D "bold"];

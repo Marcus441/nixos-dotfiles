@@ -1,6 +1,4 @@
 _: {
-  # The option is what other files read; the packages are what put the fonts on
-  # disk. Both belong to every host, so both are core.
   flake.modules.homeManager.core = [
     (
       {
@@ -14,8 +12,6 @@ _: {
             default = "IosevkaTerm Nerd Font Mono";
             description = "Primary monospace font family.";
           };
-          # Point size is a property of the panel, not of the theme, so it
-          # arrives from the host record rather than from an aspect.
           size = lib.mkOption {
             type = lib.types.int;
             default = fontSize;
@@ -32,9 +28,6 @@ _: {
 
     (
       {pkgs, ...}: {
-        # The union of what the two theming regimes installed. Which fonts a
-        # machine has is not a theming decision -- a missing glyph is a missing
-        # glyph under either palette.
         home.packages = with pkgs; [
           dejavu_fonts
           font-awesome

@@ -9,8 +9,6 @@ _: {
       }: let
         c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
       in {
-        # equibop ships equibop.desktop; the association still named
-        # vesktop.desktop, which nothing here installs.
         xdg.mimeApps.defaultApplications."x-scheme-handler/discord" = "equibop.desktop";
 
         home = {
