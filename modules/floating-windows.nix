@@ -1,19 +1,20 @@
 _: {
-  # `core`, not `hyprland`: this is a naming convention for spawn points, and a
-  # spawn point must not acquire a dependency on a compositor to use it. The
-  # values are class regexes like every other `windowTags` entry, so a session
-  # that renders them differently translates rather than reimplements.
-  flake.modules.homeManager.core = [
+  # `hyprland`, not `core`: floating is a decision a session makes, and dwl
+  # makes the opposite one. `windowTags` lives in `core` because its values are
+  # inert data a session is free to ignore -- an app-id is not, it changes the
+  # argv a spawn point executes, so a dwl host would be running commands that
+  # assert a window behaviour its compositor rejects.
+  flake.modules.homeManager.hyprland = [
     (
       {
         config,
         lib,
         ...
       }: {
-        # Options rather than bare strings: a spawn point has to name the
-        # app-id it launches under (see foot.nix's `terminal.floatingArgv`),
-        # and a literal repeated there and in the rule below is two places to
-        # change one convention.
+        # Options rather than bare strings: the spawn side has to name the
+        # app-id it launches under (see foot.nix's `terminal.floatingArgv`), and
+        # a literal repeated there and in the rule below is two places to change
+        # one convention.
         options.floatingWindow = {
           term = lib.mkOption {
             type = lib.types.str;

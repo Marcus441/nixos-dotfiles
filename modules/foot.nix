@@ -29,9 +29,14 @@ _: {
             description = "Terminal that does not depend on a running server.";
           };
 
+          # The intent is "a terminal for a TUI you open, act in and close" --
+          # not "a floating terminal". Only a session with a floating concept
+          # renders it as one; the default is the plain terminal, so a spawn
+          # point reads this without asserting anything about the session.
           floatingArgv = lib.mkOption {
             type = lib.types.listOf lib.types.str;
-            description = "Terminal carrying the `floatingWindow.term` app-id, for a TUI that wants a window rather than a tile.";
+            default = config.terminal.argv;
+            description = "Terminal for a transient TUI. A session that floats windows sets this to carry its floating app-id; elsewhere it is `argv`.";
           };
 
           command = lib.mkOption {
@@ -61,13 +66,6 @@ _: {
         config.terminal = {
           argv = ["${pkgs.foot}/bin/footclient"];
           fallbackArgv = ["${pkgs.foot}/bin/foot"];
-
-          # foot is the one window this config floats that can name itself, so
-          # the convention in ./floating-windows.nix is reachable here and
-          # nowhere else. Set unconditionally rather than per session: an app-id
-          # only means something to a session carrying a rule for it, so under
-          # dwl this tiles like any other terminal.
-          floatingArgv = config.terminal.argv ++ ["--app-id" config.floatingWindow.term];
         };
 
         # Shared terminal for all hosts: the base16 mapping below is the single
@@ -128,6 +126,20 @@ _: {
             };
           };
         };
+      }
+    )
+  ];
+
+  # The floating variant is Hyprland's alone. dwl tiles by design -- there is no
+  # floating concept there to opt into, so `floatingArgv` keeps its plain
+  # default and a TUI spawned under dwl asserts nothing about its window.
+  #
+  # Split from ./floating-windows.nix because the two halves are different
+  # knowledge: `--app-id` is foot's, the app-id it carries is the convention's.
+  flake.modules.homeManager.hyprland = [
+    (
+      {config, ...}: {
+        terminal.floatingArgv = config.terminal.argv ++ ["--app-id" config.floatingWindow.term];
       }
     )
   ];

@@ -15,8 +15,9 @@ _: {
         # escaped and appending to it would escape twice.
         #
         # The floating variant: a file manager is a window you open, act in and
-        # close, not one you keep a tile for. Only a session carrying a rule for
-        # the app-id acts on it, so this tiles unchanged under dwl.
+        # close, not one you keep a tile for. Reading the option rather than
+        # naming an app-id keeps the session's answer the session's -- under dwl
+        # it resolves to the plain terminal.
         #
         # Bound rather than read back through `config.fileManager.command`: the
         # merged option is what a `mkForce` elsewhere would win, and then an
