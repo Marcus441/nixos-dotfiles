@@ -11,14 +11,19 @@ _: {
         ...
       }: let
         # A TUI file manager has to carry its own terminal. Composed at argv
-        # level and rendered once, because `terminal.command` is already
-        # escaped and appending to it would escape twice.
+        # level and rendered once, because `terminal.transientCommand` is
+        # already escaped and appending to it would escape twice.
+        #
+        # The transient variant: a file manager is something you open, act in
+        # and close, not something you keep a tile for. Reading the option
+        # rather than naming an app-id keeps the session's answer the
+        # session's -- under dwl it resolves to the plain terminal.
         #
         # Bound rather than read back through `config.fileManager.command`: the
         # merged option is what a `mkForce` elsewhere would win, and then an
         # entry named Yazi execs thunar.
         command = lib.escapeShellArgs (
-          config.terminal.argv ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
+          config.terminal.transientArgv ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
         );
       in {
         fileManager.command = command;

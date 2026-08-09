@@ -61,7 +61,7 @@ Two independent axes: the unit of **concern** is the *file*; the unit of
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos`
   and `homeManager` in one file.
 
-**20 of the 96 files that declare an aspect declare more than one** aspect or
+**21 of the 98 files that declare an aspect declare more than one** aspect or
 class. The single-aspect file is the majority but not the model — copying an
 arbitrary neighbour reproduces the majority and misses the second direction of
 the merge. Check CLAUDE.md's "Known divergences" before treating any file as an

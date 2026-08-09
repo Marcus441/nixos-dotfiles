@@ -112,18 +112,24 @@ _: {
                   on-click = "uwsm app -- blueman-manager";
                 };
 
-                network = {
-                  format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
-                  format = "{icon}";
-                  format-wifi = "{icon}";
-                  format-ethernet = "󱘖";
-                  format-linked = "󰤮";
-                  format-disconnected = "󰤮";
-                  tooltip-format-wifi = "{essid} ({signalStrength}%) {frequency}GHz\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-                  tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-                  tooltip-format-disconnected = "Disconnected";
-                  interval = 3;
-                };
+                network =
+                  {
+                    format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+                    format = "{icon}";
+                    format-wifi = "{icon}";
+                    format-ethernet = "󱘖";
+                    format-linked = "󰤮";
+                    format-disconnected = "󰤮";
+                    tooltip-format-wifi = "{essid} ({signalStrength}%) {frequency}GHz\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+                    tooltip-format-ethernet = "{ifname} 󱘖\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+                    tooltip-format-disconnected = "Disconnected";
+                    interval = 3;
+                  }
+                  # Omitted rather than rendered empty, as with the power
+                  # button: without a provider the click would open nothing.
+                  // lib.optionalAttrs (config.networkManager.command != "") {
+                    on-click = "uwsm app -- ${config.networkManager.command}";
+                  };
 
                 battery = {
                   interval = 5;
