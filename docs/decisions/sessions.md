@@ -32,6 +32,51 @@ runtime.
 **Breaks** `home-manager switch` becomes a prerequisite for the dwl aspect —
 needed anyway for bash, foot, fonts and dwl-monitors.
 
+<a id="dwl-autostart"></a>
+## `dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
+
+**Why** `graphical-session.target` is never reached on swift5: `ly.nix` marks
+the display manager `X-NIXOS-SYSTEMD-AWARE`, which suppresses nixpkgs'
+`nixos-fake-graphical-session.target`, and uwsm — which creates the real targets
+— is Hyprland-only. A file wanting a session process therefore adds a name to
+`dwl.autostart` and builds it home-side, the `dwl.statusCommand` / `dwl-monitors`
+shape; the session script stays ignorant of what it starts.
+**Breaks** *Silently, twice.* A home-manager `services.*` unit here installs,
+carries `WantedBy=graphical-session.target`, and never starts — as
+`foot.service` already does not. And the `-s` argument is single-quoted, so an
+entry containing `'` truncates the session script.
+
+<a id="dwl-idle-dpms"></a>
+## `swayidle.nix` — `-w` with `-f`, `wlopm` for the screen, one saved brightness
+
+**Why** `-w` holds swayidle's logind sleep inhibitor open until `before-sleep`
+returns, so the lock surface exists before the machine goes down; dwl 0.8
+implements `wlr_output_power_manager_v1` (`powermgrsetmode` in dwl.c), so
+blanking need not go through output *configuration*; and `brightnessctl -s`
+belongs to the 180s step alone.
+**Breaks** *Silently, in three directions.* `-w` waits on **every** command, so
+a locker without `-f` blocks swayidle for the whole lock and the 600s and 1200s
+steps never fire — a lit lock screen until the battery is flat. `wlr-randr
+--off` blanks too, but disabling an output makes dwl move that output's tags and
+clients elsewhere. And a second `-s` further down the ladder overwrites the
+saved level with the dimmed one, so `-r` restores 30 for good.
+
+## `swayidle.nix` — no `unlock` event
+
+**Why** `loginctl unlock-session` needs no authentication from inside the
+session it unlocks. hypridle answers no such signal either.
+**Breaks** *By design, invisibly.* Wiring one turns the lock screen into a
+formality that any process in the session can dismiss.
+
+<a id="swaylock-pam"></a>
+## `swaylock.nix` — the PAM service is ours to declare
+
+**Why** nixpkgs supplies `security.pam.services.swaylock` only from
+`wayland-session.nix`, which the dwl session does not use. `hyprland.nix` keeps
+hyprlock's line for the same reason.
+**Breaks** *At the worst moment.* The lock screen appears and the correct
+password is refused; the way out is a VT switch.
+
 <a id="dwl-bar-status"></a>
 ## `bar/dwl-bar.nix` — the status feed crosses classes
 

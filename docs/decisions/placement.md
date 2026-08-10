@@ -33,7 +33,8 @@ first unfree package happened to be needed.
 
 Hyprland binds and hypridle call it by bare name, so it must be on PATH wherever
 that session runs; on a laptop it is a tool reached for directly. dwl needs
-neither entry — it interpolates the store path into compiled config.
+neither entry — it interpolates the store path into compiled config, and
+`dwl-idle` carries it in its own `runtimeInputs`.
 
 ## `clipboard.nix` — compositor-agnostic
 

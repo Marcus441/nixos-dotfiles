@@ -61,7 +61,7 @@ Two independent axes: the unit of **concern** is the *file*; the unit of
 - `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both `nixos`
   and `homeManager` in one file.
 
-**22 of the 99 files that declare an aspect declare more than one** aspect or
+**24 of the 102 files that declare an aspect declare more than one** aspect or
 class. The single-aspect file is the majority but not the model — copying an
 arbitrary neighbour reproduces the majority and misses the second direction of
 the merge. Check CLAUDE.md's "Known divergences" before treating any file as an
@@ -69,7 +69,7 @@ example.
 
 > **Recount when a file gains or loses a membership** — these two numbers go
 > stale silently, and nothing in the build checks them. Run
-> `scripts/recount-aspects.sh` and update the "21 of 94" figure above if it has
+> `scripts/recount-aspects.sh` and update the "24 of 102" figure above if it has
 > changed.
 
 ## A tool invoked by bare name must be installed by every aspect that invokes it

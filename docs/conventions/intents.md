@@ -13,7 +13,7 @@ Inv. 3 working, not a violation.
 | `launcher.argv` / `.command` | `launcher.nix` | `wmenu.nix` (`dwl`), `walker.nix` (`hyprland`) |
 | `terminal.*` | `foot.nix` | `foot.nix`, in `core` — both sessions share it |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
-| `lock.command` | `lock.nix` | `lock.nix` (`hyprland`) |
+| `lock.command` | `lock.nix` | `lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
 | `powerMenu.command` | `wleave.nix` | `wleave.nix` (`wleave`) |
 | `networkManager.command` | `impala.nix` | `impala.nix` (`impala`) |
@@ -25,8 +25,11 @@ genuinely compete for it — the namespace file must not name either.
 
 ## An empty default is a statement
 
-`lock.command` empty says swift5's dwl session has no locker. `bar.toggle` empty
-says dwl toggles its compiled-in bar itself. Neither is an oversight.
+`bar.toggle` empty says dwl toggles its compiled-in bar itself, and
+`powerMenu.command` empty says swift5 has no power menu. Neither is an
+oversight. `lock.command` was empty for the same kind of reason until dwl got
+swayidle and swaylock; both sessions now set the same `loginctl lock-session`,
+because the value names an intent and not a program.
 
 ## Omit rather than render dead
 

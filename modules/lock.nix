@@ -14,4 +14,9 @@ _: {
   flake.modules.homeManager.hyprland = [
     {lock.command = "loginctl lock-session";}
   ];
+
+  # load-bearing: docs/decisions/sessions.md#dwl-idle-dpms
+  flake.modules.homeManager.dwl = [
+    {lock.command = "loginctl lock-session";}
+  ];
 }

@@ -77,6 +77,11 @@ _: {
 
         toggleBarKey = lib.optionalString hasBar "  { MODKEY,                    XKB_KEY_b,      togglebar,        {0} },                /* super+b       -> toggle bar */";
 
+        # load-bearing: docs/decisions/sessions.md#dwl-column0
+        lockKey =
+          lib.optionalString (config.lock.command != "")
+          "  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_x, spawn, SHCMD(\"${cEsc config.lock.command}\") }, /* super+shift+x -> lock */";
+
         buttons =
           if hasBar
           then ''
@@ -256,7 +261,8 @@ _: {
             { 0,      XKB_KEY_XF86AudioPlay,        spawn, {.v = playpausecmd} },
             { 0,      XKB_KEY_XF86AudioPause,       spawn, {.v = playpausecmd} },
 
-            /* --- exit & VT switching --- */
+            /* --- lock, exit & VT switching --- */
+          ${lockKey}
             { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_z, quit, {0} }, /* super+shift+z -> exit dwl */
             { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_Terminate_Server, quit, {0} },
           #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
@@ -292,10 +298,18 @@ _: {
   flake.modules.nixos.dwl = [
     (
       {lib, ...}: {
-        options.dwl.statusCommand = lib.mkOption {
-          type = lib.types.str;
-          default = "";
-          description = "Shell command whose stdout dwl reads as bar status. Empty when the compositor was built without a bar, in which case the session does not pipe into it at all.";
+        options.dwl = {
+          statusCommand = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            description = "Shell command whose stdout dwl reads as bar status. Empty when the compositor was built without a bar, in which case the session does not pipe into it at all.";
+          };
+
+          autostart = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Commands the session backgrounds once the compositor is up, after its own wallpaper, notifier and terminal server. Resolved from ~/.nix-profile/bin, and run by dwl's -s shell inside single quotes, so an entry may not contain one.";
+          };
         };
       }
     )
@@ -320,6 +334,8 @@ _: {
           lib.optionalString (config.dwl.statusCommand != "")
           "{ ${config.dwl.statusCommand}; } | ";
 
+        autostart = lib.concatMapStrings (c: " ${c} &") config.dwl.autostart;
+
         # load-bearing: docs/decisions/sessions.md#dwl-session
         dwl-session = pkgs.writeShellScript "dwl-session" ''
           # Load the home-manager session environment (PATH, XDG_DATA_DIRS so that
@@ -331,8 +347,8 @@ _: {
           export XDG_SESSION_TYPE=wayland
 
           # -s autostart, once the compositor is up: monitor layout, wallpaper,
-          # notifications, foot server. Leading pipe is the bar's status feed.
-          ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &'
+          # notifications, foot server, then dwl.autostart. Pipe is the status feed.
+          ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &${autostart}'
         '';
 
         dwl-desktop = pkgs.writeTextFile {
