@@ -41,6 +41,7 @@ _: {
           #network,
           #pulseaudio,
           #battery,
+          #idle_inhibitor,
           #custom-power {
             font-family: 'Symbols Nerd Font Mono', 'Inter';
           }
@@ -130,6 +131,12 @@ _: {
           #battery.charging                 { color: #${base0B}; }
           #battery.full,
           #battery.plugged                  { color: #${base0C}; }
+          #idle_inhibitor {
+            color: #${base03};
+            margin: 0 4px;
+            transition: color 0.15s ease;
+          }
+          #idle_inhibitor.activated { color: #${base0A}; }
           #custom-power {
             color: #${base08};
             margin: 0 8px 0 6px;
