@@ -68,6 +68,7 @@ _: {
                     "network"
                     "pulseaudio"
                     "clock"
+                    "idle_inhibitor"
                   ]
                   ++ lib.optional (config.powerMenu.command != "") "custom/power";
 
@@ -89,6 +90,15 @@ _: {
                     "4" = [];
                     "5" = [];
                   };
+                };
+
+                idle_inhibitor = {
+                  format = "{icon}";
+                  format-icons = {
+                    activated = "󰅶";
+                    deactivated = "󰛊";
+                  };
+                  tooltip = false;
                 };
 
                 clock = {
