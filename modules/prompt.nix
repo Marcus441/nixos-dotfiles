@@ -45,4 +45,39 @@ in {
       }
     )
   ];
+
+  flake.modules.homeManager.zsh = [
+    (
+      {config, ...}: let
+        inherit (config.desktop) colors16;
+      in {
+        programs.zsh.initContent = ''
+          autoload -Uz add-zsh-hook
+
+          # Prompt: cwd + git branch + active dev environment (devenv / nix
+          # devshell / python venv) + a "$" sigil, in the base24 palette.
+          __prompt() {
+            local branch env=""
+            branch=$(command git symbolic-ref --quiet --short HEAD 2>/dev/null)
+            if [[ -n $DEVENV_ROOT ]]; then
+              env="devenv"
+            elif [[ -n $IN_NIX_SHELL ]]; then
+              env="nix"
+            fi
+            [[ -n $VIRTUAL_ENV ]] && env="''${env:+$env,}venv:''${VIRTUAL_ENV##*/}"
+            PROMPT='%B%F{${colors16.${slot.cwd}}}%~%f%b'
+            [[ -n $branch ]] && PROMPT+=" %F{${colors16.${slot.git}}}git:$branch%f"
+            [[ -n $env ]] && PROMPT+=" %F{${colors16.${slot.env}}}($env)%f"
+            PROMPT+=" %(?.%F{${colors16.${slot.ok}}}.%F{${colors16.${slot.err}}})\$%f "
+          }
+          add-zsh-hook precmd __prompt
+
+          # OSC 7: report the working directory so foot can spawn new
+          # instances (and footclient windows) in the current directory.
+          __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "$HOST" "$PWD" }
+          add-zsh-hook precmd __osc7_cwd
+        '';
+      }
+    )
+  ];
 }

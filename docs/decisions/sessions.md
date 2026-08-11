@@ -165,10 +165,12 @@ them from the login shell, so swift5 has no use for the file.
 channel, the decision is Hyprland. It held it for as long as there was one
 shell; with two it sets both `profileExtra` slots from one string, in the file
 that already turns uwsm on.
-
-**Note** This is the tty-login path, not the one in use. ly launches
+**Breaks** *Silently.* A zsh login shell reads `~/.zprofile` and never
+`~/.profile`, so dropping the second slot leaves no error and no session — just
+a shell prompt where the compositor should have been.
+**Also** This is the tty-login path, not the one in use. ly launches
 `hyprland-uwsm.desktop` through nixpkgs' `xsession-wrapper`, which sources
 `~/.profile` itself — where `uwsm check may-start` then fails, because ly set
 `XDG_SESSION_TYPE` before PAM. What reaches the block is ly's synthetic `shell`
-entry, a VT login, or `ssh`. A zsh login shell reads `~/.zprofile` and never
-`~/.profile`, so without the second slot that path would go quiet.
+entry, a VT login, or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start`
+is empty while Hyprland runs.

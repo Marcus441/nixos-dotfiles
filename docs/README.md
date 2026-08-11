@@ -6,11 +6,12 @@ Why the config is the way it is. The `.nix` files say what it is.
 conventions/   patterns that recur across many files
   intents.md     option in core, implementation per session
   placement.md   which aspect, which class
-  colour.md      one palette, three renderings
+  colour.md      one palette, four renderings
 
 decisions/     why one file made its call, grouped by area
   wiring.md            generator, host record, aspect options
   sessions.md          dwl, Hyprland, the bars
+  shells.md            bash, zsh, and which host logs into which
   terminal.md          foot and the TUIs that carry one
   theming.md           colour, fonts, the two toolkits
   placement.md         why a file is not in the obvious aspect
@@ -23,7 +24,7 @@ goes wrong if you change it, and **Also** where there is a related trap.
 
 ## Finding the reason for a line
 
-Files carry no comments except a pointer, at the 44 values where changing them
+Files carry no comments except a pointer, at the 48 values where changing them
 breaks something non-obviously:
 
 ```nix
