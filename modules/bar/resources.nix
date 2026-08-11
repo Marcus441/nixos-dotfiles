@@ -41,7 +41,7 @@ _: {
           cpu =
             {
               interval = 5;
-              format = "󰻠 {usage}%";
+              format = "󰍛 {usage}%";
               states = {
                 warning = 80;
                 critical = 95;
@@ -65,7 +65,7 @@ _: {
           memory =
             {
               interval = 5;
-              format = "󰍛 {used:0.1f}G";
+              format = " {used:0.1f}G";
               tooltip-format = "{used:0.1f}G of {total:0.1f}G used ({percentage}%)";
               states = {
                 warning = 80;
