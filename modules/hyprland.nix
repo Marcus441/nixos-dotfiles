@@ -1,7 +1,17 @@
-_: {
+_: let
+  uwsmStart = ''
+    if uwsm check may-start > /dev/null && uwsm select; then
+      uwsm start default | systemd-cat -t uwsm_start
+    fi
+  '';
+in {
   flake.modules.homeManager.hyprland = [
     (
       {pkgs, ...}: {
+        # load-bearing: docs/decisions/sessions.md#uwsm-login-shell
+        programs.bash.profileExtra = uwsmStart;
+        programs.zsh.profileExtra = uwsmStart;
+
         wayland.windowManager.hyprland = {
           enable = true;
           systemd.enable = false;

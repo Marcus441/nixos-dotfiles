@@ -34,14 +34,4 @@ _: {
       };
     }
   ];
-
-  flake.modules.homeManager.hyprland = [
-    {
-      programs.bash.profileExtra = ''
-        if uwsm check may-start > /dev/null && uwsm select; then
-          uwsm start default | systemd-cat -t uwsm_start
-        fi
-      '';
-    }
-  ];
 }

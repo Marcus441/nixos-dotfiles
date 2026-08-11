@@ -158,7 +158,17 @@ wrapping each in a group the contributing file cannot see it needs.
 **Why** uwsm reads it to inherit home-manager's session variables. dwl sources
 them from the login shell, so swift5 has no use for the file.
 
-## `bash.nix` — session startup lives in the `hyprland` aspect
+<a id="uwsm-login-shell"></a>
+## `hyprland.nix` — session startup lives in the `hyprland` aspect
 
 **Why** Session startup wearing shell clothing: the login shell is only the
-channel, the decision is Hyprland.
+channel, the decision is Hyprland. It held it for as long as there was one
+shell; with two it sets both `profileExtra` slots from one string, in the file
+that already turns uwsm on.
+
+**Note** This is the tty-login path, not the one in use. ly launches
+`hyprland-uwsm.desktop` through nixpkgs' `xsession-wrapper`, which sources
+`~/.profile` itself — where `uwsm check may-start` then fails, because ly set
+`XDG_SESSION_TYPE` before PAM. What reaches the block is ly's synthetic `shell`
+entry, a VT login, or `ssh`. A zsh login shell reads `~/.zprofile` and never
+`~/.profile`, so without the second slot that path would go quiet.
