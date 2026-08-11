@@ -77,10 +77,10 @@ _: {
             # default error. ** is recursive without an option.
             setopt extended_glob null_glob
 
-            # Completion: case- and separator-insensitive, approximate matches
-            # last, list on the first tab, arrow-navigable menu.
+            # Completion: case- and separator-insensitive, patterns honoured,
+            # list on the first tab, arrow-navigable menu.
             zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}'
-            zstyle ':completion:*' completer _complete _match _approximate
+            zstyle ':completion:*' completer _complete _match
             zstyle ':completion:*' menu select
             unsetopt list_ambiguous
 

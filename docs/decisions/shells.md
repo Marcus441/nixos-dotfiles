@@ -151,8 +151,17 @@ read. `/etc/zinputrc` is an unrelated zsh script that happens to rhyme.
 | `globstar` | **nothing needed** — recursive globbing is built in, spelled `**/*.c` |
 | `extglob` | `extended_glob` — the same idea, not the same syntax; `?(…)` would want `ksh_glob` |
 | `nullglob` | `null_glob` — the one that genuinely changes behaviour, zsh erroring by default |
-| `dirspell` | **nothing.** Nearest is the `_approximate` completer |
+| `dirspell` | **nothing.** `_approximate` was tried as the nearest thing and dropped — see below |
 | `cdspell` | **nothing.** `correct`/`correct_all` prompt, and correct command words |
+
+The completer list is `_complete _match` — real matches, then pattern matches
+when the word carries a glob. `_approximate` sat on the end as the closest
+thing zsh has to `dirspell`, and came off: it fires only once the first two
+have found nothing, which is exactly when there is no good answer, so what it
+adds to the menu is guesses. bash's `dirspell` corrects a path component
+silently during completion and never offers alternatives; the two are not the
+same trade, and one typo-tolerant completion is not worth a menu you have to
+read twice. So `dirspell` and `cdspell` both map to nothing, deliberately.
 
 ## The prompt is one file, two implementations
 
