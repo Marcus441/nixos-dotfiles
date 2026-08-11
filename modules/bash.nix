@@ -1,42 +1,8 @@
 _: {
   flake.modules.homeManager.core = [
     (
-      {
-        config,
-        lib,
-        ...
-      }: let
-        inherit (config.desktop) colors;
-
-        hexPair = s: let
-          digit = c:
-            {
-              "0" = 0;
-              "1" = 1;
-              "2" = 2;
-              "3" = 3;
-              "4" = 4;
-              "5" = 5;
-              "6" = 6;
-              "7" = 7;
-              "8" = 8;
-              "9" = 9;
-              "a" = 10;
-              "b" = 11;
-              "c" = 12;
-              "d" = 13;
-              "e" = 14;
-              "f" = 15;
-            }
-            .${
-              lib.toLower c
-            };
-          cs = lib.stringToCharacters s;
-        in
-          digit (builtins.elemAt cs 0) * 16 + digit (builtins.elemAt cs 1);
-        rgb = hex: let
-          h = lib.removePrefix "#" hex;
-        in "${toString (hexPair (builtins.substring 0 2 h))};${toString (hexPair (builtins.substring 2 2 h))};${toString (hexPair (builtins.substring 4 2 h))}";
+      {config, ...}: let
+        inherit (config.desktop) colorsRgb;
       in {
         programs.bash = {
           enable = true;
@@ -69,11 +35,11 @@ _: {
                 env="nix"
               fi
               [[ -n $VIRTUAL_ENV ]] && env="''${env:+$env,}venv:''${VIRTUAL_ENV##*/}"
-              PS1='\[\e[1;38;2;${rgb colors.base0D}m\]\w\[\e[0m\]'
-              [[ -n $branch ]] && PS1+=" \[\e[38;2;${rgb colors.base0E}m\]git:$branch\[\e[0m\]"
-              [[ -n $env ]] && PS1+=" \[\e[38;2;${rgb colors.base0C}m\]($env)\[\e[0m\]"
-              local sigil="${rgb colors.base03}"
-              [[ $code -ne 0 ]] && sigil="${rgb colors.base08}"
+              PS1='\[\e[1;38;2;${colorsRgb.base0D}m\]\w\[\e[0m\]'
+              [[ -n $branch ]] && PS1+=" \[\e[38;2;${colorsRgb.base0E}m\]git:$branch\[\e[0m\]"
+              [[ -n $env ]] && PS1+=" \[\e[38;2;${colorsRgb.base0C}m\]($env)\[\e[0m\]"
+              local sigil="${colorsRgb.base03}"
+              [[ $code -ne 0 ]] && sigil="${colorsRgb.base08}"
               PS1+=" \[\e[38;2;''${sigil}m\]\\\$\[\e[0m\] "
             }
             case "$PROMPT_COMMAND" in
@@ -84,12 +50,12 @@ _: {
             # Coloured man pages via less' termcap hooks. Scheme adapted from
             # https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf
             export GROFF_NO_SGR=1
-            export LESS_TERMCAP_mb=$'\e[1;38;2;${rgb colors.base08}m'
-            export LESS_TERMCAP_md=$'\e[1;38;2;${rgb colors.base08}m'
+            export LESS_TERMCAP_mb=$'\e[1;38;2;${colorsRgb.base08}m'
+            export LESS_TERMCAP_md=$'\e[1;38;2;${colorsRgb.base08}m'
             export LESS_TERMCAP_me=$'\e[0m'
-            export LESS_TERMCAP_so=$'\e[38;2;${rgb colors.base00}m\e[48;2;${rgb colors.base0A}m'
+            export LESS_TERMCAP_so=$'\e[38;2;${colorsRgb.base00}m\e[48;2;${colorsRgb.base0A}m'
             export LESS_TERMCAP_se=$'\e[0m'
-            export LESS_TERMCAP_us=$'\e[4;1;38;2;${rgb colors.base0B}m'
+            export LESS_TERMCAP_us=$'\e[4;1;38;2;${colorsRgb.base0B}m'
             export LESS_TERMCAP_ue=$'\e[0m'
             export LESS_TERMCAP_mr=$'\e[7m'
             export LESS_TERMCAP_mh=$'\e[2m'

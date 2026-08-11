@@ -1,11 +1,12 @@
 # Colour
 
-One source, three renderings. Declared in `modules/theme/`.
+One source, four renderings. Declared in `modules/theme/`.
 
 | Option | What it is | Who reads it |
 | --- | --- | --- |
 | `desktop.colors` | full base24 Kanagawa Dragon, hex, leading `#` | anything needing an extension slot (base10–base17) |
 | `desktop.colors16` | the `base0*` subset — exactly the low sixteen | anything speaking **ANSI** |
+| `desktop.colorsRgb` | `colors16` as `r;g;b` | anything writing a 24-bit SGR sequence by hand: the bash prompt, the pager colours |
 | `desktop.syntaxTheme` | a tmTheme | syntect: `bat`, yazi's preview |
 
 **Read `colors16` unless you specifically need a base24 slot.** ANSI carries
