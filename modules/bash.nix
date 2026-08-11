@@ -1,18 +1,18 @@
 _: {
   flake.modules.homeManager.core = [
     {
+      home.shellAliases = {
+        ls = "ls --color=auto";
+        ll = "ls -alh --color=auto";
+        grep = "grep --color=auto";
+      };
+
       programs.bash = {
         enable = true;
 
         historyControl = ["ignoredups" "ignorespace"];
         historyFileSize = 100000;
         historySize = 50000;
-
-        shellAliases = {
-          ls = "ls --color=auto";
-          ll = "ls -alh --color=auto";
-          grep = "grep --color=auto";
-        };
 
         initExtra = ''
           # Globbing: **, extended patterns, empty expansion, cd typo correction.
