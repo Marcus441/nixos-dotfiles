@@ -69,9 +69,31 @@ app set. dwl builds its own ocr-copy against its own keybind.
 `neovim.nix` is `core` and provides the headless `nvim` both profiles share;
 Neovide is the GUI front-end and is `apps` only.
 
+<a id="man-pager-colours"></a>
+## `man.nix` — the pager colours are `home.sessionVariables`
+
+`LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables that no shell
+interprets, so re-emitting them from each shell's rc would be duplication with a
+drift risk and nothing to show for it. They sat in `bash.nix` because the hex →
+`r;g;b` helper did; `desktop.colorsRgb` ended that.
+
+Coverage is equal or better than the `.bashrc` they left. bash reaches
+`hm-session-vars.sh` through `~/.profile`, which nixpkgs' `xsession-wrapper`
+also sources before launching any session, so every terminal inherits them; zsh
+sources it from `~/.zshenv` for non-login shells and `~/.zprofile` for login
+ones. The cost is that `GROFF_NO_SGR=1` is now session-wide rather than
+per-interactive-bash, which reaches any groff call. Nothing here makes one but
+`man`.
+
+Nix has no `\e`: `"\e"` is the letter, and so is `''\e`. The byte comes from
+`builtins.fromJSON` on a `\u001b` escape. Home Manager writes each variable as
+`export NAME="value"`, where a literal ESC is fine.
+
+Scheme adapted from
+<https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf>.
+
 ## Small ones
 
-- `man.nix` — `bash.nix` colours the pager; this is the pages.
 - `git.nix` — the GitHub CLI is system-wide because it was; only its home changed.
 - `home-manager.nix` — the CLI belongs with the module;
   `home-manager switch` is how a host is driven.
