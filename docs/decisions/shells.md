@@ -82,6 +82,59 @@ bash — readline has no menu at all — and a deliberate one.
 **Also** `_setup` loads `zsh/complist` on its own when `list-colors` is set, so
 checking `zmodload -L` at startup says `NOT loaded` and means nothing: the
 module arrives at the first completion, not at login.
+**Also** The menu opens on the *second* tab. The first shows the list, and
+`AUTO_MENU` starts menu completion on the next — which is when the
+`menuselect` keymap takes the arrow keys. A single tab followed by an arrow
+moves the cursor along the command line and looks like a dead menu.
+
+## The menu's own colours, but not the file types'
+
+**Why** Two different things are coloured and they answer to different owners.
+The candidates are file names, coloured from `LS_COLORS` so that a listing and
+an `ls` agree — replacing that with a palette-built database would desync the
+two and duplicate dircolors. The menu's own furniture is ours: the selected row
+takes `ma=` in `desktop.colorsRgb`, set to base02 on base06 so it reads as the
+same selection `foot.nix` gives the terminal, and the group headings, messages
+and the no-matches warning take base0C, base03 and base08 through `%F{...}`.
+
+`ma=` is why the third consumer of `desktop.colorsRgb` exists: `list-colors`
+takes raw SGR parameters, not hex.
+
+**Breaks** Nothing loudly. Verified under a pty instead: two tabs and a down
+arrow emit `48;2;57;56;54;38;2;200;192;147` against `zinputrc` and then
+`zoneinfo`, which is the selection moving.
+
+## Syntax highlighting names every style, rather than taking the defaults
+
+**Why** zsh-syntax-highlighting's defaults are ANSI names — `fg=red`,
+`fg=green` — which under foot already resolve to this palette, because
+`foot.nix` maps `colors16` onto the terminal's sixteen. They stop being ours the
+moment the shell is reached from somewhere else, which is the same reason
+`bat.nix` does not use its built-in base16 theme. So every style is set from
+`colors16` as a 24-bit `fg=#rrggbb`, and the roles are five bindings in a `let`
+rather than thirty literals: command, string, substitution, path, plain.
+
+Home Manager sources the plugin at `mkOrder 1200`, after `initContent` at 1000,
+which is the order the plugin needs — it wraps the widgets that exist when it is
+sourced, so `edit-command-line` has to be defined first. Verified in the
+generated `.zshrc`. zsh-autosuggestions is sourced earlier, at 700, and
+re-binds on every `precmd`, so it wraps the wrapper rather than fighting it.
+
+**Also** `fastSyntaxHighlighting` is the other option in the same module, and an
+assertion forbids enabling both.
+
+## `^X^E` needs saying; readline binds it for free
+
+**Why** `bind -q edit-and-execute-command` reports `\C-x\C-e` in bash, and
+`bindkey "^X^E"` reported `undefined-key` in zsh — the `edit-command-line`
+widget ships with zsh but is neither autoloaded nor bound. Three lines in
+`initContent` fix that, after the keymap switch so the binding lands in `emacs`.
+
+**Also** The two are not identical. readline's runs the line on leaving the
+editor; zle's replaces `$BUFFER` and hands it back, so it still wants Enter.
+`edit-command-line` reads `$VISUAL` before `$EDITOR`, both `nvim` here, and its
+`(*vim*)` branch passes `-c "normal! ${byteoffset}go"` so the cursor lands where
+it was on the command line.
 
 ## What does not carry over
 
