@@ -66,6 +66,22 @@ reports `undefined-key`, and is still bound under `-M viins`.
 
 So `initContent` re-sources `/etc/zinputrc` after the switch. The `-r` guard is
 what keeps a home-manager aspect from asserting a NixOS path.
+**Breaks** *Silently.* Tested by removing the line on the running system: Home,
+End, Delete and both page keys all report `undefined-key`, with no error at
+startup and no clue that a file was read into a keymap nothing points at any
+more. It is not a no-op — do not drop it.
+
+<a id="zsh-menu-select"></a>
+## `menu select` is what makes the completion list legible
+
+**Why** `list-colors` alone renders a plain list: no entry is current, so
+nothing is highlighted and the arrow keys still belong to the command line.
+`menu select` is what loads `zsh/complist` for a selectable menu, whose
+`menuselect` keymap already binds the arrows. It is a departure from mirroring
+bash — readline has no menu at all — and a deliberate one.
+**Also** `_setup` loads `zsh/complist` on its own when `list-colors` is set, so
+checking `zmodload -L` at startup says `NOT loaded` and means nothing: the
+module arrives at the first completion, not at login.
 
 ## What does not carry over
 

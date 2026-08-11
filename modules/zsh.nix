@@ -26,10 +26,11 @@ _: {
             setopt extended_glob null_glob
 
             # Completion: case- and separator-insensitive, approximate matches
-            # as a last resort, LS_COLORS in the list, list on the first tab.
+            # last, LS_COLORS in an arrow-navigable menu, list on first tab.
             zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}'
             zstyle ':completion:*' completer _complete _match _approximate
             zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+            zstyle ':completion:*' menu select
             unsetopt list_ambiguous
 
             # /etc/zshrc bound these into the keymap that was main before
