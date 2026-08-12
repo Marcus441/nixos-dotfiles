@@ -30,8 +30,8 @@ _: {
           enable = true;
           settings = {
             font = {
+              inherit (font) size;
               normal.family = font.name;
-              size = font.size;
             };
 
             window.padding = {

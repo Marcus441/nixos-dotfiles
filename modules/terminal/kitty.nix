@@ -23,8 +23,7 @@ _: {
 
           # load-bearing: docs/decisions/terminal.md#kitty-font-option
           font = {
-            name = font.name;
-            size = font.size;
+            inherit (font) name size;
             package = null;
           };
 
