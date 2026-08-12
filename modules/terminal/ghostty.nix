@@ -1,0 +1,102 @@
+_: {
+  flake.modules.homeManager.ghostty = [
+    (
+      {
+        config,
+        lib,
+        pkgs,
+        ...
+      }: let
+        inherit (config.desktop) ansi font colors16;
+      in {
+        terminal = {
+          argv = ["${pkgs.ghostty}/bin/ghostty"];
+          # load-bearing: docs/decisions/terminal.md#terminal-appid
+          appIdArgv = id: ["--class=${id}"];
+          exec = ["-e"];
+          compactArgv = config.terminal.transientArgv ++ ["--font-size=${toString config.terminal.compactSize}"];
+          desktopFile = "com.mitchellh.ghostty.desktop";
+          binary = "ghostty";
+        };
+
+        programs.ghostty = {
+          enable = true;
+          systemd.enable = true;
+          settings = {
+            font-family = font.name;
+            font-size = font.size;
+            font-feature = lib.optionals (!font.ligatures) ["-calt" "-liga" "-clig" "-dlig"];
+
+            window-padding-x = 8;
+            window-padding-y = 8;
+            window-inherit-working-directory = true;
+            window-inherit-font-size = true;
+            working-directory = "home";
+            quit-after-last-window-closed = true;
+            quit-after-last-window-closed-delay = "10m";
+            gtk-toolbar-style = "flat";
+            resize-overlay = "never";
+
+            cursor-style = "block";
+            cursor-style-blink = false;
+            # load-bearing: docs/decisions/terminal.md#ghostty-shader
+            custom-shader = "${./cursor_smear.glsl}";
+
+            unfocused-split-opacity = 0.8;
+            split-inherit-working-directory = true;
+            tab-inherit-working-directory = true;
+
+            mouse-hide-while-typing = true;
+            mouse-scroll-multiplier = 0.95;
+            focus-follows-mouse = false;
+            copy-on-select = true;
+
+            shell-integration-features = "no-cursor,ssh-env,ssh-terminfo,sudo,title";
+            async-backend = "epoll";
+
+            confirm-close-surface = false;
+            app-notifications = "no-clipboard-copy";
+
+            # load-bearing: docs/decisions/terminal.md#terminal-ansi
+            background = colors16.base00;
+            foreground = colors16.base05;
+            selection-background = colors16.base02;
+            selection-foreground = colors16.base06;
+            palette =
+              lib.imap0 (i: hex: "${toString i}=${hex}") ansi
+              ++ [
+                "16=${colors16.base09}"
+                "17=${colors16.base0F}"
+              ];
+
+            keybind = [
+              "ctrl+shift+left=new_split:left"
+              "ctrl+shift+down=new_split:down"
+              "ctrl+shift+up=new_split:up"
+              "ctrl+shift+right=new_split:right"
+
+              "ctrl+left=goto_split:left"
+              "ctrl+down=goto_split:down"
+              "ctrl+up=goto_split:up"
+              "ctrl+right=goto_split:right"
+
+              "ctrl+1=goto_tab:1"
+              "ctrl+2=goto_tab:2"
+              "ctrl+3=goto_tab:3"
+              "ctrl+4=goto_tab:4"
+              "ctrl+5=goto_tab:5"
+              "ctrl+6=goto_tab:6"
+              "ctrl+7=goto_tab:7"
+              "ctrl+8=goto_tab:8"
+              "ctrl+9=goto_tab:9"
+              "ctrl+0=goto_tab:10"
+
+              "ctrl+shift+t=new_tab"
+              "ctrl+shift+o=toggle_tab_overview"
+            ];
+          };
+        };
+      }
+    )
+  ];
+}

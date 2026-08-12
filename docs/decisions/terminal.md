@@ -96,6 +96,59 @@ escaped, so appending would escape twice.
 **Breaks** *Silently.* Reading back through `config.fileManager.command` means a
 `mkForce` elsewhere wins, and an entry named "Yazi" execs thunar.
 
+<a id="desktop-exec"></a>
+## `filemanager/yazi.nix` — a desktop `Exec` is not shell-escaped
+
+**Why** `Exec` is parsed by the desktop-entry spec, not by a shell, and `'` is
+reserved there. `lib.escapeShellArgs` quotes any argument outside
+`[a-zA-Z0-9,._+:@%/-]`, so the moment one contains `=` — ghostty's
+`--class=term.floating` — it emits single quotes the spec forbids. The same argv
+is therefore rendered twice: shell-escaped for `fileManager.command`, and
+double-quoted-where-needed for the entry.
+**Breaks** Loudly, at build time: `desktop-file-validate` refuses the entry with
+"contains a reserved character `'` outside of a quote". It went unnoticed while
+every terminal's argv happened to need no quoting at all.
+
+<a id="ghostty-shader"></a>
+## `terminal/ghostty.nix` — the cursor shader, and what kitty does instead
+
+**Why** ghostty is the only one of the four that runs a custom fragment shader,
+so `cursor_smear.glsl` is interpolated to a store path rather than a source
+path — `pkgs.formats.keyValue` takes atoms, not paths. kitty refuses custom
+shaders as a matter of policy; its `cursor_trail` is the same effect by a
+different mechanism, cell-aware and idle when the cursor is still, where
+ghostty's `custom-shader-animation` redraws every frame a window is open.
+**Breaks** *Silently.* A shader that fails to compile is ignored and says so
+only in the log. The power asymmetry matters if either aspect ever lands on
+`swift5`.
+
+<a id="ghostty-scrollback"></a>
+## `terminal/ghostty.nix` — `scrollback-limit` is bytes, and stays unset
+
+**Why** Every other terminal here counts lines. ghostty counts **bytes**, and
+its default is 10 MB; the config this file was revived from carried
+`scrollback-limit = 50000`, which reads like foot's 10 000 lines and is in fact
+50 KB.
+**Breaks** *Silently.* Roughly a hundredth of the intended scrollback, with
+nothing to indicate the unit was misread.
+
+<a id="kitty-font-option"></a>
+## `terminal/kitty.nix` — the font comes from `programs.kitty.font`, not `settings`
+
+**Why** Home Manager emits `font` at `mkOrder 510` and `settings` at 540, so
+`settings.font_size` would be written second and shadow the option.
+**Breaks** *Silently, in the wrong direction* — the value that loses is the one
+declared in the obvious place.
+
+<a id="kitty-cursor-trail"></a>
+## `terminal/kitty.nix` — `wheel_scroll_multiplier` is not ghostty's number
+
+**Why** ghostty's `mouse-scroll-multiplier = 0.95` scales its own default.
+kitty's `wheel_scroll_multiplier` defaults to `5.0` and is *lines per event*, so
+copying 0.95 across would ask for less than one line per notch.
+**Breaks** Scrolling that feels broken rather than tuned. The general rule for
+this pair: the settings are analogous, the units are not.
+
 <a id="yazi-reset"></a>
 ## `filemanager/yazi.nix` — `mode._alt.bg` is `base00`, not `reset`
 

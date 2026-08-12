@@ -6,10 +6,18 @@ _: {
         lib,
         ...
       }: let
+        argv =
+          config.terminal.transientArgv ++ config.terminal.exec ++ ["${config.programs.yazi.finalPackage}/bin/yazi"];
+
         # load-bearing: docs/decisions/terminal.md#yazi-command
-        command = lib.escapeShellArgs (
-          config.terminal.transientArgv ++ config.terminal.exec ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
-        );
+        command = lib.escapeShellArgs argv;
+
+        # load-bearing: docs/decisions/terminal.md#desktop-exec
+        desktopArg = a:
+          if builtins.match "[a-zA-Z0-9,._+:@%/=-]+" a != null
+          then a
+          else ''"${lib.escape ["\"" "`" "$" "\\"] a}"'';
+        desktopExec = lib.concatMapStringsSep " " desktopArg argv;
       in {
         fileManager.command = command;
 
@@ -18,7 +26,7 @@ _: {
             name = "Yazi";
             genericName = "File Manager";
             icon = "system-file-manager";
-            exec = "${command} %f";
+            exec = "${desktopExec} %f";
             terminal = false;
             startupNotify = false;
             categories = ["System" "FileTools" "FileManager"];
