@@ -29,7 +29,7 @@ _: {
             DisableFeedbackCommands = true;
 
             FirefoxHome = {
-              Search = true;
+              Search = false;
               TopSites = false;
               SponsoredTopSites = false;
               Highlights = false;
@@ -317,8 +317,8 @@ _: {
               "network.http.http3.enabled" = true;
 
               "browser.startup.page" = 3;
-              "browser.startup.homepage" = "about:blank";
-              "browser.newtabpage.enabled" = false;
+              "browser.startup.homepage" = "about:home";
+              "browser.newtabpage.enabled" = true;
               "browser.newtabpage.activity-stream.feeds.telemetry" = false;
               "browser.newtabpage.activity-stream.showSponsored" = false;
               "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
