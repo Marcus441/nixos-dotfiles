@@ -1,4 +1,9 @@
 _: {
+  # load-bearing: docs/decisions/terminal.md#terminal-daemons
+  flake.modules.nixos.alacritty = [
+    {dwl.autostart = ["alacritty --daemon"];}
+  ];
+
   flake.modules.homeManager.alacritty = [
     (
       {
@@ -18,12 +23,31 @@ _: {
             names);
       in {
         terminal = {
-          argv = ["${pkgs.alacritty}/bin/alacritty"];
+          # load-bearing: docs/decisions/terminal.md#terminal-daemons
+          argv = ["${pkgs.alacritty}/bin/alacritty" "msg" "create-window"];
+          fallbackArgv = ["${pkgs.alacritty}/bin/alacritty"];
           appIdArgv = id: ["--class" id];
           exec = ["-e"];
           compactArgv = config.terminal.transientArgv ++ ["-o" "font.size=${toString config.terminal.compactSize}"];
           desktopFile = "Alacritty.desktop";
           binary = "alacritty";
+        };
+
+        # load-bearing: docs/decisions/terminal.md#terminal-daemons
+        systemd.user.services.alacritty = {
+          Unit = {
+            Description = "Alacritty daemon, resident so that opening a window costs nothing";
+            PartOf = ["graphical-session.target"];
+            After = ["graphical-session.target"];
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+          };
+
+          Install.WantedBy = ["graphical-session.target"];
+
+          Service = {
+            ExecStart = "${pkgs.alacritty}/bin/alacritty --daemon";
+            Restart = "on-failure";
+          };
         };
 
         programs.alacritty = {
