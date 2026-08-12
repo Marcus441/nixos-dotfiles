@@ -3,3 +3,4 @@ alacritty/.config/alacritty/themes
 .claude/settings.local.json
 result
 result-*
+.claude/worktrees/
