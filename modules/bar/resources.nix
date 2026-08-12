@@ -29,13 +29,13 @@ _: {
 
           temp=$(( $(<"$sensor") / 1000 ))
 
-          if   [ "$temp" -ge 90 ]; then class=critical; icon=󱗗
+          if   [ "$temp" -ge 90 ]; then class=critical; icon=󱃂
           elif [ "$temp" -ge 75 ]; then class=warning;  icon=󱃂
           elif [ "$temp" -ge 55 ]; then class=normal;   icon=󰔏
           else                          class=normal;   icon=󱃃
           fi
 
-          echo "{\"text\": \"$icon ''${temp}°C\", \"tooltip\": \"CPU ''${temp}°C ($label)\", \"class\": \"$class\"}"
+          echo "{\"text\": \"$icon''${temp}°C\", \"tooltip\": \"CPU ''${temp}°C ($label)\", \"class\": \"$class\"}"
         '';
       in {
         programs.waybar.settings.mainBar = {
