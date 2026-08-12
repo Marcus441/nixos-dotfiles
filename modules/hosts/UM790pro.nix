@@ -3,7 +3,7 @@ _: {
     hostname = "UM790pro";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "zsh" "hyprland" "waybar" "wleave" "yazi" "apps"];
+    aspects = ["dev" "core" "foot" "zsh" "hyprland" "waybar" "wleave" "yazi" "apps"];
 
     fontSize = 20;
 

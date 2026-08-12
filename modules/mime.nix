@@ -1,6 +1,6 @@
 _: {
   flake.modules.homeManager.core = [
-    {
+    ({config, ...}: {
       xdg.mimeApps = {
         enable = true;
         defaultApplications = {
@@ -59,9 +59,9 @@ _: {
           "text/x-script.python" = "nvim.desktop";
           "text/x-shellscript" = "nvim.desktop";
 
-          "x-scheme-handler/terminal" = "footclient.desktop";
+          "x-scheme-handler/terminal" = config.terminal.desktopFile;
         };
       };
-    }
+    })
   ];
 }

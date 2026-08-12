@@ -3,7 +3,7 @@ _: {
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "laptop" "dwl" "dwl-bar"];
+    aspects = ["dev" "core" "foot" "laptop" "dwl" "dwl-bar"];
 
     fontSize = 16;
 

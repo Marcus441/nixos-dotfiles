@@ -1,18 +1,45 @@
 # Terminal and TUIs
 
-foot, and the programs that have to carry a terminal with them.
+The four terminals, the namespace they implement, and the programs that have to
+carry one with them.
+
+<a id="terminal-namespace"></a>
+## `terminal.nix` — the namespace is a file of its own, naming no terminal
+
+**Why** foot, alacritty, ghostty and kitty genuinely compete for `terminal.*`,
+which is the same reason `launcher.nix` exists apart from wmenu and walker. The
+`hyprland` setter lives here too, and stays terminal-agnostic by going through
+`appIdArgv` — one file, two aspects, the `lock.nix` shape.
+**Breaks** Left in `foot.nix`, that setter fires for *any* Hyprland host and
+appends foot's `--app-id` to whatever terminal the host actually took.
+
+<a id="terminal-desktopfile"></a>
+## `terminal.nix` — `desktopFile` and `binary` carry no default
+
+**Why** They are the only scalars in the namespace. Every other member is a
+list or a function, and both of those **merge by concatenating** rather than
+conflicting — two terminal aspects would silently produce
+`argv = ["…/footclient" "…/kitty"]` and run one as the other's argument.
+**Breaks** Without them nothing rejects a host taking two terminals; the
+generator cannot help, because `aspectRequires` says "needs" and never
+"excludes". A scalar with no default gives the conflict `fileManager.command`
+already gives thunar-plus-yazi, naming both files. A host taking *no* terminal
+gets `terminal.argv has no value defined` — loud, but it does not name the
+missing aspect.
 
 <a id="foot-server"></a>
-## `foot.nix` — daemon mode, and why every spawn point keeps a fallback
+## `terminal/foot.nix` — daemon mode, and why every spawn point keeps a fallback
 
 **Why** Terminals spawn as `footclient` against a foot server. uwsm activates
 the unit on Hyprland; the dwl session is a plain script and starts the server
-from its own autostart.
+from `dwl.autostart`.
 **Breaks** footclient is useless if the server is down — exactly when you want a
-terminal. The plain-`foot` fallback is a role of its own.
+terminal. The plain-`foot` fallback is a role of its own, which is why
+`fallbackArgv` exists at all; for a terminal with no daemon it defaults back to
+`argv` and the fallback bind is merely redundant.
 
-<a id="foot-transient"></a>
-## `foot.nix` — `transientArgv` is named for the lifecycle
+<a id="terminal-transient"></a>
+## `terminal.nix` — `transientArgv` is named for the lifecycle
 
 **Why** A TUI you open, act in, and close. dwl tiles it, Hyprland floats it, so
 neither answer belongs in the name.
@@ -78,16 +105,40 @@ escaped, so appending would escape twice.
 through the middle of the bar. base00 is foot's terminal background, so it
 renders as nothing.
 
-<a id="foot-compact"></a>
-## `foot.nix` — `compactArgv` is three fifths of the host font size
+<a id="terminal-compact"></a>
+## `terminal.nix` — `compactSize` is three fifths of the host font size
 
 **Why** Measured on UM790pro, against Hyprland's `floating-size` rule of
 `1200 600`: 20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses
 to start under 24x60, so the full size misses it by seven rows and 14pt clears
-it with none to spare. Three fifths lands on 12pt there.
+it with none to spare. Three fifths lands on 12pt there. The *measurement* is
+shared; the flag that carries it is not, because foot's override re-renders the
+whole font spec — family and ligature suppression included — where the other
+three take a bare number.
 **Breaks** btop exits with "Terminal size too small" rather than opening. Any
 change to `floating-size`, to a host's `fontSize`, or to this fraction moves the
 row count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
+Write `font.size * 3 / 5` with the spaces: `3/5` is a path literal.
+
+<a id="terminal-appid"></a>
+## `terminal.nix` — `appIdArgv` is a function, not a flag name
+
+**Why** The four spellings differ in shape, not just in text: foot takes
+`--app-id <id>`, alacritty and kitty `--class <id>`, and ghostty accepts
+**only** `--class=<id>`.
+**Breaks** *Silently.* ghostty given the space form swallows it with no
+diagnostic at all, so a `flag` string plus `[flag id]` would leave ghostty
+windows unnamed and every floating TUI tiled.
+
+<a id="terminal-alt-scroll"></a>
+## `terminal/foot.nix` — `alternate-scroll-mode` is foot's alone
+
+**Why** It stops the wheel sending arrow keys in the alternate screen, so
+scrolling a full-screen TUI scrolls the terminal instead of walking shell
+history.
+**Breaks** *Silently, on three hosts out of four.* alacritty, kitty and ghostty
+have no equivalent setting, so the fix is foot-only and choosing another
+terminal quietly reverts it.
 
 <a id="btop-presets"></a>
 ## `cli/btop.nix` — the two presets exist so `--preset` can mean something

@@ -34,7 +34,7 @@ leaves one unmet, naming the host and the aspect.
 
 ## Prefer a store path; bare name only where PATH is required
 
-`foot.nix` publishes `config.terminal` by store path. `wmenu.nix` keeps wmenu on
+`terminal/foot.nix` publishes `config.terminal` by store path. `wmenu.nix` keeps wmenu on
 PATH only for the human, because dwl compiles the argv into its C keybind array.
 
 The corollary: a tool invoked **by bare name** must be installed by every aspect

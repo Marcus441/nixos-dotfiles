@@ -104,9 +104,10 @@ in it.
 
 `laptop` is deliberately small: `power-profiles-daemon` and `upower` stay in
 `core`, because waybar runs a battery module on the desktops too and a too-small
-aspect is recoverable where a broken power path is not. The terminal (`foot`),
-the editor and the shell are `core` — every host gets them regardless of
-session.
+aspect is recoverable where a broken power path is not. The editor and the shell
+are `core` — every host gets them regardless of session. The terminal is not:
+`terminal.nix` declares the namespace in `core` and a terminal aspect
+implements it, so a host that names none fails to build rather than guessing.
 
 `hyprland` and `dwl` are mutually exclusive, and each pairs with its own bar.
 Theming is not an aspect: colours, fonts and the cursor live in `core`, so every
