@@ -6,7 +6,7 @@ _: {
         lib,
         ...
       }: let
-        inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base05 base08 base09 base0A base0C base0D base0E;
+        inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base03 base05 base08 base09 base0A base0C base0D base0E;
       in {
         programs.wleave.style = ''
           * {
@@ -23,7 +23,7 @@ _: {
             background-color: #${base01};
             background-image: none;
             box-shadow: none;
-            border: 2px solid #${base02};
+            border: 2px solid #${base03};
             border-radius: 0;
             margin: 15px;
             padding: 40px;

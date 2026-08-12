@@ -157,8 +157,10 @@ ID outranks `button label.keybind`, so muting the keybind with `color` would
 lose the cascade silently; `opacity` sidesteps specificity entirely. Upstream's
 own sheet mutes it the same way.
 **Also** the border stays 2px in every state and only changes colour, so
-focusing a button reflows nothing. Resting `base02`, focused `base0D` — the
-accent marks where you are, as it does for waybar's active workspace.
+focusing a button reflows nothing. Resting `base03`, focused `base0D` — that is
+Hyprland's `inactive_border`/`active_border` pair verbatim, so a focused button
+marks where you are exactly as a focused window does. `base02` stays in the file
+for the hover *background*; only the frame carries state.
 
 <a id="wleave-service"></a>
 ## `wleave.nix` — the unit names the config files it is already reading
