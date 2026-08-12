@@ -31,13 +31,22 @@ command is dropped and a plain shell opens instead. It cannot live inside
 `argv`, because `compactArgv` appends a font override after `transientArgv` and
 that would land past the `-e`.
 
-<a id="foot-base16"></a>
-## `foot.nix` — the base16 slot mapping, not a base24 one
+<a id="terminal-ansi"></a>
+## `theme/colors.nix` — the base16 slot mapping is a list, and the index is the slot
 
 **Why** A TUI asking for "the base16 theme" asserts ANSI 9 is base09. The
-brights used to come from base12–base17, so that assertion was false.
-**Breaks** *Silently.* Anything reading a colour by number was off by a slot.
-The cost is that regular and bright now differ only in slots 0 and 7.
+brights used to come from base12–base17, so that assertion was false. With four
+terminals the mapping would be written four times in four vocabularies —
+`regular0`, `colors.normal.black`, `color0`, `palette = "0=…"` — so it is one
+ordered list in `desktop.ansi` and each terminal renders it by index.
+**Breaks** *Silently.* Anything reading a colour by number is off by a slot, and
+reordering the list reassigns every colour at once — the same trap qt5ct's
+positional role list carries. The cost is that regular and bright differ only in
+slots 0 and 7.
+**Also** slots 16 and 17 are **not** in the list. They are the 256-cube trick
+that is the only way base09 and base0F reach a terminal at all, so each
+implementation reads `colors16` for those directly, as it does for foreground,
+background and selection.
 
 ## `filemanager/yazi.nix` — the program is `apps`, the role is its own aspect
 

@@ -4,14 +4,20 @@ paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,*
 
 # Theming hazards — colours and syntax themes
 
-- **ANSI carries base16; base24 is only reachable as hex.** `foot.nix` renders
-  the standard base16 slot mapping from `desktop.colors16` (the `base0*` subset
-  of `desktop.colors`), so a program asking for *the base16 theme* now gets
-  what it asserts — ANSI 9 is base09. The corollary is that `base10`–`base17`
-  cannot travel through ANSI at all: a consumer wanting one reads
-  `desktop.colors` and hands over hex, which is why `qt.nix` does. The reason
-  `bat.nix` and `filemanager/yazi.nix` share `desktop.syntaxTheme` is
+- **ANSI carries base16; base24 is only reachable as hex.** `desktop.ansi`
+  holds the standard base16 slot mapping — `desktop.colors16` (the `base0*`
+  subset of `desktop.colors`) in slot order — so a program asking for *the
+  base16 theme* gets what it asserts: ANSI 9 is base09. The corollary is that
+  `base10`–`base17` cannot travel through ANSI at all: a consumer wanting one
+  reads `desktop.colors` and hands over hex, which is why `qt.nix` does. The
+  reason `bat.nix` and `filemanager/yazi.nix` share `desktop.syntaxTheme` is
   unchanged: syntect takes a tmTheme, not ANSI.
+- **`desktop.ansi` is positional, like qt5ct's role list.** The index *is* the
+  slot number, and each terminal renders it into its own vocabulary
+  (`regular0`/`bright0`, `colors.normal.black`, `color0`, `palette = "0=…"`).
+  Reordering the list silently reassigns every colour in every terminal at
+  once. Slots 16 and 17 are deliberately outside it — the 256-cube trick that
+  carries base09 and base0F — so each terminal reads `colors16` for those.
 - **`reset` is a value that only survives being drawn.** yazi's status bar
   reads colours back and transposes them — `status.lua` draws `style.alt:bg()`
   as a *foreground*, where a `reset` renders as a base05 bar through the middle
@@ -63,8 +69,9 @@ paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,*
 
 ## Where the options are declared
 
-- `modules/theme/colors.nix` — `desktop.colors` (base24, hex) and
-  `desktop.colors16` (the `base0*` subset, what ANSI consumers read).
+- `modules/theme/colors.nix` — `desktop.colors` (base24, hex),
+  `desktop.colors16` (the `base0*` subset, what ANSI consumers read) and
+  `desktop.ansi` (that subset in slot order, what the terminals render).
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
   in `core`, read by `bat.nix` and `yazi.nix`.
 - `modules/theme/font.nix` — the option is `core`; point size comes from the

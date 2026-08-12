@@ -12,7 +12,7 @@ _: {
         pkgs,
         ...
       }: let
-        inherit (config.desktop) font colors16;
+        inherit (config.desktop) ansi font colors16;
         fontAt = size:
           "${font.name}:size=${toString size}"
           + lib.optionalString (!font.ligatures) ":fontfeatures=-calt,-liga,-clig,-dlig";
@@ -93,35 +93,29 @@ _: {
             mouse.hide-when-typing = "yes";
             mouse.alternate-scroll-mode = "no";
 
-            # load-bearing: docs/decisions/terminal.md#foot-base16
-            colors-dark = {
-              foreground = strip colors16.base05;
-              background = strip colors16.base00;
+            # load-bearing: docs/decisions/terminal.md#terminal-ansi
+            colors-dark =
+              {
+                foreground = strip colors16.base05;
+                background = strip colors16.base00;
 
-              selection-foreground = strip colors16.base06;
-              selection-background = strip colors16.base02;
+                selection-foreground = strip colors16.base06;
+                selection-background = strip colors16.base02;
 
-              regular0 = strip colors16.base00;
-              regular1 = strip colors16.base08;
-              regular2 = strip colors16.base0B;
-              regular3 = strip colors16.base0A;
-              regular4 = strip colors16.base0D;
-              regular5 = strip colors16.base0E;
-              regular6 = strip colors16.base0C;
-              regular7 = strip colors16.base05;
-
-              bright0 = strip colors16.base03;
-              bright1 = strip colors16.base08;
-              bright2 = strip colors16.base0B;
-              bright3 = strip colors16.base0A;
-              bright4 = strip colors16.base0D;
-              bright5 = strip colors16.base0E;
-              bright6 = strip colors16.base0C;
-              bright7 = strip colors16.base07;
-
-              "16" = strip colors16.base09;
-              "17" = strip colors16.base0F;
-            };
+                "16" = strip colors16.base09;
+                "17" = strip colors16.base0F;
+              }
+              // lib.listToAttrs (lib.imap0 (
+                  i: hex:
+                    lib.nameValuePair
+                    "${
+                      if i < 8
+                      then "regular"
+                      else "bright"
+                    }${toString (lib.mod i 8)}"
+                    (strip hex)
+                )
+                ansi);
           };
         };
       }

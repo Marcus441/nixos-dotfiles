@@ -19,6 +19,32 @@ _: {
           description = "the base16 subset of `desktop.colors`.";
         };
 
+        # load-bearing: docs/decisions/terminal.md#terminal-ansi
+        options.desktop.ansi = lib.mkOption {
+          type = lib.types.listOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
+          readOnly = true;
+          default = with config.desktop.colors16; [
+            base00
+            base08
+            base0B
+            base0A
+            base0D
+            base0E
+            base0C
+            base05
+
+            base03
+            base08
+            base0B
+            base0A
+            base0D
+            base0E
+            base0C
+            base07
+          ];
+          description = "`desktop.colors16` in ANSI slot order, 0-7 then the brights. The list index *is* the slot number, so every terminal renders the same mapping into its own vocabulary.";
+        };
+
         options.desktop.colorsRgb = lib.mkOption {
           type = lib.types.attrsOf lib.types.str;
           readOnly = true;
