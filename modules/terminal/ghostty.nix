@@ -1,4 +1,9 @@
 _: {
+  # load-bearing: docs/decisions/terminal.md#terminal-daemons
+  flake.modules.nixos.ghostty = [
+    {dwl.autostart = ["ghostty --gtk-single-instance=true --initial-window=false"];}
+  ];
+
   flake.modules.homeManager.ghostty = [
     (
       {
@@ -11,6 +16,8 @@ _: {
       in {
         terminal = {
           argv = ["${pkgs.ghostty}/bin/ghostty"];
+          # load-bearing: docs/decisions/terminal.md#terminal-daemons
+          fallbackArgv = ["${pkgs.ghostty}/bin/ghostty" "--gtk-single-instance=false"];
           # load-bearing: docs/decisions/terminal.md#terminal-appid
           appIdArgv = id: ["--class=${id}"];
           exec = ["-e"];
@@ -18,6 +25,10 @@ _: {
           desktopFile = "com.mitchellh.ghostty.desktop";
           binary = "ghostty";
         };
+
+        # load-bearing: docs/decisions/terminal.md#ghostty-enablement
+        xdg.configFile."systemd/user/graphical-session.target.wants/app-com.mitchellh.ghostty.service".source =
+          "${pkgs.ghostty}/share/systemd/user/app-com.mitchellh.ghostty.service";
 
         programs.ghostty = {
           enable = true;
@@ -32,8 +43,10 @@ _: {
             window-inherit-working-directory = true;
             window-inherit-font-size = true;
             working-directory = "home";
-            quit-after-last-window-closed = true;
-            quit-after-last-window-closed-delay = "10m";
+            # load-bearing: docs/decisions/terminal.md#ghostty-resident
+            quit-after-last-window-closed = false;
+            # load-bearing: docs/decisions/terminal.md#ghostty-single-instance
+            gtk-single-instance = true;
             gtk-toolbar-style = "flat";
             resize-overlay = "never";
 
