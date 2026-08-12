@@ -51,17 +51,34 @@ with nothing to say why.
 headless by `--start-as=hidden`; ghostty's uses `--initial-window=false`.
 
 <a id="kitty-single-instance"></a>
-## `terminal/kitty.nix` — the server re-parses the client's argv
+## `terminal/kitty.nix` — the client's argv crosses the socket, but not all of it
 
-**Why** This is the reason a floating TUI can share the process. kitty's client
-ships its whole argv over the socket and the server parses it fresh —
-`boss.py`'s single-instance handler runs `parse_args` on the incoming
-`data['args']`, then `create_opts`, then `create_sessions`, and `session.py`
-takes `os_window_class` from the client's `--class`. So `--class term.floating`
-and `-o font_size=12` survive the trip.
-**Breaks** If this ever stopped holding, TUIs would open in the server's class
-and geometry — tiled and full-size — with no error. It is the property to check
-first after a kitty upgrade.
+**Why** kitty's client ships its whole argv over and the server parses it fresh
+— `boss.py`'s single-instance handler runs `parse_args` on the incoming
+`data['args']`, then `create_opts`, then `create_sessions`. What that handler
+then *uses* is a short list: `wclass` (so `--class term.floating` works and a
+TUI floats), `wname`, `title`, and `opts_for_size`, plus two explicit
+per-window special cases for `background_opacity` and `background_image`.
+**Breaks** *Silently, for everything not on that list.* **`-o font_size` is not
+on it** — the new window renders in the running instance's font, because the
+whole point of single-instance is that instances "share a single sprite cache
+on the GPU". Anything that must differ per spawn has to be checked against that
+handler, not assumed from `--class` working.
+
+<a id="kitty-compact-group"></a>
+## `terminal/kitty.nix` — compact spawns get their own instance group
+
+**Why** `compactArgv` shrinks the font so a 24-row TUI fits the floating window,
+and by the entry above a single-instance client cannot change the font.
+`--instance-group=compact` makes those spawns a *second* kitty instance, created
+by the first of them and so built at `compactSize`; the rest join it and stay
+cheap. The alternative — dropping `--single-instance` for compact spawns — works
+too but pays full startup on every btop click.
+**Breaks** Measured on foot, not kitty: `compactSize` is three fifths of the host
+font size because that is where **foot's** cell metrics put 24 rows in
+`1200 600`. kitty's differ, so verify with
+`kitty --instance-group=probe -o font_size=12 bash -c 'sleep 1; stty size'`
+and raise the fraction, or the floating window, if the first number is under 24.
 
 <a id="ghostty-single-instance"></a>
 ## `terminal/ghostty.nix` — the server serves the plain bind only

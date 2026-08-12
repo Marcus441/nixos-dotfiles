@@ -36,7 +36,10 @@ _: {
           argv = ["${pkgs.kitty}/bin/kitty" "--single-instance"];
           fallbackArgv = ["${pkgs.kitty}/bin/kitty"];
           appIdArgv = id: ["--class" id];
-          compactArgv = config.terminal.transientArgv ++ ["-o" "font_size=${toString config.terminal.compactSize}"];
+          # load-bearing: docs/decisions/terminal.md#kitty-compact-group
+          compactArgv =
+            config.terminal.transientArgv
+            ++ ["--instance-group=compact" "-o" "font_size=${toString config.terminal.compactSize}"];
           desktopFile = "kitty.desktop";
           binary = "kitty";
         };
