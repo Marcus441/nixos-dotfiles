@@ -1,7 +1,11 @@
 {inputs, ...}: {
   flake.modules.homeManager.apps = [
     (
-      {pkgs, ...}: let
+      {
+        config,
+        pkgs,
+        ...
+      }: let
         inherit (pkgs.stdenv.hostPlatform) system;
         neovim = inputs.neovim-config.packages.${system};
       in {
@@ -22,8 +26,9 @@
             wsl = false;
 
             font = {
-              normal = ["IosevkaTerm Nerd Font Mono"];
-              size = 20.0;
+              normal = [config.desktop.font.name];
+              # load-bearing: docs/decisions/theming.md#neovide-font-size
+              size = 0.0 + config.desktop.font.size;
             };
           };
         };
