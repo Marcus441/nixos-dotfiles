@@ -21,7 +21,7 @@ _: {
         humidity=$(echo "$data" | ${jq} '.current.relativehumidity_2m')
 
         # WMO weathercode to icon
-        if   [[ $code -eq 0 ]];                    then icon="󰖙"  desc="Clear"
+        if   [[ $code -eq 0 ]];                    then icon="󰖨"  desc="Clear"
         elif [[ $code -le 2 ]];                    then icon="󰖕"  desc="Partly cloudy"
         elif [[ $code -eq 3 ]];                    then icon="󰖐"  desc="Overcast"
         elif [[ $code -le 49 ]];                   then icon="󰖑"  desc="Foggy"
@@ -30,10 +30,10 @@ _: {
         elif [[ $code -le 79 ]];                   then icon="󰖘"  desc="Snow"
         elif [[ $code -le 84 ]];                   then icon="󰖖"  desc="Rain showers"
         elif [[ $code -le 94 ]];                   then icon="󰖓"  desc="Thunderstorm"
-        else                                            icon=""  desc="N/A"
+        else                                            icon="󰨹"  desc="N/A"
         fi
 
-        text="$icon  ''${temp}°C"
+        text="$icon ''${temp}°C"
         tooltip="$desc\n ''${temp}°C 󰖝 ''${wind}km/h  ''${humidity}%"
 
         echo "{\"text\": \"$text\", \"tooltip\": \"$tooltip\", \"class\": \"weather\"}"

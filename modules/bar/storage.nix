@@ -99,7 +99,7 @@ _: {
         programs.waybar.settings.mainBar.disk = {
           interval = 60;
           path = "/";
-          format = "󰋊 {percentage_used}%";
+          format = "󰋊 {percentage_used}%";
           tooltip-format = "{used} of {total} used ({free} free)";
           states = {
             warning = 80;
