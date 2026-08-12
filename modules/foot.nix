@@ -33,6 +33,13 @@ _: {
             description = "Terminal for a TUI opened, used and closed in one sitting. A session renders that however it likes; the default is `argv`.";
           };
 
+          # load-bearing: docs/decisions/terminal.md#terminal-exec
+          exec = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Arguments introducing the command to run, appended after every option and immediately before it. Empty where the terminal takes a bare trailing command.";
+          };
+
           compactArgv = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             # load-bearing: docs/decisions/terminal.md#foot-compact

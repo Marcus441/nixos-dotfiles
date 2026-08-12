@@ -107,7 +107,7 @@ _: {
           };
           on-click = "uwsm app -- ${
             lib.escapeShellArgs (
-              config.terminal.transientArgv ++ ["${report}/bin/nix-store-report"]
+              config.terminal.transientArgv ++ config.terminal.exec ++ ["${report}/bin/nix-store-report"]
             )
           }";
         };

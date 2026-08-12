@@ -8,7 +8,7 @@ _: {
       }: let
         # load-bearing: docs/decisions/terminal.md#yazi-command
         command = lib.escapeShellArgs (
-          config.terminal.transientArgv ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
+          config.terminal.transientArgv ++ config.terminal.exec ++ ["${config.programs.yazi.finalPackage}/bin/yazi"]
         );
       in {
         fileManager.command = command;

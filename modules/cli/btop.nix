@@ -34,7 +34,7 @@ _: {
 
         atPreset = id:
           lib.escapeShellArgs (
-            config.terminal.compactArgv ++ ["${btop}/bin/btop" "--preset" id]
+            config.terminal.compactArgv ++ config.terminal.exec ++ ["${btop}/bin/btop" "--preset" id]
           );
       in {
         systemMonitor = {

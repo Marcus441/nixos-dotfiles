@@ -19,6 +19,18 @@ neither answer belongs in the name.
 **Breaks** Naming it `floatingArgv` would make a spawn point assert a window
 behaviour dwl rejects.
 
+<a id="terminal-exec"></a>
+## `foot.nix` — `exec` sits between the options and the command
+
+**Why** foot and kitty take a bare trailing command; alacritty and ghostty need
+`-e`, and alacritty needs it *last*. A spawn point composing
+`transientArgv ++ [prog]` is therefore only correct for half the terminals, and
+`exec` is the piece that names the difference.
+**Breaks** *Silently, on ghostty.* An argument it does not recognise as a
+command is dropped and a plain shell opens instead. It cannot live inside
+`argv`, because `compactArgv` appends a font override after `transientArgv` and
+that would land past the `-e`.
+
 <a id="foot-base16"></a>
 ## `foot.nix` — the base16 slot mapping, not a base24 one
 
