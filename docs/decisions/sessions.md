@@ -96,12 +96,25 @@ instead of a rejection.
 ## `floating-windows.nix` — the limit of the app-id convention
 
 **Why** An app that can name itself opts in at spawn time:
-`footclient --app-id floating-term` floats, plain `footclient` tiles.
+`footclient --app-id term.floating` floats, plain `footclient` tiles.
 **Breaks** app-id is set by the client, and Wayland has no outside override the
-way X11 had `--class`. Only foot takes the flag; pavucontrol, blueman-manager
-and thunar have none, and xdg-desktop-portal-gtk is D-Bus activated with no
-spawn site. Those four match their real class, which floats **every** instance.
-Accepted — a title match or a rename wrapper both break silently instead.
+way X11 had `--class`. Every terminal takes the flag, under three spellings
+(`--app-id`, `--class`, `--class=`); pavucontrol, blueman-manager and thunar
+have none, and xdg-desktop-portal-gtk is D-Bus activated with no spawn site.
+Those four match their real class, which floats **every** instance. Accepted —
+a title match or a rename wrapper both break silently instead.
+
+<a id="floating-gtk-id"></a>
+## `floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
+
+**Why** ghostty parses `--class` as a GTK application ID, which must carry at
+least one period. `floating-term` is not one, so the id both terminals and GUI
+utilities announce is `term.floating` / `app.floating` — one spelling all four
+terminals accept.
+**Breaks** *Silently, twice.* ghostty given an invalid class exits 0, logs a
+warning nobody reads, falls back to `com.mitchellh.ghostty`, and the TUI tiles.
+And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matches
+`termXfloating` — so the value goes through `lib.escapeRegex`.
 
 <a id="wleave-no-anim"></a>
 ## `wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
