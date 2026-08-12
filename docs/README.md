@@ -24,7 +24,7 @@ goes wrong if you change it, and **Also** where there is a related trap.
 
 ## Finding the reason for a line
 
-Files carry no comments except a pointer, at the 76 values where changing them
+Files carry no comments except a pointer, at the 80 values where changing them
 breaks something non-obviously:
 
 ```nix
@@ -32,7 +32,7 @@ breaks something non-obviously:
 platformTheme.name = "qtct";
 ```
 
-The 28 whose **Breaks** line says *silently* are the sharp end — they fail with
+The 31 whose **Breaks** line says *silently* are the sharp end — they fail with
 no error anywhere, so the pointer is the only warning.
 
 ## Where else things live

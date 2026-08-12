@@ -161,6 +161,32 @@ consumers (fzf, git, ls) are the ones that felt.
 that is the only way base09 and base0F reach a terminal at all, so each
 implementation reads `colors16` for those directly, as it does for foreground,
 background and selection.
+**Also** the cursor is base05 — the foreground — in all four, and the colour
+under it is base00. Every default here is a different colour: foot and alacritty
+reverse foreground and background, and kitty's `cursor_text_color` is a bare
+`#111111` rather than the background it sits on. foot's `cursor` takes both
+values in one string and alacritty's takes both keys, so the text colour is
+spelled out three times rather than left to the terminal.
+
+<a id="terminal-clipboard-keys"></a>
+## `terminal/*.nix` — the dedicated copy/cut/paste keys, and who already had them
+
+**Why** a keyboard sending `KC_COPY`/`KC_CUT`/`KC_PASTE` produces the keysyms
+`XF86Copy`/`XF86Cut`/`XF86Paste`, and three of the four terminals already bind
+two of the three: foot ships `XF86Copy`/`XF86Paste` as defaults of
+`clipboard-copy`/`clipboard-paste`, ghostty ships `copy` and `paste`, and
+alacritty ships `Copy` and `Paste`. Only kitty binds none, which is why it is
+the one file listing all three.
+**Breaks** *Silently, in foot.* A `[key-bindings]` value **replaces** the
+default combos rather than adding to them, so `clipboard-copy` has to restate
+`Control+Shift+c` and `XF86Copy` alongside the `XF86Cut` it exists to add —
+dropping either kills a binding that was working before the line was written.
+**Also** no terminal has a cut, so the cut key is a copy that does nothing
+without a selection: kitty's `copy_or_noop`, alacritty's `Copy`, and ghostty's
+`copy_to_clipboard`, which is *performable* and so falls through as if unbound.
+kitty's `copy_and_clear_or_interrupt` was the other candidate and was rejected:
+with no selection it sends SIGINT, so a stray press would kill a running
+command.
 
 <a id="kitty-borders"></a>
 ## `terminal/kitty.nix` — the split borders are ours, not upstream's

@@ -44,11 +44,16 @@ _: {
             # load-bearing: docs/decisions/terminal.md#terminal-alt-scroll
             mouse.alternate-scroll-mode = "no";
 
+            # load-bearing: docs/decisions/terminal.md#terminal-clipboard-keys
+            key-bindings.clipboard-copy = "Control+Shift+c XF86Copy XF86Cut";
+
             # load-bearing: docs/decisions/terminal.md#terminal-ansi
             colors-dark =
               {
                 foreground = strip colors16.base05;
                 background = strip colors16.base00;
+
+                cursor = "${strip colors16.base00} ${strip colors16.base05}";
 
                 selection-foreground = strip colors16.base06;
                 selection-background = strip colors16.base02;

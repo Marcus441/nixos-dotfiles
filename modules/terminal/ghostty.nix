@@ -74,7 +74,7 @@ _: {
             foreground = colors16.base05;
             selection-background = colors16.base02;
             selection-foreground = colors16.base06;
-            cursor-color = colors16.base06;
+            cursor-color = colors16.base05;
             palette =
               lib.imap0 (i: hex: "${toString i}=${hex}") ansi
               ++ [
@@ -106,6 +106,8 @@ _: {
 
               "ctrl+shift+t=new_tab"
               "ctrl+shift+o=toggle_tab_overview"
+
+              "cut=copy_to_clipboard:mixed"
             ];
           };
         };

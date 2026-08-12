@@ -66,6 +66,14 @@ _: {
             scrolling.history = 10000;
             mouse.hide_when_typing = true;
 
+            # load-bearing: docs/decisions/terminal.md#terminal-clipboard-keys
+            keyboard.bindings = [
+              {
+                key = "Cut";
+                action = "Copy";
+              }
+            ];
+
             # load-bearing: docs/decisions/terminal.md#terminal-ansi
             colors = {
               primary = {
@@ -76,6 +84,11 @@ _: {
               selection = {
                 text = colors16.base06;
                 background = colors16.base02;
+              };
+
+              cursor = {
+                text = colors16.base00;
+                cursor = colors16.base05;
               };
 
               normal = slots 0;

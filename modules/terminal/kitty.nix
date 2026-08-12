@@ -80,7 +80,8 @@ _: {
               foreground = colors16.base05;
               selection_background = colors16.base02;
               selection_foreground = colors16.base06;
-              cursor = colors16.base06;
+              cursor = colors16.base05;
+              cursor_text_color = colors16.base00;
               color16 = colors16.base09;
               color17 = colors16.base0F;
 
@@ -120,6 +121,10 @@ _: {
             "ctrl+0" = "goto_tab 10";
 
             "ctrl+shift+t" = "new_tab_with_cwd";
+
+            "XF86Copy" = "copy_to_clipboard";
+            "XF86Cut" = "copy_or_noop";
+            "XF86Paste" = "paste_from_clipboard";
           };
         };
       }
