@@ -27,7 +27,20 @@ paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,*
 - **Colour formats are per-consumer, and none of them are interchangeable.**
   Qt wants ARGB (`#aarrggbb`) and no alpha comes from the palette; girara
   (zathura) parses through `gdk_rgba_parse`, which takes `#rrggbbaa`; dwl's
-  colour tables want `0xrrggbbff`.
+  colour tables want `0xrrggbbff`; hyprlang wants `rgb(rrggbb)` /
+  `rgba(rrggbbaa)`.
+- **`#` opens a comment in hyprlang, so a bare `#rrggbb` never reaches
+  hyprlock.** Colours go through `rgb(…)`. The same rule bites pango markup in
+  a hyprlock text field, where a hex colour has to be written `##rrggbb` —
+  which is why `hyprlock.nix` mutes the date with a `color` key on its own
+  label rather than a `<span foreground=…>` inside one.
+- **hyprlock ignores config keys it does not know, and says so only on
+  stderr.** Parse-check a generated config without locking the screen:
+  `WAYLAND_DISPLAY=nonexistent hyprlock -c <path>` prints every
+  `config option <x> does not exist` and then dies on the missing compositor.
+  This is how `general:grace`, `general:no_fade_in` and
+  `general:disable_loading_bar` were found to be dead in 0.9.6 — `grace` and
+  `no_fade_in` became the CLI flags `--grace` / `--no-fade-in`.
 
 ## Toolkit theming traps
 
