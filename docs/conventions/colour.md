@@ -19,7 +19,7 @@ Two rules that are easy to get backwards:
   others. The option type makes it a build failure.
 - **`reset` only survives being drawn.** Where a colour is read back and
   transposed — yazi's `status.lua` draws a background as a foreground — use
-  `base00`, which is foot's terminal background and so renders as nothing.
+  `base00`, which is the terminal background and so renders as nothing.
 
 Per-consumer formats are not interchangeable: Qt wants `#aarrggbb`, girara
 (zathura) wants `#rrggbbaa`, dwl's colour tables want `0xrrggbbff`, and

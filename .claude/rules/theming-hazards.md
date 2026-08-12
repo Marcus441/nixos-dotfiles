@@ -1,5 +1,5 @@
 ---
-paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix"
+paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix"
 ---
 
 # Theming hazards — colours and syntax themes
@@ -21,7 +21,7 @@ paths: "**/foot.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,*
 - **`reset` is a value that only survives being drawn.** yazi's status bar
   reads colours back and transposes them — `status.lua` draws `style.alt:bg()`
   as a *foreground*, where a `reset` renders as a base05 bar through the middle
-  of the bar. Use `base00` (foot's terminal background, so it renders as
+  of the bar. Use `base00` (the terminal background, so it renders as
   nothing) wherever a background is read back. Check whether anything reads a
   colour back before choosing one.
 - **The leading `#` in `desktop.colors` is load-bearing.** Consumers either

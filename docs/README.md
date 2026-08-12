@@ -12,7 +12,7 @@ decisions/     why one file made its call, grouped by area
   wiring.md            generator, host record, aspect options
   sessions.md          dwl, Hyprland, the bars
   shells.md            bash, zsh, and which host logs into which
-  terminal.md          foot and the TUIs that carry one
+  terminal.md          the four terminals and the TUIs that carry one
   theming.md           colour, fonts, the two toolkits
   placement.md         why a file is not in the obvious aspect
   display-and-boot.md  monitors, hyprlock, boot
@@ -24,7 +24,7 @@ goes wrong if you change it, and **Also** where there is a related trap.
 
 ## Finding the reason for a line
 
-Files carry no comments except a pointer, at the 48 values where changing them
+Files carry no comments except a pointer, at the 65 values where changing them
 breaks something non-obviously:
 
 ```nix
@@ -32,7 +32,7 @@ breaks something non-obviously:
 platformTheme.name = "qtct";
 ```
 
-The 15 whose **Breaks** line says *silently* are the sharp end — they fail with
+The 27 whose **Breaks** line says *silently* are the sharp end — they fail with
 no error anywhere, so the pointer is the only warning.
 
 ## Where else things live

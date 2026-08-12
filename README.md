@@ -48,7 +48,7 @@ by **vic** (pinned in `flake.nix` from its `denful/import-tree` location).
 `flake.nix` is a manifest only because this exists. Its rule that paths
 containing `/_` are skipped — `hasInfix "/_"` against the full path — is the
 only way anything under `modules/` escapes auto-discovery, which is what
-`modules/_pkgs`, `modules/_walker` and `modules/_dormant` all depend on.
+`modules/_pkgs` and `modules/_walker` both depend on.
 
 **[Search for best dotfiles structure: Dendritic
 edition](https://discourse.nixos.org/t/search-for-best-dotfiles-structure-dendritic-edition/75134)**
@@ -72,9 +72,9 @@ is in `LICENSE`.
 
 | Host | Machine | Session | Aspects |
 | --- | --- | --- | --- |
-| `swift5` | laptop | dwl (Wayland) | `dev core laptop dwl dwl-bar` |
-| `gpc` | gaming rig | Hyprland | `core gaming nvidia hyprland waybar wleave thunar apps` |
-| `UM790pro` | dev machine | Hyprland | `dev core hyprland waybar thunar apps` |
+| `swift5` | laptop | dwl (Wayland) | `dev core foot laptop dwl dwl-bar` |
+| `gpc` | gaming rig | Hyprland | `core kitty zsh gaming nvidia hyprland waybar wleave thunar apps` |
+| `UM790pro` | dev machine | Hyprland | `dev core kitty zsh hyprland waybar wleave yazi apps` |
 
 Six build targets: three `nixosConfigurations.<host>` and three
 `homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
@@ -89,6 +89,10 @@ in it.
 | Aspect | Meaning |
 | --- | --- |
 | `core` | Everything no host opts out of |
+| `foot` | foot as the terminal — a client/server pair, so spawns are cheap |
+| `alacritty` | alacritty instead — foot's config, on the GPU |
+| `ghostty` | ghostty instead — splits, tabs, and a cursor-smear shader |
+| `kitty` | kitty instead — ghostty's config, with a native cursor trail |
 | `hyprland` | Hyprland session: hypridle, hyprlock, hyprpaper |
 | `dwl` | dwl session: a patched dwl, wmenu |
 | `dwl-bar` | dwl's bar: the patch that draws it and the status pipe that feeds it |
@@ -116,7 +120,9 @@ it declares `core`. The palette is base24 Kanagawa Dragon, rendered
 twice — `desktop.colors` for anything taking hex, and `desktop.colors16`, its
 `base00`–`base0F` subset, for anything that reaches a terminal. ANSI has sixteen
 slots and cannot carry the extension, so a program asking for *the base16 theme*
-gets exactly what it assumes.
+gets exactly what it assumes. `desktop.ansi` is that subset in slot order, so
+the four terminals share one mapping rather than restating it in four
+vocabularies.
 
 Portable intents — `launcher`, `terminal`, `screenshot`, `clipboard`, `lock`,
 `logout`, `bar`, `fileManager`, `powerMenu` — are option namespaces in `core`,
@@ -146,6 +152,7 @@ modules/
   cli/                       terminal tools, across core and apps
   display/                   monitor geometry and the renderers that consume it
   filemanager/               thunar and yazi
+  terminal/                  the four terminals; terminal.nix is the namespace
   media/                     players, viewers and editors
   theme/                     colours, fonts, cursor, GTK and Qt
   <concern>.nix              one concern; declares its own aspect membership
@@ -196,7 +203,7 @@ and no profile to pick.
 
        # What this machine is. Order is load-bearing: it sets module merge
        # order, which reaches derivation hashes.
-       aspects = ["core" "hyprland" "apps"];
+       aspects = ["core" "kitty" "hyprland" "apps"];
 
        fontSize = 12;
        hardware = ../../hosts/<hostname>/hardware-configuration.nix;

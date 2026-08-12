@@ -77,7 +77,7 @@ highlights get transparency without a second colour format.
 ## `lazygit.nix` — `selectedLineBgColor = ["default"]`
 
 **Why** `default` keeps the terminal's own background, so the cursor line does
-not fight foot's.
+not fight it — whichever terminal the host took.
 
 <a id="walker-style"></a>
 ## `walker.nix` — the launcher names no theme

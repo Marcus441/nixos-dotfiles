@@ -82,6 +82,6 @@ is correct, not duplication. Where the consumer can hold a store path instead
 - Check CLAUDE.md's *Known divergences* before treating a neighbouring file as
   an example.
 - If the file gained or lost an aspect membership, run
-  `scripts/recount-aspects.sh` and update the "21 of 94" figure in
+  `scripts/recount-aspects.sh` and update the "26 of 109" figure in
   `.claude/rules/nix-file-conventions.md`.
 - Small, single-concern commit. Rationale in the message, not in comments.

@@ -94,7 +94,7 @@ The candidates are file names, coloured from `LS_COLORS` so that a listing and
 an `ls` agree — replacing that with a palette-built database would desync the
 two and duplicate dircolors. The menu's own furniture is ours: the selected row
 takes `ma=` in `desktop.colorsRgb`, set to base02 on base06 so it reads as the
-same selection `foot.nix` gives the terminal, and the group headings, messages
+same selection the terminal gives, and the group headings, messages
 and the no-matches warning take base0C, base03 and base08 through `%F{...}`.
 
 `ma=` is why the third consumer of `desktop.colorsRgb` exists: `list-colors`
@@ -107,8 +107,9 @@ arrow emit `48;2;57;56;54;38;2;200;192;147` against `zinputrc` and then
 ## Syntax highlighting names every style, rather than taking the defaults
 
 **Why** zsh-syntax-highlighting's defaults are ANSI names — `fg=red`,
-`fg=green` — which under foot already resolve to this palette, because
-`foot.nix` maps `colors16` onto the terminal's sixteen. They stop being ours the
+`fg=green` — which under any of the four terminals already resolve to this
+palette, because each maps `desktop.ansi` onto the terminal's sixteen. They stop
+being ours the
 moment the shell is reached from somewhere else, which is the same reason
 `bat.nix` does not use its built-in base16 theme. So every style is set from
 `colors16` as a 24-bit `fg=#rrggbb`, and the roles are five bindings in a `let`

@@ -42,7 +42,7 @@ never bulk file contents. Keep the report under ~40 lines.
   than the provider's file.
 - A tool invoked by bare name that is not installed by every aspect that
   invokes it.
-- A stale "21 of 94" figure in `.claude/rules/nix-file-conventions.md`.
+- A stale "26 of 109" figure in `.claude/rules/nix-file-conventions.md`.
 
 ## What is not a finding
 

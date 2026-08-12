@@ -93,7 +93,7 @@ committing.
 - No unrequested changes: no package bumps, no deprecation fixes, no
   reformatting files the task doesn't touch.
 - If a file gained or lost an aspect membership, run
-  `scripts/recount-aspects.sh` and update the "21 of 94" figure in
+  `scripts/recount-aspects.sh` and update the "26 of 109" figure in
   `.claude/rules/nix-file-conventions.md`.
 - Finished plans go to git history. Cite a commit hash, never a plan filename.
 - If a task touched a file listed under *Known divergences* in CLAUDE.md,

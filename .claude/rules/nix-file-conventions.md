@@ -69,7 +69,7 @@ example.
 
 > **Recount when a file gains or loses a membership** — these two numbers go
 > stale silently, and nothing in the build checks them. Run
-> `scripts/recount-aspects.sh` and update the "25 of 105" figure above if it has
+> `scripts/recount-aspects.sh` and update the "26 of 109" figure above if it has
 > changed.
 
 ## A tool invoked by bare name must be installed by every aspect that invokes it

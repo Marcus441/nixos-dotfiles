@@ -30,7 +30,7 @@ runtime.
 **Why** dwl is compiled in the dwl *home* aspect, so the session launches
 `~/.nix-profile`'s copy.
 **Breaks** `home-manager switch` becomes a prerequisite for the dwl aspect —
-needed anyway for bash, foot, fonts and dwl-monitors.
+needed anyway for bash, the terminal, fonts and dwl-monitors.
 
 <a id="dwl-autostart-core"></a>
 ## `dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
@@ -59,7 +59,7 @@ the display manager `X-NIXOS-SYSTEMD-AWARE`, which suppresses nixpkgs'
 shape; the session script stays ignorant of what it starts.
 **Breaks** *Silently, twice.* A home-manager `services.*` unit here installs,
 carries `WantedBy=graphical-session.target`, and never starts — as
-`foot.service` already does not. And the `-s` argument is single-quoted, so an
+foot's own `foot.service` already does not. And the `-s` argument is single-quoted, so an
 entry containing `'` truncates the session script.
 
 <a id="dwl-idle-dpms"></a>

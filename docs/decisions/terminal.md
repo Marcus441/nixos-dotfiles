@@ -47,7 +47,7 @@ neither answer belongs in the name.
 behaviour dwl rejects.
 
 <a id="terminal-exec"></a>
-## `foot.nix` — `exec` sits between the options and the command
+## `terminal.nix` — `exec` sits between the options and the command
 
 **Why** foot and kitty take a bare trailing command; alacritty and ghostty need
 `-e`, and alacritty needs it *last*. A spawn point composing
@@ -155,7 +155,7 @@ this pair: the settings are analogous, the units are not.
 **Why** `status.lua` reads that background back as a *foreground*:
 `ui.Span(sep_left.close):fg(style.alt:bg())`.
 **Breaks** *Silently.* A `reset` there is the default text colour — a base05 bar
-through the middle of the bar. base00 is foot's terminal background, so it
+through the middle of the bar. base00 is the terminal background, so it
 renders as nothing.
 
 <a id="terminal-compact"></a>
