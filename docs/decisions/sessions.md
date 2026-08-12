@@ -174,3 +174,22 @@ a shell prompt where the compositor should have been.
 `XDG_SESSION_TYPE` before PAM. What reaches the block is ly's synthetic `shell`
 entry, a VT login, or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start`
 is empty while Hyprland runs.
+
+<a id="persistent-workspaces"></a>
+## `hyprland-workspaces.nix` — the bar's persistent buttons need a monitor
+
+**Why** Waybar's `persistent-workspaces` only draws buttons; the workspaces
+themselves have to exist on the Hyprland side, and since 0.51 a `persistent`
+workspace rule without `monitor:` is ignored outright (hyprwm/Hyprland#11762).
+So the set is declared once, in one file, and both consumers read the same list:
+the compositor gets a `workspace_rule` per entry bound to the host's first
+monitor, the bar gets the matching button. The monitor comes from
+`flake.lib.monitors.identify`, so it is the description where the host gives one
+and the connector otherwise.
+**Breaks** *Silently, and asymmetrically.* Drop the Hyprland half and the bar
+draws five buttons over workspaces that do not exist; drop `monitor:` and the
+rule parses, loads, and does nothing. Neither produces an error.
+**Also** The rules pin 1–5 to the *first* monitor, so on a multi-head host the
+other outputs get no persistent workspaces. `hyprland-binds.nix` binds nine
+workspaces, not five — the extra four are created on demand and were never
+persistent, which is why the two counts differ.
