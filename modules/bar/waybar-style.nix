@@ -62,7 +62,7 @@ _: {
             padding: 2px 4px;
             margin: 4px 2px;
             border-radius: 6px;
-            background-color: #${base01};
+            background-color: transparent;
             color: #${base05};
             font-weight: 600;
             border: none;
@@ -70,8 +70,8 @@ _: {
                         color 0.15s ease;
           }
           #workspaces button.empty {
-            color: #${base03};
-            background-color: #${base01};
+            color: #${base04};
+            background-color: transparent;
           }
           #workspaces button.active {
             background-color: #${base0D};
