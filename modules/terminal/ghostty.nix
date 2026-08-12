@@ -27,8 +27,7 @@ _: {
         };
 
         # load-bearing: docs/decisions/terminal.md#ghostty-enablement
-        xdg.configFile."systemd/user/graphical-session.target.wants/app-com.mitchellh.ghostty.service".source =
-          "${pkgs.ghostty}/share/systemd/user/app-com.mitchellh.ghostty.service";
+        xdg.configFile."systemd/user/graphical-session.target.wants/app-com.mitchellh.ghostty.service".source = "${pkgs.ghostty}/share/systemd/user/app-com.mitchellh.ghostty.service";
 
         programs.ghostty = {
           enable = true;

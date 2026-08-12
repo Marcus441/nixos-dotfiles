@@ -1,5 +1,5 @@
 _: {
-  # load-bearing: docs/decisions/terminal.md#foot-server
+  # load-bearing: docs/decisions/terminal.md#terminal-daemons
   flake.modules.nixos.foot = [
     {dwl.autostart = ["foot --server"];}
   ];
@@ -31,7 +31,7 @@ _: {
 
         programs.foot = {
           enable = true;
-          # load-bearing: docs/decisions/terminal.md#foot-server
+          # load-bearing: docs/decisions/terminal.md#terminal-daemons
           server.enable = true;
           settings = {
             main = {

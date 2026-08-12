@@ -89,10 +89,10 @@ in it.
 | Aspect | Meaning |
 | --- | --- |
 | `core` | Everything no host opts out of |
-| `foot` | foot as the terminal — a client/server pair, so spawns are cheap |
-| `alacritty` | alacritty instead — foot's config, on the GPU |
-| `ghostty` | ghostty instead — splits, tabs, and a cursor-smear shader |
-| `kitty` | kitty instead — ghostty's config, with a native cursor trail |
+| `foot` | foot as the terminal — `footclient` against a `foot --server` |
+| `alacritty` | alacritty instead — foot's config, on the GPU, `msg create-window` against a `--daemon` |
+| `ghostty` | ghostty instead — splits, tabs, a cursor-smear shader, one GTK instance |
+| `kitty` | kitty instead — ghostty's config, a native cursor trail, one headless instance |
 | `hyprland` | Hyprland session: hypridle, hyprlock, hyprpaper |
 | `dwl` | dwl session: a patched dwl, wmenu |
 | `dwl-bar` | dwl's bar: the patch that draws it and the status pipe that feeds it |
@@ -112,6 +112,8 @@ aspect is recoverable where a broken power path is not. The editor and the shell
 are `core` — every host gets them regardless of session. The terminal is not:
 `terminal.nix` declares the namespace in `core` and a terminal aspect
 implements it, so a host that names none fails to build rather than guessing.
+All four keep a resident server so a window costs nothing to open, wired twice —
+a systemd user unit under Hyprland, a `dwl.autostart` entry under dwl.
 
 `hyprland` and `dwl` are mutually exclusive, and each pairs with its own bar.
 Theming is not an aspect: colours, fonts and the cursor live in `core`, so every

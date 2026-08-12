@@ -27,16 +27,78 @@ already gives thunar-plus-yazi, naming both files. A host taking *no* terminal
 gets `terminal.argv has no value defined` — loud, but it does not name the
 missing aspect.
 
-<a id="foot-server"></a>
-## `terminal/foot.nix` — daemon mode, and why every spawn point keeps a fallback
+<a id="terminal-daemons"></a>
+## `terminal/*.nix` — all four keep a server, each with a different client
 
-**Why** Terminals spawn as `footclient` against a foot server. uwsm activates
-the unit on Hyprland; the dwl session is a plain script and starts the server
-from `dwl.autostart`.
-**Breaks** footclient is useless if the server is down — exactly when you want a
-terminal. The plain-`foot` fallback is a role of its own, which is why
-`fallbackArgv` exists at all; for a terminal with no daemon it defaults back to
-`argv` and the fallback bind is merely redundant.
+**Why** Opening a window should cost nothing. Each terminal offers that
+differently, and the aspect owns both halves:
+
+| | server | client |
+| --- | --- | --- |
+| foot | `foot --server` | `footclient` |
+| alacritty | `alacritty --daemon` | `alacritty msg create-window` |
+| kitty | `kitty --single-instance --start-as=hidden` | `kitty --single-instance` |
+| ghostty | `ghostty --gtk-single-instance=true --initial-window=false` | `ghostty` |
+
+Every server is wired **twice**, because the sessions start things differently
+(`sessions.md#dwl-autostart`): a systemd user unit for Hyprland, and a
+`dwl.autostart` entry — a bare name from `~/.nix-profile/bin`, no `'` — for dwl.
+**Breaks** A client is useless when its server is down, which is exactly when
+you want a terminal, so `fallbackArgv` is a role of its own and both sessions
+bind it. Wire only one channel and the terminal is slow on the other session
+with nothing to say why.
+**Also** foot's and alacritty's servers hold no window at all; kitty's is
+headless by `--start-as=hidden`; ghostty's uses `--initial-window=false`.
+
+<a id="kitty-single-instance"></a>
+## `terminal/kitty.nix` — the server re-parses the client's argv
+
+**Why** This is the reason a floating TUI can share the process. kitty's client
+ships its whole argv over the socket and the server parses it fresh —
+`boss.py`'s single-instance handler runs `parse_args` on the incoming
+`data['args']`, then `create_opts`, then `create_sessions`, and `session.py`
+takes `os_window_class` from the client's `--class`. So `--class term.floating`
+and `-o font_size=12` survive the trip.
+**Breaks** If this ever stopped holding, TUIs would open in the server's class
+and geometry — tiled and full-size — with no error. It is the property to check
+first after a kitty upgrade.
+
+<a id="ghostty-single-instance"></a>
+## `terminal/ghostty.nix` — the server serves the plain bind only
+
+**Why** `gtk-single-instance` defaults to `detect`, which switches itself
+**off** when `TERM_PROGRAM` is set or when *any* CLI argument is present,
+because "single instance mode inherits the configuration from when it was
+launched" (`ghostty.5`). Setting it `true` explicitly is what makes
+`SUPER+Return` reuse the running process.
+**Breaks** Nothing, and that is worth stating: `-e` independently forces
+`gtk-single-instance=false`, and every TUI spawn site appends `terminal.exec`,
+which is `["-e"]` here. So a transient spawn always forks — slower than the
+other three, by ghostty's design — but it also always honours its own
+`--class`, which a connecting client would have silently ignored. The two rules
+cancel; remove either and floating TUIs stop floating.
+
+<a id="ghostty-enablement"></a>
+## `terminal/ghostty.nix` — the unit's `[Install]` symlink is declared by hand
+
+**Why** Home Manager writes ghostty's unit through `xdg.configFile` rather than
+`systemd.user.services`, so nothing emits the `graphical-session.target.wants`
+symlink that a `[Install]` section would otherwise produce.
+**Breaks** *Quietly, and only in the first second.* Ghostty's D-Bus service file
+carries `SystemdService=`, so the first launch activates the unit anyway and
+every later one is fast — the symptom is not a broken terminal but the first
+window of every session paying for the server.
+
+<a id="ghostty-resident"></a>
+## `terminal/ghostty.nix` — `quit-after-last-window-closed` is false
+
+**Why** The config ghostty was revived from set it `true` with a `10m` delay.
+A server that exits ten minutes after the last window is not a server, and
+systemd will not bring it back: the packaged unit is `Type=notify-reload`, so a
+clean exit is success.
+**Breaks** *Silently, and only after a pause.* Everything is fast until the
+first ten idle minutes, after which the next terminal pays full startup and the
+session has no server again until the next login.
 
 <a id="terminal-transient"></a>
 ## `terminal.nix` — `transientArgv` is named for the lifecycle
