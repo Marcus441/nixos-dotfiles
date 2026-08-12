@@ -79,6 +79,7 @@ _: {
             };
             scrollback.lines = 10000;
             mouse.hide-when-typing = "yes";
+            mouse.alternate-scroll-mode = "no";
 
             # load-bearing: docs/decisions/terminal.md#foot-base16
             colors-dark = {
