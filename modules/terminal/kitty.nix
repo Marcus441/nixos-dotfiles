@@ -1,4 +1,9 @@
 _: {
+  # load-bearing: docs/decisions/terminal.md#terminal-daemons
+  flake.modules.nixos.kitty = [
+    {dwl.autostart = ["kitty --single-instance --start-as=hidden"];}
+  ];
+
   flake.modules.homeManager.kitty = [
     (
       {
@@ -9,7 +14,25 @@ _: {
       }: let
         inherit (config.desktop) ansi font colors16;
       in {
+        # load-bearing: docs/decisions/terminal.md#terminal-daemons
+        systemd.user.services.kitty = {
+          Unit = {
+            Description = "kitty in headless single-instance mode, resident so that opening a window costs nothing";
+            PartOf = ["graphical-session.target"];
+            After = ["graphical-session.target"];
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+          };
+
+          Install.WantedBy = ["graphical-session.target"];
+
+          Service = {
+            ExecStart = "${pkgs.kitty}/bin/kitty --single-instance --start-as=hidden";
+            Restart = "on-failure";
+          };
+        };
+
         terminal = {
+          # load-bearing: docs/decisions/terminal.md#kitty-single-instance
           argv = ["${pkgs.kitty}/bin/kitty" "--single-instance"];
           fallbackArgv = ["${pkgs.kitty}/bin/kitty"];
           appIdArgv = id: ["--class" id];
