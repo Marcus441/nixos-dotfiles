@@ -59,6 +59,10 @@ _: {
               confirm_os_window_close = 0;
               remember_window_size = false;
 
+              # load-bearing: docs/decisions/terminal.md#terminal-stroke-weight
+              text_composition_strategy = "1.0 25";
+              undercurl_style = "thick-dense";
+
               cursor_shape = "block";
               cursor_blink_interval = 0;
               # load-bearing: docs/decisions/terminal.md#kitty-cursor-trail
@@ -66,7 +70,8 @@ _: {
               cursor_trail_start_threshold = 2;
 
               enabled_layouts = "splits,stack";
-              inactive_text_alpha = 0.8;
+              # load-bearing: docs/decisions/terminal.md#kitty-inactive-alpha
+              inactive_text_alpha = -0.8;
 
               mouse_hide_wait = "-1.0";
               focus_follows_mouse = false;

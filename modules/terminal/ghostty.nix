@@ -36,6 +36,9 @@ _: {
             font-family = font.name;
             font-size = font.size;
             font-feature = lib.optionals (!font.ligatures) ["-calt" "-liga" "-clig" "-dlig"];
+            # load-bearing: docs/decisions/terminal.md#terminal-stroke-weight
+            alpha-blending = "linear";
+            adjust-underline-thickness = "50%";
 
             window-padding-x = 8;
             window-padding-y = 8;

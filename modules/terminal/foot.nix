@@ -38,6 +38,8 @@ _: {
               font = fontStr;
               pad = "8x8";
               initial-color-theme = "dark";
+              # load-bearing: docs/decisions/terminal.md#terminal-stroke-weight
+              gamma-correct-blending = "yes";
             };
             scrollback.lines = 10000;
             mouse.hide-when-typing = "yes";

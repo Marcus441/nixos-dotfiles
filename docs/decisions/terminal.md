@@ -188,6 +188,58 @@ kitty's `copy_and_clear_or_interrupt` was the other candidate and was rejected:
 with no selection it sends SIGINT, so a stray press would kill a running
 command.
 
+<a id="terminal-stroke-weight"></a>
+## `terminal/*.nix` — red strokes thin out first, and each terminal thins them differently
+
+**Why** sRGB weights luminance R 0.2126, G 0.7152, B 0.0722, so red carries
+under a third of the perceived brightness green does at the same saturation. On
+`base00` the ANSI red sits at 5.21 — the lowest ratio in the palette — and
+nvim's diagnostic red at 4.04, against 10.76 for the foreground. A thin
+antialiased stroke survives on luminance contrast alone, so red is where
+coverage blending fails first, and an undercurl is the thinnest stroke a
+terminal draws. Each terminal spells the remedy differently: kitty takes a
+multiplicative contrast on glyph alpha, the second number of
+`text_composition_strategy`, plus a separate undercurl geometry in
+`undercurl_style`; foot and ghostty take gamma-correct blending, which thickens
+bright glyphs on a dark background — foot's `gamma-correct-blending` is off by
+default, and ghostty's Linux default `linear-corrected` is that same linear
+blending with a correction step that deliberately puts the native thinness back,
+so `linear` is what asks for the thickening.
+**Breaks** *Silently, in three different ways.* alacritty has no equivalent at
+all — its whole `[font]` table is the four families, a size and two offsets — so
+a host moving to it reverts the fix with nothing anywhere to say so. ghostty
+drops a value it cannot parse without a diagnostic: `+show-config` simply omits
+the key and stderr stays empty. And foot's flag forces the 16- or 10-bit buffers
+its precision needs, which are slower; `tweak.surface-bit-depth = "8-bit"` buys
+the speed back at the cost of the colour accuracy the flag exists for.
+**Also** kitty's contrast number does **not** reach the undercurl, which is why
+`undercurl_style` sits beside it rather than instead of it. `cell_fragment.glsl`
+applies `foreground_contrast()` to the glyph sprite in `main()`, then samples
+`underline_alpha` afterwards in `calculate_premul_foreground_from_sprites()` and
+blends it with `decoration_fg` having never passed it through. The number is a
+perceptual dial, not a measurement: kitty's own docs prescribe fixing the first
+number at the Linux default `1.0`, which only affects dark text on light, and
+raising the second on a dark theme until it looks right.
+
+<a id="kitty-inactive-alpha"></a>
+## `terminal/kitty.nix` — `inactive_text_alpha` is negative, and the sign is the setting
+
+**Why** The absolute value is the opacity; the **sign** chooses when fading
+applies at all. Positive fades text whenever the OS window loses focus, even
+with a single window open, so every glance at another application dims the
+terminal. Negative restricts fading to when more than one kitty window is
+visible in an OS window — the state actually worth indicating, and the one the
+window manager cannot indicate for you. kitty's own default is `1.0`: no fading.
+**Breaks** *Silently, and worst on the thinnest strokes.* `cell_fragment.glsl`
+multiplies both `combined_alpha` and `underline_alpha` by `effective_text_alpha`,
+so a positive value fades undercurls along with the text. A red undercurl at 0.8
+alpha is the first thing to vanish — the coverage failure
+`#terminal-stroke-weight` exists to fix, reintroduced by a setting that looks
+like it is only about focus.
+**Also** `-0.8` and `0.8` render identically whenever more than one window is
+visible, so they differ only in the single-window case nobody deliberately
+tests. That is how a whole-window fade survived every look at the colours.
+
 <a id="kitty-borders"></a>
 ## `terminal/kitty.nix` — the split borders are ours, not upstream's
 
