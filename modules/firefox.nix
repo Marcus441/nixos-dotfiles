@@ -29,7 +29,7 @@ _: {
             DisableFeedbackCommands = true;
 
             FirefoxHome = {
-              Search = false;
+              Search = true;
               TopSites = false;
               SponsoredTopSites = false;
               Highlights = false;
