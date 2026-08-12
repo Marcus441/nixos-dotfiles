@@ -12,6 +12,7 @@ _: {
           base01
           base02
           base03
+          base04
           base05
           base08
           base0A
@@ -95,7 +96,7 @@ _: {
           #custom-cputemp,
           #memory,
           #disk {
-            color: #${base05};
+            color: #${base04};
             font-weight: 400;
             margin: 0 6px;
           }
