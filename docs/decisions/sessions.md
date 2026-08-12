@@ -104,7 +104,7 @@ spawn site. Those four match their real class, which floats **every** instance.
 Accepted — a title match or a rename wrapper both break silently instead.
 
 <a id="wleave-no-anim"></a>
-## `wleave.nix` — appearing instantly takes a rule and a stylesheet, not one
+## `wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
 
 **Why** Two animators, neither of which is wleave: Hyprland fades the layer
 surface in, and libadwaita transitions the button that keyboard focus lands on.
@@ -115,6 +115,21 @@ The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
 absence. wleave is GTK4 (`libgtk-4`, `libadwaita-1`, `gtk4-layer-shell`), not
 GTK3, so the properties it accepts are GTK4's; check against that library
 before adding one.
+**Also** the same override-not-absence rule is why `button` restates
+`background-image: none` and `box-shadow: none`: libadwaita gives a button a
+gradient and a shadow, and neither survives contact with a flat palette.
+
+<a id="wleave-focus"></a>
+## `wleave-style.nix` — the keybind dims by opacity, not by colour
+
+**Why** The per-button hues are ID selectors (`#lock`, `#shutdown`, …) and the
+icons are `currentColor` SVGs, so one `color` sets icon and label together. An
+ID outranks `button label.keybind`, so muting the keybind with `color` would
+lose the cascade silently; `opacity` sidesteps specificity entirely. Upstream's
+own sheet mutes it the same way.
+**Also** the border stays 2px in every state and only changes colour, so
+focusing a button reflows nothing. Resting `base02`, focused `base0D` — the
+accent marks where you are, as it does for waybar's active workspace.
 
 <a id="wleave-service"></a>
 ## `wleave.nix` — the unit names the config files it is already reading
