@@ -184,8 +184,8 @@ _: {
           /* helper for spawning shell commands in the pre dwm-5.0 fashion */
           #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-          /* commands: absolute store paths; termcmd is footclient, termfbcmd
-             plain foot for when the server is down */
+          /* commands: absolute store paths; termfbcmd is the terminal in the
+             form that needs no running server */
           static const char *termcmd[]      = { ${argvC config.terminal.argv}, NULL };
           static const char *termfbcmd[]    = { ${argvC config.terminal.fallbackArgv}, NULL };
           static const char *menucmd[]      = { ${menuArgvC}, NULL };
@@ -203,7 +203,7 @@ _: {
           static const Key keys[] = {
             /* --- applications & screenshots (mirror the hyprland binds) --- */
             { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },   /* super+enter   -> terminal      */
-            { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return, spawn, {.v = termfbcmd} }, /* super+ctrl+enter -> plain foot (server-down fallback) */
+            { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return, spawn, {.v = termfbcmd} }, /* super+ctrl+enter -> terminal (server-down fallback) */
             { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
             { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },    /* super+c       -> OCR to clip   */
             { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn,                     /* super+shift+s -> shot (screen) */
@@ -295,21 +295,26 @@ _: {
     )
   ];
 
+  # load-bearing: docs/decisions/sessions.md#dwl-autostart-core
+  flake.modules.nixos.core = [
+    (
+      {lib, ...}: {
+        options.dwl.autostart = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          description = "Commands the session backgrounds once the compositor is up, after its own wallpaper and notifier. Resolved from ~/.nix-profile/bin, and run by dwl's -s shell inside single quotes, so an entry may not contain one. Declared here because aspects that are not the session set it; a host without dwl carries it inertly.";
+        };
+      }
+    )
+  ];
+
   flake.modules.nixos.dwl = [
     (
       {lib, ...}: {
-        options.dwl = {
-          statusCommand = lib.mkOption {
-            type = lib.types.str;
-            default = "";
-            description = "Shell command whose stdout dwl reads as bar status. Empty when the compositor was built without a bar, in which case the session does not pipe into it at all.";
-          };
-
-          autostart = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            default = [];
-            description = "Commands the session backgrounds once the compositor is up, after its own wallpaper, notifier and terminal server. Resolved from ~/.nix-profile/bin, and run by dwl's -s shell inside single quotes, so an entry may not contain one.";
-          };
+        options.dwl.statusCommand = lib.mkOption {
+          type = lib.types.str;
+          default = "";
+          description = "Shell command whose stdout dwl reads as bar status. Empty when the compositor was built without a bar, in which case the session does not pipe into it at all.";
         };
       }
     )
@@ -347,8 +352,8 @@ _: {
           export XDG_SESSION_TYPE=wayland
 
           # -s autostart, once the compositor is up: monitor layout, wallpaper,
-          # notifications, foot server, then dwl.autostart. Pipe is the status feed.
-          ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako & foot --server &${autostart}'
+          # notifications, then dwl.autostart. Pipe is the status feed.
+          ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako &${autostart}'
         '';
 
         dwl-desktop = pkgs.writeTextFile {

@@ -32,6 +32,22 @@ runtime.
 **Breaks** `home-manager switch` becomes a prerequisite for the dwl aspect —
 needed anyway for bash, foot, fonts and dwl-monitors.
 
+<a id="dwl-autostart-core"></a>
+## `dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
+
+**Why** The terminal server is an autostart entry now, and the aspect that owns
+it is a terminal, not a session — it cannot know whether the host runs dwl. So
+the option is declared where every host has it and read only by the session, the
+`windowTags` shape. `statusCommand` stays in `dwl`: only `dwl-bar` sets it, and
+`aspectRequires.dwl-bar = ["dwl"]` already guarantees they arrive together.
+**Breaks** A setter outside the `dwl` aspect hits an undeclared option on every
+host that does not take dwl. A host taking a terminal but not dwl carries the
+entry inertly, which is the point.
+**Also** the rendered order is **not** the host's aspect order. swift5 lists
+`core` before `dwl`, and the entry set from `core` still lands *after* the one
+set from `dwl` — measured, `dwl-idle & foot --server &`. Nothing here depends on
+it; anything that does must be measured, not reasoned about (CLAUDE.md §5).
+
 <a id="dwl-autostart"></a>
 ## `dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
 

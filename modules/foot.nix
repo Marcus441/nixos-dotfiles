@@ -1,4 +1,9 @@
 _: {
+  # load-bearing: docs/decisions/terminal.md#foot-server
+  flake.modules.nixos.core = [
+    {dwl.autostart = ["foot --server"];}
+  ];
+
   flake.modules.homeManager.core = [
     (
       {
