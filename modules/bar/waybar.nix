@@ -63,12 +63,12 @@ _: {
                     "custom/cputemp"
                     "memory"
                     "disk"
-                    "battery"
                     "bluetooth"
                     "network"
                     "pulseaudio"
-                    "clock"
+                    "battery"
                     "idle_inhibitor"
+                    "clock"
                   ]
                   ++ lib.optional (config.powerMenu.command != "") "custom/power";
 
