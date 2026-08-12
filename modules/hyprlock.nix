@@ -58,7 +58,7 @@ in {
           size = "${toString (builtins.floor (m.width / 10))}, ${toString (builtins.floor (m.height / 20))}";
           position = "0, -${toString (builtins.floor (m.height / 10))}";
           dots_center = true;
-          dots_rounding = -2;
+          dots_rounding = -1;
           rounding = 0;
           outline_thickness = 2;
           outer_color = base0D;
