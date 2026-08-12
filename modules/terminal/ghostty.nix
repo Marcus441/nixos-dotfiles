@@ -74,6 +74,7 @@ _: {
             foreground = colors16.base05;
             selection-background = colors16.base02;
             selection-foreground = colors16.base06;
+            cursor-color = colors16.base06;
             palette =
               lib.imap0 (i: hex: "${toString i}=${hex}") ansi
               ++ [

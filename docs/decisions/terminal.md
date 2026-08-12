@@ -138,21 +138,43 @@ command is dropped and a plain shell opens instead. It cannot live inside
 that would land past the `-e`.
 
 <a id="terminal-ansi"></a>
-## `theme/colors.nix` — the base16 slot mapping is a list, and the index is the slot
+## `theme/colors.nix` — the ANSI table is upstream's, and the index is the slot
 
-**Why** A TUI asking for "the base16 theme" asserts ANSI 9 is base09. The
-brights used to come from base12–base17, so that assertion was false. With four
-terminals the mapping would be written four times in four vocabularies —
-`regular0`, `colors.normal.black`, `color0`, `palette = "0=…"` — so it is one
-ordered list in `desktop.ansi` and each terminal renders it by index.
+**Why** kanagawa.nvim ships the dragon terminal theme for all four of these
+terminals, generated from one table — `themes.lua`'s `dragon.term`. That table
+is the authority, so `desktop.ansi` reproduces it exactly rather than deriving
+it from a slot convention. Written out per terminal it would appear four times
+in four vocabularies — `regular0`, `colors.normal.black`, `color0`,
+`palette = "0=…"` — so it is one ordered list and each terminal renders it by
+index.
 **Breaks** *Silently.* Anything reading a colour by number is off by a slot, and
 reordering the list reassigns every colour at once — the same trap qt5ct's
-positional role list carries. The cost is that regular and bright differ only in
-slots 0 and 7.
+positional role list carries.
+**Also** the earlier shape read `colors16` and duplicated slots 1–6 into 9–14,
+on the argument that a TUI asking for "the base16 theme" asserts ANSI 9 is
+base09. Nothing in this tree reads a colour by slot number — bat, yazi, tmux,
+opencode, zsh, lazygit, man and prompt all take hex or a tmTheme — so that
+argument bought nothing and cost every bright: ANSI 8 sat at 2.9:1 on the
+background and 9–14 were byte-identical to 1–6, which the unconfigured
+consumers (fzf, git, ls) are the ones that felt.
 **Also** slots 16 and 17 are **not** in the list. They are the 256-cube trick
 that is the only way base09 and base0F reach a terminal at all, so each
 implementation reads `colors16` for those directly, as it does for foreground,
 background and selection.
+
+<a id="kitty-borders"></a>
+## `terminal/kitty.nix` — the split borders are ours, not upstream's
+
+**Why** kanagawa.nvim's `extras/kitty/kanagawa_dragon.conf` sets no border
+colours, so `enabled_layouts = "splits,stack"` drew kitty's stock
+`active_border_color #00ff00`, `inactive_border_color #cccccc` and
+`bell_border_color #ff5a00` — the one part of the terminal the theme could not
+reach. They take base0D/base03/base08, the same roles `hyprland-general.nix`
+gives a window border, because a kitty split is the same thing one level down.
+**Breaks** *Loudly, but only in a split.* A single window never shows a border,
+so this survived every look at the colours until someone opened a split.
+**Also** upstream specifies nothing here, so these three are the only terminal
+colours in the tree that a diff against `extras/` cannot check.
 
 ## `filemanager/yazi.nix` — the program is `apps`, the role is its own aspect
 

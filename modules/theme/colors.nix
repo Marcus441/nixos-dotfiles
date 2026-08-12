@@ -23,26 +23,26 @@ _: {
         options.desktop.ansi = lib.mkOption {
           type = lib.types.listOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           readOnly = true;
-          default = with config.desktop.colors16; [
-            base00
+          default = with config.desktop.colors; [
+            base11
             base08
             base0B
             base0A
             base0D
             base0E
             base0C
-            base05
+            base06
 
-            base03
-            base08
-            base0B
-            base0A
-            base0D
-            base0E
-            base0C
+            base04
+            base12
+            base14
+            base13
+            base16
+            base17
+            base15
             base07
           ];
-          description = "`desktop.colors16` in ANSI slot order, 0-7 then the brights. The list index *is* the slot number, so every terminal renders the same mapping into its own vocabulary.";
+          description = "`desktop.colors` in ANSI slot order, 0-7 then the brights. The list index *is* the slot number, so every terminal renders the same mapping into its own vocabulary.";
         };
 
         options.desktop.colorsRgb = lib.mkOption {
@@ -62,9 +62,9 @@ _: {
         config.desktop.colors = {
           base00 = "#181616";
           base01 = "#282727";
-          base02 = "#393836";
-          base03 = "#625e5a";
-          base04 = "#737c73";
+          base02 = "#2d4f67";
+          base03 = "#737c73";
+          base04 = "#a6a69c";
           base05 = "#c5c9c5";
           base06 = "#c8c093";
           base07 = "#c5c9c5";

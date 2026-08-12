@@ -12,7 +12,7 @@ _: {
         pkgs,
         ...
       }: let
-        inherit (config.desktop) ansi font colors16;
+        inherit (config.desktop) ansi colors font colors16;
       in {
         # load-bearing: docs/decisions/terminal.md#terminal-daemons
         systemd.user.services.kitty = {
@@ -80,8 +80,19 @@ _: {
               foreground = colors16.base05;
               selection_background = colors16.base02;
               selection_foreground = colors16.base06;
+              cursor = colors16.base06;
               color16 = colors16.base09;
               color17 = colors16.base0F;
+
+              active_tab_background = colors.base10;
+              active_tab_foreground = colors16.base06;
+              inactive_tab_background = colors.base10;
+              inactive_tab_foreground = colors16.base04;
+
+              # load-bearing: docs/decisions/terminal.md#kitty-borders
+              active_border_color = colors16.base0D;
+              inactive_border_color = colors16.base03;
+              bell_border_color = colors16.base08;
             }
             // lib.optionalAttrs (!font.ligatures) {disable_ligatures = "always";}
             // lib.listToAttrs (lib.imap0 (i: hex: lib.nameValuePair "color${toString i}" hex) ansi);

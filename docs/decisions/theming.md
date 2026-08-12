@@ -9,6 +9,25 @@ Colour, fonts, and the two toolkits.
 **Breaks** *Silently.* A value without one is right in some files and wrong in
 others. The option type makes it a build failure instead.
 
+<a id="colors-neutrals"></a>
+## `theme/colors.nix` — base02–base04 carry the values upstream's table needs
+
+**Why** The dragon terminal table wants `#2d4f67` for selection and `#a6a69c`
+for ANSI 8, and neither was in the palette. base02 is base24's selection slot,
+so `waveBlue2` belongs there outright. ANSI 8 is base24's base03, but base03 is
+also `lineHighlight` in `tmtheme.nix` — a *background* — and `#a6a69c` there is
+a near-white bar across the current line. So base03 takes `dragonAsh`
+(`#737c73`, dragon's own comment colour, which is what base03 means) and
+`dragonGray` goes to base04, which ANSI 8 reads instead.
+**Breaks** *Silently, in the other direction.* Every base04 consumer is a dim
+foreground — waybar's readouts, zathura's status bar, qt's placeholder, tmux's
+`thm_dim` — and they all get brighter. `dragonBlack5` and `dragonBlack6` leave
+the palette; nothing outside the terminals wanted them.
+**Also** the consumers that read base02 as a neutral raised surface rather than
+a selection — qt's `Mid`/`Midlight`, discord's surfaces — now get blue. That is
+kanagawa's own selection colour, not a mistake, but it is the visible half of
+this change.
+
 <a id="tmtheme"></a>
 ## `theme/tmtheme.nix` — the hex escape hatch
 

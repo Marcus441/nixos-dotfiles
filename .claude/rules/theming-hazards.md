@@ -4,14 +4,19 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura
 
 # Theming hazards — colours and syntax themes
 
-- **ANSI carries base16; base24 is only reachable as hex.** `desktop.ansi`
-  holds the standard base16 slot mapping — `desktop.colors16` (the `base0*`
-  subset of `desktop.colors`) in slot order — so a program asking for *the
-  base16 theme* gets what it asserts: ANSI 9 is base09. The corollary is that
-  `base10`–`base17` cannot travel through ANSI at all: a consumer wanting one
-  reads `desktop.colors` and hands over hex, which is why `qt.nix` does. The
-  reason `bat.nix` and `filemanager/yazi.nix` share `desktop.syntaxTheme` is
-  unchanged: syntect takes a tmTheme, not ANSI.
+- **ANSI carries upstream's table, so it reaches into base24.** `desktop.ansi`
+  reproduces kanagawa.nvim's `dragon.term` exactly, which means it reads
+  `desktop.colors` and not `desktop.colors16`: slot 0 is base11 and the brights
+  9–14 are base12–base17. Do not "restore" a slot convention over it — the
+  upstream table is the authority, and matching it is checkable against the
+  files in `extras/`. `desktop.colors16` remains the honest type for the
+  consumers that genuinely cannot reach an extension slot. The reason `bat.nix`
+  and `filemanager/yazi.nix` share `desktop.syntaxTheme` is unchanged: syntect
+  takes a tmTheme, not ANSI.
+- **base03 is read as a background, so it cannot hold a light value.**
+  `tmtheme.nix` uses it for `lineHighlight`. ANSI 8's `#a6a69c` lives in base04
+  for that reason — see `docs/decisions/theming.md#colors-neutrals`. Check
+  whether a slot is ever a background before rebalancing the neutrals.
 - **`desktop.ansi` is positional, like qt5ct's role list.** The index *is* the
   slot number, and each terminal renders it into its own vocabulary
   (`regular0`/`bright0`, `colors.normal.black`, `color0`, `palette = "0=…"`).
@@ -70,8 +75,9 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura
 ## Where the options are declared
 
 - `modules/theme/colors.nix` — `desktop.colors` (base24, hex),
-  `desktop.colors16` (the `base0*` subset, what ANSI consumers read) and
-  `desktop.ansi` (that subset in slot order, what the terminals render).
+  `desktop.colors16` (the `base0*` subset, what the hex-only TUI consumers read)
+  and `desktop.ansi` (upstream's dragon terminal table in slot order, what the
+  terminals render).
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
   in `core`, read by `bat.nix` and `yazi.nix`.
 - `modules/theme/font.nix` — the option is `core`; point size comes from the
