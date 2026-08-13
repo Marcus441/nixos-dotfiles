@@ -329,7 +329,7 @@ copying 0.95 across would ask for less than one line per notch.
 this pair: the settings are analogous, the units are not.
 
 <a id="yazi-reset"></a>
-## `filemanager/yazi.nix` — `mode._alt.bg` is `base00`, not `reset`
+## `filemanager/yazi-style.nix` — `mode._alt.bg` is `base00`, not `reset`
 
 **Why** `status.lua` reads that background back as a *foreground*:
 `ui.Span(sep_left.close):fg(style.alt:bg())`.

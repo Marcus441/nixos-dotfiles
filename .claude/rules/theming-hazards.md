@@ -1,5 +1,5 @@
 ---
-paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix"
+paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix"
 ---
 
 # Theming hazards — colours and syntax themes
@@ -11,8 +11,8 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura
   upstream table is the authority, and matching it is checkable against the
   files in `extras/`. `desktop.colors16` remains the honest type for the
   consumers that genuinely cannot reach an extension slot. The reason `bat.nix`
-  and `filemanager/yazi.nix` share `desktop.syntaxTheme` is unchanged: syntect
-  takes a tmTheme, not ANSI.
+  and `filemanager/yazi-style.nix` share `desktop.syntaxTheme` is unchanged:
+  syntect takes a tmTheme, not ANSI.
 - **base03 is read as a background, so it cannot hold a light value.**
   `tmtheme.nix` uses it for `lineHighlight`. ANSI 8's `#a6a69c` lives in base04
   for that reason — see `docs/decisions/theming.md#colors-neutrals`. Check
@@ -79,6 +79,6 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi.nix,**/gtk.nix,**/zathura
   and `desktop.ansi` (upstream's dragon terminal table in slot order, what the
   terminals render).
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
-  in `core`, read by `bat.nix` and `yazi.nix`.
+  in `core`, read by `bat.nix` and `filemanager/yazi-style.nix`.
 - `modules/theme/font.nix` — the option is `core`; point size comes from the
   host record, because it is a property of the panel and not of the theme.
