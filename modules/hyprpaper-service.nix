@@ -1,7 +1,11 @@
 _: {
   flake.modules.homeManager.hyprland = [
     (
-      {pkgs, ...}: let
+      {
+        pkgs,
+        config,
+        ...
+      }: let
         walls = import ./_wallpapers.nix {inherit pkgs;};
       in {
         systemd.user.services.wallpaper-rotator = {
@@ -9,7 +13,7 @@ _: {
             Description = "Background wallpaper rotator for Hyprpaper";
             After = ["wayland-session@hyprland.desktop.target"];
             PartOf = ["wayland-session@hyprland.desktop.target"];
-            ConditionPathExists = "%h/.cache/wallpaper_rotator_enabled";
+            ConditionPathExists = "%C/wallpaper_rotator_enabled";
           };
 
           Install = {
@@ -18,7 +22,7 @@ _: {
 
           Service = {
             ExecStart = "${pkgs.writeShellScript "rotate" ''
-              CACHE_FILE="$HOME/.cache/current_wallpaper.img"
+              CACHE_FILE="${config.xdg.cacheHome}/current_wallpaper.img"
 
               while true; do
                 WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)

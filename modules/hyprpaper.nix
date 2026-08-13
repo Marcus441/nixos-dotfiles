@@ -9,7 +9,7 @@ _: {
         walls = import ./_wallpapers.nix {inherit pkgs;};
         wallDir = "${walls}/walled_tiers/4k/";
         defaultImage = "${wallDir}/mountain/a_castle_on_a_hill_with_fog_with_Eltz_Castle_in_the_background.jpg";
-        currentWallpaper = "${config.home.homeDirectory}/.cache/current_wallpaper.img";
+        currentWallpaper = "${config.xdg.cacheHome}/current_wallpaper.img";
       in {
         services.hyprpaper = {
           enable = true;
@@ -27,9 +27,9 @@ _: {
         };
 
         home.activation.initWallpaper = ''
-          if [ ! -e "$HOME/.cache/current_wallpaper.img" ]; then
-            mkdir -p "$HOME/.cache"
-            ln -sf "${defaultImage}" "$HOME/.cache/current_wallpaper.img"
+          if [ ! -e "${currentWallpaper}" ]; then
+            mkdir -p "${config.xdg.cacheHome}"
+            ln -sf "${defaultImage}" "${currentWallpaper}"
           fi
         '';
       }

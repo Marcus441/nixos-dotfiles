@@ -1,11 +1,15 @@
 _: {
   flake.modules.homeManager.hyprland = [
     (
-      {pkgs, ...}: let
+      {
+        pkgs,
+        config,
+        ...
+      }: let
         walls = import ./_wallpapers.nix {inherit pkgs;};
         update-wallpaper = pkgs.writeShellScript "update-wallpaper" ''
           if [ -f "$1" ]; then
-            ln -sf "$1" "$HOME/.cache/current_wallpaper.img"
+            ln -sf "$1" "${config.xdg.cacheHome}/current_wallpaper.img"
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
           fi
         '';
@@ -18,7 +22,7 @@ _: {
           FixedOrder = true
 
           Action = "${pkgs.writeShellScript "wp-logic" ''
-            STATE_FILE="$HOME/.cache/wallpaper_rotator_enabled"
+            STATE_FILE="${config.xdg.cacheHome}/wallpaper_rotator_enabled"
 
             if [ "$1" = "ENABLE_ROTATOR" ]; then
               touch "$STATE_FILE"
