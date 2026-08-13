@@ -49,6 +49,25 @@ so lowering ours produces a "defined multiple times" conflict rather than an
 override. An option is also what the repo does when two implementations compete
 for one slot, and here they are two shells.
 
+<a id="zsh-dotdir"></a>
+## `dotDir` is set, and history is pulled out of it
+
+Home Manager warns that `dotDir`'s default flips to the XDG config directory at
+`stateVersion` 26.05; setting it now adopts the new behaviour rather than
+inheriting it at an upgrade nobody connects to the breakage.
+
+**Why** `history.path` defaults to `${dotDir}/.zsh_history`, so moving `dotDir`
+alone would file 100 000 lines of history under `~/.config`. History is state.
+No `.keep` is needed beside it, unlike the two in `xdg-app-dirs.nix`: the
+generated `.zshrc` runs its own `mkdir -p "$(dirname "$HISTFILE")"`.
+**Breaks** Session startup, at first glance: `hyprland.nix` puts the uwsm start
+in `programs.zsh.profileExtra`, which is now `~/.config/zsh/.zprofile`, a path
+zsh reads only because Home Manager keeps a `~/.zshenv` stub that exports
+`ZDOTDIR`. Deleting that stub as stray leaves no error and no session.
+**Also** `sessions.md#uwsm-login-shell` for the other half of that path, and
+`xdg.md#prefer-xdg-directories` for why this one is set by hand — `dotDir`
+keys off `stateVersion`, not `home.preferXdgDirectories`.
+
 <a id="zsh-keymap"></a>
 ## `defaultKeymap = "emacs"`, and the re-source that follows it
 

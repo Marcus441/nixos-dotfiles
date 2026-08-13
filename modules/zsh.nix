@@ -7,12 +7,16 @@ _: {
         programs.zsh = {
           enable = true;
 
+          # load-bearing: docs/decisions/shells.md#zsh-dotdir
+          dotDir = "${config.xdg.configHome}/zsh";
+
           # load-bearing: docs/decisions/shells.md#zsh-keymap
           defaultKeymap = "emacs";
 
           history = {
             size = 50000;
             save = 100000;
+            path = "${config.xdg.stateHome}/zsh/history";
           };
 
           autosuggestion = {
