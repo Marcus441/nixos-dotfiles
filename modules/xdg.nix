@@ -1,6 +1,11 @@
 _: {
   flake.modules.homeManager.core = [
     {
+      xdg.enable = true;
+
+      # load-bearing: docs/decisions/xdg.md#prefer-xdg-directories
+      home.preferXdgDirectories = true;
+
       xdg.userDirs = {
         enable = true;
         createDirectories = true;

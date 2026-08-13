@@ -16,6 +16,7 @@ decisions/     why one file made its call, grouped by area
   theming.md           colour, fonts, the two toolkits
   placement.md         why a file is not in the obvious aspect
   display-and-boot.md  monitors, hyprlock, boot
+  xdg.md               which app state leaves $HOME, and which stays
 ```
 
 Most entries are three lines — **Why** the value is what it is, **Breaks** what
@@ -24,7 +25,7 @@ goes wrong if you change it, and **Also** where there is a related trap.
 
 ## Finding the reason for a line
 
-Files carry no comments except a pointer, at the 85 values where changing them
+Files carry no comments except a pointer, at the 88 values where changing them
 breaks something non-obviously:
 
 ```nix
