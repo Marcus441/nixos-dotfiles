@@ -1,0 +1,18 @@
+# Gaming
+
+<a id="proton-compat-path"></a>
+## `proton.nix` — `extraCompatPackages`, not a path plus a fetcher
+
+**Why** `programs.steam.package` carries an `apply` that derives
+`STEAM_EXTRA_COMPAT_TOOLS_PATHS` from `extraCompatPackages` and injects it into
+the FHS wrapper's own environment. Setting that variable by hand duplicated the
+module and aimed it at `~/.steam/root/compatibilitytools.d` — mutable state
+outside the store, filled by `protonup-ng` at runtime and invisible to a
+rebuild.
+**Breaks** The Proton-GE version is now whichever one nixpkgs carries, not one
+chosen on demand. A title needing a specific build gets it by being added to
+`extraCompatPackages`, not by reaching for `protonup`.
+**Also** `programs.steam.protontricks.enable` is the right lever for
+protontricks rather than `pkgs.protontricks` in a package list — the module
+overrides the package so it inherits the same `extraCompatPaths`, which a bare
+package does not get.
