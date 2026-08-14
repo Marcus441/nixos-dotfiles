@@ -138,3 +138,23 @@ through `moduleParams`, which is also why `boot.extraModprobeConfig` is the
 wrong lever — the module *generates* that string, so writing to it by hand
 fights the generator. `NVreg_UsePageAttributeTable = 1` is nixpkgs' own
 documented example for this option.
+
+<a id="vaapi-decode-only"></a>
+## `nvidia-vaapi.nix` — the driver is decode-only, and the variable is global
+
+**Why** Only the variables are declared here. The package is already present:
+`hardware.nvidia.videoAcceleration` defaults to `true` and the module adds
+`nvidia-vaapi-driver` to `hardware.graphics.extraPackages` itself, so listing
+it again is duplication that measures as a no-op. `NVD_BACKEND = "direct"` is
+required for the driver to work under Wayland at all — the default backend path
+assumes X11 — and `LIBVA_DRIVER_NAME` makes libva pick it rather than probe.
+**Breaks** The pair is session-wide, and `nvidia-vaapi-driver` implements
+**decode only**. `firefox.nix` and `thunderbird.nix` both set
+`media.ffmpeg.vaapi.enabled`, so they get hardware decode — but anything that
+probes VA-API for *encode* finds a driver that advertises itself and then
+fails. OBS, ffmpeg and kdenlive all come in through `apps`, which gpc takes.
+Accepted knowingly: the failure is loud rather than silent, and the fix is to
+scope both variables to the two consumers instead of the session.
+**Also** They reach the compositor's environment through `xdg.nix`'s
+`uwsm/env` symlink to `home.sessionVariablesPackage`, not through any
+Hyprland-specific mechanism.
