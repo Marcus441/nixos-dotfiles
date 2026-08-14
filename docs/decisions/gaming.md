@@ -98,3 +98,19 @@ the rules with it.
 **Also** `hardware.xone` was considered and rejected — it drives the Xbox
 Wireless Dongle, and enabling it blacklists `mt76x2u`, a MediaTek Wi-Fi
 driver, on a host that cannot be tested from here.
+
+<a id="mangohud-fhs"></a>
+## `mangohud.nix` — the package is installed twice, on purpose
+
+**Why** Steam runs inside a bubblewrap FHS with its own view of the
+filesystem, so the Vulkan implicit layer that MangoHud registers under the home
+profile's `share/vulkan/implicit_layer.d` is not reliably visible to a game
+launched from Steam. `programs.steam.extraPackages` is threaded into that
+bubble by the module and is the only copy that reaches inside it; the
+`homeManager` copy carries the config and serves native, non-Steam launches.
+**Breaks** Dropping the `extraPackages` entry leaves `MANGOHUD=1` silently
+doing nothing for every Steam title while continuing to work everywhere else —
+which reads as a MangoHud bug rather than a packaging one.
+**Also** This is the `brightnessctl.nix` "two audiences" shape rather than
+duplication. `font_size` takes the host's `fontSize`, the same machine fact the
+terminals scale from, so the overlay matches the display it is drawn on.

@@ -1,11 +1,7 @@
 _: {
   flake.modules.nixos.gaming = [
-    (
-      {pkgs, ...}: {
-        programs.steam.enable = true;
-
-        environment.systemPackages = [pkgs.mangohud];
-      }
-    )
+    {
+      programs.steam.enable = true;
+    }
   ];
 }
