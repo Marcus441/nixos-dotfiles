@@ -24,6 +24,23 @@ power-profiles-daemon and upower stay in `core` because waybar's battery module
 runs on the desktops too. A too-small aspect is recoverable where a broken power
 path is not.
 
+<a id="launchers-nixos"></a>
+## `game-launchers.nix` — `nixos`, against the default
+
+CLAUDE.md §6 says default to `homeManager` and justify the exception. The
+justification: `lutris` takes `steamSupport ? true`, which pulls unfree
+`pkgs.steam`, and `unfree.nix` sets `allowUnfree` on **nixos `core` only**.
+Home Manager here is standalone on `nixpkgs.legacyPackages.${system}` — a fixed
+`pkgs` instance — so `nixpkgs.config.allowUnfree` in a home module is accepted
+and then ignored, and the build fails on the unfree licence with no hint that
+the option it names is inert.
+
+The alternatives were worse: `lutris.override { steamSupport = false; }` trades
+a licence boundary for lost functionality, and giving the generator an
+`allowUnfree` pkgs instance moves every home closure on all three hosts to fix
+one package on one. The rest of `gaming` is nixos already — steam, gamemode,
+gamescope, scx — and a gaming rig's launchers are not what `mbp` will port.
+
 ## `unfree.nix` — `core`, not `gaming`
 
 Not a gaming fact. It was only ever in gpc's host file because that is where the
