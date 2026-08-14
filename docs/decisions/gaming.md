@@ -64,3 +64,19 @@ nvidia-settings, which is inert under Wayland. `users.groups.gamemode` is
 created by the module and read by nothing — renice comes from the
 `cap_sys_nice` wrapper on gamemoded (`enableRenice`, default true), so adding
 the user to that group would be cargo.
+
+<a id="gamescope-wrapper"></a>
+## `gamescope.nix` — `capSysNice` moves the binary
+
+**Why** `--rt` asks for realtime scheduling and needs CAP_SYS_NICE to get it;
+`capSysNice` is what grants it. `enable` is left to the steam module's
+`mkDefault` off `gamescopeSession`, so it is not restated here.
+**Breaks** Setting it takes gamescope *out* of `environment.systemPackages` —
+the module reads `mkIf (!cfg.capSysNice)` — leaving only the setcap wrapper in
+`/run/wrappers/bin`. That is on PATH, so a bare `gamescope` still resolves, but
+anything holding a store path from `pkgs.gamescope` gets neither the capability
+nor the args.
+**Also** The args do survive the capability wrapper:
+`security.wrappers.gamescope.source` points at the makeWrapper output rather
+than the raw package. gamescope on NVIDIA is the most fragile piece in this
+stack — if the Steam session stops starting, turn this off first.
