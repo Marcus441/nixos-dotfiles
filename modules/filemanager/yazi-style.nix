@@ -34,11 +34,28 @@ _: {
             tab_width = 1;
             syntect_theme = "${config.desktop.syntaxTheme}";
 
-            border_style.fg = colors16.base0D;
+            border_style.fg = colors16.base01;
+
+            find_keyword = {
+              fg = colors16.base0D;
+              bold = true;
+              italic = false;
+              underline = false;
+            };
+            find_position = {
+              fg = colors.base17;
+              bold = true;
+              italic = false;
+            };
           };
 
           confirm = {
-            border.fg = colors16.base0D;
+            border.fg = colors16.base01;
+
+            title = {
+              fg = colors16.base03;
+              bold = true;
+            };
 
             btn_yes = {
               fg = colors.base14;
@@ -48,8 +65,19 @@ _: {
             btn_labels = ["  󰄬 Yes  " "  󰅖 No  "];
           };
 
+          # load-bearing: docs/decisions/terminal.md#yazi-blocks
           cmp = {
-            border.fg = colors16.base0D;
+            border = {
+              fg = colors16.base01;
+              bg = colors16.base01;
+            };
+
+            inactive.bg = colors16.base01;
+
+            active = {
+              reversed = false;
+              bg = colors16.base02;
+            };
 
             icon_file = "󰈔";
             icon_folder = "󰉋";
@@ -57,25 +85,94 @@ _: {
           };
 
           notify = {
+            title_info.fg = colors16.base0D;
+            title_warn.fg = colors.base13;
+            title_error.fg = colors.base12;
+
             icon_info = "󰋽";
             icon_warn = "󰀪";
             icon_error = "󰅚";
           };
 
-          input.border.fg = colors16.base0D;
-          pick.border.fg = colors16.base0D;
-          spot.border.fg = colors16.base0D;
-          tasks.border.fg = colors16.base0D;
+          input = {
+            border = {
+              fg = colors16.base01;
+              bg = colors16.base01;
+            };
 
+            title = {
+              fg = colors16.base03;
+              bg = colors16.base01;
+              bold = true;
+            };
+
+            value.bg = colors16.base01;
+
+            selected = {
+              reversed = false;
+              bg = colors16.base02;
+            };
+          };
+
+          pick = {
+            border.fg = colors16.base01;
+
+            active = {
+              fg = colors16.base05;
+              bg = colors16.base02;
+              bold = true;
+            };
+          };
+
+          spot = {
+            border.fg = colors16.base01;
+
+            title = {
+              fg = colors16.base03;
+              bold = true;
+            };
+          };
+
+          tasks = {
+            border.fg = colors16.base01;
+
+            title = {
+              fg = colors16.base03;
+              bold = true;
+            };
+
+            hovered = {
+              fg = colors16.base05;
+              bg = colors16.base02;
+            };
+          };
+
+          help.hovered = {
+            reversed = false;
+            bg = colors16.base02;
+            bold = true;
+          };
+
+          # load-bearing: docs/decisions/terminal.md#yazi-frames
           indicator = {
             padding = {
               open = "▐";
               close = "▌";
             };
 
+            current = {
+              reversed = false;
+              bg = colors16.base02;
+            };
+
+            parent = {
+              reversed = false;
+              bg = colors16.base01;
+            };
+
             preview = {
               underline = false;
-              bg = colors16.base02;
+              bg = colors16.base01;
             };
           };
 

@@ -35,6 +35,18 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathur
 - **A partial theme merges onto the preset; a list replaces it.** yazi's theme
   overrides only what the preset gets wrong, but its `icon` rules replace the
   preset's 14 named-folder rules wholesale.
+- **A yazi popup fills only if its contents cover every cell.** Every popup
+  draws `Clear` — ratatui's, so the terminal default — then an *unstyled*
+  `Block`, so no key fills an interior directly. `input` and `cmp` still come
+  out solid, because `border` + `title` + `value` reach all three of the
+  input's rows and `cmp` sizes itself to `items.len() + 2`; `confirm`, `tasks`,
+  `spot` and `notify` have no such cover and stay frames. Do not generalise
+  from either half — check which keys reach which cells.
+  `docs/decisions/terminal.md#yazi-blocks`.
+- **A yazi `bg` needs `reversed = false` beside it.** The merge is partial, so
+  the preset's `reversed = true` on `indicator.parent`/`current`, `cmp.active`,
+  `input.selected` and `help.hovered` survives and swaps the `bg` into the
+  foreground — a coloured-text row instead of a bar.
 - **Colour formats are per-consumer, and none of them are interchangeable.**
   Qt wants ARGB (`#aarrggbb`) and no alpha comes from the palette; girara
   (zathura) parses through `gdk_rgba_parse`, which takes `#rrggbbaa`; dwl's

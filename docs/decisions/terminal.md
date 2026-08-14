@@ -403,3 +403,40 @@ lazily and the first window pays the startup cost.
 **Why** The default followed the option.
 **Breaks** `core` used to point every host at `thunar.desktop`, including the
 one with no thunar installed.
+
+<a id="yazi-frames"></a>
+## `filemanager/yazi-style.nix` — `base01` is the surface, `base02` is the selection
+
+**Why** The editor's floats put each block's border in that block's own
+background, so the frame reads as padding rather than an outline
+(`neovim/docs/decisions/theme.md#picker-blocks`). The whole theme runs on two
+values: `base01` is every ambient surface — the seven borders, the filled
+popups, the bar under an unfocused pane's hovered row — and `base02`, base24's
+selection slot, is reserved for the one thing actually selected: the current
+pane's hovered row, the completion's active row, `pick`/`tasks`/`help`'s
+hovered row, and the range inside the input. Two values, one meaning each.
+**Breaks** *Silently.* The preset sets `reversed = true` on
+`indicator.parent`/`current`, `cmp.active`, `input.selected` and
+`help.hovered`, and a partial theme merges onto it — so a `bg` set without an
+explicit `reversed = false` is swapped into the foreground and paints the text,
+not the row.
+**Also** the parent and preview panes take the same `base01` bar as each other;
+`base10` was tried there first and reads as a hole rather than a highlight.
+
+<a id="yazi-blocks"></a>
+## `filemanager/yazi-style.nix` — `input` and `cmp` fill, and the rest cannot
+
+**Why** Every yazi popup draws `Clear` — ratatui's, so `Cell::EMPTY` and the
+terminal default — then an *unstyled* `Block`, so no key fills an interior
+directly. Two popups fill anyway, because their contents cover every cell:
+`input` is three rows, and `border` plus `title` plus `value` reach all of them
+(`Line::styled(...).render()` calls `buf.set_style` across the whole line, so
+`value` paints the full inner width and not just the typed text); `cmp` sizes
+its area to `items.len() + 2`, so per-row `active`/`inactive` leave no blank
+row behind. That is the cmdline pair from `#picker-blocks`, and it is why they
+are solid where `confirm`, `tasks`, `spot` and `notify` are frames.
+**Breaks** Nothing loudly — a popup that cannot fill simply stays on the
+terminal background, which is why the two that can are the two that do.
+**Also** `confirm` is *nearly* fillable through `body` and `list`, but its
+button row leaves gaps around the labels; a half-filled popup reads worse than
+an unfilled one.
