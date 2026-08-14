@@ -26,7 +26,7 @@ goes wrong if you change it, and **Also** where there is a related trap.
 
 ## Finding the reason for a line
 
-Files carry no comments except a pointer, at the 88 values where changing them
+Files carry no comments except a pointer, at the 102 values where changing them
 breaks something non-obviously:
 
 ```nix
@@ -34,8 +34,13 @@ breaks something non-obviously:
 platformTheme.name = "qtct";
 ```
 
-The 34 whose **Breaks** line says *silently* are the sharp end — they fail with
+The 41 whose **Breaks** line says *silently* are the sharp end — they fail with
 no error anywhere, so the pointer is the only warning.
+
+Both counts are `grep -rc` results, so they can be reproduced rather than
+trusted: `grep -rn 'load-bearing:' modules/ --include='*.nix' | wc -l` for the
+first, and `grep -rhE '^\*\*Breaks\*\*' docs/ | grep -ci silently` for the
+second.
 
 ## Where else things live
 
