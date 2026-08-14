@@ -16,7 +16,7 @@ _: {
               gaps_out = 5;
               border_size = 2;
               resize_on_border = false;
-              allow_tearing = false;
+              allow_tearing = lib.mkDefault false;
               layout = "dwindle";
               col = {
                 active_border = "0xff${c.base0D}";

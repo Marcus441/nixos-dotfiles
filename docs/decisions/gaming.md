@@ -158,3 +158,27 @@ scope both variables to the two consumers instead of the session.
 **Also** They reach the compositor's environment through `xdg.nix`'s
 `uwsm/env` symlink to `home.sessionVariablesPackage`, not through any
 Hyprland-specific mechanism.
+
+<a id="tearing-intersection"></a>
+## `tearing.nix` — an aspect for `gaming ∧ hyprland`
+
+**Why** These settings need *both*. `aspectRequires.gaming = ["hyprland"]`
+would be wrong in the other direction — it forbids a dwl host from ever taking
+`gaming`, which is exactly the case worth keeping open — and gating on
+`config.wayland.windowManager.hyprland.enable` inside `gaming` is the "one
+aspect branching between dwl and Hyprland" anti-pattern. There is no
+intersection operator, so the intersection gets a name and `aspectRequires`
+lists both parents. This is `bar/waybar.nix`'s shape with two entries rather
+than one, and the generator rejects a host that takes `tearing` without them.
+**Breaks** `allow_tearing` cannot be added additively. `settings` bottoms out
+in `bool`, whose merge is `mergeEqualOption`, so two definitions of it are a
+hard eval error rather than a last-wins. `hyprland-general.nix` therefore holds
+it as `lib.mkDefault false` — priority only, and measured byte-identical on
+UM790pro. If that ever stops holding, the fallback is `lib.mkForce true` here,
+which works but hides the coupling from the file being overridden.
+**Also** Only `no-anim` goes through `windowTags`, because it is the one tag
+whose behaviour row already exists in `hyprland-rules.nix` and the one that is
+genuinely inert on dwl. `immediate`, `content` and `idle_inhibit` are Hyprland
+vocabulary with no dwl analogue — the app-id case from
+`conventions/placement.md` — so they stay here with their regex rather than
+forcing a second reader on `hyprland-rules.nix`.
