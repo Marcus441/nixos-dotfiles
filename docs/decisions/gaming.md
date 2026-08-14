@@ -1,5 +1,25 @@
 # Gaming
 
+<a id="preempt-dynamic"></a>
+## `preempt.nix` — a boot parameter instead of a kernel build
+
+**Why** This is the whole of what a custom kernel would have bought. Stock
+`linuxPackages_latest` already ships `CONFIG_HZ_1000`, `NO_HZ_FULL`,
+`TRANSPARENT_HUGEPAGE`, `DEBUG_INFO_BTF`, `SCHED_CLASS_EXT` and `NTSYNC=m`;
+`CONFIG_PREEMPT` was the only gap, and `CONFIG_PREEMPT_DYNAMIC=y` makes the
+same behaviour selectable at boot. `uname -v` reports `PREEMPT_DYNAMIC`.
+**Breaks** Nothing that a reboot does not undo — which is the point. Building
+the kernel instead costs a from-source rebuild of the kernel *and*, because
+`boot.kernelPackages` is an extensible set whose `nvidia_x11.open` builds
+against `self.kernel`, the NVIDIA module with it — on every nixpkgs bump,
+forever, for one flag.
+**Also** `gaming` rather than the host file, even though gpc is the only host
+taking it. "Favour latency over throughput" is a decision that follows from
+being a gaming machine, not a fact about this machine — the same reason
+`scx.nix` and ntsync live on the aspect. Machine facts (Inv. 7) are things like
+UM790pro's `usbcore.autosuspend=-1`. Transparent hugepages stay on `madvise`:
+`always` is double-edged for games, and Proton opts in explicitly.
+
 <a id="proton-compat-path"></a>
 ## `proton.nix` — `extraCompatPackages`, not a path plus a fetcher
 
