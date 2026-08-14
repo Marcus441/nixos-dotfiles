@@ -12,17 +12,23 @@ _: {
         hardware.nvidia = {
           modesetting.enable = true;
 
-          powerManagement.enable = false;
+          # load-bearing: docs/decisions/gaming.md#nvidia-preserve-vram
+          powerManagement.enable = true;
 
           powerManagement.finegrained = false;
-
           open = true;
-
           nvidiaSettings = true;
-
           package = config.boot.kernelPackages.nvidiaPackages.latest;
+
+          moduleParams.nvidia.NVreg_UsePageAttributeTable = 1;
         };
       }
     )
+  ];
+
+  flake.modules.homeManager.nvidia = [
+    {
+      home.sessionVariables.__GL_VRR_ALLOWED = "1";
+    }
   ];
 }

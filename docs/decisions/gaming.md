@@ -114,3 +114,27 @@ which reads as a MangoHud bug rather than a packaging one.
 **Also** This is the `brightnessctl.nix` "two audiences" shape rather than
 duplication. `font_size` takes the host's `fontSize`, the same machine fact the
 terminals scale from, so the overlay matches the display it is drawn on.
+
+<a id="nvidia-preserve-vram"></a>
+## `nvidia.nix` — `powerManagement.enable` is how VRAM survives suspend
+
+**Why** It reads like a laptop option and is not. The module derives
+`moduleParams.nvidia.NVreg_PreserveVideoMemoryAllocations = 1` from it, which
+is what saves and restores VRAM around a sleep; without it a desktop session
+frequently does not survive suspend/resume at all.
+**Breaks** Setting the modprobe parameter by hand instead gives the parameter
+without the mechanism that drives it. Which mechanism you get depends on the
+driver: `powerManagement.kernelSuspendNotifier` defaults to `open && version ≥
+595`, and gpc's `nvidiaPackages.latest` is 610.57.04, so the driver takes
+kernel suspend notifications directly and the `nvidia-suspend` / `-resume` /
+`-hibernate` units are deliberately **not** installed — they are the
+`!kernelSuspendNotifier` fallback. Do not go looking for them.
+`finegrained` stays off: that one *is* Optimus-only and has no place on a
+desktop.
+**Also** Two parameters the guide asked for are already applied and must not be
+restated: `nvidia-drm.modeset=1` follows from `modesetting.enable`, and
+`nvidia-drm.fbdev=1` follows from it too on any driver ≥545. Both arrive
+through `moduleParams`, which is also why `boot.extraModprobeConfig` is the
+wrong lever — the module *generates* that string, so writing to it by hand
+fights the generator. `NVreg_UsePageAttributeTable = 1` is nixpkgs' own
+documented example for this option.
