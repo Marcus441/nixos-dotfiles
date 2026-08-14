@@ -13,6 +13,11 @@ _: {
           # load-bearing: docs/decisions/shells.md#zsh-keymap
           defaultKeymap = "emacs";
 
+          shellAliases = {
+            # load-bearing: docs/decisions/shells.md#noglob-nix
+            nix = "noglob nix";
+          };
+
           history = {
             size = 50000;
             save = 100000;

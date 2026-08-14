@@ -183,6 +183,30 @@ silently during completion and never offers alternatives; the two are not the
 same trade, and one typo-tolerant completion is not worth a menu you have to
 read twice. So `dirspell` and `cdspell` both map to nothing, deliberately.
 
+<a id="noglob-nix"></a>
+## `nix` is aliased to `noglob nix`, because `null_glob` eats flake refs
+
+`extended_glob` makes `#` the "zero or more of the preceding" operator, so a
+flake reference is a glob pattern: `.#fetch-deps` reads as zero or more dots
+followed by `fetch-deps`. It matches no file, and `null_glob` — the option
+above that genuinely changes behaviour — then deletes the word instead of
+erroring. `nix build .#fetch-deps` reaches nix as a bare `nix build`, which
+builds the default package or fails saying `packages.<system>.default` does not
+exist. The error names an attribute nobody typed, which is what makes it cost
+an afternoon. `nix flake init -t github:owner/repo#template` goes the same way.
+
+`noglob` suppresses filename generation for the rest of the command line, which
+is exactly right for flake references: nix parses them itself and never wants
+the shell to touch a `#`. An alias expands only as a command's first word, so
+this covers interactive typing and leaves scripts, `command nix`, and any `nix`
+inside a `''` block alone.
+
+It belongs in `programs.zsh.shellAliases` rather than `home.shellAliases`,
+which bash also reads: `noglob` is a zsh reserved word and bash would answer
+`noglob: command not found` on every invocation. Bash needs no equivalent — `#`
+is not a pattern character there, so a flake ref survives `extglob` and
+`nullglob` unharmed.
+
 ## The prompt is one file, two implementations
 
 `prompt.nix` holds both. zsh cannot reuse a line of the bash one — `%~` for
