@@ -24,22 +24,29 @@ power-profiles-daemon and upower stay in `core` because waybar's battery module
 runs on the desktops too. A too-small aspect is recoverable where a broken power
 path is not.
 
-<a id="launchers-nixos"></a>
-## `game-launchers.nix` — `nixos`, against the default
+<a id="unfree-nixos"></a>
+## `game-launchers.nix`, `nvtop.nix` — `nixos`, because unfree cannot be home
 
 CLAUDE.md §6 says default to `homeManager` and justify the exception. The
-justification: `lutris` takes `steamSupport ? true`, which pulls unfree
-`pkgs.steam`, and `unfree.nix` sets `allowUnfree` on **nixos `core` only**.
-Home Manager here is standalone on `nixpkgs.legacyPackages.${system}` — a fixed
-`pkgs` instance — so `nixpkgs.config.allowUnfree` in a home module is accepted
-and then ignored, and the build fails on the unfree licence with no hint that
-the option it names is inert.
+justification is the same for both files and is not about the packages: **an
+unfree package cannot go in `home.packages` at all here.** `unfree.nix` sets
+`allowUnfree` on **nixos `core` only**, and Home Manager is standalone on
+`nixpkgs.legacyPackages.${system}` — a *fixed* `pkgs` instance. Setting
+`nixpkgs.config.allowUnfree` in a home module is therefore accepted and then
+ignored, and the build fails on the licence with no hint that the option it
+names is inert. This is the overlay trap in `host-wiring.md`, wearing a
+different hat.
 
-The alternatives were worse: `lutris.override { steamSupport = false; }` trades
-a licence boundary for lost functionality, and giving the generator an
+What each one trips over: `lutris` takes `steamSupport ? true`, which pulls
+unfree `pkgs.steam`; `nvtopPackages.nvidia` pulls `cuda_nvml_dev`, which is
+under the CUDA EULA.
+
+The alternatives were worse. Overriding the flags off (`steamSupport = false`)
+trades a licence boundary for lost functionality, and giving the generator an
 `allowUnfree` pkgs instance moves every home closure on all three hosts to fix
-one package on one. The rest of `gaming` is nixos already — steam, gamemode,
-gamescope, scx — and a gaming rig's launchers are not what `mbp` will port.
+two packages on one. The rest of `gaming` is nixos already — steam, gamemode,
+gamescope, scx — and neither a gaming rig's launchers nor an NVIDIA monitor is
+what `mbp` will port.
 
 ## `unfree.nix` — `core`, not `gaming`
 

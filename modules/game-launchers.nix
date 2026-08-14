@@ -2,7 +2,7 @@ _: {
   flake.modules.nixos.gaming = [
     (
       {pkgs, ...}: {
-        # load-bearing: docs/decisions/placement.md#launchers-nixos
+        # load-bearing: docs/decisions/placement.md#unfree-nixos
         environment.systemPackages = with pkgs; [
           lutris
           heroic
