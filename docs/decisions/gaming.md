@@ -16,3 +16,16 @@ chosen on demand. A title needing a specific build gets it by being added to
 protontricks rather than `pkgs.protontricks` in a package list — the module
 overrides the package so it inherits the same `extraCompatPaths`, which a bare
 package does not get.
+
+<a id="ntsync-module"></a>
+## `proton.nix` — `ntsync` is loaded, not built
+
+**Why** `CONFIG_NTSYNC=m` already in stock `linuxPackages_latest`. The
+in-kernel synchronisation primitive that replaces esync/fsync is compiled and
+simply not autoloaded, so `/dev/ntsync` never appears and nothing asks for it.
+Loading the module is the whole of the change; no kernel rebuild is involved.
+**Breaks** Silently. Without the device node Proton falls back to esync/fsync
+and reports nothing — `PROTON_LOG=1` is the only way to see which path a title
+actually took.
+**Also** Having the node does not oblige Proton to use it; recent builds detect
+it, and `PROTON_USE_NTSYNC=1` forces it per-title.
