@@ -29,3 +29,18 @@ and reports nothing — `PROTON_LOG=1` is the only way to see which path a title
 actually took.
 **Also** Having the node does not oblige Proton to use it; recent builds detect
 it, and `PROTON_USE_NTSYNC=1` forces it per-title.
+
+<a id="scx-package"></a>
+## `scx.nix` — `rustscheds`, not the default `scx.full`
+
+**Why** `services.scx.package` defaults to `pkgs.scx.full`, which has no
+substitute in this pin and pulls `scx_cscheds` in behind it for schedulers
+nothing here names. `rustscheds` is cached and its `passthru.schedulers` still
+carries `scx_lavd`, which is the one built for gaming workloads — it targets
+latency spikes and 1% lows rather than throughput.
+**Breaks** `services.scx.scheduler` is typed `enum cfg.package.schedulers`, so
+narrowing the package narrows the set of legal names with it. Reaching for a C
+scheduler later is an eval error naming the valid ones, not a silent fallback.
+**Also** The daemon runs from `multi-user.target`, not per-game. `scx-loader`
+driven by gamemode's `custom.start`/`custom.end` is the per-game alternative,
+at the cost of more moving parts.
