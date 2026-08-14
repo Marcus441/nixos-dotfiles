@@ -76,7 +76,25 @@ the module reads `mkIf (!cfg.capSysNice)` — leaving only the setcap wrapper in
 `/run/wrappers/bin`. That is on PATH, so a bare `gamescope` still resolves, but
 anything holding a store path from `pkgs.gamescope` gets neither the capability
 nor the args.
-**Also** The args do survive the capability wrapper:
+**Also** `--adaptive-sync` is a request, not an assertion — gamescope enables
+variable refresh only where the output supports it. The args do survive the
+capability wrapper:
 `security.wrappers.gamescope.source` points at the makeWrapper output rather
 than the raw package. gamescope on NVIDIA is the most fragile piece in this
 stack — if the Steam session stops starting, turn this off first.
+
+<a id="dualsense-no-driver"></a>
+## `dualsense.nix` — a tool, not a driver
+
+**Why** `hid-playstation` has been in-tree since 6.2, so the DualSense already
+works as a gamepad with nothing declared. `dualsensectl` only adds what the
+kernel does not expose: battery, LED, microphone and adaptive-trigger control.
+It is a user-facing CLI, so it goes to `homeManager` (CLAUDE.md §6).
+**Breaks** Nothing here, but the reason there is no udev rule is worth
+recording: `dualsensectl` talks over hidraw, and `programs.steam` sets
+`hardware.steam-hardware.enable = true` unconditionally, which pulls in
+`steam-devices-udev-rules` and grants that access. Removing Steam would take
+the rules with it.
+**Also** `hardware.xone` was considered and rejected — it drives the Xbox
+Wireless Dongle, and enabling it blacklists `mt76x2u`, a MediaTek Wi-Fi
+driver, on a host that cannot be tested from here.
