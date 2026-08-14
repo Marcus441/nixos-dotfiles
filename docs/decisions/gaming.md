@@ -44,3 +44,23 @@ scheduler later is an eval error naming the valid ones, not a silent fallback.
 **Also** The daemon runs from `multi-user.target`, not per-game. `scx-loader`
 driven by gamemode's `custom.start`/`custom.end` is the per-game alternative,
 at the cost of more moving parts.
+
+<a id="gamemode-governor"></a>
+## `gamemode.nix` — renice only, and the governor stays with PPD
+
+**Why** `renice` is the one general setting gamemode does not already default
+to; `inhibit_screensaver` is on, `softrealtime` needs SCHED_ISO that no
+upstream kernel ships, and `powerManagement.cpuFreqGovernor = "performance"`
+would lose anyway — `power-profiles-daemon` is in `core`, owns the governor and
+the EPP, and rewrites both on every profile change. gamemode drives the
+governor itself through its pkexec'd `cpugovctl`, scoped to the game.
+**Breaks** Silently, in the direction of doing nothing. The two power
+mechanisms have no NixOS assertion between them, so a governor set beside PPD
+looks applied and is not. Forcing it means dropping PPD, not adding the option
+next to it.
+**Also** The GPU block is left out on purpose: nixpkgs' own example carries a
+hardware-damage warning, and `nv_powermizer_mode` reaches the card through
+nvidia-settings, which is inert under Wayland. `users.groups.gamemode` is
+created by the module and read by nothing — renice comes from the
+`cap_sys_nice` wrapper on gamemoded (`enableRenice`, default true), so adding
+the user to that group would be cargo.
