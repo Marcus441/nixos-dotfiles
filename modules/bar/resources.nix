@@ -59,8 +59,8 @@ _: {
               exec = "${cpuTemp}";
               interval = 5;
             }
-            // lib.optionalAttrs (config.systemMonitor.command != "") {
-              on-click = "uwsm app -- ${config.systemMonitor.command}";
+            // lib.optionalAttrs (config.systemMonitor.temperatureCommand != "") {
+              on-click = "uwsm app -- ${config.systemMonitor.temperatureCommand}";
             };
 
           memory =

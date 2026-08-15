@@ -89,15 +89,18 @@ lazily and the first window pays the startup cost.
 **Breaks** `core` used to point every host at `thunar.desktop`, including the
 one with no thunar installed.
 
-<a id="btop-presets"></a>
-## `cli/btop.nix` — the two presets exist so `--preset` can mean something
+<a id="btop-views"></a>
+## `cli/btop.nix` — a view is a whole config file, not a `--preset`
 
-**Why** btop has no flag for "start on the memory view". Preset 0 is its
-built-in all-boxes layout and config presets are numbered from 1, so the string
-defines 1 = processor + processes and 2 = memory + processes — the two states
-the bar's readouts click into.
-**Breaks** Reordering or shortening the string re-points `systemMonitor.command`
-and `systemMonitor.memoryCommand` at whatever now sits at that index, silently.
+**Why** A preset chooses boxes and nothing else, but each readout wants its own
+`proc_sorting` and `proc_tree` — config keys with no flag behind them. So the
+three views are three generated configs passed to `--config`, and `shown_boxes`
+states the layout by name rather than by an index into a `presets` string.
+**Breaks** `save_config_on_exit` defaults to true and these paths are in the
+store, so each view turns it off; without that btop tries to write a read-only
+file on quit. The same read-only-ness is why a setting changed inside a
+bar-opened btop is gone at exit — by design, and only there. `programs.btop.settings`
+is the interactive config and keeps the tree.
 
 <a id="impala-argv"></a>
 ## `impala.nix` — impala over NetworkManager's iwd
