@@ -3,21 +3,28 @@ description: >-
   Use when adding a new host to the Nix flake, or editing an existing host's
   aspect list or machine facts. Covers creating the host file, what the
   generator rejects, aspectRequires, class placement, and the planned darwin
-  host.
+  host. Triggers: add a host, new machine, host record, aspect list, monitors,
+  stateVersion, hardware-configuration, aspectRequires, mbp, darwin, aarch64.
 ---
 
-# Adding a host
+# Adding or editing a host
 
-1. **Add `modules/hosts/<hostname>.nix`.** It declares what the machine *is*:
-   its aspect list plus machine facts — hostname, `hostPlatform`,
-   `stateVersion`, disk layout, monitor geometry. Aspects are host-agnostic
-   (Inv. 7); everything machine-specific lives here.
-2. **Aspect order matters.** The list determines merge order → `buildEnv`
-   order → derivation hashes. When splitting an aspect, put the new names where
-   the old one sat.
-3. **Host-varying values reach aspects as `_module.args`,** injected by the
-   generator. Never `specialArgs`. See `.claude/rules/sharing-values.md`.
-4. **Verify:** `./scripts/verify.sh build`.
+Class placement is `AGENTS.md` §6; the generator's mechanics and the Home
+Manager overlay trap are `.claude/rules/host-wiring.md`. This is the procedure.
+
+## Steps
+
+1. **Copy the hardware config** to `hosts/<hostname>/hardware-configuration.nix`.
+   It is machine-generated and never edited by hand.
+2. **Write `modules/hosts/<hostname>.nix`** — the aspect list plus machine
+   facts. `modules/hosts/record.nix` is the typed record; the argument pattern
+   is strict, so a missing field is an evaluation error rather than a silently
+   absent module. Copy an existing host file for the shape.
+3. **Order the aspect list deliberately.** It sets merge order, which reaches
+   derivation hashes (§5).
+4. **Verify:** `./scripts/verify.sh build`, then `./scripts/inventory.sh` —
+   the host and its aspects are generated into `docs/inventory.md`, not written
+   into prose anywhere.
 
 ## What the generator rejects
 
@@ -27,40 +34,24 @@ description: >-
 
 **When an aspect depends on another, declare `aspectRequires` in the file that
 creates the dependency** — a central table would not know when a file stops
-reading.
+reading. Current dependencies are in `docs/inventory.md`.
 
-## Class placement
+## Host-varying values
 
-Home Manager is **standalone** — `homeConfigurations."marcus@<host>"`,
-activated separately. Do not convert it to
-`home-manager.nixosModules.home-manager`. Six build targets per repo: three
-`nixosConfigurations.<host>.config.system.build.toplevel` and three
-`homeConfigurations."marcus@<host>".activationPackage`.
-
-| Goes in `homeManager` | Goes in `nixos` / `darwin` |
-| --- | --- |
-| shell, prompt, editor, git, terminal | services, daemons, systemd/launchd units |
-| user packages, dotfiles, keybindings | users, boot, filesystems, networking |
-| theming, fonts config, cursor | compositor/session registration, PAM |
-
-**Default to `homeManager`. Justify the exception.**
+They reach aspects as `_module.args`, injected by the generator. Never
+`specialArgs`. An aspect is one value shared by every host that takes it, so it
+cannot specialise on a host fact (Inv. 7) — if config must depend on one, that
+is a *decision*, and decisions belong in the aspect list.
 
 ## The Mac
 
 `mbp` (`aarch64-darwin`) is planned, not present — `systems` is
 `["x86_64-linux"]`. Every line put in `nixos` that could have lived in
-`homeManager` is a line to be ported later.
-
-Adding `aarch64-darwin` to `systems` will immediately fail any Linux-only
-`perSystem.packages`. Exclude by attribute, not by value — see
+`homeManager` is a line to port later. Adding `aarch64-darwin` will immediately
+fail any Linux-only `perSystem.packages` — see
 `.claude/rules/perSystem-platform.md`.
-
-Cross-platform intents (`launcher`, `screenshot`, `clipboard`, `lock`) are
-option namespaces in `core`, set by `hyprland` and `dwl`. `notifications` is
-deliberately **not** one — mako serves both sessions from one file and nothing
-invokes it by command.
 
 ## Build where it hurts least
 
-Build on `UM790pro`. Building Hyprland closures on `swift5` drags the whole
-chain onto the laptop.
+Build on `UM790pro`. Hyprland closures on `swift5` drag the whole chain onto
+the laptop.

@@ -2,7 +2,9 @@
 description: >-
   Use when adding a package, an overlay, or a flake input. Covers
   perSystem.packages placement, the Home Manager overlay trap, platform
-  exclusion, and the rules around flake.lock.
+  exclusion, and the rules around flake.lock. Triggers: add a package, install
+  software, custom derivation, callPackage, overlay, flake input, flake.lock,
+  nix flake update, unfree package, perSystem.packages.
 ---
 
 # Adding a package, overlay, or flake input
