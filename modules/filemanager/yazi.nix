@@ -9,10 +9,10 @@ _: {
         argv =
           config.terminal.transientArgv ++ config.terminal.exec ++ ["${config.programs.yazi.finalPackage}/bin/yazi"];
 
-        # load-bearing: docs/decisions/terminal.md#yazi-command
+        # load-bearing: docs/decisions/tui.md#yazi-command
         command = lib.escapeShellArgs argv;
 
-        # load-bearing: docs/decisions/terminal.md#desktop-exec
+        # load-bearing: docs/decisions/tui.md#desktop-exec
         desktopArg = a:
           if builtins.match "[a-zA-Z0-9,._+:@%/=-]+" a != null
           then a
@@ -39,7 +39,7 @@ _: {
     )
   ];
 
-  # load-bearing: docs/decisions/terminal.md#yazi-requires
+  # load-bearing: docs/decisions/tui.md#yazi-requires
   aspectRequires.yazi = ["apps"];
 
   flake.modules.homeManager.apps = [

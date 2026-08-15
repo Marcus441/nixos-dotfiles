@@ -1,37 +1,33 @@
-# Terminal and TUIs
+# Terminals
 
-The four terminals, the namespace they implement, and the programs that have to
-carry one with them.
+The four terminals and the namespace they implement. The TUIs and file managers
+that have to carry one are in `tui.md`.
 
 <a id="terminal-namespace"></a>
 ## `terminal.nix` — the namespace is a file of its own, naming no terminal
 
-**Why** foot, alacritty, ghostty and kitty genuinely compete for `terminal.*`,
-which is the same reason `launcher.nix` exists apart from wmenu and walker. The
-`hyprland` setter lives here too, and stays terminal-agnostic by going through
-`appIdArgv` — one file, two aspects, the `lock.nix` shape.
+**Why** Four terminals compete for `terminal.*`, the same reason `launcher.nix`
+sits apart from wmenu and walker. The `hyprland` setter lives here too and stays
+terminal-agnostic by going through `appIdArgv`.
 **Breaks** Left in `foot.nix`, that setter fires for *any* Hyprland host and
 appends foot's `--app-id` to whatever terminal the host actually took.
 
 <a id="terminal-desktopfile"></a>
 ## `terminal.nix` — `desktopFile` and `binary` carry no default
 
-**Why** They are the only scalars in the namespace. Every other member is a
-list or a function, and both of those **merge by concatenating** rather than
-conflicting — two terminal aspects would silently produce
-`argv = ["…/footclient" "…/kitty"]` and run one as the other's argument.
-**Breaks** Without them nothing rejects a host taking two terminals; the
-generator cannot help, because `aspectRequires` says "needs" and never
-"excludes". A scalar with no default gives the conflict `fileManager.command`
-already gives thunar-plus-yazi, naming both files. A host taking *no* terminal
-gets `terminal.argv has no value defined` — loud, but it does not name the
-missing aspect.
+**Why** They are the only scalars in the namespace. Every other member is a list
+or a function, and both **merge by concatenating** rather than conflicting.
+**Breaks** Without them nothing rejects a host taking two terminals — two
+aspects silently produce `argv = ["…/footclient" "…/kitty"]` and run one as the
+other's argument. `aspectRequires` cannot help: it says "needs", never
+"excludes". A host taking *no* terminal gets `terminal.argv has no value
+defined` — loud, but it does not name the missing aspect.
 
 <a id="terminal-daemons"></a>
 ## `terminal/*.nix` — all four keep a server, each with a different client
 
-**Why** Opening a window should cost nothing. Each terminal offers that
-differently, and the aspect owns both halves:
+**Why** Opening a window should cost nothing, and each terminal offers that
+differently. The aspect owns both halves:
 
 | | server | client |
 | --- | --- | --- |
@@ -40,79 +36,68 @@ differently, and the aspect owns both halves:
 | kitty | `kitty --single-instance --start-as=hidden` | `kitty --single-instance` |
 | ghostty | `ghostty --gtk-single-instance=true --initial-window=false` | `ghostty` |
 
-Every server is wired **twice**, because the sessions start things differently
-(`sessions.md#dwl-autostart`): a systemd user unit for Hyprland, and a
+Every server is wired **twice** because the sessions start things differently
+(`sessions.md#dwl-autostart`): a systemd user unit for Hyprland, a
 `dwl.autostart` entry — a bare name from `~/.nix-profile/bin`, no `'` — for dwl.
 **Breaks** A client is useless when its server is down, which is exactly when
 you want a terminal, so `fallbackArgv` is a role of its own and both sessions
 bind it. Wire only one channel and the terminal is slow on the other session
 with nothing to say why.
-**Also** foot's and alacritty's servers hold no window at all; kitty's is
-headless by `--start-as=hidden`; ghostty's uses `--initial-window=false`.
 
 <a id="kitty-single-instance"></a>
 ## `terminal/kitty.nix` — the client's argv crosses the socket, but not all of it
 
-**Why** kitty's client ships its whole argv over and the server parses it fresh
-— `boss.py`'s single-instance handler runs `parse_args` on the incoming
-`data['args']`, then `create_opts`, then `create_sessions`. What that handler
-then *uses* is a short list: `wclass` (so `--class term.floating` works and a
-TUI floats), `wname`, `title`, and `opts_for_size`, plus two explicit
-per-window special cases for `background_opacity` and `background_image`.
+**Why** kitty's client ships its whole argv over and the server re-parses it,
+but `boss.py`'s handler *uses* only `wclass`, `wname`, `title` and
+`opts_for_size`, plus per-window cases for `background_opacity` and
+`background_image`.
 **Breaks** *Silently, for everything not on that list.* **`-o font_size` is not
-on it** — the new window renders in the running instance's font, because the
-whole point of single-instance is that instances "share a single sprite cache
-on the GPU". Anything that must differ per spawn has to be checked against that
-handler, not assumed from `--class` working.
+on it** — the new window renders in the running instance's font, because
+single-instance shares one GPU sprite cache. Check anything that must differ per
+spawn against that handler; do not assume it works because `--class` does.
 
 <a id="kitty-compact-group"></a>
 ## `terminal/kitty.nix` — compact spawns get their own instance group
 
 **Why** `compactArgv` shrinks the font so a 24-row TUI fits the floating window,
-and by the entry above a single-instance client cannot change the font.
-`--instance-group=compact` makes those spawns a *second* kitty instance, created
-by the first of them and so built at `compactSize`; the rest join it and stay
-cheap. The alternative — dropping `--single-instance` for compact spawns — works
-too but pays full startup on every btop click.
-**Breaks** Measured on foot, not kitty: `compactSize` is three fifths of the host
-font size because that is where **foot's** cell metrics put 24 rows in
-`1200 600`. kitty's differ, so verify with
-`kitty --instance-group=probe -o font_size=12 bash -c 'sleep 1; stty size'`
-and raise the fraction, or the floating window, if the first number is under 24.
+and per the entry above a single-instance client cannot change the font.
+`--instance-group=compact` makes those spawns a *second* instance, built at
+`compactSize` by the first of them; the rest join it and stay cheap. Dropping
+`--single-instance` instead works but pays full startup on every btop click.
+**Breaks** `compactSize` was measured on **foot**, not kitty — three fifths of
+the host font size is where foot's cell metrics put 24 rows in `1200 600`.
+Verify with `kitty --instance-group=probe -o font_size=12 bash -c 'sleep 1; stty
+size'` and raise the fraction, or the window, if the first number is under 24.
 
 <a id="ghostty-single-instance"></a>
 ## `terminal/ghostty.nix` — the server serves the plain bind only
 
-**Why** `gtk-single-instance` defaults to `detect`, which switches itself
-**off** when `TERM_PROGRAM` is set or when *any* CLI argument is present,
-because "single instance mode inherits the configuration from when it was
-launched" (`ghostty.5`). Setting it `true` explicitly is what makes
-`SUPER+Return` reuse the running process.
+**Why** `gtk-single-instance` defaults to `detect`, which switches itself **off**
+when `TERM_PROGRAM` is set or when any CLI argument is present. Setting it
+`true` explicitly is what makes `SUPER+Return` reuse the running process.
 **Breaks** Nothing, and that is worth stating: `-e` independently forces
-`gtk-single-instance=false`, and every TUI spawn site appends `terminal.exec`,
-which is `["-e"]` here. So a transient spawn always forks — slower than the
-other three, by ghostty's design — but it also always honours its own
-`--class`, which a connecting client would have silently ignored. The two rules
-cancel; remove either and floating TUIs stop floating.
+`gtk-single-instance=false`, and every TUI spawn appends `terminal.exec`
+(`["-e"]`). So a transient spawn always forks — slower by design — but always
+honours its own `--class`, which a connecting client would have ignored. The two
+rules cancel; remove either and floating TUIs stop floating.
 
 <a id="ghostty-enablement"></a>
 ## `terminal/ghostty.nix` — the unit's `[Install]` symlink is declared by hand
 
 **Why** Home Manager writes ghostty's unit through `xdg.configFile` rather than
 `systemd.user.services`, so nothing emits the `graphical-session.target.wants`
-symlink that a `[Install]` section would otherwise produce.
+symlink an `[Install]` section would.
 **Breaks** *Quietly, and only in the first second.* Ghostty's D-Bus service file
-carries `SystemdService=`, so the first launch activates the unit anyway and
-every later one is fast — the symptom is not a broken terminal but the first
-window of every session paying for the server.
+carries `SystemdService=`, so the first launch activates the unit anyway — the
+symptom is not a broken terminal but the first window of every session paying
+for the server.
 
 <a id="ghostty-resident"></a>
 ## `terminal/ghostty.nix` — `quit-after-last-window-closed` is false
 
-**Why** The config ghostty was revived from set it `true` with a `10m` delay.
-A server that exits ten minutes after the last window is not a server, and
-systemd will not bring it back: the packaged unit is `Type=notify-reload`, so a
-clean exit is success.
+**Why** A server that exits ten minutes after the last window is not a server,
+and systemd will not bring it back: the packaged unit is `Type=notify-reload`,
+so a clean exit is success.
 **Breaks** *Silently, and only after a pause.* Everything is fast until the
 first ten idle minutes, after which the next terminal pays full startup and the
 session has no server again until the next login.
@@ -129,9 +114,8 @@ behaviour dwl rejects.
 ## `terminal.nix` — `exec` sits between the options and the command
 
 **Why** foot and kitty take a bare trailing command; alacritty and ghostty need
-`-e`, and alacritty needs it *last*. A spawn point composing
-`transientArgv ++ [prog]` is therefore only correct for half the terminals, and
-`exec` is the piece that names the difference.
+`-e`, and alacritty needs it *last*. `transientArgv ++ [prog]` is therefore
+correct for only half the terminals, and `exec` names the difference.
 **Breaks** *Silently, on ghostty.* An argument it does not recognise as a
 command is dropped and a plain shell opens instead. It cannot live inside
 `argv`, because `compactArgv` appends a font override after `transientArgv` and
@@ -140,102 +124,68 @@ that would land past the `-e`.
 <a id="terminal-ansi"></a>
 ## `theme/colors.nix` — the ANSI table is upstream's, and the index is the slot
 
-**Why** kanagawa.nvim ships the dragon terminal theme for all four of these
-terminals, generated from one table — `themes.lua`'s `dragon.term`. That table
-is the authority, so `desktop.ansi` reproduces it exactly rather than deriving
-it from a slot convention. Written out per terminal it would appear four times
-in four vocabularies — `regular0`, `colors.normal.black`, `color0`,
-`palette = "0=…"` — so it is one ordered list and each terminal renders it by
-index.
+**Why** kanagawa.nvim generates the dragon terminal theme for all four from one
+table, `themes.lua`'s `dragon.term`. That table is the authority, so
+`desktop.ansi` reproduces it exactly rather than deriving it from a slot
+convention — and it is one ordered list because written per terminal it would
+appear four times in four vocabularies (`regular0`, `colors.normal.black`,
+`color0`, `palette = "0=…"`).
 **Breaks** *Silently.* Anything reading a colour by number is off by a slot, and
-reordering the list reassigns every colour at once — the same trap qt5ct's
-positional role list carries.
-**Also** the earlier shape read `colors16` and duplicated slots 1–6 into 9–14,
-on the argument that a TUI asking for "the base16 theme" asserts ANSI 9 is
-base09. Nothing in this tree reads a colour by slot number — bat, yazi, tmux,
-opencode, zsh, lazygit, man and prompt all take hex or a tmTheme — so that
-argument bought nothing and cost every bright: ANSI 8 sat at 2.9:1 on the
-background and 9–14 were byte-identical to 1–6, which the unconfigured
-consumers (fzf, git, ls) are the ones that felt.
-**Also** slots 16 and 17 are **not** in the list. They are the 256-cube trick
-that is the only way base09 and base0F reach a terminal at all, so each
-implementation reads `colors16` for those directly, as it does for foreground,
-background and selection.
-**Also** the cursor is base05 — the foreground — in all four, and the colour
-under it is base00. Every default here is a different colour: foot and alacritty
-reverse foreground and background, and kitty's `cursor_text_color` is a bare
-`#111111` rather than the background it sits on. foot's `cursor` takes both
-values in one string and alacritty's takes both keys, so the text colour is
-spelled out three times rather than left to the terminal.
+reordering reassigns every colour at once — the trap qt5ct's positional role
+list also carries.
+**Also** slots 16 and 17 are **not** in the list; they are the 256-cube trick
+that is the only way base09 and base0F reach a terminal, so each implementation
+reads `colors16` for those, as it does for foreground, background and selection.
+The cursor is base05 over base00 in all four, spelled out because every
+terminal's default here is a different colour.
 
 <a id="terminal-clipboard-keys"></a>
-## `terminal/*.nix` — the dedicated copy/cut/paste keys, and who already had them
+## `terminal/*.nix` — the dedicated copy/cut/paste keys
 
-**Why** a keyboard sending `KC_COPY`/`KC_CUT`/`KC_PASTE` produces the keysyms
-`XF86Copy`/`XF86Cut`/`XF86Paste`, and three of the four terminals already bind
-two of the three: foot ships `XF86Copy`/`XF86Paste` as defaults of
-`clipboard-copy`/`clipboard-paste`, ghostty ships `copy` and `paste`, and
-alacritty ships `Copy` and `Paste`. Only kitty binds none, which is why it is
-the one file listing all three.
+**Why** A keyboard sending `KC_COPY`/`KC_CUT`/`KC_PASTE` produces
+`XF86Copy`/`XF86Cut`/`XF86Paste`. Three of the four already bind two of the
+three; only kitty binds none, which is why it is the one file listing all three.
 **Breaks** *Silently, in foot.* A `[key-bindings]` value **replaces** the
 default combos rather than adding to them, so `clipboard-copy` has to restate
-`Control+Shift+c` and `XF86Copy` alongside the `XF86Cut` it exists to add —
-dropping either kills a binding that was working before the line was written.
+`Control+Shift+c` and `XF86Copy` alongside the `XF86Cut` it exists to add.
 **Also** no terminal has a cut, so the cut key is a copy that does nothing
-without a selection: kitty's `copy_or_noop`, alacritty's `Copy`, and ghostty's
-`copy_to_clipboard`, which is *performable* and so falls through as if unbound.
-kitty's `copy_and_clear_or_interrupt` was the other candidate and was rejected:
-with no selection it sends SIGINT, so a stray press would kill a running
-command.
+without a selection. kitty's `copy_and_clear_or_interrupt` was rejected: with no
+selection it sends SIGINT, so a stray press would kill a running command.
 
 <a id="terminal-stroke-weight"></a>
-## `terminal/*.nix` — red strokes thin out first, and each terminal thins them differently
+## `terminal/*.nix` — red strokes thin out first, and each terminal differs
 
 **Why** sRGB weights luminance R 0.2126, G 0.7152, B 0.0722, so red carries
-under a third of the perceived brightness green does at the same saturation. On
-`base00` the ANSI red sits at 5.21 — the lowest ratio in the palette — and
-nvim's diagnostic red at 4.04, against 10.76 for the foreground. A thin
-antialiased stroke survives on luminance contrast alone, so red is where
-coverage blending fails first, and an undercurl is the thinnest stroke a
-terminal draws. Each terminal spells the remedy differently: kitty takes a
-multiplicative contrast on glyph alpha, the second number of
-`text_composition_strategy`, plus a separate undercurl geometry in
-`undercurl_style`; foot and ghostty take gamma-correct blending, which thickens
-bright glyphs on a dark background — foot's `gamma-correct-blending` is off by
-default, and ghostty's Linux default `linear-corrected` is that same linear
-blending with a correction step that deliberately puts the native thinness back,
-so `linear` is what asks for the thickening.
-**Breaks** *Silently, in three different ways.* alacritty has no equivalent at
-all — its whole `[font]` table is the four families, a size and two offsets — so
-a host moving to it reverts the fix with nothing anywhere to say so. ghostty
-drops a value it cannot parse without a diagnostic: `+show-config` simply omits
-the key and stderr stays empty. And foot's flag forces the 16- or 10-bit buffers
-its precision needs, which are slower; `tweak.surface-bit-depth = "8-bit"` buys
-the speed back at the cost of the colour accuracy the flag exists for.
-**Also** kitty's contrast number does **not** reach the undercurl, which is why
-`undercurl_style` sits beside it rather than instead of it. `cell_fragment.glsl`
-applies `foreground_contrast()` to the glyph sprite in `main()`, then samples
-`underline_alpha` afterwards in `calculate_premul_foreground_from_sprites()` and
-blends it with `decoration_fg` having never passed it through. The number is a
-perceptual dial, not a measurement: kitty's own docs prescribe fixing the first
-number at the Linux default `1.0`, which only affects dark text on light, and
-raising the second on a dark theme until it looks right.
+under a third of green's perceived brightness — on `base00` the ANSI red sits at
+5.21, the palette's lowest, against 10.76 for the foreground. Thin antialiased
+strokes survive on luminance contrast alone, so red fails first and an undercurl
+is the thinnest stroke drawn. kitty takes a multiplicative contrast on glyph
+alpha (the second number of `text_composition_strategy`) plus `undercurl_style`;
+foot and ghostty take gamma-correct blending, so foot's
+`gamma-correct-blending` goes on and ghostty takes `linear` rather than its
+default `linear-corrected`, which puts the native thinness back.
+**Breaks** *Silently, in three ways.* alacritty has no equivalent at all, so a
+host moving to it reverts the fix with nothing to say so. ghostty drops an
+unparseable value without a diagnostic. And foot's flag forces the 16- or
+10-bit buffers its precision needs, which are slower.
+**Also** kitty's contrast number does **not** reach the undercurl —
+`cell_fragment.glsl` samples `underline_alpha` after applying
+`foreground_contrast()`, never through it — which is why `undercurl_style` sits
+beside it. Fix the first number at `1.0` and raise the second until it looks
+right.
 
 <a id="kitty-inactive-alpha"></a>
 ## `terminal/kitty.nix` — `inactive_text_alpha` is negative, and the sign is the setting
 
 **Why** The absolute value is the opacity; the **sign** chooses when fading
-applies at all. Positive fades text whenever the OS window loses focus, even
-with a single window open, so every glance at another application dims the
-terminal. Negative restricts fading to when more than one kitty window is
-visible in an OS window — the state actually worth indicating, and the one the
-window manager cannot indicate for you. kitty's own default is `1.0`: no fading.
+applies. Positive fades whenever the OS window loses focus, even with one window
+open. Negative restricts it to more than one kitty window being visible — the
+state worth indicating, and the one the window manager cannot indicate for you.
 **Breaks** *Silently, and worst on the thinnest strokes.* `cell_fragment.glsl`
-multiplies both `combined_alpha` and `underline_alpha` by `effective_text_alpha`,
-so a positive value fades undercurls along with the text. A red undercurl at 0.8
-alpha is the first thing to vanish — the coverage failure
-`#terminal-stroke-weight` exists to fix, reintroduced by a setting that looks
-like it is only about focus.
+multiplies both `combined_alpha` and `underline_alpha` by
+`effective_text_alpha`, so a positive value fades undercurls with the text — the
+coverage failure `#terminal-stroke-weight` exists to fix, reintroduced by a
+setting that looks like it is only about focus.
 **Also** `-0.8` and `0.8` render identically whenever more than one window is
 visible, so they differ only in the single-window case nobody deliberately
 tests. That is how a whole-window fade survived every look at the colours.
@@ -244,75 +194,36 @@ tests. That is how a whole-window fade survived every look at the colours.
 ## `terminal/kitty.nix` — the split borders are ours, not upstream's
 
 **Why** kanagawa.nvim's `extras/kitty/kanagawa_dragon.conf` sets no border
-colours, so `enabled_layouts = "splits,stack"` drew kitty's stock
-`active_border_color #00ff00`, `inactive_border_color #cccccc` and
-`bell_border_color #ff5a00` — the one part of the terminal the theme could not
-reach. They take base0D/base03/base08, the same roles `hyprland-general.nix`
-gives a window border, because a kitty split is the same thing one level down.
+colours, so `enabled_layouts = "splits,stack"` drew kitty's stock green, grey
+and orange. These take base0D/base03/base08, the roles `hyprland-general.nix`
+gives a window border — a kitty split is the same thing one level down.
 **Breaks** *Loudly, but only in a split.* A single window never shows a border,
 so this survived every look at the colours until someone opened a split.
 **Also** upstream specifies nothing here, so these three are the only terminal
-colours in the tree that a diff against `extras/` cannot check.
-
-## `filemanager/yazi.nix` — the program is `apps`, the role is its own aspect
-
-**Why** So a host can install yazi without making it what `$mod+E` opens.
-**Breaks** `thunar` and `yazi` both set `fileManager.command`, so taking both is
-a conflict naming both files.
-
-<a id="yazi-requires"></a>
-## `filemanager/yazi.nix` — `aspectRequires.yazi = ["apps"]`
-
-**Why** `finalPackage` is declared outside `mkIf cfg.enable`.
-**Breaks** *Silently.* Without it, a host taking `yazi` without `apps` gets an
-unconfigured `pkgs.yazi` rather than an error.
-
-<a id="yazi-command"></a>
-## `filemanager/yazi.nix` — the command is bound, not read back
-
-**Why** Composed at argv level and rendered once — `transientCommand` is already
-escaped, so appending would escape twice.
-**Breaks** *Silently.* Reading back through `config.fileManager.command` means a
-`mkForce` elsewhere wins, and an entry named "Yazi" execs thunar.
-
-<a id="desktop-exec"></a>
-## `filemanager/yazi.nix` — a desktop `Exec` is not shell-escaped
-
-**Why** `Exec` is parsed by the desktop-entry spec, not by a shell, and `'` is
-reserved there. `lib.escapeShellArgs` quotes any argument outside
-`[a-zA-Z0-9,._+:@%/-]`, so the moment one contains `=` — ghostty's
-`--class=term.floating` — it emits single quotes the spec forbids. The same argv
-is therefore rendered twice: shell-escaped for `fileManager.command`, and
-double-quoted-where-needed for the entry.
-**Breaks** Loudly, at build time: `desktop-file-validate` refuses the entry with
-"contains a reserved character `'` outside of a quote". It went unnoticed while
-every terminal's argv happened to need no quoting at all.
+colours in the tree a diff against `extras/` cannot check.
 
 <a id="ghostty-shader"></a>
 ## `terminal/ghostty.nix` — the cursor shader, and what kitty does instead
 
-**Why** ghostty is the only one of the four that runs a custom fragment shader,
-so `cursor_smear.glsl` is interpolated to a store path rather than a source
-path — `pkgs.formats.keyValue` takes atoms, not paths. kitty refuses custom
-shaders as a matter of policy; its `cursor_trail` is the same effect by a
-different mechanism, cell-aware and idle when the cursor is still, where
-ghostty's `custom-shader-animation` redraws every frame a window is open.
+**Why** ghostty is the only one of the four running a custom fragment shader, so
+`cursor_smear.glsl` is interpolated to a store path rather than a source path —
+`pkgs.formats.keyValue` takes atoms, not paths. kitty refuses custom shaders as
+policy; its `cursor_trail` is the same effect, cell-aware and idle when the
+cursor is still, where ghostty's `custom-shader-animation` redraws every frame.
 **Breaks** *Silently.* A shader that fails to compile is ignored and says so
-only in the log. The power asymmetry matters if either aspect ever lands on
-`swift5`.
+only in the log. The power asymmetry matters if either aspect lands on `swift5`.
 
 <a id="ghostty-scrollback"></a>
 ## `terminal/ghostty.nix` — `scrollback-limit` is bytes, and stays unset
 
 **Why** Every other terminal here counts lines. ghostty counts **bytes**, and
-its default is 10 MB; the config this file was revived from carried
-`scrollback-limit = 50000`, which reads like foot's 10 000 lines and is in fact
-50 KB.
+its default is 10 MB; the `50000` this file was revived from reads like foot's
+10 000 lines and is in fact 50 KB.
 **Breaks** *Silently.* Roughly a hundredth of the intended scrollback, with
 nothing to indicate the unit was misread.
 
 <a id="kitty-font-option"></a>
-## `terminal/kitty.nix` — the font comes from `programs.kitty.font`, not `settings`
+## `terminal/kitty.nix` — the font comes from `programs.kitty.font`
 
 **Why** Home Manager emits `font` at `mkOrder 510` and `settings` at 540, so
 `settings.font_size` would be written second and shadow the option.
@@ -323,44 +234,34 @@ declared in the obvious place.
 ## `terminal/kitty.nix` — `wheel_scroll_multiplier` is not ghostty's number
 
 **Why** ghostty's `mouse-scroll-multiplier = 0.95` scales its own default.
-kitty's `wheel_scroll_multiplier` defaults to `5.0` and is *lines per event*, so
-copying 0.95 across would ask for less than one line per notch.
-**Breaks** Scrolling that feels broken rather than tuned. The general rule for
-this pair: the settings are analogous, the units are not.
-
-<a id="yazi-reset"></a>
-## `filemanager/yazi-style.nix` — `mode._alt.bg` is `base00`, not `reset`
-
-**Why** `status.lua` reads that background back as a *foreground*:
-`ui.Span(sep_left.close):fg(style.alt:bg())`.
-**Breaks** *Silently.* A `reset` there is the default text colour — a base05 bar
-through the middle of the bar. base00 is the terminal background, so it
-renders as nothing.
+kitty's defaults to `5.0` and is *lines per event*, so copying 0.95 across would
+ask for less than one line per notch.
+**Breaks** Scrolling that feels broken rather than tuned. The rule for this
+pair: the settings are analogous, the units are not.
 
 <a id="terminal-compact"></a>
 ## `terminal.nix` — `compactSize` is three fifths of the host font size
 
-**Why** Measured on UM790pro, against Hyprland's `floating-size` rule of
-`1200 600`: 20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses
-to start under 24x60, so the full size misses it by seven rows and 14pt clears
-it with none to spare. Three fifths lands on 12pt there. The *measurement* is
-shared; the flag that carries it is not, because foot's override re-renders the
-whole font spec — family and ligature suppression included — where the other
-three take a bare number.
+**Why** Measured on UM790pro against Hyprland's `floating-size` of `1200 600`:
+20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses to start
+under 24x60, so the full size misses it by seven rows. Three fifths lands on
+12pt there. The measurement is shared; the flag carrying it is not, because
+foot's override re-renders the whole font spec where the other three take a
+bare number.
 **Breaks** btop exits with "Terminal size too small" rather than opening. Any
-change to `floating-size`, to a host's `fontSize`, or to this fraction moves the
-row count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
+change to `floating-size`, a host's `fontSize`, or this fraction moves the row
+count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
 Write `font.size * 3 / 5` with the spaces: `3/5` is a path literal.
 
 <a id="terminal-appid"></a>
 ## `terminal.nix` — `appIdArgv` is a function, not a flag name
 
-**Why** The four spellings differ in shape, not just in text: foot takes
-`--app-id <id>`, alacritty and kitty `--class <id>`, and ghostty accepts
-**only** `--class=<id>`.
+**Why** The four spellings differ in shape, not just text: foot takes
+`--app-id <id>`, alacritty and kitty `--class <id>`, and ghostty accepts **only**
+`--class=<id>`.
 **Breaks** *Silently.* ghostty given the space form swallows it with no
-diagnostic at all, so a `flag` string plus `[flag id]` would leave ghostty
-windows unnamed and every floating TUI tiled.
+diagnostic, so a `flag` string plus `[flag id]` would leave ghostty windows
+unnamed and every floating TUI tiled.
 
 <a id="terminal-alt-scroll"></a>
 ## `terminal/foot.nix` — `alternate-scroll-mode` is foot's alone
@@ -368,139 +269,57 @@ windows unnamed and every floating TUI tiled.
 **Why** It stops the wheel sending arrow keys in the alternate screen, so
 scrolling a full-screen TUI scrolls the terminal instead of walking shell
 history.
-**Breaks** *Silently, on three hosts out of four.* alacritty, kitty and ghostty
-have no equivalent setting, so the fix is foot-only and choosing another
-terminal quietly reverts it.
+**Breaks** *Silently, on three terminals out of four.* alacritty, kitty and
+ghostty have no equivalent, so choosing another terminal quietly reverts it.
 
-<a id="btop-presets"></a>
-## `cli/btop.nix` — the two presets exist so `--preset` can mean something
+<a id="kitty-split-navigation"></a>
+## `terminal/kitty.nix` — the four keys are bound, then conditionally unbound
 
-**Why** btop has no flag for "start on the memory view". Preset 0 is its
-built-in all-boxes layout and config presets are numbered from 1, so the string
-defines 1 = processor + processes and 2 = memory + processes — the two states
-the bar's readouts click into.
-**Breaks** Reordering or shortening the string re-points `systemMonitor.command`
-and `systemMonitor.memoryCommand` at whatever now sits at that index, silently.
+**Why** kitty sees the keypress before the program does, so
+`map ctrl+h neighboring_window left` alone would take `C-h` from Neovim
+entirely. smart-splits.nvim writes an `IS_NVIM` user-var over OSC 1337, and the
+four `map --when-focus-on var:IS_NVIM ctrl+h` lines with an empty action unbind
+the key again *for windows that have it*. The reverse trip goes over `kitty @`,
+which is what `allow_remote_control` and `listen_on` are for.
+**Breaks** Silently, and `listen_on` is the sharp half: it puts
+`KITTY_LISTEN_ON` in the environment, the *only* thing smart-splits tests to
+decide it is talking to kitty. Drop it and the plugin reports no multiplexer,
+navigation stops at the last Neovim window, and nothing says why.
+`echo $KITTY_LISTEN_ON` is the check.
+**Also** the unbind lines live in `extraConfig` because their action is empty
+and the `keybindings` attrset cannot express that; the default order 1000 lands
+after `settings` (540) and `keybindings` (560) in the same string.
 
-<a id="impala-argv"></a>
-## `impala.nix` — impala over NetworkManager's iwd
+<a id="ghostty-split-arrows"></a>
+## `terminal/ghostty.nix` — the splits keep the arrows, and kitty's did not
 
-**Why** `net.nix` runs NetworkManager with `wifi.backend = "iwd"`, so both talk
-to the same daemon.
-**Breaks** A connection impala makes is one NetworkManager did not author, so
-NM's state can disagree until it resyncs.
-
-<a id="thunar-daemon"></a>
-## `filemanager/thunar.nix` — the drop-in adds `[Install]` and no `ExecStart`
-
-**Why** thunar ships `thunar.service` with no `[Install]`, so systemd starts it
-lazily and the first window pays the startup cost.
-**Breaks** NixOS merges this as a drop-in *over* the packaged unit, and a second
-`ExecStart=` on a non-oneshot service makes systemd refuse to load it.
-
-## `filemanager/thunar.nix` — the directory association moved out of `core`
-
-**Why** The default followed the option.
-**Breaks** `core` used to point every host at `thunar.desktop`, including the
-one with no thunar installed.
-
-<a id="yazi-frames"></a>
-## `filemanager/yazi-style.nix` — `base01` is the surface, `base02` is the selection
-
-**Why** The editor's floats put each block's border in that block's own
-background, so the frame reads as padding rather than an outline
-(`neovim/docs/decisions/theme.md#picker-blocks`). The whole theme runs on two
-values: `base01` is every ambient surface — the seven borders, the filled
-popups, the bar under an unfocused pane's hovered row — and `base02`, base24's
-selection slot, is reserved for the one thing actually selected: the current
-pane's hovered row, the completion's active row, `pick`/`tasks`/`help`'s
-hovered row, and the range inside the input. Two values, one meaning each.
-**Breaks** *Silently.* The preset sets `reversed = true` on
-`indicator.parent`/`current`, `cmp.active`, `input.selected` and
-`help.hovered`, and a partial theme merges onto it — so a `bg` set without an
-explicit `reversed = false` is swapped into the foreground and paints the text,
-not the row.
-**Also** the parent and preview panes take the same `base01` bar as each other;
-`base10` was tried there first and reads as a hole rather than a highlight.
-
-<a id="yazi-blocks"></a>
-## `filemanager/yazi-style.nix` — `input` and `cmp` fill, and the rest cannot
-
-**Why** Every yazi popup draws `Clear` — ratatui's, so `Cell::EMPTY` and the
-terminal default — then an *unstyled* `Block`, so no key fills an interior
-directly. Two popups fill anyway, because their contents cover every cell:
-`input` is three rows, and `border` plus `title` plus `value` reach all of them
-(`Line::styled(...).render()` calls `buf.set_style` across the whole line, so
-`value` paints the full inner width and not just the typed text); `cmp` sizes
-its area to `items.len() + 2`, so per-row `active`/`inactive` leave no blank
-row behind. That is the cmdline pair from `#picker-blocks`, and it is why they
-are solid where `confirm`, `tasks`, `spot` and `notify` are frames.
-**Breaks** Nothing loudly — a popup that cannot fill simply stays on the
-terminal background, which is why the two that can are the two that do.
-**Also** `confirm` is *nearly* fillable through `body` and `list`, but its
-button row leaves gaps around the labels; a half-filled popup reads worse than
-an unfilled one.
+**Why** Ghostty cannot do what kitty does above, and the gap is structural: no
+conditional-keybind mechanism, no implemented OSC 1337 `SetUserVar` to test, and
+a Linux D-Bus surface reaching `+new-window` only. Its one state-aware prefix,
+`performable:`, asks whether *Ghostty* can perform the action, never whether the
+child should have had the key first. The divergence is the decision, not drift.
+**Breaks** Silently, in the direction that looks like success.
+`performable:ctrl+h=goto_split:left` works whenever Ghostty has no split that
+way — most of the time you would test it — and the moment a Ghostty split *and*
+a Neovim window both sit left, Ghostty wins and that window is unreachable.
+smart-splits closed its Ghostty backend (PR #433) on exactly this.
+**Also** ghostty is in no host's aspect list today, so this costs nothing now;
+it is written down so the arrows are not "fixed" into `hjkl` later.
 
 <a id="tmux-pane-is-vim"></a>
 ## `tmux.nix` — the pane keys are root-table, and Neovim gets first refusal
 
 **Why** `C-h/j/k/l` has to mean "one pane left/down/up/right" whether the pane
 holds a shell or a Neovim with its own splits, so the bindings are root-table
-(`-n`, no prefix) and each one asks `#{@pane-is-vim}` before acting.
+(`-n`, no prefix) and each asks `#{@pane-is-vim}` before acting.
 smart-splits.nvim sets that pane-local option on load and clears it on exit, so
 the flag tracks the *pane*, not a guess about the process. The older snippets
-scrape `ps -o comm= -t #{pane_tty}` through `if-shell` instead; that forks per
-keypress and calls anything named like `view` or `nvimx` a Neovim.
-**Breaks** silently in one direction only. With no Neovim side the flag is never
-set, the guard always takes the second branch, and the keys still move tmux
-panes — so a half-installed setup looks like it works until Neovim has two
-windows and the first one becomes unreachable. `tmux show -p @pane-is-vim` in the
-pane is the check.
+scrape `ps -o comm= -t #{pane_tty}`, which forks per keypress and calls anything
+named like `view` or `nvimx` a Neovim.
+**Breaks** Silently, in one direction only. With no Neovim side the flag is
+never set, the guard always takes the second branch, and the keys still move
+tmux panes — so a half-installed setup looks like it works until Neovim has two
+windows and the first becomes unreachable. `tmux show -p @pane-is-vim` is the
+check.
 **Also** `C-l` was the shell's clear-screen and is now tmux's, so `prefix C-l`
-sends the real one. Removing the old `prefix h/j/k/l` also settled a collision
-that had been live: `bind k kill-window` sat below `bind k select-pane -U` and
-silently won.
-
-<a id="kitty-split-navigation"></a>
-## `terminal/kitty.nix` — the same four keys are bound and then conditionally unbound
-
-**Why** kitty sees the keypress before the program in the window does, so
-`map ctrl+h neighboring_window left` alone would take `C-h` away from Neovim
-entirely. smart-splits.nvim writes an `IS_NVIM` user-var over OSC 1337 when it
-loads, and the four `map --when-focus-on var:IS_NVIM ctrl+h` lines with an empty
-action unbind the key again *for windows that have it* — so kitty handles the
-key in a shell window and forwards it in a Neovim one. The reverse trip, Neovim
-running out of splits and focusing the next kitty window, goes over `kitty @`,
-which is what `allow_remote_control` and `listen_on` are for. `socket-only`
-rather than `yes` keeps remote control off the TTY escape channel, which
-`kitty @` does not need.
-**Breaks** silently, and `listen_on` is the sharp half: it is what puts
-`KITTY_LISTEN_ON` in the environment, and that variable is the *only* thing
-smart-splits tests to decide it is talking to kitty. Drop it and the plugin
-reports no multiplexer, navigation stops at the last Neovim window, and nothing
-anywhere says why. `echo $KITTY_LISTEN_ON` is the check.
-**Also** the unbind lines live in `extraConfig` because their action is empty
-and home-manager's `keybindings` attrset cannot express that. Order is not left
-to chance — `settings` renders at `mkOrder 540` and `keybindings` at `560` into
-the same string, so a plain `extraConfig` at the default 1000 lands after both.
-
-<a id="ghostty-split-arrows"></a>
-## `terminal/ghostty.nix` — the splits keep the arrows, and kitty's did not
-
-**Why** Ghostty cannot do what kitty does above, and the gap is structural. It
-has no conditional-keybind mechanism, nothing equivalent to `--when-focus-on`;
-it parses but does not implement OSC 1337 `SetUserVar`, so there would be no
-variable to test even if there were a test; and its Linux D-Bus surface reaches
-`+new-window` only, so a plugin has no way to focus a split from the other side.
-Its one state-aware prefix, `performable:`, asks whether *Ghostty* can perform
-the action, never whether the child should have had the key first. Divergence
-from `kitty.nix` here is the decision, not drift.
-**Breaks** silently and in the direction that looks like success.
-`performable:ctrl+h=goto_split:left` works whenever Ghostty has no split that
-way, which is most of the time you would test it — and the moment a Ghostty
-split *and* a Neovim window both sit to the left, Ghostty wins and that Neovim
-window cannot be reached at all. smart-splits closed its Ghostty backend (PR
-#433) on exactly this, and the feature request (#273) as not planned.
-**Also** ghostty is in no host's aspect list today, so this costs nothing now; it
-is written down so the arrows are not "fixed" into `hjkl` later. If ghostty ever
-grows a focus-split verb over D-Bus (#12556), the entry is what to revisit.
+sends the real one.

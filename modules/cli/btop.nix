@@ -51,7 +51,7 @@ _: {
             io_graph_combined = false;
             io_mode = true;
             only_physical = true;
-            # load-bearing: docs/decisions/terminal.md#btop-presets
+            # load-bearing: docs/decisions/tui.md#btop-presets
             presets = "cpu:0:default,proc:0:default mem:0:default,proc:0:default";
             proc_tree = true;
             rounded_corners = false;

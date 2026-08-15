@@ -16,7 +16,7 @@ _: {
         pkgs,
         ...
       }: {
-        # load-bearing: docs/decisions/terminal.md#impala-argv
+        # load-bearing: docs/decisions/tui.md#impala-argv
         networkManager.command = lib.escapeShellArgs (
           config.terminal.transientArgv ++ config.terminal.exec ++ ["${pkgs.impala}/bin/impala"]
         );

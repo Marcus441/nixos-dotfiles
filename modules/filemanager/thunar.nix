@@ -42,7 +42,7 @@ _: {
           tumbler.enable = true;
         };
 
-        # load-bearing: docs/decisions/terminal.md#thunar-daemon
+        # load-bearing: docs/decisions/tui.md#thunar-daemon
         systemd.user.services.thunar = {
           partOf = ["graphical-session.target"];
           after = ["graphical-session.target"];
