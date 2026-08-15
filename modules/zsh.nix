@@ -84,7 +84,7 @@ _: {
           # load-bearing: docs/decisions/shells.md#zsh-menu-select
           initContent = ''
             # Globbing: extended patterns; empty expansion instead of an error.
-            setopt extended_glob null_glob
+            setopt extended_glob null_glob interactivecomments
 
             # Completion: case- and separator-insensitive, list first, then a menu.
             zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}'
