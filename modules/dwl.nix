@@ -107,16 +107,14 @@ _: {
 
         # load-bearing: docs/decisions/sessions.md#dwl-session
         dwl-session = pkgs.writeShellScript "dwl-session" ''
-          # Load the home-manager session environment (PATH, XDG_DATA_DIRS so that
-          # wmenu finds .desktop files and dbus finds the mako service, etc.).
+          # The home-manager session environment: PATH, XDG_DATA_DIRS, dbus.
           hm_vars="$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           [ -f "$hm_vars" ] && . "$hm_vars"
           export PATH="$HOME/.nix-profile/bin:$PATH"
           export XDG_CURRENT_DESKTOP=dwl
           export XDG_SESSION_TYPE=wayland
 
-          # -s autostart, once the compositor is up: monitor layout, wallpaper,
-          # notifications, then dwl.autostart. Pipe is the status feed.
+          # -s autostart, then dwl.autostart. The pipe is the status feed.
           ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako &${autostart}'
         '';
 

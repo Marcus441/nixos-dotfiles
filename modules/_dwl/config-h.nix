@@ -34,8 +34,7 @@
         [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
       };''
     else ''
-      /* base24 borders, same roles as the bar's colour table: unfocused sinks
-         toward the background (base01), focused lifts a shade above it (base03). */
+      /* unfocused, focused, urgent */
       static const float bordercolor[]           = COLOR(${toBar colors.base01});
       static const float focuscolor[]            = COLOR(${toBar colors.base03});
       static const float urgentcolor[]           = COLOR(${toBar colors.base08});'';
@@ -83,7 +82,6 @@ in ''
                           ((hex >> 8) & 0xFF) / 255.0f, \
                           (hex & 0xFF) / 255.0f }
 
-  /* appearance */
   static const int sloppyfocus               = 1;  /* focus follows mouse */
   static const int bypass_surface_visibility = 0;
   static const unsigned int borderpx         = 1;  /* border pixel of windows */
@@ -93,10 +91,8 @@ in ''
 
   ${colorTable}
 
-  /* tagging */
   ${tagging}
 
-  /* logging */
   static int log_level = WLR_ERROR;
 
   static const Rule rules[] = {
@@ -104,7 +100,6 @@ in ''
     { NULL,    NULL,  0,         0,          -1 }, /* at least one rule must exist */
   };
 
-  /* layout(s) */
   static const Layout layouts[] = {
     /* symbol  arrange function */
     { "[]=",   tile },
@@ -118,7 +113,6 @@ in ''
     { NULL,  0.55f, 1,       1,     &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1 },
   };
 
-  /* keyboard */
   static const struct xkb_rule_names xkb_rules = {
     .options = NULL,
   };
@@ -126,7 +120,6 @@ in ''
   static const int repeat_rate  = 25;
   static const int repeat_delay = 600;
 
-  /* Trackpad */
   static const int tap_to_click            = 1;
   static const int tap_and_drag            = 1;
   static const int drag_lock               = 1;
@@ -141,7 +134,6 @@ in ''
   static const double accel_speed = 0.0;
   static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TAP_MAP_LRM;
 
-  /* Use the Super/Windows key as the modifier (mirrors the hyprland session). */
   #define MODKEY WLR_MODIFIER_LOGO
 
   #define TAGKEYS(KEY,SKEY,TAG) \
@@ -153,8 +145,7 @@ in ''
   /* helper for spawning shell commands in the pre dwm-5.0 fashion */
   #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-  /* commands: absolute store paths; termfbcmd is the terminal in the
-     form that needs no running server */
+  /* absolute store paths; termfbcmd needs no running server */
   static const char *termcmd[]      = { ${argvC config.terminal.argv}, NULL };
   static const char *termfbcmd[]    = { ${argvC config.terminal.fallbackArgv}, NULL };
   static const char *menucmd[]      = { ${menuArgvC}, NULL };
