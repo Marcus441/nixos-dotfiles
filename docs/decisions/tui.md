@@ -109,3 +109,6 @@ is the interactive config and keeps the tree.
 to the same daemon.
 **Breaks** A connection impala makes is one NetworkManager did not author, so
 NM's state can disagree until it resyncs.
+**Also** the spawn is `compactArgv`, not `transientArgv`. Every bar click lands
+in the same `1200 600` float, so the font was the only thing making impala a
+different terminal from btop's three.
