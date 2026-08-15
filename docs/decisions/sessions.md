@@ -43,10 +43,10 @@ the option is declared where every host has it and read only by the session, the
 **Breaks** A setter outside the `dwl` aspect hits an undeclared option on every
 host that does not take dwl. A host taking a terminal but not dwl carries the
 entry inertly, which is the point.
-**Also** the rendered order is **not** the host's aspect order. swift5 lists
-`core` before `dwl`, and the entry set from `core` still lands *after* the one
-set from `dwl` — measured, `dwl-idle & foot --server &`. Nothing here depends on
-it; anything that does must be measured, not reasoned about (CLAUDE.md §5).
+**Also** the rendered order is **not** the host's aspect order: swift5 lists
+`core` before `dwl`, yet the `core` entry lands *after* the `dwl` one — measured,
+`dwl-idle & foot --server &`. Nothing depends on it; anything that does must be
+measured (AGENTS.md §5).
 
 <a id="dwl-autostart"></a>
 ## `dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
@@ -114,11 +114,10 @@ instead of a rejection.
 **Why** An app that can name itself opts in at spawn time:
 `footclient --app-id term.floating` floats, plain `footclient` tiles.
 **Breaks** app-id is set by the client, and Wayland has no outside override the
-way X11 had `--class`. Every terminal takes the flag, under three spellings
-(`--app-id`, `--class`, `--class=`); pavucontrol, blueman-manager and thunar
-have none, and xdg-desktop-portal-gtk is D-Bus activated with no spawn site.
-Those four match their real class, which floats **every** instance. Accepted —
-a title match or a rename wrapper both break silently instead.
+way X11 had `--class`. pavucontrol, blueman-manager and thunar take no flag, and
+xdg-desktop-portal-gtk is D-Bus activated with no spawn site, so those four
+match their real class — which floats **every** instance. Accepted: a title
+match or a rename wrapper both break silently instead.
 
 <a id="floating-gtk-id"></a>
 ## `floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
@@ -139,14 +138,11 @@ And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matche
 surface in, and libadwaita transitions the button that keyboard focus lands on.
 The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
 `*` kills the second. wleave itself ships no CSS animation at all.
-**Breaks** Fixing one leaves the other. Deleting our own `transition` from
-`button` does not reach libadwaita's — the reset has to be an override, not an
-absence. wleave is GTK4 (`libgtk-4`, `libadwaita-1`, `gtk4-layer-shell`), not
-GTK3, so the properties it accepts are GTK4's; check against that library
-before adding one.
-**Also** the same override-not-absence rule is why `button` restates
-`background-image: none` and `box-shadow: none`: libadwaita gives a button a
-gradient and a shadow, and neither survives contact with a flat palette.
+**Breaks** Fixing one leaves the other, and the reset has to be an override
+rather than an absence — deleting our own `transition` does not reach
+libadwaita's. Same rule is why `button` restates `background-image: none` and
+`box-shadow: none`. wleave is GTK4, not GTK3, so check any new property against
+that library.
 
 <a id="wleave-focus"></a>
 ## `wleave-style.nix` — the keybind dims by opacity, not by colour
@@ -157,10 +153,9 @@ ID outranks `button label.keybind`, so muting the keybind with `color` would
 lose the cascade silently; `opacity` sidesteps specificity entirely. Upstream's
 own sheet mutes it the same way.
 **Also** the border stays 2px in every state and only changes colour, so
-focusing a button reflows nothing. Resting `base03`, focused `base0D` — that is
-Hyprland's `inactive_border`/`active_border` pair verbatim, so a focused button
-marks where you are exactly as a focused window does. `base02` stays in the file
-for the hover *background*; only the frame carries state.
+focusing reflows nothing. Resting `base03`, focused `base0D` — Hyprland's
+`inactive_border`/`active_border` pair verbatim. Only the frame carries state;
+`base02` is the hover *background*.
 
 <a id="wleave-service"></a>
 ## `wleave.nix` — the unit names the config files it is already reading
@@ -179,18 +174,15 @@ the old one until reboot.
 
 **Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
 resident instance grows one layer surface per keypress, and `app/mod.rs` guards
-close-on-lost-focus with `&& !service_mode`, so none of them close. Before the
-service the second half hid the first — the older window died as the newer took
-focus. `powerMenu.command` is therefore a script: restart the unit if a wleave
-layer is mapped, activate if none is. Restarting is the only close available
-from outside, since a layer surface is not a window a compositor can shut.
-
+close-on-lost-focus with `&& !service_mode`, so none close. `powerMenu.command`
+is therefore a script: restart the unit if a wleave layer is mapped, activate if
+none is. Restarting is the only close available from outside, since a layer
+surface is not a window a compositor can shut.
 **Breaks** *Silently, and only under a held key.* `StartLimitIntervalSec = 0` is
 what keeps the toggle from tripping systemd's default five-starts-in-ten-seconds
-limit and leaving the unit dead with no menu at all. The detection string is
-`namespace: wleave` from `hyprctl layers`; `hyprctl` is called by bare name
-because the running compositor is what provides it, and the branch is skipped
-where there is none.
+limit and leaving the unit dead with no menu at all. Detection is
+`namespace: wleave` from `hyprctl layers`, called by bare name and skipped where
+there is no compositor.
 
 <a id="hyprland-rules-regex"></a>
 ## `hyprland-rules.nix` — one rule per regex, not one alternation
@@ -214,9 +206,8 @@ that already turns uwsm on.
 **Breaks** *Silently.* A zsh login shell reads `~/.zprofile` and never
 `~/.profile`, so dropping the second slot leaves no error and no session — just
 a shell prompt where the compositor should have been.
-**Also** This is the tty-login path, not the one in use. ly launches
-`hyprland-uwsm.desktop` through nixpkgs' `xsession-wrapper`, which sources
-`~/.profile` itself — where `uwsm check may-start` then fails, because ly set
-`XDG_SESSION_TYPE` before PAM. What reaches the block is ly's synthetic `shell`
-entry, a VT login, or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start`
-is empty while Hyprland runs.
+**Also** This is the tty-login path, not the one in use — ly launches
+`hyprland-uwsm.desktop` through `xsession-wrapper`, where `uwsm check may-start`
+then fails because ly set `XDG_SESSION_TYPE` before PAM. What reaches the block
+is a VT login or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start` is
+empty while Hyprland runs.

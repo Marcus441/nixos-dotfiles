@@ -109,7 +109,7 @@ stack — if the Steam session stops starting, turn this off first.
 **Why** `hid-playstation` has been in-tree since 6.2, so the DualSense already
 works as a gamepad with nothing declared. `dualsensectl` only adds what the
 kernel does not expose: battery, LED, microphone and adaptive-trigger control.
-It is a user-facing CLI, so it goes to `homeManager` (CLAUDE.md §6).
+It is a user-facing CLI, so it goes to `homeManager` (AGENTS.md §6).
 **Breaks** Nothing here, but the reason there is no udev rule is worth
 recording: `dualsensectl` talks over hidraw, and `programs.steam` sets
 `hardware.steam-hardware.enable = true` unconditionally, which pulls in
@@ -142,63 +142,48 @@ terminals scale from, so the overlay matches the display it is drawn on.
 `moduleParams.nvidia.NVreg_PreserveVideoMemoryAllocations = 1` from it, which
 is what saves and restores VRAM around a sleep; without it a desktop session
 frequently does not survive suspend/resume at all.
-**Breaks** Setting the modprobe parameter by hand instead gives the parameter
-without the mechanism that drives it. Which mechanism you get depends on the
-driver: `powerManagement.kernelSuspendNotifier` defaults to `open && version ≥
-595`, and gpc's `nvidiaPackages.latest` is 610.57.04, so the driver takes
-kernel suspend notifications directly and the `nvidia-suspend` / `-resume` /
-`-hibernate` units are deliberately **not** installed — they are the
-`!kernelSuspendNotifier` fallback. Do not go looking for them.
-`finegrained` stays off: that one *is* Optimus-only and has no place on a
-desktop.
-**Also** Two parameters the guide asked for are already applied and must not be
-restated: `nvidia-drm.modeset=1` follows from `modesetting.enable`, and
-`nvidia-drm.fbdev=1` follows from it too on any driver ≥545. Both arrive
-through `moduleParams`, which is also why `boot.extraModprobeConfig` is the
-wrong lever — the module *generates* that string, so writing to it by hand
-fights the generator. `NVreg_UsePageAttributeTable = 1` is nixpkgs' own
-documented example for this option.
+**Breaks** Setting the modprobe parameter by hand gives the parameter without
+the mechanism that drives it. `powerManagement.kernelSuspendNotifier` defaults
+to `open && version ≥ 595` and gpc's driver is 610.57.04, so it takes kernel
+suspend notifications directly and the `nvidia-suspend`/`-resume`/`-hibernate`
+units are deliberately **not** installed — do not go looking for them.
+`finegrained` stays off: that one *is* Optimus-only.
+**Also** `nvidia-drm.modeset=1` and `nvidia-drm.fbdev=1` (driver ≥545) already
+follow from `modesetting.enable` and must not be restated. Both arrive through
+`moduleParams`, which is why `boot.extraModprobeConfig` is the wrong lever — the
+module *generates* that string, so writing it by hand fights the generator.
 
 <a id="vaapi-decode-only"></a>
 ## `nvidia-vaapi.nix` — the driver is decode-only, and the variable is global
 
-**Why** Only the variables are declared here. The package is already present:
-`hardware.nvidia.videoAcceleration` defaults to `true` and the module adds
-`nvidia-vaapi-driver` to `hardware.graphics.extraPackages` itself, so listing
-it again is duplication that measures as a no-op. `NVD_BACKEND = "direct"` is
-required for the driver to work under Wayland at all — the default backend path
-assumes X11 — and `LIBVA_DRIVER_NAME` makes libva pick it rather than probe.
-**Breaks** The pair is session-wide, and `nvidia-vaapi-driver` implements
-**decode only**. `firefox.nix` and `thunderbird.nix` both set
-`media.ffmpeg.vaapi.enabled`, so they get hardware decode — but anything that
-probes VA-API for *encode* finds a driver that advertises itself and then
-fails. OBS, ffmpeg and kdenlive all come in through `apps`, which gpc takes.
-Accepted knowingly: the failure is loud rather than silent, and the fix is to
-scope both variables to the two consumers instead of the session.
-**Also** They reach the compositor's environment through `xdg.nix`'s
-`uwsm/env` symlink to `home.sessionVariablesPackage`, not through any
-Hyprland-specific mechanism.
+**Why** Only the variables are declared here — `hardware.nvidia.videoAcceleration`
+defaults true and the module already adds `nvidia-vaapi-driver`, so listing it
+again measures as a no-op. `NVD_BACKEND = "direct"` is required under Wayland at
+all (the default path assumes X11) and `LIBVA_DRIVER_NAME` makes libva pick it
+rather than probe.
+**Breaks** The pair is session-wide, and the driver implements **decode only**.
+Firefox and Thunderbird get hardware decode, but anything probing VA-API for
+*encode* — OBS, ffmpeg, kdenlive, all in `apps`, which gpc takes — finds a
+driver that advertises itself and then fails. Accepted knowingly: the failure is
+loud, and the fix is to scope both variables to the two consumers.
+**Also** they reach the compositor through `xdg.nix`'s `uwsm/env` symlink to
+`home.sessionVariablesPackage`, not any Hyprland-specific mechanism.
 
 <a id="tearing-intersection"></a>
 ## `tearing.nix` — an aspect for `gaming ∧ hyprland`
 
-**Why** These settings need *both*. `aspectRequires.gaming = ["hyprland"]`
-would be wrong in the other direction — it forbids a dwl host from ever taking
-`gaming`, which is exactly the case worth keeping open — and gating on
-`config.wayland.windowManager.hyprland.enable` inside `gaming` is the "one
-aspect branching between dwl and Hyprland" anti-pattern. There is no
-intersection operator, so the intersection gets a name and `aspectRequires`
-lists both parents. This is `bar/waybar.nix`'s shape with two entries rather
-than one, and the generator rejects a host that takes `tearing` without them.
+**Why** These settings need *both*. `aspectRequires.gaming = ["hyprland"]` is
+wrong in the other direction — it forbids a dwl host from ever taking `gaming` —
+and gating on `hyprland.enable` inside `gaming` is the "one aspect branching
+between dwl and Hyprland" anti-pattern. There is no intersection operator, so
+the intersection gets a name and `aspectRequires` lists both parents.
 **Breaks** `allow_tearing` cannot be added additively. `settings` bottoms out
 in `bool`, whose merge is `mergeEqualOption`, so two definitions of it are a
 hard eval error rather than a last-wins. `hyprland-general.nix` therefore holds
 it as `lib.mkDefault false` — priority only, and measured byte-identical on
 UM790pro. If that ever stops holding, the fallback is `lib.mkForce true` here,
 which works but hides the coupling from the file being overridden.
-**Also** Only `no-anim` goes through `windowTags`, because it is the one tag
-whose behaviour row already exists in `hyprland-rules.nix` and the one that is
-genuinely inert on dwl. `immediate`, `content` and `idle_inhibit` are Hyprland
-vocabulary with no dwl analogue — the app-id case from
-`conventions/placement.md` — so they stay here with their regex rather than
-forcing a second reader on `hyprland-rules.nix`.
+**Also** only `no-anim` goes through `windowTags` — the one tag whose behaviour
+row already exists in `hyprland-rules.nix` and the one genuinely inert on dwl.
+`immediate`, `content` and `idle_inhibit` are Hyprland vocabulary with no dwl
+analogue, so they stay here with their regex.

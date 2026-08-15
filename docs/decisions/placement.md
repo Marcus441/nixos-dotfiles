@@ -27,26 +27,18 @@ path is not.
 <a id="unfree-nixos"></a>
 ## `game-launchers.nix`, `nvtop.nix` — `nixos`, because unfree cannot be home
 
-CLAUDE.md §6 says default to `homeManager` and justify the exception. The
-justification is the same for both files and is not about the packages: **an
-unfree package cannot go in `home.packages` at all here.** `unfree.nix` sets
-`allowUnfree` on **nixos `core` only**, and Home Manager is standalone on
-`nixpkgs.legacyPackages.${system}` — a *fixed* `pkgs` instance. Setting
-`nixpkgs.config.allowUnfree` in a home module is therefore accepted and then
-ignored, and the build fails on the licence with no hint that the option it
-names is inert. This is the overlay trap in `host-wiring.md`, wearing a
-different hat.
-
-What each one trips over: `lutris` takes `steamSupport ? true`, which pulls
-unfree `pkgs.steam`; `nvtopPackages.nvidia` pulls `cuda_nvml_dev`, which is
-under the CUDA EULA.
-
-The alternatives were worse. Overriding the flags off (`steamSupport = false`)
-trades a licence boundary for lost functionality, and giving the generator an
-`allowUnfree` pkgs instance moves every home closure on all three hosts to fix
-two packages on one. The rest of `gaming` is nixos already — steam, gamemode,
-gamescope, scx — and neither a gaming rig's launchers nor an NVIDIA monitor is
-what `mbp` will port.
+**Why** Not about the packages: **an unfree package cannot go in `home.packages`
+at all here.** `unfree.nix` sets `allowUnfree` on **nixos `core` only**, and Home
+Manager is standalone on a *fixed* `nixpkgs.legacyPackages.${system}`. `lutris`
+pulls unfree `pkgs.steam` through `steamSupport ? true`; `nvtopPackages.nvidia`
+pulls `cuda_nvml_dev` under the CUDA EULA.
+**Breaks** *Silently, then loudly in the wrong place.* Setting
+`nixpkgs.config.allowUnfree` in a home module is accepted and then ignored, and
+the build fails on the licence with no hint that the option it names is inert —
+the overlay trap in `host-wiring.md` wearing a different hat.
+**Also** the alternatives were worse: `steamSupport = false` trades a licence
+boundary for lost functionality, and giving the generator an `allowUnfree` pkgs
+instance moves every home closure on all three hosts to fix two packages on one.
 
 ## `unfree.nix` — `core`, not `gaming`
 
@@ -96,24 +88,17 @@ Neovide is the GUI front-end and is `apps` only.
 <a id="man-pager-colours"></a>
 ## `man.nix` — the pager colours are `home.sessionVariables`
 
-`LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables that no shell
+**Why** `LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables no shell
 interprets, so re-emitting them from each shell's rc would be duplication with a
-drift risk and nothing to show for it. They sat in `bash.nix` because the hex →
-`r;g;b` helper did; `desktop.colorsRgb` ended that.
-
-Coverage is equal or better than the `.bashrc` they left. bash reaches
-`hm-session-vars.sh` through `~/.profile`, which nixpkgs' `xsession-wrapper`
-also sources before launching any session, so every terminal inherits them; zsh
-sources it from `~/.zshenv` for non-login shells and `~/.zprofile` for login
-ones. The cost is that `GROFF_NO_SGR=1` is now session-wide rather than
-per-interactive-bash, which reaches any groff call. Nothing here makes one but
-`man`.
-
-Nix has no `\e`: `"\e"` is the letter, and so is `''\e`. The byte comes from
-`builtins.fromJSON` on a `\u001b` escape. Home Manager writes each variable as
-`export NAME="value"`, where a literal ESC is fine.
-
-Scheme adapted from
+drift risk. They sat in `bash.nix` because the hex → `r;g;b` helper did;
+`desktop.colorsRgb` ended that. Coverage is equal or better: bash reaches
+`hm-session-vars.sh` through `~/.profile`, which `xsession-wrapper` also sources
+before any session; zsh sources it from `~/.zshenv` and `~/.zprofile`.
+**Breaks** Nothing here. The cost is that `GROFF_NO_SGR=1` is session-wide
+rather than per-interactive-bash, reaching any groff call — nothing here makes
+one but `man`.
+**Also** Nix has no `\e`: `"\e"` is the letter, and so is `''\e`. The byte comes from
+`builtins.fromJSON` on a `\u001b` escape. Scheme adapted from
 <https://gist.github.com/bahamas10/542875bb47990933638d2b7dfaa501bf>.
 
 ## Small ones
