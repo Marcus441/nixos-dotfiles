@@ -86,10 +86,8 @@ _: {
               ];
 
             keybind = [
-              "ctrl+shift+left=new_split:left"
-              "ctrl+shift+down=new_split:down"
-              "ctrl+shift+up=new_split:up"
-              "ctrl+shift+right=new_split:right"
+              "ctrl+shift+s=new_split:down"
+              "ctrl+shift+enter=new_split:right"
 
               "ctrl+left=goto_split:left"
               "ctrl+down=goto_split:down"
@@ -106,6 +104,8 @@ _: {
               "ctrl+8=goto_tab:8"
               "ctrl+9=goto_tab:9"
               "ctrl+0=goto_tab:10"
+
+              "alt+l=clear_screen"
 
               "ctrl+shift+t=new_tab"
               "ctrl+shift+o=toggle_tab_overview"

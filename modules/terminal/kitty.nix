@@ -107,10 +107,8 @@ _: {
             // lib.listToAttrs (lib.imap0 (i: hex: lib.nameValuePair "color${toString i}" hex) ansi);
 
           keybindings = {
-            "ctrl+shift+left" = "launch --location=vsplit --cwd=current";
-            "ctrl+shift+right" = "launch --location=vsplit --cwd=current";
-            "ctrl+shift+up" = "launch --location=hsplit --cwd=current";
-            "ctrl+shift+down" = "launch --location=hsplit --cwd=current";
+            "ctrl+shift+enter" = "launch --location=vsplit --cwd=current";
+            "ctrl+shift+s" = "launch --location=hsplit --cwd=current";
 
             "ctrl+h" = "neighboring_window left";
             "ctrl+j" = "neighboring_window down";
@@ -129,6 +127,7 @@ _: {
             "ctrl+0" = "goto_tab 10";
 
             "ctrl+shift+t" = "new_tab_with_cwd";
+            "alt+l" = "clear_terminal to_cursor_scroll active";
 
             "XF86Copy" = "copy_to_clipboard";
             "XF86Cut" = "copy_or_noop";
