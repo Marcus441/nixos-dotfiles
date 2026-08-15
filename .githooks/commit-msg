@@ -62,17 +62,6 @@ fail() {
   bad=1
 }
 
-n=${#subject}
-if [ "$n" -gt "$subject_max" ]; then
-  fail "subject is $n chars, limit is $subject_max" "$subject"
-elif [ "$n" -gt "$subject_warn" ]; then
-  echo "commit-msg: note: subject is $n chars; the target is $subject_warn" >&2
-fi
-
-case $subject in
-*.) fail "subject ends in a period" "$subject" ;;
-esac
-
 types='build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test'
 if [[ $subject =~ ^($types)(\([A-Za-z0-9._/-]+\))?!?:\ . ]]; then
   rest=${subject#*: }
@@ -80,6 +69,21 @@ else
   fail "subject needs a 'type(scope): ' prefix, type one of $types" "$subject"
   rest=$subject
 fi
+
+# The limit is on the whole line, which is what git and GitHub truncate. The
+# target is on the text past the prefix, which is the part the author writes:
+# a scope can spend 18 columns nobody chose, and a note that fires on half the
+# log is wallpaper.
+n=${#subject}
+if [ "$n" -gt "$subject_max" ]; then
+  fail "subject is $n chars, limit is $subject_max" "$subject"
+elif [ ${#rest} -gt "$subject_warn" ]; then
+  echo "commit-msg: note: ${#rest} chars past the prefix; the target is $subject_warn" >&2
+fi
+
+case $subject in
+*.) fail "subject ends in a period" "$subject" ;;
+esac
 
 # Imperative mood, judged only on the six past-tense openers that actually
 # recur. Anything subtler is prose.
