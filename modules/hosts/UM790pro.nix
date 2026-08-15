@@ -36,21 +36,15 @@ _: {
       networking.networkmanager.wifi.powersave = false;
       programs.nix-ld.enable = true;
 
-      # Google's prebuilt Android SDK binaries are FHS ELFs run through nix-ld.
-      # adb and the build tools need nothing beyond glibc, but the emulator is a
-      # Qt app: it bundles Qt and the xcb extensions under lib64/qt/lib and
-      # expects the rest from the system. This list is every DT_NEEDED soname in
-      # $ANDROID_HOME/emulator that the tree does not ship itself, plus the
-      # GL/Vulkan/Wayland stack it dlopens at runtime.
+      # load-bearing: docs/decisions/hosts.md#nix-ld-emulator
       programs.nix-ld.libraries = with pkgs; [
-        # linked directly
         libbsd
         dbus
         libdrm
         expat
         libgbm
-        nspr # libnspr4, libplc4, libplds4
-        nss # libnss3, libnssutil3, libsmime3
+        nspr
+        nss
         libpng
         libpulseaudio
         libuuid
@@ -63,8 +57,7 @@ _: {
         libxi
         libxkbfile
 
-        # dlopened for rendering / windowing
-        libglvnd # libGL, libEGL, libGLESv1_CM, libGLESv2
+        libglvnd
         libxau
         vulkan-loader
         wayland
