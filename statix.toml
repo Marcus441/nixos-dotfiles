@@ -1,8 +1,8 @@
 # repeated_keys (W20) is wrong for this repo, not merely noisy. A file that
 # declares flake.modules.<class>.<aspect> two or three times is the dendritic
-# pattern working -- one concern serving several aspects (CLAUDE.md §2) -- and
+# pattern working -- one concern serving several aspects (AGENTS.md §2) -- and
 # collapsing it to `flake = { modules.homeManager.core = ...; }` buries the
 # aspect name a level deeper and makes parallel declarations read as one thing
-# with parts. See CLAUDE.md §13.
+# with parts. See AGENTS.md §11 and .claude/rules/settled-decisions.md.
 disabled = ["repeated_keys"]
 ignore = [".direnv"]

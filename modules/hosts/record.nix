@@ -59,7 +59,7 @@
 
       aspects = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        description = "Order is load-bearing: it sets merge order, which reaches derivation hashes. CLAUDE.md §5.";
+        description = "Order is load-bearing: it sets merge order, which reaches derivation hashes. AGENTS.md §5.";
       };
 
       hardware = lib.mkOption {

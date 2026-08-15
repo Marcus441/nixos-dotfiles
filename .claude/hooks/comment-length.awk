@@ -1,7 +1,7 @@
 # Find comment runs longer than two lines inside '' blocks.
 #
 # Text in a '' block is content: it ships into the generated bashrc, tmux.conf
-# or config.h. CLAUDE.md 10 caps a comment there at two lines -- a label, not
+# or config.h. AGENTS.md §10 caps a comment there at two lines -- a label, not
 # an argument. This finds the violations.
 #
 # Two passes. The first lexes Nix to learn which lines sit inside an indented

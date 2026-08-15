@@ -121,7 +121,7 @@ for h in "${HOSTS[@]}"; do
         nvd diff "$old" "$new" | sed 's/^/    /'
       fi
       echo "  innocent: an empty diff-closures with a differing path is buildEnv"
-      echo "  order, from a file changing rank within its aspect (CLAUDE.md 5)."
+      echo "  order, from a file changing rank within its aspect (AGENTS.md §5)."
       echo "  Not innocent: a version change, an unintended package, or a diff"
       echo "  on a host the change predicted would be identical."
     fi
