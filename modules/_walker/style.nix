@@ -10,7 +10,6 @@
   @define-color base0D #${colors.base0D};
   @define-color base08 #${colors.base08};
 
-  /* RESET */
   * {
     all: unset;
     font-family: '${font}', 'Symbols Nerd Font Mono', monospace;
@@ -29,8 +28,6 @@
   .normal-icons { -gtk-icon-size: 16px; }
   .large-icons { -gtk-icon-size: 32px; }
 
-  /* OUTER WRAPPER — opaque, square, accent border
-     (mako's idiom: 2px @base0D around a @base00 surface) */
   .box-wrapper {
     background: @base00;
     border: 2px solid @base0D;
@@ -40,7 +37,6 @@
     overflow: hidden;
   }
 
-  /* SEARCH BAR — prominent top row */
   .search-container {
     background: transparent;
     padding: 14px 18px;
@@ -73,11 +69,9 @@
   .input:active {
   }
 
-  /* CONTENT AREA */
   .content-container {
   }
 
-  /* LEFT LIST PANE — fixed width */
   .scroll {
   }
 
@@ -93,7 +87,6 @@
     padding: 20px;
   }
 
-  /* LIST ITEMS — compact icon + name */
   child {
   }
 
@@ -141,7 +134,6 @@
     color: @base00;
   }
 
-  /* RIGHT PREVIEW PANE */
   .preview {
     color: @base05;
     border-left: 1px solid @base01;
@@ -156,7 +148,6 @@
     -gtk-icon-size: 64px;
   }
 
-  /* CALCULATOR — large result, muted expr */
   .calc .item-text {
     font-size: 28px;
     font-weight: bold;
@@ -168,12 +159,10 @@
     color: @base03;
   }
 
-  /* SYMBOLS */
   .symbols .item-image {
     font-size: 24px;
   }
 
-  /* TODO */
   .todo.done .item-text-box {
     opacity: 0.25;
   }
@@ -186,18 +175,15 @@
     font-weight: bold;
   }
 
-  /* BLUETOOTH */
   .bluetooth.disconnected {
     color: @base03;
   }
 
-  /* PROVIDER LIST */
   .providerlist .item-subtext {
     font-size: unset;
     color: @base03;
   }
 
-  /* KEYBINDS — hidden */
   .keybinds {
     padding: 0;
     margin: 0;
@@ -220,14 +206,12 @@
     font-style: italic;
   }
 
-  /* ERROR BAR */
   .error {
     padding: 10px 14px;
     background: @base08;
     color: @base00;
   }
 
-  /* WALLPAPER ITEMS */
   .wallpaper-item {
     padding: 8px;
     border-radius: 0;
@@ -253,7 +237,6 @@
     color: @base05;
   }
 
-  /* PACKAGE PREVIEW */
   .preview-content.archlinuxpkgs,
   .preview-content.dnfpackages {
     font-family: monospace;
