@@ -7,7 +7,7 @@ _: {
             enable = true;
             configurationLimit = 10;
           };
-          # hold space at boot for the generation menu -- docs/decisions/display-and-boot.md#boot-timeout
+          # load-bearing: docs/decisions/display-and-boot.md#boot-timeout
           timeout = 0;
           efi.canTouchEfiVariables = true;
         };

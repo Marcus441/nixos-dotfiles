@@ -21,7 +21,10 @@ Two rules that are easy to get backwards:
   transposed — yazi's `status.lua` draws a background as a foreground — use
   `base00`, which is the terminal background and so renders as nothing.
 
-Per-consumer formats are not interchangeable: Qt wants `#aarrggbb`, girara
+<a id="colour-formats"></a>
+## Per-consumer formats
+
+Not interchangeable: Qt wants `#aarrggbb`, girara
 (zathura) wants `#rrggbbaa`, dwl's colour tables want `0xrrggbbff`, and
 hyprlang (hyprlock) wants `rgb(rrggbb)` or `rgba(rrggbbaa)` — it rejects a bare
 `#rrggbb`, because `#` opens a comment. `hyprlock.nix` therefore maps the

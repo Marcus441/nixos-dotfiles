@@ -6,6 +6,7 @@ _: {
         lib,
         ...
       }: {
+        # load-bearing: docs/decisions/terminal.md#terminal-namespace
         options.terminal = {
           argv = lib.mkOption {
             type = lib.types.listOf lib.types.str;

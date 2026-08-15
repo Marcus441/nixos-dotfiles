@@ -6,6 +6,7 @@ _: {
         lib,
         ...
       }: let
+        # load-bearing: docs/decisions/theming.md#fastfetch-palette
         inherit (config.desktop) colors;
 
         # load-bearing: docs/decisions/theming.md#fastfetch-rules

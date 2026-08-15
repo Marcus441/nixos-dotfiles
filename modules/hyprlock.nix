@@ -9,7 +9,7 @@ in {
         monitors,
         ...
       }: let
-        # load-bearing: docs/conventions/colour.md
+        # load-bearing: docs/conventions/colour.md#colour-formats
         inherit
           (lib.mapAttrs (_: c: "rgb(${lib.removePrefix "#" c})") config.desktop.colors)
           base00
@@ -48,6 +48,7 @@ in {
           path = "screenshot";
           blur_passes = 3;
           blur_size = 8;
+          # load-bearing: docs/decisions/display-and-boot.md#hyprlock-flat
           brightness = 0.35;
           vibrancy = 0.0;
           color = base00;

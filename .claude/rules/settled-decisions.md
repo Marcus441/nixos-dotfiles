@@ -21,6 +21,10 @@ human makes, not a cleanup you offer.
   are the only scalars, and so the only thing that rejects a host taking two
   terminals. Do not give them defaults, and do not fold the namespace back into
   an implementation.
+- **ghostty's `scrollback-limit` stays unset.** It counts **bytes**, not lines,
+  and defaults to 10 MB; the `50000` this config was revived from reads like
+  foot's 10 000 lines and is in fact 50 KB.
+  `docs/decisions/terminal.md#ghostty-scrollback`.
 - **Deliberately deferred — do not propose unasked:** Quickshell; a dwl host
   taking `waybar`/`walker` (four blockers in git history).
 - **`statix.toml` disables `repeated_keys`, and it stays disabled.** The rule

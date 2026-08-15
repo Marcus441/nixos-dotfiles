@@ -85,6 +85,7 @@ _: {
                 "17=${colors16.base0F}"
               ];
 
+            # load-bearing: docs/decisions/terminal.md#ghostty-split-arrows
             keybind = [
               "ctrl+shift+s=new_split:down"
               "ctrl+shift+enter=new_split:right"

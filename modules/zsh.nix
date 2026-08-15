@@ -81,6 +81,7 @@ _: {
             };
           };
 
+          # load-bearing: docs/decisions/shells.md#zsh-menu-select
           initContent = ''
             # Globbing: extended patterns, and empty expansion in place of the
             # default error. ** is recursive without an option.

@@ -14,7 +14,7 @@ _: {
       }: let
         inherit (config.desktop) ansi font colors16;
 
-        # the eight ANSI colour names, in slot order; the index is the slot
+        # load-bearing: docs/decisions/terminal.md#terminal-ansi
         names = ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "white"];
         slots = offset:
           lib.listToAttrs (lib.imap0 (

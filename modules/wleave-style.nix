@@ -8,6 +8,8 @@ _: {
       }: let
         inherit (lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors) base00 base01 base02 base03 base05 base08 base09 base0A base0C base0D base0E;
       in {
+        # load-bearing: docs/decisions/sessions.md#wleave-no-anim
+        # load-bearing: docs/decisions/sessions.md#wleave-focus
         programs.wleave.style = ''
           * {
             font-family: "Inter", "Symbols Nerd Font Mono";
