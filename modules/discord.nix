@@ -19,7 +19,6 @@ _: {
               ./discord/equibop-plugin-settings.json;
             ".config/equibop/settings/quickCss.css".text = ''
               .theme-dark {
-                /* ── backgrounds ── */
                 --background-base-lower:      #${c.base00};
                 --background-base-low:        #${c.base01};
                 --background-primary:         #${c.base01};
@@ -41,7 +40,6 @@ _: {
                 --bg-overlay-2:               #${c.base01};
                 --bg-surface-raised:          #${c.base02};
 
-                /* ── text ── */
                 --text-normal:    #${c.base05};
                 --text-default:   #${c.base05};
                 --text-muted:     #${c.base04};
@@ -55,27 +53,23 @@ _: {
                 --header-primary:   #${c.base06};
                 --header-secondary: #${c.base04};
 
-                /* ── icons ── */
                 --icon-default:  #${c.base04};
                 --icon-muted:    #${c.base03};
                 --icon-strong:   #${c.base06};
                 --icon-subtle:   #${c.base03};
                 --icon-link:     #${c.base0D};
 
-                /* ── interactive ── */
                 --interactive-normal:  #${c.base04};
                 --interactive-hover:   #${c.base05};
                 --interactive-active:  #${c.base06};
                 --interactive-muted:   #${c.base03};
 
-                /* ── borders ── */
                 --border-faint:  #${c.base02};
                 --border-subtle: #${c.base01};
                 --border-normal: #${c.base01};
                 --border-strong: #${c.base04};
                 --border-focus:  #${c.base0D};
 
-                /* ── brand / accent ── */
                 --brand-500:              #${c.base0D};
                 --brand-experiment:       #${c.base0D};
                 --brand-experiment-400:   #${c.base0D};
@@ -85,7 +79,6 @@ _: {
                 --control-brand-foreground: #${c.base0D};
                 --control-brand-foreground-new: #${c.base0D};
 
-                /* ── status ── */
                 --status-positive:            #${c.base0B};
                 --status-positive-background: #${c.base0B}33;
                 --status-positive-text:       #${c.base0B};
@@ -96,13 +89,11 @@ _: {
                 --status-danger-background:   #${c.base08}33;
                 --status-danger-text:         #${c.base08};
 
-                /* ── channels / chat ── */
                 --channels-default:         #${c.base04};
                 --channel-icon:             #${c.base03};
                 --chat-background:          #${c.base01};
                 --chat-background-default:  #${c.base01};
 
-                /* ── inputs ── */
                 --input-background:        #${c.base01};
                 --input-background-default: #${c.base01};
                 --input-border:            #${c.base03};
@@ -112,19 +103,16 @@ _: {
                 --input-placeholder-text-default: #${c.base03};
                 --input-text-default:      #${c.base05};
 
-                /* ── scrollbars ── */
                 --scrollbar-thin-thumb:  #${c.base03};
                 --scrollbar-thin-track:  transparent;
                 --scrollbar-auto-thumb:  #${c.base03};
                 --scrollbar-auto-track:  #${c.base01};
 
-                /* ── mentions / highlights ── */
                 --mention-background:   #${c.base0D}1a;
                 --mention-foreground:   #${c.base0D};
                 --message-highlight-background-default: #${c.base0A}1a;
                 --message-mentioned-background-default: #${c.base0D}1a;
 
-                /* ── legacy vars (still referenced by some elements) ── */
                 --primary-530: #${c.base01};
                 --primary-600: #${c.base02};
                 --primary-630: #${c.base02};

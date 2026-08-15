@@ -83,30 +83,25 @@ _: {
 
           # load-bearing: docs/decisions/shells.md#zsh-menu-select
           initContent = ''
-            # Globbing: extended patterns, and empty expansion in place of the
-            # default error. ** is recursive without an option.
+            # Globbing: extended patterns; empty expansion instead of an error.
             setopt extended_glob null_glob
 
-            # Completion: case- and separator-insensitive, patterns honoured,
-            # list on the first tab, arrow-navigable menu.
+            # Completion: case- and separator-insensitive, list first, then a menu.
             zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}'
             zstyle ':completion:*' completer _complete _match
             zstyle ':completion:*' menu select
             unsetopt list_ambiguous
 
-            # Menu: file types from LS_COLORS, as ls prints them; the selected
-            # row in the colours foot gives a terminal selection.
+            # Menu colours: file types from LS_COLORS, selected row from the palette.
             zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS} 'ma=48;2;${colorsRgb.base02};38;2;${colorsRgb.base06}'
             zstyle ':completion:*:descriptions' format '%F{${colors16.base0C}}%d%f'
             zstyle ':completion:*:messages' format '%F{${colors16.base03}}%d%f'
             zstyle ':completion:*:warnings' format '%F{${colors16.base08}}no matches%f'
 
-            # /etc/zshrc bound these into the keymap that was main before
-            # defaultKeymap relinked it.
+            # Rebind the keys /etc/zinputrc left in the keymap we relinked away from.
             [[ -r /etc/zinputrc ]] && source /etc/zinputrc
 
             # C-x C-e: edit the line in $VISUAL, as readline binds by default.
-            # Unlike readline's, it hands the line back rather than running it.
             autoload -Uz edit-command-line
             zle -N edit-command-line
             bindkey '^X^E' edit-command-line
