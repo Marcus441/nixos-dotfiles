@@ -24,28 +24,13 @@ _: {
         enableMcpIntegration = false;
 
         context = ''
-          # General Development Rules
+          A repository's own AGENTS.md outranks every line here.
 
-          ## Environment & Context
-          - **Environment Awareness:** You are working within a NixOS/Flake-managed development environment.
-          - **Context Management:** When dealing with large files, prefer reading specific sections or using grep to minimize token usage. Avoid ingesting thousands of lines unless strictly necessary.
-          - **Lazy Loading:** If the project has a specific @rules/ folder, load relevant files lazily on need-to-know basis.
-
-          ## Code Quality Standards
-          - **Readability:** Be concise, technical, and prioritize readability.
-          - **Clean Code:** Follow Clean Code principles (SOLID, DRY) and design patterns appropriate for the language used.
-          - **Minimal Diffs:** Minimize git diffs: Only modify lines necessary for the requested change.
-          - **Logic first:** For complex tasks, think step-by-step and outline the logic before implementation.
-
-          ## Security & Reliability
-          - **Security First:** Always check for security vulnerabilities (injection, memory leaks, UB).
-          - **NO SECRETS:** NEVER suggest or commit code containing hardcoded secrets, API keys, or PII. Use environment variables or secret management placeholders.
-          - **Reliability:** If unsure of a library version or API, prioritize the standard library or explicitly state your uncertainty. Do not hallucinate version-specific features.
-
-          ## Nix-Specific Guidelines
-          - **Hermeticity:** Flag hardcoded absolute paths (e.g., /home/marcus) in favor of relative paths or Nix variables.
-          - **Flake Awareness:** Understand the flake output schema and input system.
-          - **Module System:** Follow home-manager module patterns when modifying Nix configurations.
+          - Read the sections you need. Do not ingest a large file whole.
+          - Change only the lines the request needs.
+          - Never write a hardcoded secret, API key or PII.
+          - Say you are unsure of an API rather than inventing one.
+          - Absolute paths under /home are a smell in anything checked in.
         '';
 
         agents = {
