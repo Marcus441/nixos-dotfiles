@@ -88,7 +88,7 @@ BEGIN { RS = "\0" }
     if (s ~ /^#/) {
       # not a comment: shebang, C preprocessor, CSS colour, CSS selector
       if (s ~ /^#!/)                                          { flush(k); continue }
-      if (s ~ /^#(define|include|if|ifdef|ifndef|else|elif|endif|pragma|undef)\b/) { flush(k); continue }
+      if (s ~ /^#(define|include|if|ifdef|ifndef|else|elif|endif|pragma|undef)\y/) { flush(k); continue }
       if (s ~ /^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?([0-9a-fA-F]{2})?[^0-9a-zA-Z]/)    { flush(k); continue }
       if (s ~ /^#[A-Za-z_-][A-Za-z0-9_-]*[ \t]*[,{>:.]/)      { flush(k); continue }
       if (!run) start = k
