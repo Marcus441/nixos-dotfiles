@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# Enforce the mechanically checkable half of the commit standard. The other
+# half -- one logical change, why rather than what, a refactor kept out of a
+# behavioural commit -- is judgement, lives in AGENTS.md §11, and is
+# deliberately not guessed at here.
+#
+#   git config core.hooksPath .githooks    # once per clone
+#   git commit --no-verify                 # the deliberate override
+#
+# Every rejection names the offending line and the rule, because a hook that
+# only says no gets bypassed rather than obeyed.
+
+set -uo pipefail
+
+# ${#s} counts characters, not bytes, only under a UTF-8 locale, and the
+# bodies here are full of em dashes.
+export LC_ALL=C.UTF-8
+
+subject_max=72
+subject_warn=50
+body_max=72
+
+msg=${1:-}
+[ -n "$msg" ] && [ -f "$msg" ] || exit 0
+
+# git strips comments and everything below a scissors line at cleanup time, so
+# the hook must too -- under `commit -v` the diff beneath it is not
+# comment-prefixed and would otherwise be linted as prose.
+scissors='^#[[:space:]]*-{2,}[[:space:]]*>8[[:space:]]*-{2,}'
+lines=()
+while IFS= read -r line || [ -n "$line" ]; do
+  [[ $line =~ $scissors ]] && break
+  [[ $line == '#'* ]] && continue
+  lines+=("$line")
+done <"$msg"
+
+while [ ${#lines[@]} -gt 0 ] && [ -z "${lines[0]//[[:space:]]/}" ]; do
+  lines=("${lines[@]:1}")
+done
+while [ ${#lines[@]} -gt 0 ] && [ -z "${lines[-1]//[[:space:]]/}" ]; do
+  unset 'lines[-1]'
+done
+
+# An aborted commit leaves an empty message; git will reject it on its own.
+[ ${#lines[@]} -gt 0 ] || exit 0
+
+subject=${lines[0]}
+
+merge_head=$(git rev-parse --git-path MERGE_HEAD 2>/dev/null)
+[ -n "$merge_head" ] && [ -e "$merge_head" ] && exit 0
+
+# Merges and reverts are generated; fixup!/squash!/amend! are consumed by
+# rebase and never reach history in this form.
+case $subject in
+'Merge '* | 'Revert "'* | 'fixup! '* | 'squash! '* | 'amend! '*) exit 0 ;;
+esac
+
+bad=0
+fail() {
+  echo "commit-msg: $1" >&2
+  if [ $# -gt 1 ]; then echo "  $2" >&2; fi
+  bad=1
+}
+
+n=${#subject}
+if [ "$n" -gt "$subject_max" ]; then
+  fail "subject is $n chars, limit is $subject_max" "$subject"
+elif [ "$n" -gt "$subject_warn" ]; then
+  echo "commit-msg: note: subject is $n chars; the target is $subject_warn" >&2
+fi
+
+case $subject in
+*.) fail "subject ends in a period" "$subject" ;;
+esac
+
+types='build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test'
+if [[ $subject =~ ^($types)(\([A-Za-z0-9._/-]+\))?!?:\ . ]]; then
+  rest=${subject#*: }
+else
+  fail "subject needs a 'type(scope): ' prefix, type one of $types" "$subject"
+  rest=$subject
+fi
+
+# Imperative mood, judged only on the six past-tense openers that actually
+# recur. Anything subtler is prose.
+first=${rest%% *}
+case ${first,,} in
+fixed) want=fix ;;
+added) want=add ;;
+updated) want=update ;;
+changed) want=change ;;
+removed) want=remove ;;
+refactored) want=refactor ;;
+*) want= ;;
+esac
+[ -n "$want" ] && fail "subject opens with '$first'; the imperative is '$want'" "$subject"
+
+# Contentless subjects. Kept narrow on purpose: 'bump flake.lock' says what
+# changed and must pass, while 'run treefmt' only says what was typed.
+low=${rest,,}
+low=${low%"${low##*[![:space:]]}"}
+empty='^(wip( .*)?|update|updates|update file|update files|fix|fixes|changes|change|misc|cleanup|clean up|stuff|temp|tmp|minor|various|more)$'
+tool='^(run )?(nix fmt|nixfmt|alejandra|treefmt|statix|deadnix|shellcheck|shfmt|prettier|eslint|black|gofmt|go fmt|cargo fmt|rustfmt|ktlint|ktlintformat|make|npm run [a-z0-9:._-]+|yarn [a-z0-9:._-]+|pnpm [a-z0-9:._-]+|\./[a-z0-9._/-]+)$'
+if [[ $low =~ $empty ]]; then
+  fail "subject says nothing about what changed" "$subject"
+elif [[ $low =~ $tool ]]; then
+  fail "subject names the command, not the change" "$subject"
+fi
+
+if [ ${#lines[@]} -gt 1 ] && [ -n "${lines[1]}" ]; then
+  fail "line 2 must be blank; git reads the first paragraph as the subject" "${lines[1]}"
+fi
+
+# The trailing block of Token: value lines is exempt from the wrap, since a
+# session URL cannot be broken. Found by position, not by shape -- 'Cost: …'
+# and 'TUIs: …' open body paragraphs here and are ordinary prose.
+trailer_from=${#lines[@]}
+i=$((${#lines[@]} - 1))
+while [ "$i" -ge 1 ] && [[ ${lines[i]} =~ ^[A-Za-z][A-Za-z0-9-]*:\  ]]; do
+  trailer_from=$i
+  i=$((i - 1))
+done
+if [ "$trailer_from" -gt 1 ] && [ -n "${lines[$((trailer_from - 1))]}" ]; then
+  trailer_from=${#lines[@]}
+fi
+
+fence=0
+for ((i = 1; i < ${#lines[@]}; i++)); do
+  l=${lines[i]}
+  case $l in '```'*)
+    fence=$((1 - fence))
+    continue
+    ;;
+  esac
+  [ "$fence" -eq 1 ] && continue
+  [ "$i" -ge "$trailer_from" ] && continue
+  n=${#l}
+  [ "$n" -le "$body_max" ] && continue
+  case $l in
+  *://*) continue ;;
+  [[:space:]]*) continue ;;
+  esac
+  [[ $l == *' '* ]] || continue
+  fail "body line $((i + 1)) is $n chars, limit is $body_max" "$l"
+done
+
+if [ "$bad" -ne 0 ]; then
+  {
+    echo
+    echo "AGENTS.md §11. The message is still in .git/COMMIT_EDITMSG; reopen it"
+    echo "with 'git commit -e -F .git/COMMIT_EDITMSG'."
+  } >&2
+fi
+
+exit "$bad"

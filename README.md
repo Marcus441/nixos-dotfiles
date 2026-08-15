@@ -89,11 +89,16 @@ separately rather than as a NixOS module.
    ```bash
    git clone https://github.com/Marcus441/nixos-dotfiles.git ~/.dotfiles/flake
    cd ~/.dotfiles/flake
+   git config core.hooksPath .githooks
    ```
 
    The location is load-bearing: `modules/nh.nix` points `programs.nh.flake` at
    `/home/<user>/.dotfiles/flake`, so `nh os switch` finds nothing if the tree
    lives anywhere else.
+
+   The hooks in `.githooks/` are tracked, but `core.hooksPath` is per-clone
+   local config: it is not cloned, so the line above is run once per checkout
+   or the hooks sit there inert.
 
 2. **Drop in the hardware config** — the one machine-generated file, never
    edited by hand:
