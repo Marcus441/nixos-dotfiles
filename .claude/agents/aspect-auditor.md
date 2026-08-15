@@ -42,11 +42,11 @@ never bulk file contents. Keep the report under ~40 lines.
   than the provider's file.
 - A tool invoked by bare name that is not installed by every aspect that
   invokes it.
-- A stale "26 of 109" figure in `.claude/rules/nix-file-conventions.md`.
+- A figure restated in prose that `docs/inventory.md` already generates.
 
 ## What is not a finding
 
-Anything listed under *Known divergences* in CLAUDE.md or in
+Anything listed under *Known divergences* in AGENTS.md or in
 `.claude/rules/settled-decisions.md`. Report those as known, not as defects.
 
 Do not edit any file. Report only.
