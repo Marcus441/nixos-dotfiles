@@ -210,8 +210,21 @@ across `#`, `//` and `/* */`. A `load-bearing:` pointer does not belong in a
   generator or `aspects.nix`.
 - **Prefer adding a file to editing one**, especially when extending an aspect.
   Do not add an enable flag; split into two files and let hosts differ by aspect.
-- **Small, single-concern commits.** Rationale in the commit message. Predict
-  the six-target `verify.sh` signature and justify every FAIL.
+- **Small, single-concern commits.** One logical change each: needing "and" in
+  the subject is usually two commits, while ten files touched for one reason is
+  still one. Never split a coherent change because the message got long — a long
+  body is fine, an incoherent history is not. A refactor or a reformat travels in
+  its own commit, never folded into a behavioural one. Rationale in the commit
+  message: why, not what. Predict the six-target `verify.sh` signature and
+  justify every FAIL. `.githooks/commit-msg` checks the mechanical half;
+  `core.hooksPath` is per-clone, set once (README, step 1).
+- **Branch off `main`**, rebase onto it before opening a PR, and keep the
+  branch's own commits atomic — squash-and-merge is not a licence for messy
+  intermediates. Never force-push `main`; `.githooks/pre-push` refuses it. A PR
+  is reviewable in one sitting or it is too large: stack it or split it. Its
+  title follows the commit-subject rules, and its description is one sentence of
+  why then dot points on the decisions, not the diffs — written so it can serve
+  as the squash message.
 - **No unrequested changes.** No package bumps, no deprecation fixes, no
   reformatting files the current task doesn't touch.
 - **Do not introduce a framework** (`den`, `snowfall`, `flake-file`,
