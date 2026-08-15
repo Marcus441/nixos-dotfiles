@@ -54,10 +54,23 @@ _: {
             bind s split-window -v -c "#{pane_current_path}"
             bind v split-window -h -c "#{pane_current_path}"
             bind x kill-pane
-            bind h select-pane -L
-            bind j select-pane -D
-            bind k select-pane -U
-            bind l select-pane -R
+
+            # load-bearing: docs/decisions/terminal.md#tmux-pane-is-vim
+            bind -n C-h if -F "#{@pane-is-vim}" 'send-keys C-h' 'select-pane -L'
+            bind -n C-j if -F "#{@pane-is-vim}" 'send-keys C-j' 'select-pane -D'
+            bind -n C-k if -F "#{@pane-is-vim}" 'send-keys C-k' 'select-pane -U'
+            bind -n C-l if -F "#{@pane-is-vim}" 'send-keys C-l' 'select-pane -R'
+            bind C-l send-keys C-l
+
+            bind -n M-h if -F "#{@pane-is-vim}" 'send-keys M-h' 'resize-pane -L 3'
+            bind -n M-j if -F "#{@pane-is-vim}" 'send-keys M-j' 'resize-pane -D 3'
+            bind -n M-k if -F "#{@pane-is-vim}" 'send-keys M-k' 'resize-pane -U 3'
+            bind -n M-l if -F "#{@pane-is-vim}" 'send-keys M-l' 'resize-pane -R 3'
+
+            bind -T copy-mode-vi C-h select-pane -L
+            bind -T copy-mode-vi C-j select-pane -D
+            bind -T copy-mode-vi C-k select-pane -U
+            bind -T copy-mode-vi C-l select-pane -R
 
             # Window controls
             bind r command-prompt -I "#W" "rename-window -- '%%'"

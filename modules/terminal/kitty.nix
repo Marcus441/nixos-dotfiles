@@ -70,6 +70,9 @@ _: {
               cursor_trail_start_threshold = 2;
 
               enabled_layouts = "splits,stack";
+              # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
+              allow_remote_control = "socket-only";
+              listen_on = "unix:@mykitty";
               # load-bearing: docs/decisions/terminal.md#kitty-inactive-alpha
               inactive_text_alpha = -0.8;
 
@@ -109,10 +112,10 @@ _: {
             "ctrl+shift+up" = "launch --location=hsplit --cwd=current";
             "ctrl+shift+down" = "launch --location=hsplit --cwd=current";
 
-            "ctrl+left" = "neighboring_window left";
-            "ctrl+down" = "neighboring_window down";
-            "ctrl+up" = "neighboring_window up";
-            "ctrl+right" = "neighboring_window right";
+            "ctrl+h" = "neighboring_window left";
+            "ctrl+j" = "neighboring_window down";
+            "ctrl+k" = "neighboring_window up";
+            "ctrl+l" = "neighboring_window right";
 
             "ctrl+1" = "goto_tab 1";
             "ctrl+2" = "goto_tab 2";
@@ -131,6 +134,14 @@ _: {
             "XF86Cut" = "copy_or_noop";
             "XF86Paste" = "paste_from_clipboard";
           };
+
+          # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
+          extraConfig = ''
+            map --when-focus-on var:IS_NVIM ctrl+h
+            map --when-focus-on var:IS_NVIM ctrl+j
+            map --when-focus-on var:IS_NVIM ctrl+k
+            map --when-focus-on var:IS_NVIM ctrl+l
+          '';
         };
       }
     )

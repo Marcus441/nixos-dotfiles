@@ -440,3 +440,67 @@ terminal background, which is why the two that can are the two that do.
 **Also** `confirm` is *nearly* fillable through `body` and `list`, but its
 button row leaves gaps around the labels; a half-filled popup reads worse than
 an unfilled one.
+
+<a id="tmux-pane-is-vim"></a>
+## `tmux.nix` — the pane keys are root-table, and Neovim gets first refusal
+
+**Why** `C-h/j/k/l` has to mean "one pane left/down/up/right" whether the pane
+holds a shell or a Neovim with its own splits, so the bindings are root-table
+(`-n`, no prefix) and each one asks `#{@pane-is-vim}` before acting.
+smart-splits.nvim sets that pane-local option on load and clears it on exit, so
+the flag tracks the *pane*, not a guess about the process. The older snippets
+scrape `ps -o comm= -t #{pane_tty}` through `if-shell` instead; that forks per
+keypress and calls anything named like `view` or `nvimx` a Neovim.
+**Breaks** silently in one direction only. With no Neovim side the flag is never
+set, the guard always takes the second branch, and the keys still move tmux
+panes — so a half-installed setup looks like it works until Neovim has two
+windows and the first one becomes unreachable. `tmux show -p @pane-is-vim` in the
+pane is the check.
+**Also** `C-l` was the shell's clear-screen and is now tmux's, so `prefix C-l`
+sends the real one. Removing the old `prefix h/j/k/l` also settled a collision
+that had been live: `bind k kill-window` sat below `bind k select-pane -U` and
+silently won.
+
+<a id="kitty-split-navigation"></a>
+## `terminal/kitty.nix` — the same four keys are bound and then conditionally unbound
+
+**Why** kitty sees the keypress before the program in the window does, so
+`map ctrl+h neighboring_window left` alone would take `C-h` away from Neovim
+entirely. smart-splits.nvim writes an `IS_NVIM` user-var over OSC 1337 when it
+loads, and the four `map --when-focus-on var:IS_NVIM ctrl+h` lines with an empty
+action unbind the key again *for windows that have it* — so kitty handles the
+key in a shell window and forwards it in a Neovim one. The reverse trip, Neovim
+running out of splits and focusing the next kitty window, goes over `kitty @`,
+which is what `allow_remote_control` and `listen_on` are for. `socket-only`
+rather than `yes` keeps remote control off the TTY escape channel, which
+`kitty @` does not need.
+**Breaks** silently, and `listen_on` is the sharp half: it is what puts
+`KITTY_LISTEN_ON` in the environment, and that variable is the *only* thing
+smart-splits tests to decide it is talking to kitty. Drop it and the plugin
+reports no multiplexer, navigation stops at the last Neovim window, and nothing
+anywhere says why. `echo $KITTY_LISTEN_ON` is the check.
+**Also** the unbind lines live in `extraConfig` because their action is empty
+and home-manager's `keybindings` attrset cannot express that. Order is not left
+to chance — `settings` renders at `mkOrder 540` and `keybindings` at `560` into
+the same string, so a plain `extraConfig` at the default 1000 lands after both.
+
+<a id="ghostty-split-arrows"></a>
+## `terminal/ghostty.nix` — the splits keep the arrows, and kitty's did not
+
+**Why** Ghostty cannot do what kitty does above, and the gap is structural. It
+has no conditional-keybind mechanism, nothing equivalent to `--when-focus-on`;
+it parses but does not implement OSC 1337 `SetUserVar`, so there would be no
+variable to test even if there were a test; and its Linux D-Bus surface reaches
+`+new-window` only, so a plugin has no way to focus a split from the other side.
+Its one state-aware prefix, `performable:`, asks whether *Ghostty* can perform
+the action, never whether the child should have had the key first. Divergence
+from `kitty.nix` here is the decision, not drift.
+**Breaks** silently and in the direction that looks like success.
+`performable:ctrl+h=goto_split:left` works whenever Ghostty has no split that
+way, which is most of the time you would test it — and the moment a Ghostty
+split *and* a Neovim window both sit to the left, Ghostty wins and that Neovim
+window cannot be reached at all. smart-splits closed its Ghostty backend (PR
+#433) on exactly this, and the feature request (#273) as not planned.
+**Also** ghostty is in no host's aspect list today, so this costs nothing now; it
+is written down so the arrows are not "fixed" into `hjkl` later. If ghostty ever
+grows a focus-split verb over D-Bus (#12556), the entry is what to revisit.
