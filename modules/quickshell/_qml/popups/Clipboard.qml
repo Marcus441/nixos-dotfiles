@@ -50,42 +50,49 @@ Overlay {
 
     Column {
         anchors.fill: parent
-        anchors.margins: 12
-        spacing: 10
-
-        TextInput {
-            id: search
-
-            width: parent.width
-            color: Config.base05
-            font.family: Config.fontFamily
-            font.pixelSize: Config.fontSize + 4
-            focus: true
-            onTextChanged: root.refilter()
-            Keys.onEscapePressed: root.dismissed()
-            Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
-            Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
-            Keys.onReturnPressed: root.pick(root.filtered[root.selected])
-
-            Text {
-                visible: search.text === ""
-                text: "Clipboard history…"
-                color: Config.base03
-                font: search.font
-            }
-        }
+        spacing: 0
 
         Rectangle {
+            id: searchBox
+
             width: parent.width
-            height: 1
-            color: Config.base02
+            height: search.implicitHeight + 24
+            color: Config.base01
+
+            TextInput {
+                id: search
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: 14
+                anchors.rightMargin: 14
+                color: Config.base05
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize + 4
+                focus: true
+                onTextChanged: root.refilter()
+                Keys.onEscapePressed: root.dismissed()
+                Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
+                Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
+                Keys.onReturnPressed: root.pick(root.filtered[root.selected])
+
+                Text {
+                    visible: search.text === ""
+                    text: "Clipboard history…"
+                    color: Config.base03
+                    font: search.font
+                }
+            }
         }
 
         ListView {
             id: list
 
             width: parent.width
-            height: parent.height - search.height - 21
+            height: parent.height - searchBox.height
+            topMargin: 8
+            bottomMargin: 8
             clip: true
             model: root.filtered
             currentIndex: root.selected
@@ -117,8 +124,8 @@ Overlay {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
-                    anchors.leftMargin: 8
-                    width: parent.width - 16
+                    anchors.leftMargin: 14
+                    width: parent.width - 28
                     text: row.modelData.text
                     elide: Text.ElideRight
                     color: Config.base05

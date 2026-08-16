@@ -59,32 +59,45 @@ Overlay {
 
     Column {
         anchors.fill: parent
-        anchors.margins: 12
-        spacing: 10
+        spacing: 0
         focus: true
         Keys.onEscapePressed: root.dismissed()
 
-        Row {
-            spacing: 16
+        Rectangle {
+            id: header
 
-            Text {
-                text: "Wallpapers"
-                color: Config.base05
-                font.family: Config.fontFamily
-                font.pixelSize: Config.fontSize + 4
-            }
+            width: parent.width
+            height: title.implicitHeight + 24
+            color: Config.base01
 
-            Text {
-                text: root.rotatorEnabled ? "󰒝 shuffle on" : "󰒝 shuffle off"
-                color: root.rotatorEnabled ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-                anchors.verticalCenter: parent.verticalCenter
+            Row {
+                anchors.fill: parent
+                anchors.leftMargin: 14
+                anchors.rightMargin: 14
+                spacing: 16
 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.toggleRotator()
+                Text {
+                    id: title
+
+                    text: "Wallpapers"
+                    color: Config.base05
+                    font.family: Config.fontFamily
+                    font.pixelSize: Config.fontSize + 4
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    text: root.rotatorEnabled ? "󰒝 shuffle on" : "󰒝 shuffle off"
+                    color: root.rotatorEnabled ? Config.base0D : Config.base04
+                    font.family: Config.iconFamily
+                    font.pixelSize: Config.fontSize
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.toggleRotator()
+                    }
                 }
             }
         }
@@ -93,7 +106,11 @@ Overlay {
             id: grid
 
             width: parent.width
-            height: parent.height - 40
+            height: parent.height - header.height
+            topMargin: 10
+            bottomMargin: 10
+            leftMargin: 10
+            rightMargin: 10
             clip: true
             cellWidth: (width - leftMargin - rightMargin) / 4
             cellHeight: 144

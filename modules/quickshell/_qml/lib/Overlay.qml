@@ -36,7 +36,7 @@ PanelWindow {
         anchors.centerIn: parent
         width: root.contentWidth
         height: root.contentHeight
-        color: Config.base00
+        color: Config.base10
 
         MouseArea {
             anchors.fill: parent
