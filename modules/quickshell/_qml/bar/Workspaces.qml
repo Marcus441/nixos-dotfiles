@@ -86,7 +86,12 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: Hyprland.dispatch(`workspace ${pill.modelData}`)
+                    onClicked: {
+                        if (pill.ws)
+                            pill.ws.activate();
+                        else
+                            Hyprland.dispatch(Hyprland.usingLua ? `hl.dsp.focus({ workspace = "${pill.modelData}" })` : `workspace ${pill.modelData}`);
+                    }
                 }
             }
         }
