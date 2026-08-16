@@ -78,27 +78,13 @@ Item {
         id: popup
 
         anchorItem: root
+        title: "System"
         visible: false
 
-        Column {
-            spacing: 6
-
-            Repeater {
-                model: [`󰻠 CPU        ${root.cpuPct}%`, `󰔏 ${root.tempChip}    ${root.tempC}°C`, `󰍛 Memory     ${root.memUsed.toFixed(1)}G / ${root.memTotal.toFixed(1)}G`, `󰋊 Disk /     ${root.diskPct}%`]
-
-                Text {
-                    required property string modelData
-
-                    text: modelData
-                    color: Config.base05
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-                }
-            }
-
+        headerContent: [
             Text {
                 visible: Config.systemMonitorCommand !== ""
-                text: "󱂬 open monitor"
+                text: "󱂬 monitor"
                 color: monitorMouse.containsMouse ? Config.base0D : Config.base04
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
@@ -113,6 +99,25 @@ Item {
                         Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.systemMonitorCommand}`]);
                         popup.visible = false;
                     }
+                }
+            }
+        ]
+
+        Repeater {
+            model: [`󰻠 CPU        ${root.cpuPct}%`, `󰔏 ${root.tempChip}    ${root.tempC}°C`, `󰍛 Memory     ${root.memUsed.toFixed(1)}G / ${root.memTotal.toFixed(1)}G`, `󰋊 Disk /     ${root.diskPct}%`]
+
+            PopupRow {
+                id: metricRow
+
+                required property string modelData
+
+                hoverable: false
+
+                Text {
+                    text: metricRow.modelData
+                    color: Config.base05
+                    font.family: Config.iconFamily
+                    font.pixelSize: Config.fontSize
                 }
             }
         }

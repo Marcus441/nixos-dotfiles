@@ -46,90 +46,72 @@ Item {
         id: popup
 
         anchorItem: root
+        title: "Wi-Fi"
         visible: false
 
-        Column {
-            spacing: 6
+        headerContent: [
+            Text {
+                text: Networking.wifiEnabled ? "󰤨 on" : "󰤮 off"
+                color: Networking.wifiEnabled ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
 
-            Row {
-                spacing: 12
-
-                Text {
-                    text: Networking.wifiEnabled ? "󰤨 wifi on" : "󰤮 wifi off"
-                    color: toggleMouse.containsMouse ? Config.base0D : Config.base05
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-
-                    MouseArea {
-                        id: toggleMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
-                    }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
                 }
+            },
+            Text {
+                visible: Config.networkManagerCommand !== ""
+                text: "󱂬 manager"
+                color: managerMouse.containsMouse ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
 
-                Text {
-                    visible: Config.networkManagerCommand !== ""
-                    text: "󱂬 manager"
-                    color: managerMouse.containsMouse ? Config.base0D : Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
+                MouseArea {
+                    id: managerMouse
 
-                    MouseArea {
-                        id: managerMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
-                            popup.visible = false;
-                        }
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
+                        popup.visible = false;
                     }
                 }
             }
+        ]
 
-            Repeater {
-                model: (root.wifiDev?.networks.values ?? []).slice().sort((a, b) => b.signalStrength - a.signalStrength).slice(0, 10)
+        Repeater {
+            model: (root.wifiDev?.networks.values ?? []).slice().sort((a, b) => b.signalStrength - a.signalStrength).slice(0, 10)
 
-                Row {
-                    id: netRow
+            PopupRow {
+                id: netRow
 
-                    required property var modelData
+                required property var modelData
 
-                    spacing: 8
+                onClicked: {
+                    if (netRow.modelData.connected)
+                        netRow.modelData.disconnect();
+                    else if (netRow.modelData.known || netRow.modelData.security === WifiSecurityType.Open)
+                        netRow.modelData.connect();
+                    else if (Config.networkManagerCommand !== "")
+                        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
+                }
 
-                    Text {
-                        text: root.strengthIcon(netRow.modelData.signalStrength)
-                        color: netRow.modelData.connected ? Config.base0D : Config.base04
-                        font.family: Config.iconFamily
-                        font.pixelSize: Config.fontSize
-                    }
+                Text {
+                    text: root.strengthIcon(netRow.modelData.signalStrength)
+                    color: netRow.modelData.connected ? Config.base0D : Config.base04
+                    font.family: Config.iconFamily
+                    font.pixelSize: Config.fontSize
+                }
 
-                    Text {
-                        text: netRow.modelData.name + (netRow.modelData.security !== WifiSecurityType.Open ? " 󰌾" : "")
-                        color: netMouse.containsMouse ? Config.base0D : netRow.modelData.connected ? Config.base05 : Config.base04
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
-
-                        MouseArea {
-                            id: netMouse
-
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (netRow.modelData.connected)
-                                    netRow.modelData.disconnect();
-                                else if (netRow.modelData.known || netRow.modelData.security === WifiSecurityType.Open)
-                                    netRow.modelData.connect();
-                                else if (Config.networkManagerCommand !== "")
-                                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
-                            }
-                        }
-                    }
+                Text {
+                    text: netRow.modelData.name + (netRow.modelData.security !== WifiSecurityType.Open ? " 󰌾" : "")
+                    color: netRow.modelData.connected ? Config.base05 : Config.base04
+                    font.family: Config.fontFamily
+                    font.pixelSize: Config.fontSize
                 }
             }
         }

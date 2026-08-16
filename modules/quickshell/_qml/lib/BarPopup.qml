@@ -7,9 +7,10 @@ PopupWindow {
     id: root
 
     property Item anchorItem
-    property int contentPadding: 10
+    property string title: ""
     property int barGap: 4
-    default property alias content: container.data
+    default property alias content: contentColumn.data
+    property alias headerContent: headerExtra.data
 
     readonly property bool vertical: Config.barPosition === "left" || Config.barPosition === "right"
     readonly property var barWindow: root.anchorItem ? root.anchorItem.QsWindow.window : null
@@ -36,8 +37,8 @@ PopupWindow {
     anchor.window: root.barWindow
     anchor.edges: root.popupEdge
     anchor.gravity: root.popupEdge
-    implicitWidth: container.implicitWidth + root.contentPadding * 2 + (root.vertical ? root.barGap : 0)
-    implicitHeight: container.implicitHeight + root.contentPadding * 2 + (root.vertical ? 0 : root.barGap)
+    implicitWidth: Math.max(root.title !== "" ? headerRow.implicitWidth + 28 : 0, contentColumn.implicitWidth, 240) + (root.vertical ? root.barGap : 0)
+    implicitHeight: header.height + contentColumn.implicitHeight + 16 + (root.vertical ? 0 : root.barGap)
     color: "transparent"
 
     Connections {
@@ -62,18 +63,50 @@ PopupWindow {
         anchors.bottomMargin: Config.barPosition === "bottom" ? root.barGap : 0
         anchors.leftMargin: Config.barPosition === "left" ? root.barGap : 0
         anchors.rightMargin: Config.barPosition === "right" ? root.barGap : 0
-        color: Config.base00
-        border.color: Config.base02
-        border.width: 1
-        radius: 6
+        color: Config.base10
     }
 
-    Item {
-        id: container
+    Rectangle {
+        id: header
 
-        anchors.fill: frame
-        anchors.margins: root.contentPadding
-        implicitWidth: children.length > 0 ? children[0].implicitWidth : 0
-        implicitHeight: children.length > 0 ? children[0].implicitHeight : 0
+        visible: root.title !== ""
+        anchors.top: frame.top
+        anchors.left: frame.left
+        anchors.right: frame.right
+        height: visible ? headerRow.implicitHeight + 20 : 0
+        color: Config.base01
+
+        Row {
+            id: headerRow
+
+            anchors.left: parent.left
+            anchors.leftMargin: 14
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 14
+
+            Text {
+                text: root.title
+                color: Config.base05
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize + 2
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Row {
+                id: headerExtra
+
+                spacing: 14
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
+    }
+
+    Column {
+        id: contentColumn
+
+        anchors.top: header.bottom
+        anchors.topMargin: 8
+        anchors.left: frame.left
+        anchors.right: frame.right
     }
 }

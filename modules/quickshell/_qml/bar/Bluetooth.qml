@@ -44,85 +44,71 @@ Item {
         id: popup
 
         anchorItem: root
+        title: "Bluetooth"
         visible: false
 
-        Column {
-            spacing: 6
+        headerContent: [
+            Text {
+                text: root.adapter?.enabled ? "󰂯 on" : "󰂲 off"
+                color: root.adapter?.enabled ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
 
-            Row {
-                spacing: 12
-
-                Text {
-                    text: root.adapter?.enabled ? "󰂯 bluetooth on" : "󰂲 bluetooth off"
-                    color: toggleMouse.containsMouse ? Config.base0D : Config.base05
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-
-                    MouseArea {
-                        id: toggleMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            if (root.adapter)
-                                root.adapter.enabled = !root.adapter.enabled;
-                        }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (root.adapter)
+                            root.adapter.enabled = !root.adapter.enabled;
                     }
                 }
+            },
+            Text {
+                text: "󱂬 manager"
+                color: managerMouse.containsMouse ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
 
-                Text {
-                    text: "󱂬 manager"
-                    color: managerMouse.containsMouse ? Config.base0D : Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
+                MouseArea {
+                    id: managerMouse
 
-                    MouseArea {
-                        id: managerMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
-                            popup.visible = false;
-                        }
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
+                        popup.visible = false;
                     }
                 }
             }
+        ]
 
-            Repeater {
-                model: {
-                    root.devRev;
-                    return Bluetooth.devices.values.filter(d => d.paired).slice(0, 10);
+        Repeater {
+            model: {
+                root.devRev;
+                return Bluetooth.devices.values.filter(d => d.paired).slice(0, 10);
+            }
+
+            PopupRow {
+                id: devRow
+
+                required property var modelData
+
+                onClicked: {
+                    if (devRow.modelData.connected)
+                        devRow.modelData.disconnect();
+                    else
+                        devRow.modelData.connect();
                 }
 
                 Text {
-                    id: devRow
-
-                    required property var modelData
-
                     text: {
                         const battery = devRow.modelData.batteryAvailable ? `  ${Math.round(devRow.modelData.battery * 100)}%` : "";
                         return `${devRow.modelData.connected ? "󰂱" : "󰂯"} ${devRow.modelData.name}${battery}`;
                     }
-                    color: devMouse.containsMouse ? Config.base0D : devRow.modelData.connected ? Config.base05 : Config.base04
+                    color: devRow.modelData.connected ? Config.base05 : Config.base04
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize
-
-                    MouseArea {
-                        id: devMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            if (devRow.modelData.connected)
-                                devRow.modelData.disconnect();
-                            else
-                                devRow.modelData.connect();
-                        }
-                    }
                 }
             }
         }

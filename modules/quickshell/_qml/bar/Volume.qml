@@ -43,10 +43,50 @@ Item {
         id: popup
 
         anchorItem: root
+        title: "Volume"
         visible: false
 
-        Column {
-            spacing: 8
+        headerContent: [
+            Text {
+                text: root.muted ? "󰖁 unmute" : "󰕾 mute"
+                color: muteMouse.containsMouse ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
+
+                MouseArea {
+                    id: muteMouse
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (root.sink?.audio)
+                            root.sink.audio.muted = !root.sink.audio.muted;
+                    }
+                }
+            },
+            Text {
+                text: "󰓃 mixer"
+                color: mixerMouse.containsMouse ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
+
+                MouseArea {
+                    id: mixerMouse
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
+                        popup.visible = false;
+                    }
+                }
+            }
+        ]
+
+        PopupRow {
+            hoverable: false
 
             Text {
                 text: `${root.sink?.description ?? "No sink"}  ${Math.round(root.volume * 100)}%`
@@ -54,6 +94,10 @@ Item {
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }
+        }
+
+        PopupRow {
+            hoverable: false
 
             Rectangle {
                 id: track
@@ -78,48 +122,6 @@ Item {
                     onPositionChanged: mouseEvent => {
                         if (pressed)
                             root.setVolume(mouseEvent.x / track.width);
-                    }
-                }
-            }
-
-            Row {
-                spacing: 16
-
-                Text {
-                    text: root.muted ? "󰖁 unmute" : "󰕾 mute"
-                    color: muteMouse.containsMouse ? Config.base0D : Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-
-                    MouseArea {
-                        id: muteMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            if (root.sink?.audio)
-                                root.sink.audio.muted = !root.sink.audio.muted;
-                        }
-                    }
-                }
-
-                Text {
-                    text: "󰓃 mixer"
-                    color: mixerMouse.containsMouse ? Config.base0D : Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-
-                    MouseArea {
-                        id: mixerMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
-                            popup.visible = false;
-                        }
                     }
                 }
             }
