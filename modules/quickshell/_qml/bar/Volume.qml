@@ -89,7 +89,18 @@ Item {
             hoverable: false
 
             Text {
-                text: `${root.sink?.description ?? "No sink"}  ${Math.round(root.volume * 100)}%`
+                text: root.sink?.description ?? "No sink"
+                elide: Text.ElideRight
+                width: Math.min(implicitWidth, 220 - pctLabel.width - 8)
+                color: Config.base05
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize
+            }
+
+            Text {
+                id: pctLabel
+
+                text: `${Math.round(root.volume * 100)}%`
                 color: Config.base05
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
