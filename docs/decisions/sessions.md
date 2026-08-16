@@ -112,14 +112,6 @@ inhibition is the Wayland protocol, which hypridle honours.
 rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
 screen.
 
-<a id="waybar-requires"></a>
-## `bar/waybar.nix` — requires `hyprland`
-
-**Why** It reads `hyprland/window`, shells to `hyprctl`, and binds a systemd
-target only uwsm-under-Hyprland creates.
-**Breaks** Without the requirement a dwl host is handed three dead modules
-instead of a rejection.
-
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention
 

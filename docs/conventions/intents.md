@@ -10,7 +10,7 @@ Inv. 3 working, not a violation.
 
 | Namespace | Declared in (its `core` block) | Set from |
 | --- | --- | --- |
-| `launcher.argv` / `.command` | `launcher/launcher.nix` | `launcher/wmenu.nix` (`dwl`), `launcher/walker.nix` (`hyprland`) |
+| `launcher.argv` / `.command` | `launcher/launcher.nix` | `launcher/wmenu.nix` (`dwl`), `launcher/walker.nix` (`walker`), `quickshell/launcher.nix` (`quickshell`) |
 | `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
@@ -18,8 +18,8 @@ Inv. 3 working, not a violation.
 | `powerMenu.command` | `powermenu/wleave.nix` | `powermenu/wleave.nix` (`wleave`) |
 | `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
 | `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
-| `bar.toggle` | `bar/waybar.nix` | `bar/waybar.nix` (`waybar`) |
-| `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`hyprland`) |
+| `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
+| `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`), `quickshell/quickshell.nix` (`quickshell`) |
 
 `launcher`, `terminal` and `wallpaperMenu` have files to themselves, because
 their implementations genuinely compete — the namespace file must not name any
@@ -45,7 +45,7 @@ Consumers guard on the empty default and emit **nothing**:
 ```
 
 A keybind that runs nothing looks like a broken machine. An absent bind explains
-itself. Sites: `hyprland/binds.nix`, `bar/waybar.nix`, `powermenu/wleave.nix`.
+itself. Sites: `hyprland/binds.nix`, `quickshell/_qml/`, `powermenu/wleave.nix`.
 
 ## The aspect that installs the tool names it
 

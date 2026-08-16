@@ -19,7 +19,7 @@ facts (hostname, `hostPlatform`, `stateVersion`, disk layout, monitors).
 **When an aspect depends on another, declare `aspectRequires` in the file that
 creates the dependency** — a central table would not know when a file stops
 reading. Example: `bar/dwl-bar.nix` declares `aspectRequires.dwl-bar =
-["dwl"]`; `waybar.nix` declares `aspectRequires.waybar = ["hyprland"]`.
+["dwl"]`; `quickshell.nix` declares `aspectRequires.quickshell = ["hyprland"]`.
 
 ## Aspect order is load-bearing
 

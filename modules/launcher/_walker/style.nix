@@ -96,7 +96,7 @@
     min-height: 44px;
   }
 
-  /* A quiet fill, not the accent -- waybar's inactive-workspace chip. */
+  /* A quiet fill, not the accent -- the bar's inactive-workspace chip. */
   child:selected .item-box,
   row:selected .item-box {
     background: @base02;

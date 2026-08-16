@@ -20,9 +20,9 @@ which nothing here installs.
 
 ## `laptop.nix` — deliberately small
 
-power-profiles-daemon and upower stay in `core` because waybar's battery module
-runs on the desktops too. A too-small aspect is recoverable where a broken power
-path is not.
+power-profiles-daemon and upower stay in `core` because the bar's battery
+widget runs on the desktops too. A too-small aspect is recoverable where a
+broken power path is not.
 
 <a id="unfree-nixos"></a>
 ## `gaming/launchers.nix`, `nvidia/nvtop.nix` — `nixos`, because unfree cannot be home

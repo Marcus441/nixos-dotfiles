@@ -113,11 +113,6 @@ _: {
               no_anim = true;
             }
             {
-              name = "no-anim-walker";
-              match = {namespace = "walker";};
-              no_anim = true;
-            }
-            {
               name = "no-anim-wleave";
               match = {namespace = "wleave";};
               no_anim = true;
