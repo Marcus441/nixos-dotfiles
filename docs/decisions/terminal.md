@@ -4,7 +4,7 @@ The four terminals and the namespace they implement. The TUIs and file managers
 that have to carry one are in `tui.md`.
 
 <a id="terminal-namespace"></a>
-## `terminal.nix` — the namespace is a file of its own, naming no terminal
+## `terminal/terminal.nix` — the namespace is a file of its own, naming no terminal
 
 **Why** Four terminals compete for `terminal.*`, the same reason `launcher.nix`
 sits apart from wmenu and walker. The `hyprland` setter lives here too and stays
@@ -13,7 +13,7 @@ terminal-agnostic by going through `appIdArgv`.
 appends foot's `--app-id` to whatever terminal the host actually took.
 
 <a id="terminal-desktopfile"></a>
-## `terminal.nix` — `desktopFile` and `binary` carry no default
+## `terminal/terminal.nix` — `desktopFile` and `binary` carry no default
 
 **Why** They are the only scalars in the namespace. Every other member is a list
 or a function, and both **merge by concatenating** rather than conflicting.
@@ -103,7 +103,7 @@ first ten idle minutes, after which the next terminal pays full startup and the
 session has no server again until the next login.
 
 <a id="terminal-transient"></a>
-## `terminal.nix` — `transientArgv` is named for the lifecycle
+## `terminal/terminal.nix` — `transientArgv` is named for the lifecycle
 
 **Why** A TUI you open, act in, and close. dwl tiles it, Hyprland floats it, so
 neither answer belongs in the name.
@@ -111,7 +111,7 @@ neither answer belongs in the name.
 behaviour dwl rejects.
 
 <a id="terminal-exec"></a>
-## `terminal.nix` — `exec` sits between the options and the command
+## `terminal/terminal.nix` — `exec` sits between the options and the command
 
 **Why** foot and kitty take a bare trailing command; alacritty and ghostty need
 `-e`, and alacritty needs it *last*. `transientArgv ++ [prog]` is therefore
@@ -240,7 +240,7 @@ ask for less than one line per notch.
 pair: the settings are analogous, the units are not.
 
 <a id="terminal-compact"></a>
-## `terminal.nix` — `compactSize` is three fifths of the host font size
+## `terminal/terminal.nix` — `compactSize` is three fifths of the host font size
 
 **Why** Measured on UM790pro against Hyprland's `floating-size` of `1200 600`:
 20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses to start
@@ -254,7 +254,7 @@ count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'
 Write `font.size * 3 / 5` with the spaces: `3/5` is a path literal.
 
 <a id="terminal-appid"></a>
-## `terminal.nix` — `appIdArgv` is a function, not a flag name
+## `terminal/terminal.nix` — `appIdArgv` is a function, not a flag name
 
 **Why** The four spellings differ in shape, not just text: foot takes
 `--app-id <id>`, alacritty and kitty `--class <id>`, and ghostty accepts **only**

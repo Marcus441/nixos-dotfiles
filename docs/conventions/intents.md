@@ -11,7 +11,7 @@ Inv. 3 working, not a violation.
 | Namespace | Declared in (its `core` block) | Set from |
 | --- | --- | --- |
 | `launcher.argv` / `.command` | `launcher.nix` | `wmenu.nix` (`dwl`), `walker.nix` (`hyprland`) |
-| `terminal.*` | `terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal.nix` itself sets `transientArgv` from `hyprland` |
+| `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
 | `lock.command` | `lock.nix` | `lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
@@ -22,7 +22,7 @@ Inv. 3 working, not a violation.
 
 `launcher` and `terminal` have files to themselves, because their
 implementations genuinely compete — the namespace file must not name any of
-them. `terminal.nix` also holds a setter, which is only allowed because that
+them. `terminal/terminal.nix` also holds a setter, which is only allowed because that
 setter is implementation-independent: it composes through `appIdArgv` and so
 never needs editing when a terminal is added.
 
