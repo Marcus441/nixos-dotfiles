@@ -11,7 +11,7 @@ of those also has a hand-settable variable — `INPUTRC`, `GTK2_RC_FILES`,
 `LAZYGIT_NEW_DIR_FILE` — and setting one is strictly worse, because
 home-manager keeps writing the old path.
 **Breaks** *Silently.* An `INPUTRC` set in `xdg-app-dirs.nix` would point
-readline at a file nothing generates, discarding every setting in `bash.nix`'s
+readline at a file nothing generates, discarding every setting in `shell/bash.nix`'s
 `programs.readline` with no error and no missing file.
 **Also** `xdg.enable` is what exports the four `XDG_*_HOME` variables, into
 `systemd.user.sessionVariables` as well as the login shell. `wallpaper/service.nix`

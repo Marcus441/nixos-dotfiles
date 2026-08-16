@@ -90,7 +90,7 @@ Neovide is the GUI front-end and is `apps` only.
 
 **Why** `LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables no shell
 interprets, so re-emitting them from each shell's rc would be duplication with a
-drift risk. They sat in `bash.nix` because the hex → `r;g;b` helper did;
+drift risk. They sat in `shell/bash.nix` because the hex → `r;g;b` helper did;
 `desktop.colorsRgb` ended that. Coverage is equal or better: bash reaches
 `hm-session-vars.sh` through `~/.profile`, which `xsession-wrapper` also sources
 before any session; zsh sources it from `~/.zshenv` and `~/.zprofile`.
