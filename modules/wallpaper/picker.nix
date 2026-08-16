@@ -14,6 +14,8 @@ _: {
           fi
         '';
       in {
+        wallpaperMenu.command = "walker -m menus:wallpapers";
+
         xdg.configFile."elephant/menus/wallpapers.lua".text = ''
           Name = "wallpapers"
           NamePretty = "Wallpapers"

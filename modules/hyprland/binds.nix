@@ -110,10 +110,12 @@ _: {
                 (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.clipboard.history}\")")
               ];
             }
+          ]
+          ++ lib.optionals (config.wallpaperMenu.command != "") [
             {
               _args = [
                 "${mainMod} + W"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m menus:wallpapers\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.wallpaperMenu.command}\")")
               ];
             }
           ]

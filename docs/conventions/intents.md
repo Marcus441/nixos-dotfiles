@@ -19,10 +19,11 @@ Inv. 3 working, not a violation.
 | `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
 | `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/waybar.nix` | `bar/waybar.nix` (`waybar`) |
+| `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`hyprland`) |
 
-`launcher` and `terminal` have files to themselves, because their
-implementations genuinely compete — the namespace file must not name any of
-them. `terminal/terminal.nix` also holds a setter, which is only allowed because that
+`launcher`, `terminal` and `wallpaperMenu` have files to themselves, because
+their implementations genuinely compete — the namespace file must not name any
+of them. `terminal/terminal.nix` also holds a setter, which is only allowed because that
 setter is implementation-independent: it composes through `appIdArgv` and so
 never needs editing when a terminal is added.
 
