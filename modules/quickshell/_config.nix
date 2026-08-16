@@ -86,6 +86,7 @@
         readonly property string enableRotatorScript: "${enableRotator}"
         readonly property string metricsScript: "${metrics}"
         readonly property string sh: "${pkgs.runtimeShell}"
+        readonly property string hyprctl: "${pkgs.hyprland}/bin/hyprctl"
         readonly property string curl: "${pkgs.curl}/bin/curl"
         readonly property string fd: "${pkgs.fd}/bin/fd"
         readonly property string cliphist: "${pkgs.cliphist}/bin/cliphist"

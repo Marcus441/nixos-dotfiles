@@ -48,6 +48,10 @@ PanelWindow {
             bar: bar
         }
 
+        LayoutIndicator {
+            bar: bar
+        }
+
         FocusedTitle {
             visible: !bar.vertical
         }
