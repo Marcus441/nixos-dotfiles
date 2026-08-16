@@ -73,24 +73,6 @@ _: {
                 match = {tag = "no-anim";};
                 no_anim = true;
               }
-              {
-                name = "no-gaps-wtv1";
-                match = {
-                  float = false;
-                  workspace = "w[tv1]";
-                };
-                border_size = 0;
-                rounding = 0;
-              }
-              {
-                name = "no-gaps-f1";
-                match = {
-                  float = false;
-                  workspace = "f[1]";
-                };
-                border_size = 0;
-                rounding = 0;
-              }
             ];
 
           workspace_rule = [
