@@ -20,7 +20,7 @@ depends on the systemd half for its `%C` specifier.
 ## `xdg-app-dirs.nix` — `dev`, not `core`
 
 **Why** Rust, Gradle, Android, .NET, npm and Docker are toolchain state, and
-`gpc` takes neither the toolchains nor `dev`. It is the same test `ccache.nix`
+`gpc` takes neither the toolchains nor `dev`. It is the same test `dev/ccache.nix`
 already passes, in the same aspect. `XCOMPOSECACHE` is not a toolchain, so it
 is the one variable in that file declaring `core`.
 

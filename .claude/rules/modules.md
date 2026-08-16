@@ -31,8 +31,9 @@ is what the dendritic README's "Not declaring options" anti-pattern asks for.
   **This is the file to copy.**
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares
   `desktop.syntaxTheme` in `core`, read by `bat.nix` and `yazi-style.nix`.
-- `modules/ccache.nix` — declares `dev` beside files declaring `core`. Nothing
-  about its location says which. Inv. 4 demonstrated.
+- `modules/dev/ccache.nix` — declares `dev`; `modules/dev/direnv.nix` beside it
+  declares `apps`. The directory names the feature area; the file still
+  declares its own membership. Inv. 4 demonstrated.
 - `modules/dwl/dwl.nix`, `modules/hyprland.nix` — one concern spanning both classes.
 
 The single-aspect file is the majority but not the model — copying an arbitrary

@@ -106,5 +106,5 @@ one but `man`.
 - `git/git.nix` — the GitHub CLI is system-wide because it was; only its home changed.
 - `home-manager.nix` — the CLI belongs with the module;
   `home-manager switch` is how a host is driven.
-- `ccache.nix` — ccache plus the CMake launcher env, for
+- `dev/ccache.nix` — ccache plus the CMake launcher env, for
   out-of-nix C/C++ builds.
