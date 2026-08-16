@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.core = [
+  flake.modules.homeManager.dwl = [
     {
       services.mako = {
         enable = true;

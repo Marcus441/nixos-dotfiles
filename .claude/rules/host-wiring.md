@@ -42,8 +42,8 @@ to `home-manager.nixosModules.home-manager`.**
 
 `launcher`, `screenshot`, `clipboard`, and `lock` are option namespaces in
 `core`, set by `hyprland` and `dwl`. `notifications` is deliberately **not**
-one — mako serves both sessions from one file and nothing invokes it by
-command.
+one — mako serves dwl from the `dwl` aspect, quickshell claims the D-Bus name
+on Hyprland hosts, and nothing invokes either by command.
 
 ## The Mac
 

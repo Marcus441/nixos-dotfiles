@@ -116,11 +116,14 @@ not fight it — whichever terminal the host took.
 **Why** Setting `theme` at all overrides `services.walker.settings.theme` with
 its name, so `launcher/walker-style.nix` owns it alone.
 
-## `mako.nix` — notifications are a capability, not a theme
+## `mako.nix` — mako is dwl's notifier
 
-**Why** The daemon lived in `palette` and `stylix`.
-**Breaks** A dwl host taking neither got no notifications at all, while
-`dwl/dwl.nix`'s autostart still invoked `mako` by bare name.
+**Why** The daemon once lived in `palette` and `stylix`, then in `core`; now
+quickshell owns `org.freedesktop.Notifications` on Hyprland hosts, so mako's
+membership is `dwl` (plus the `laptop` battery timeout, inert without it).
+**Breaks** `dwl/dwl.nix`'s session string invokes `mako` by bare name, so
+`services.mako.enable` must stay under `dwl` to keep the package installed;
+under `core` it would race quickshell for the D-Bus name.
 
 <a id="fastfetch-palette"></a>
 ## `cli/fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names

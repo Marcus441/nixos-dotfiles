@@ -23,9 +23,9 @@ Enumerate the files behind any row with
 | --- | --- | --- |
 | `alacritty` | `homeManager nixos` | 2 |
 | `apps` | `homeManager nixos` | 15 |
-| `core` | `homeManager nixos` | 63 |
+| `core` | `homeManager nixos` | 62 |
 | `dev` | `homeManager nixos` | 4 |
-| `dwl` | `homeManager nixos` | 10 |
+| `dwl` | `homeManager nixos` | 11 |
 | `dwl-bar` | `homeManager nixos` | 2 |
 | `foot` | `homeManager nixos` | 2 |
 | `gaming` | `homeManager nixos` | 11 |

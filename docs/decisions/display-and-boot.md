@@ -28,7 +28,7 @@ what lets the clock, the date and the input field all go flat.
 out, `brightness` is the value to lower — putting `shadow_passes` back would
 re-introduce the one non-flat element on the lock screen.
 **Also** the input field is the only floating surface here, so it carries the
-2px `base0D` frame over `base00` that mako and walker use, squared off with
+2px `base0D` frame over `base00` that mako (on dwl) and walker use, squared off with
 `rounding = 0`. The dots stay round (`dots_rounding = -1`) rather than
 inheriting that zero (`-2`) — square dots on a square field read as a row of
 blocks rather than as typed characters.
