@@ -14,8 +14,8 @@ Inv. 3 working, not a violation.
 | `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
-| `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
-| `powerMenu.command` | `wleave.nix` | `wleave.nix` (`wleave`) |
+| `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
+| `powerMenu.command` | `powermenu/wleave.nix` | `powermenu/wleave.nix` (`wleave`) |
 | `networkManager.command` | `impala.nix` | `impala.nix` (`impala`) |
 | `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/waybar.nix` | `bar/waybar.nix` (`waybar`) |
@@ -44,7 +44,7 @@ Consumers guard on the empty default and emit **nothing**:
 ```
 
 A keybind that runs nothing looks like a broken machine. An absent bind explains
-itself. Sites: `hyprland/binds.nix`, `bar/waybar.nix`, `wleave.nix`.
+itself. Sites: `hyprland/binds.nix`, `bar/waybar.nix`, `powermenu/wleave.nix`.
 
 ## The aspect that installs the tool names it
 

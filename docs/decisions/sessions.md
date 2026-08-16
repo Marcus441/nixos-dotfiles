@@ -132,7 +132,7 @@ And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matche
 `termXfloating` — so the value goes through `lib.escapeRegex`.
 
 <a id="wleave-no-anim"></a>
-## `wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
+## `powermenu/wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
 
 **Why** Two animators, neither of which is wleave: Hyprland fades the layer
 surface in, and libadwaita transitions the button that keyboard focus lands on.
@@ -145,7 +145,7 @@ libadwaita's. Same rule is why `button` restates `background-image: none` and
 that library.
 
 <a id="wleave-focus"></a>
-## `wleave-style.nix` — the keybind dims by opacity, not by colour
+## `powermenu/wleave-style.nix` — the keybind dims by opacity, not by colour
 
 **Why** The per-button hues are ID selectors (`#lock`, `#shutdown`, …) and the
 icons are `currentColor` SVGs, so one `color` sets icon and label together. An
@@ -158,7 +158,7 @@ focusing reflows nothing. Resting `base03`, focused `base0D` — Hyprland's
 `base02` is the hover *background*.
 
 <a id="wleave-service"></a>
-## `wleave.nix` — the unit names the config files it is already reading
+## `powermenu/wleave.nix` — the unit names the config files it is already reading
 
 **Why** wleave is a `gio` application run with `--service`: it holds itself
 alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
@@ -170,7 +170,7 @@ home-manager's sd-switch see a changed unit and restart it; pointed at
 the old one until reboot.
 
 <a id="wleave-toggle"></a>
-## `wleave.nix` — the bind toggles, because a resident wleave will not
+## `powermenu/wleave.nix` — the bind toggles, because a resident wleave will not
 
 **Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
 resident instance grows one layer surface per keypress, and `app/mod.rs` guards
