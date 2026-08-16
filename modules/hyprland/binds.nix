@@ -4,11 +4,18 @@ _: {
       {
         lib,
         config,
+        pkgs,
         ...
       }: let
         mainMod = "SUPER";
         terminal = "uwsm app -- ${config.terminal.command}";
         terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
+        layoutToggle = pkgs.writeShellScript "layout-toggle" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) ${pkgs.hyprland}/bin/hyprctl keyword general:layout dwindle ;;
+            *) ${pkgs.hyprland}/bin/hyprctl keyword general:layout monocle ;;
+          esac
+        '';
       in {
         wayland.windowManager.hyprland.settings.bind =
           [
@@ -100,8 +107,26 @@ _: {
             }
             {
               _args = [
+                "${mainMod} + M"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${pkgs.hyprland}/bin/hyprctl keyword general:layout monocle\")")
+              ];
+            }
+            {
+              _args = [
+                "${mainMod} + T"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${pkgs.hyprland}/bin/hyprctl keyword general:layout dwindle\")")
+              ];
+            }
+            {
+              _args = [
+                "${mainMod} + space"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutToggle}\")")
+              ];
+            }
+            {
+              _args = [
                 "${mainMod} + Tab"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m windows\")")
+                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next()")
               ];
             }
             {
@@ -150,13 +175,13 @@ _: {
             {
               _args = [
                 "${mainMod} + K"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"u\" })")
+                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next({ next = false })")
               ];
             }
             {
               _args = [
                 "${mainMod} + J"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"d\" })")
+                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next()")
               ];
             }
 
