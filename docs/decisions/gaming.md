@@ -136,7 +136,7 @@ duplication. `font_size` takes the host's `fontSize`, the same machine fact the
 terminals scale from, so the overlay matches the display it is drawn on.
 
 <a id="nvidia-preserve-vram"></a>
-## `nvidia.nix` — `powerManagement.enable` is how VRAM survives suspend
+## `nvidia/nvidia.nix` — `powerManagement.enable` is how VRAM survives suspend
 
 **Why** It reads like a laptop option and is not. The module derives
 `moduleParams.nvidia.NVreg_PreserveVideoMemoryAllocations = 1` from it, which
@@ -154,7 +154,7 @@ follow from `modesetting.enable` and must not be restated. Both arrive through
 module *generates* that string, so writing it by hand fights the generator.
 
 <a id="vaapi-decode-only"></a>
-## `nvidia-vaapi.nix` — the driver is decode-only, and the variable is global
+## `nvidia/vaapi.nix` — the driver is decode-only, and the variable is global
 
 **Why** Only the variables are declared here — `hardware.nvidia.videoAcceleration`
 defaults true and the module already adds `nvidia-vaapi-driver`, so listing it
