@@ -66,7 +66,7 @@ _: {
               {
                 name = "floating-size";
                 match = {tag = "floating-window";};
-                size = "1200 600";
+                size = "1200 760";
               }
               {
                 name = "no-anim";
