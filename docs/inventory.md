@@ -49,8 +49,8 @@ Declared in the file that creates the dependency, never in a central table.
 | --- | --- | --- |
 | `dwl-bar` | `dwl` | `bar/dwl-bar.nix` |
 | `waybar` | `hyprland` | `bar/waybar.nix` |
+| `tearing` | `gaming hyprland` | `gaming/tearing.nix` |
 | `yazi` | `apps` | `filemanager/yazi.nix` |
-| `tearing` | `gaming hyprland` | `tearing.nix` |
 
 ## Counts
 

@@ -25,7 +25,7 @@ runs on the desktops too. A too-small aspect is recoverable where a broken power
 path is not.
 
 <a id="unfree-nixos"></a>
-## `game-launchers.nix`, `nvidia/nvtop.nix` — `nixos`, because unfree cannot be home
+## `gaming/launchers.nix`, `nvidia/nvtop.nix` — `nixos`, because unfree cannot be home
 
 **Why** Not about the packages: **an unfree package cannot go in `home.packages`
 at all here.** `unfree.nix` sets `allowUnfree` on **nixos `core` only**, and Home
