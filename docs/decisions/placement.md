@@ -80,9 +80,9 @@ File choosers and settings. dwl declares its portals on the nixos side via
 Bound to keys in `hyprland/binds.nix`, so it follows the session rather than the
 app set. dwl builds its own ocr-copy against its own keybind.
 
-## `neovim.nix` / `neovide.nix` — headless vs GUI
+## `editor/neovim.nix` / `editor/neovide.nix` — headless vs GUI
 
-`neovim.nix` is `core` and provides the headless `nvim` both profiles share;
+`editor/neovim.nix` is `core` and provides the headless `nvim` both profiles share;
 Neovide is the GUI front-end and is `apps` only.
 
 <a id="man-pager-colours"></a>

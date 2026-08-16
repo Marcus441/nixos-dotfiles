@@ -87,7 +87,7 @@ Both belong to every host. Point size comes from the host record, being a
 property of the panel and not the theme.
 
 <a id="neovide-font-size"></a>
-## `neovide.nix` — the point size is coerced to a float
+## `editor/neovide.nix` — the point size is coerced to a float
 
 **Why** Neovide's `FontSettings.size` is an `f32` and is not optional, while
 `desktop.font.size` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
