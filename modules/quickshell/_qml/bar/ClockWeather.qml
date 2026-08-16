@@ -3,7 +3,7 @@ import Quickshell.Io
 import QtQuick
 import qs
 
-Row {
+Grid {
     id: root
 
     property bool vertical: false
@@ -11,7 +11,10 @@ Row {
     property string weatherTemp: ""
     property string weatherDesc: ""
 
+    columns: vertical ? 1 : 2
     spacing: 8
+    horizontalItemAlignment: Grid.AlignHCenter
+    verticalItemAlignment: Grid.AlignVCenter
 
     function wmoIcon(code) {
         if (code === 0)
@@ -68,12 +71,12 @@ Row {
     }
 
     Text {
-        visible: !root.vertical && root.weatherIcon !== ""
-        text: `${root.weatherIcon} ${root.weatherTemp}`
+        visible: root.weatherIcon !== ""
+        text: root.vertical ? `${root.weatherIcon}\n${root.weatherTemp.replace("C", "")}` : `${root.weatherIcon} ${root.weatherTemp}`
         color: Config.base05
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
-        anchors.verticalCenter: parent.verticalCenter
+        horizontalAlignment: Text.AlignHCenter
     }
 
     Text {
@@ -82,6 +85,5 @@ Row {
         font.family: Config.fontFamily
         font.pixelSize: Config.fontSize
         horizontalAlignment: Text.AlignHCenter
-        anchors.verticalCenter: parent.verticalCenter
     }
 }
