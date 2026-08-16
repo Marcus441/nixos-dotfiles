@@ -105,7 +105,7 @@ file, which is how a hardcoded family outlived two attempts to change it.
 highlights get transparency without a second colour format.
 
 <a id="lazygit"></a>
-## `lazygit.nix` — `selectedLineBgColor = ["default"]`
+## `git/lazygit.nix` — `selectedLineBgColor = ["default"]`
 
 **Why** `default` keeps the terminal's own background, so the cursor line does
 not fight it — whichever terminal the host took.
