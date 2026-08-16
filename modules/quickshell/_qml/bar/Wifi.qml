@@ -8,39 +8,20 @@ Item {
     id: root
 
     property var bar
-    property int devRev: 0
 
     readonly property var wifiDev: {
-        devRev;
-        return Networking.devices.values.find(d => d.type === DeviceType.Wifi) ?? null;
+        const wifis = Networking.devices.values.filter(d => d.type === DeviceType.Wifi);
+        return wifis.find(d => d.connected) ?? wifis[0] ?? null;
     }
-    readonly property var wiredDev: {
-        devRev;
-        return Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null;
-    }
-    readonly property var activeNet: {
-        devRev;
-        return wifiDev?.networks.values.find(n => n.connected) ?? null;
-    }
+    readonly property var wiredDev: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
+    readonly property var activeNet: wifiDev?.networks.values.find(n => n.connected) ?? null
 
     implicitWidth: widget.implicitWidth
     implicitHeight: widget.implicitHeight
 
     function strengthIcon(strength) {
         const icons = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"];
-        return icons[Math.min(4, Math.floor(strength / 20))];
-    }
-
-    Connections {
-        target: Networking.devices
-
-        function onObjectInsertedPost() {
-            root.devRev++;
-        }
-
-        function onObjectRemovedPost() {
-            root.devRev++;
-        }
+        return icons[Math.min(4, Math.floor(strength * 5))];
     }
 
     BarWidget {
@@ -109,10 +90,7 @@ Item {
             }
 
             Repeater {
-                model: {
-                    root.devRev;
-                    return (root.wifiDev?.networks.values ?? []).slice().sort((a, b) => b.signalStrength - a.signalStrength).slice(0, 10);
-                }
+                model: (root.wifiDev?.networks.values ?? []).slice().sort((a, b) => b.signalStrength - a.signalStrength).slice(0, 10)
 
                 Row {
                     id: netRow
