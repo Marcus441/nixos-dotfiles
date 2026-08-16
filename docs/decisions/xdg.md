@@ -37,12 +37,11 @@ AVD list comes up empty. There is nothing to regenerate it from.
 
 ## What stays in `$HOME`
 
-`.mozilla`, `.thunderbird`, `.floorp`, `.pki`, `.icons`, `.cmake`, `.lldb`,
-`.omnisharp`, `.java`, `.gemini`, `.cursor`.
+`.mozilla`, `.floorp`, `.pki`, `.icons`, `.cmake`, `.lldb`, `.omnisharp`,
+`.java`, `.gemini`, `.cursor`.
 
 **Why** None of them honours a variable, and the alternatives cost more than
 the tidiness is worth — a `HOME`-rewriting wrapper per binary, or
 `_JAVA_OPTIONS` for `.java`, which prints a banner to stderr on every JVM
-start. Thunderbird in particular is hardcoded twice over: by Mozilla, and by
-home-manager's own `thunderbirdConfigPath`.
+start.
 **Also** listed here so the question is answered rather than re-opened.

@@ -162,10 +162,10 @@ again measures as a no-op. `NVD_BACKEND = "direct"` is required under Wayland at
 all (the default path assumes X11) and `LIBVA_DRIVER_NAME` makes libva pick it
 rather than probe.
 **Breaks** The pair is session-wide, and the driver implements **decode only**.
-Firefox and Thunderbird get hardware decode, but anything probing VA-API for
-*encode* — OBS, ffmpeg, kdenlive, all in `apps`, which gpc takes — finds a
-driver that advertises itself and then fails. Accepted knowingly: the failure is
-loud, and the fix is to scope both variables to the two consumers.
+Firefox gets hardware decode, but anything probing VA-API for *encode* — OBS,
+ffmpeg, kdenlive, all in `apps`, which gpc takes — finds a driver that
+advertises itself and then fails. Accepted knowingly: the failure is loud, and
+the fix is to scope both variables to Firefox.
 **Also** they reach the compositor through `xdg.nix`'s `uwsm/env` symlink to
 `home.sessionVariablesPackage`, not any Hyprland-specific mechanism.
 
