@@ -86,6 +86,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         if (pill.ws)
                             pill.ws.activate();

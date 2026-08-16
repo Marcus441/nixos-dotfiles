@@ -73,6 +73,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     anchors.margins: -6
+                    cursorShape: Qt.PointingHandCursor
                     onPressed: mouseEvent => root.setVolume(mouseEvent.x / track.width)
                     onPositionChanged: mouseEvent => {
                         if (pressed)
@@ -95,6 +96,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             if (root.sink?.audio)
                                 root.sink.audio.muted = !root.sink.audio.muted;
@@ -113,6 +115,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
                             popup.visible = false;

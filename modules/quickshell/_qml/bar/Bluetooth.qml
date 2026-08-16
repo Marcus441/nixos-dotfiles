@@ -63,6 +63,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             if (root.adapter)
                                 root.adapter.enabled = !root.adapter.enabled;
@@ -81,6 +82,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
                             popup.visible = false;
@@ -113,6 +115,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             if (devRow.modelData.connected)
                                 devRow.modelData.disconnect();

@@ -65,6 +65,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
                     }
                 }
@@ -81,6 +82,7 @@ Item {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
                             popup.visible = false;
@@ -117,6 +119,7 @@ Item {
 
                             anchors.fill: parent
                             hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (netRow.modelData.connected)
                                     netRow.modelData.disconnect();

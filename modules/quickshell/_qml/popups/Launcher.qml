@@ -149,6 +149,7 @@ Overlay {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onEntered: root.selected = row.index
                     onClicked: root.launch(row.modelData)
                 }

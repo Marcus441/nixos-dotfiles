@@ -69,6 +69,7 @@ Item {
 
         MouseArea {
             anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
             onClicked: popup.visible = !popup.visible
         }
     }
@@ -107,6 +108,7 @@ Item {
 
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.systemMonitorCommand}`]);
                         popup.visible = false;

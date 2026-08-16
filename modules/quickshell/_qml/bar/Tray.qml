@@ -25,6 +25,7 @@ Row {
 
             MouseArea {
                 anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: mouseEvent => {
                     if (mouseEvent.button === Qt.LeftButton && !item.modelData.onlyMenu)

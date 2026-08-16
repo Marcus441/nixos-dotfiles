@@ -82,6 +82,7 @@ Overlay {
 
                 MouseArea {
                     anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: root.toggleRotator()
                 }
             }
@@ -147,6 +148,7 @@ Overlay {
 
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: root.pick(cell.modelData)
                     }
                 }
