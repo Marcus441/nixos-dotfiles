@@ -88,7 +88,7 @@ formality that any process in the session can dismiss.
 ## `swaylock.nix` — the PAM service is ours to declare
 
 **Why** nixpkgs supplies `security.pam.services.swaylock` only from
-`wayland-session.nix`, which the dwl session does not use. `hyprland.nix` keeps
+`wayland-session.nix`, which the dwl session does not use. `hyprland/hyprland.nix` keeps
 hyprlock's line for the same reason.
 **Breaks** *At the worst moment.* The lock screen appears and the correct
 password is refused; the way out is a VT switch.
@@ -109,7 +109,7 @@ target only uwsm-under-Hyprland creates.
 instead of a rejection.
 
 <a id="floating-appid"></a>
-## `floating-windows.nix` — the limit of the app-id convention
+## `hyprland/floating-windows.nix` — the limit of the app-id convention
 
 **Why** An app that can name itself opts in at spawn time:
 `footclient --app-id term.floating` floats, plain `footclient` tiles.
@@ -120,7 +120,7 @@ match their real class — which floats **every** instance. Accepted: a title
 match or a rename wrapper both break silently instead.
 
 <a id="floating-gtk-id"></a>
-## `floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
+## `hyprland/floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
 
 **Why** ghostty parses `--class` as a GTK application ID, which must carry at
 least one period. `floating-term` is not one, so the id both terminals and GUI
@@ -136,7 +136,7 @@ And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matche
 
 **Why** Two animators, neither of which is wleave: Hyprland fades the layer
 surface in, and libadwaita transitions the button that keyboard focus lands on.
-The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
+The layer rule in `hyprland/rules.nix` kills the first, `transition: none` on
 `*` kills the second. wleave itself ships no CSS animation at all.
 **Breaks** Fixing one leaves the other, and the reset has to be an override
 rather than an absence — deleting our own `transition` does not reach
@@ -185,7 +185,7 @@ limit and leaving the unit dead with no menu at all. Detection is
 there is no compositor.
 
 <a id="hyprland-rules-regex"></a>
-## `hyprland-rules.nix` — one rule per regex, not one alternation
+## `hyprland/rules.nix` — one rule per regex, not one alternation
 
 **Why** The regexes arrive from separate files, so joining them would mean
 wrapping each in a group the contributing file cannot see it needs.
@@ -197,7 +197,7 @@ wrapping each in a group the contributing file cannot see it needs.
 them from the login shell, so swift5 has no use for the file.
 
 <a id="uwsm-login-shell"></a>
-## `hyprland.nix` — session startup lives in the `hyprland` aspect
+## `hyprland/hyprland.nix` — session startup lives in the `hyprland` aspect
 
 **Why** Session startup wearing shell clothing: the login shell is only the
 channel, the decision is Hyprland. It held it for as long as there was one

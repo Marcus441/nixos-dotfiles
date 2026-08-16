@@ -70,14 +70,14 @@ Walker's data-provider backend, with its own daemon and config tree that
 `hyprpaper-picker.nix` writes into. The walker flake's module enabled it
 implicitly; the home-manager module does not.
 
-## `hyprland.nix` — the GTK portal
+## `hyprland/hyprland.nix` — the GTK portal
 
 File choosers and settings. dwl declares its portals on the nixos side via
 `xdg.portal.extraPortals`.
 
-## `hyprland-screenshot.nix` — follows the session
+## `hyprland/screenshot.nix` — follows the session
 
-Bound to keys in `hyprland-binds.nix`, so it follows the session rather than the
+Bound to keys in `hyprland/binds.nix`, so it follows the session rather than the
 app set. dwl builds its own ocr-copy against its own keybind.
 
 ## `neovim.nix` / `neovide.nix` — headless vs GUI

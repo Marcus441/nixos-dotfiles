@@ -44,7 +44,7 @@ Consumers guard on the empty default and emit **nothing**:
 ```
 
 A keybind that runs nothing looks like a broken machine. An absent bind explains
-itself. Sites: `hyprland-binds.nix`, `bar/waybar.nix`, `wleave.nix`.
+itself. Sites: `hyprland/binds.nix`, `bar/waybar.nix`, `wleave.nix`.
 
 ## The aspect that installs the tool names it
 

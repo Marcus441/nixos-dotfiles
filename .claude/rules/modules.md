@@ -34,7 +34,7 @@ is what the dendritic README's "Not declaring options" anti-pattern asks for.
 - `modules/dev/ccache.nix` — declares `dev`; `modules/dev/direnv.nix` beside it
   declares `apps`. The directory names the feature area; the file still
   declares its own membership. Inv. 4 demonstrated.
-- `modules/dwl/dwl.nix`, `modules/hyprland.nix` — one concern spanning both classes.
+- `modules/dwl/dwl.nix`, `modules/hyprland/hyprland.nix` — one concern spanning both classes.
 
 The single-aspect file is the majority but not the model — copying an arbitrary
 neighbour reproduces the majority and misses the second direction of the merge.

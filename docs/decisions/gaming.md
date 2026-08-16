@@ -179,11 +179,11 @@ between dwl and Hyprland" anti-pattern. There is no intersection operator, so
 the intersection gets a name and `aspectRequires` lists both parents.
 **Breaks** `allow_tearing` cannot be added additively. `settings` bottoms out
 in `bool`, whose merge is `mergeEqualOption`, so two definitions of it are a
-hard eval error rather than a last-wins. `hyprland-general.nix` therefore holds
+hard eval error rather than a last-wins. `hyprland/general.nix` therefore holds
 it as `lib.mkDefault false` — priority only, and measured byte-identical on
 UM790pro. If that ever stops holding, the fallback is `lib.mkForce true` here,
 which works but hides the coupling from the file being overridden.
 **Also** only `no-anim` goes through `windowTags` — the one tag whose behaviour
-row already exists in `hyprland-rules.nix` and the one genuinely inert on dwl.
+row already exists in `hyprland/rules.nix` and the one genuinely inert on dwl.
 `immediate`, `content` and `idle_inhibit` are Hyprland vocabulary with no dwl
 analogue, so they stay here with their regex.

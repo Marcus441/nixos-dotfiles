@@ -195,7 +195,7 @@ tests. That is how a whole-window fade survived every look at the colours.
 
 **Why** kanagawa.nvim's `extras/kitty/kanagawa_dragon.conf` sets no border
 colours, so `enabled_layouts = "splits,stack"` drew kitty's stock green, grey
-and orange. These take base0D/base03/base08, the roles `hyprland-general.nix`
+and orange. These take base0D/base03/base08, the roles `hyprland/general.nix`
 gives a window border — a kitty split is the same thing one level down.
 **Breaks** *Loudly, but only in a split.* A single window never shows a border,
 so this survived every look at the colours until someone opened a split.
