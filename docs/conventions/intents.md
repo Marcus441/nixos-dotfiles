@@ -13,7 +13,7 @@ Inv. 3 working, not a violation.
 | `launcher.argv` / `.command` | `launcher.nix` | `wmenu.nix` (`dwl`), `walker.nix` (`hyprland`) |
 | `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
-| `lock.command` | `lock.nix` | `lock.nix` (`hyprland`, `dwl`) |
+| `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
 | `powerMenu.command` | `wleave.nix` | `wleave.nix` (`wleave`) |
 | `networkManager.command` | `impala.nix` | `impala.nix` (`impala`) |

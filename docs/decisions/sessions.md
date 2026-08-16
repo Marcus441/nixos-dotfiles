@@ -63,7 +63,7 @@ foot's own `foot.service` already does not. And the `-s` argument is single-quot
 entry containing `'` truncates the session script.
 
 <a id="dwl-idle-dpms"></a>
-## `swayidle.nix` — `-w` with `-f`, `wlopm` for the screen, one saved brightness
+## `lock/swayidle.nix` — `-w` with `-f`, `wlopm` for the screen, one saved brightness
 
 **Why** `-w` holds swayidle's logind sleep inhibitor open until `before-sleep`
 returns, so the lock surface exists before the machine goes down; dwl 0.8
@@ -77,7 +77,7 @@ steps never fire — a lit lock screen until the battery is flat. `wlr-randr
 clients elsewhere. And a second `-s` further down the ladder overwrites the
 saved level with the dimmed one, so `-r` restores 30 for good.
 
-## `swayidle.nix` — no `unlock` event
+## `lock/swayidle.nix` — no `unlock` event
 
 **Why** `loginctl unlock-session` needs no authentication from inside the
 session it unlocks. hypridle answers no such signal either.
@@ -85,7 +85,7 @@ session it unlocks. hypridle answers no such signal either.
 formality that any process in the session can dismiss.
 
 <a id="swaylock-pam"></a>
-## `swaylock.nix` — the PAM service is ours to declare
+## `lock/swaylock.nix` — the PAM service is ours to declare
 
 **Why** nixpkgs supplies `security.pam.services.swaylock` only from
 `wayland-session.nix`, which the dwl session does not use. `hyprland/hyprland.nix` keeps
