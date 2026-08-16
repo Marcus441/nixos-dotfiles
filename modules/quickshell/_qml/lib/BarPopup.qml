@@ -49,7 +49,7 @@ PopupWindow {
     }
 
     HyprlandFocusGrab {
-        active: root.visible
+        active: root.backingWindowVisible
         windows: root.barWindow ? [root, root.barWindow] : [root]
         onCleared: root.visible = false
     }
