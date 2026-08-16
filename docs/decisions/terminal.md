@@ -305,21 +305,3 @@ a Neovim window both sit left, Ghostty wins and that window is unreachable.
 smart-splits closed its Ghostty backend (PR #433) on exactly this.
 **Also** ghostty is in no host's aspect list today, so this costs nothing now;
 it is written down so the arrows are not "fixed" into `hjkl` later.
-
-<a id="tmux-pane-is-vim"></a>
-## `tmux.nix` — the pane keys are root-table, and Neovim gets first refusal
-
-**Why** `C-h/j/k/l` has to mean "one pane left/down/up/right" whether the pane
-holds a shell or a Neovim with its own splits, so the bindings are root-table
-(`-n`, no prefix) and each asks `#{@pane-is-vim}` before acting.
-smart-splits.nvim sets that pane-local option on load and clears it on exit, so
-the flag tracks the *pane*, not a guess about the process. The older snippets
-scrape `ps -o comm= -t #{pane_tty}`, which forks per keypress and calls anything
-named like `view` or `nvimx` a Neovim.
-**Breaks** Silently, in one direction only. With no Neovim side the flag is
-never set, the guard always takes the second branch, and the keys still move
-tmux panes — so a half-installed setup looks like it works until Neovim has two
-windows and the first becomes unreachable. `tmux show -p @pane-is-vim` is the
-check.
-**Also** `C-l` was the shell's clear-screen and is now tmux's, so `prefix C-l`
-sends the real one.

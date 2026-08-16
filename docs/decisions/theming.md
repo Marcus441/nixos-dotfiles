@@ -20,9 +20,9 @@ a near-white bar across the current line. So base03 takes `dragonAsh`
 (`#737c73`, dragon's own comment colour, which is what base03 means) and
 `dragonGray` goes to base04, which ANSI 8 reads instead.
 **Breaks** *Silently, in the other direction.* Every base04 consumer is a dim
-foreground — waybar's readouts, zathura's status bar, qt's placeholder, tmux's
-`thm_dim` — and they all get brighter. `dragonBlack5` and `dragonBlack6` leave
-the palette; nothing outside the terminals wanted them.
+foreground — waybar's readouts, zathura's status bar, qt's placeholder — and
+they all get brighter. `dragonBlack5` and `dragonBlack6` leave the palette;
+nothing outside the terminals wanted them.
 **Also** the consumers that read base02 as a neutral raised surface rather than
 a selection — qt's `Mid`/`Midlight`, discord's surfaces — now get blue. That is
 kanagawa's own selection colour, not a mistake, but it is the visible half of
