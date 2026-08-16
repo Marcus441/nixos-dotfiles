@@ -25,6 +25,7 @@ _: {
             font = config.desktop.font;
             powerMenuCommand = config.powerMenu.command;
             lockCommand = config.lock.command;
+            logoutCommand = config.logout.command;
             systemMonitorCommand = config.systemMonitor.command;
             networkManagerCommand = config.networkManager.command;
           };

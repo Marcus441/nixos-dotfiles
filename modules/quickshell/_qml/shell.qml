@@ -43,6 +43,14 @@ ShellRoot {
         }
     }
 
+    LazyLoader {
+        id: powerLoader
+
+        PowerMenu {
+            onDismissed: powerLoader.active = false
+        }
+    }
+
     function toggleLauncher(): void {
         launcherLoader.active = !launcherLoader.active;
     }
@@ -53,6 +61,10 @@ ShellRoot {
 
     function toggleWallpaper(): void {
         wallpaperLoader.active = !wallpaperLoader.active;
+    }
+
+    function togglePower(): void {
+        powerLoader.active = !powerLoader.active;
     }
 
     IpcHandler {
@@ -84,6 +96,14 @@ ShellRoot {
 
         function toggle(): void {
             shellRoot.toggleWallpaper();
+        }
+    }
+
+    IpcHandler {
+        target: "powermenu"
+
+        function toggle(): void {
+            shellRoot.togglePower();
         }
     }
 }

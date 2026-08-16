@@ -5,6 +5,7 @@
   barPosition,
   powerMenuCommand,
   lockCommand,
+  logoutCommand,
   systemMonitorCommand,
   networkManagerCommand,
 }: let
@@ -85,6 +86,7 @@
 
         readonly property string powerMenuCommand: "${powerMenuCommand}"
         readonly property string lockCommand: "${lockCommand}"
+        readonly property string logoutCommand: "${logoutCommand}"
         readonly property string systemMonitorCommand: "${systemMonitorCommand}"
         readonly property string networkManagerCommand: "${networkManagerCommand}"
 
@@ -94,6 +96,7 @@
         readonly property string disableRotatorScript: "${disableRotator}"
         readonly property string metricsScript: "${metrics}"
         readonly property string sh: "${pkgs.runtimeShell}"
+        readonly property string systemctl: "${pkgs.systemd}/bin/systemctl"
         readonly property string hyprctl: "${pkgs.hyprland}/bin/hyprctl"
         readonly property string curl: "${pkgs.curl}/bin/curl"
         readonly property string fd: "${pkgs.fd}/bin/fd"
