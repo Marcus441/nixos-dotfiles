@@ -14,7 +14,7 @@ home-manager keeps writing the old path.
 readline at a file nothing generates, discarding every setting in `bash.nix`'s
 `programs.readline` with no error and no missing file.
 **Also** `xdg.enable` is what exports the four `XDG_*_HOME` variables, into
-`systemd.user.sessionVariables` as well as the login shell. `hyprpaper-service.nix`
+`systemd.user.sessionVariables` as well as the login shell. `wallpaper/service.nix`
 depends on the systemd half for its `%C` specifier.
 
 ## `xdg-app-dirs.nix` — `dev`, not `core`

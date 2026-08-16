@@ -67,7 +67,7 @@ the human.
 ## `elephant.nix` — named explicitly
 
 Walker's data-provider backend, with its own daemon and config tree that
-`hyprpaper-picker.nix` writes into. The walker flake's module enabled it
+`wallpaper/picker.nix` writes into. The walker flake's module enabled it
 implicitly; the home-manager module does not.
 
 ## `hyprland/hyprland.nix` — the GTK portal
