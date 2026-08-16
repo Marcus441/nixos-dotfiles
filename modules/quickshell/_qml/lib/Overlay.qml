@@ -15,7 +15,7 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
     exclusionMode: ExclusionMode.Ignore
-    color: "transparent"
+    color: Qt.rgba(0, 0, 0, 0.4)
 
     anchors {
         left: true
@@ -37,9 +37,6 @@ PanelWindow {
         width: root.contentWidth
         height: root.contentHeight
         color: Config.base00
-        border.color: Config.base02
-        border.width: 1
-        radius: 8
 
         MouseArea {
             anchors.fill: parent

@@ -94,8 +94,8 @@ Overlay {
             width: parent.width
             height: parent.height - 40
             clip: true
-            cellWidth: 196
-            cellHeight: 130
+            cellWidth: (width - leftMargin - rightMargin) / 4
+            cellHeight: 144
             model: root.walls
 
             delegate: Item {
@@ -106,51 +106,48 @@ Overlay {
                 width: grid.cellWidth
                 height: grid.cellHeight
 
-                Rectangle {
+                Column {
                     anchors.fill: parent
                     anchors.margins: 4
-                    radius: 6
-                    color: Config.base01
-                    border.color: cellMouse.containsMouse ? Config.base0D : Config.base02
-                    border.width: 1
+                    spacing: 4
 
                     Image {
-                        anchors.fill: parent
-                        anchors.margins: 3
+                        width: parent.width
+                        height: parent.height - label.height - parent.spacing
                         source: "file://" + cell.modelData
                         sourceSize.width: 240
                         fillMode: Image.PreserveAspectCrop
+                        clip: true
                         asynchronous: true
-                    }
+                        opacity: cellMouse.containsMouse ? 1 : 0.82
 
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 3
-                        height: 18
-                        color: Qt.alpha(Config.base00, 0.8)
-
-                        Text {
-                            anchors.centerIn: parent
-                            width: parent.width - 8
-                            text: root.prettyName(cell.modelData)
-                            elide: Text.ElideRight
-                            horizontalAlignment: Text.AlignHCenter
-                            color: Config.base05
-                            font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize - 2
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 120
+                            }
                         }
                     }
 
-                    MouseArea {
-                        id: cellMouse
+                    Text {
+                        id: label
 
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.pick(cell.modelData)
+                        width: parent.width
+                        text: root.prettyName(cell.modelData)
+                        elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignHCenter
+                        color: cellMouse.containsMouse ? Config.base05 : Config.base04
+                        font.family: Config.fontFamily
+                        font.pixelSize: Config.fontSize - 2
                     }
+                }
+
+                MouseArea {
+                    id: cellMouse
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.pick(cell.modelData)
                 }
             }
         }

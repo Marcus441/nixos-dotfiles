@@ -7,8 +7,8 @@ import qs.lib
 Overlay {
     id: root
 
-    contentWidth: 560
-    contentHeight: 420
+    contentWidth: 680
+    contentHeight: 500
 
     readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name))
     property var filtered: apps
@@ -55,7 +55,7 @@ Overlay {
                 text: "󰍉"
                 color: Config.base04
                 font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize + 4
+                font.pixelSize: Config.fontSize + 8
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -65,7 +65,7 @@ Overlay {
                 width: parent.width - parent.spacing - searchIcon.width
                 color: Config.base05
                 font.family: Config.fontFamily
-                font.pixelSize: Config.fontSize + 4
+                font.pixelSize: Config.fontSize + 8
                 focus: true
                 anchors.verticalCenter: parent.verticalCenter
                 onTextChanged: root.refilter()
@@ -106,11 +106,10 @@ Overlay {
                 required property int index
 
                 width: list.width
-                height: 34
+                height: 44
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: 6
                     color: row.index === root.selected ? Config.base02 : "transparent"
                 }
 
@@ -120,7 +119,7 @@ Overlay {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 8
-                    implicitSize: 22
+                    implicitSize: 28
                     asynchronous: true
                     source: Quickshell.iconPath(row.modelData.icon, true)
                 }
@@ -134,7 +133,7 @@ Overlay {
                         text: row.modelData.name
                         color: Config.base05
                         font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
+                        font.pixelSize: Config.fontSize + 4
                     }
 
                     Text {
@@ -142,7 +141,7 @@ Overlay {
                         text: row.modelData.comment ?? ""
                         color: Config.base03
                         font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize - 2
+                        font.pixelSize: Config.fontSize + 1
                     }
                 }
 

@@ -101,7 +101,6 @@ Overlay {
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: 6
                     color: row.index === root.selected ? Config.base02 : "transparent"
                 }
 
