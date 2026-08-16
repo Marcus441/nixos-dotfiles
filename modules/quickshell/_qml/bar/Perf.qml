@@ -62,7 +62,7 @@ Item {
     Text {
         id: readout
 
-        text: root.bar.vertical ? "󰻠" : `󰻠 ${root.cpuPct}%  ${root.tempC >= 55 ? "󰔏" : "󱃃"}${root.tempC}°C  󰍛 ${root.memUsed.toFixed(1)}G  󰋊 ${root.diskPct}%`
+        text: root.bar.vertical ? "󰻠" : `󰻠 ${root.cpuPct}% ${root.tempC >= 55 ? "󰔏" : "󱃃"}${root.tempC}°C 󰍛 ${root.memUsed.toFixed(1)}G 󰋊 ${root.diskPct}%`
         color: root.stateColor(Math.max(root.cpuPct, root.diskPct - 10, (root.memUsed / Math.max(root.memTotal, 1)) * 100 - 10), 70, 90)
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize

@@ -66,8 +66,8 @@ PanelWindow {
         id: endGroup
 
         flow: bar.vertical ? GridLayout.TopToBottom : GridLayout.LeftToRight
-        rowSpacing: 8
-        columnSpacing: 8
+        rowSpacing: 20
+        columnSpacing: 20
         anchors.right: bar.vertical ? undefined : parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: bar.vertical ? undefined : parent.verticalCenter
@@ -83,28 +83,44 @@ PanelWindow {
             bar: bar
         }
 
-        Wifi {
-            bar: bar
+        GridLayout {
+            id: statusGroup
+
+            flow: endGroup.flow
+            rowSpacing: 8
+            columnSpacing: 8
+
+            Wifi {
+                bar: bar
+            }
+
+            Bluetooth {
+                bar: bar
+            }
+
+            Volume {
+                bar: bar
+            }
+
+            Battery {}
         }
 
-        Bluetooth {
-            bar: bar
+        GridLayout {
+            id: actionGroup
+
+            flow: endGroup.flow
+            rowSpacing: 8
+            columnSpacing: 8
+
+            IdleInhibit {
+                bar: bar
+            }
+
+            WallpaperButton {
+                bar: bar
+            }
+
+            Power {}
         }
-
-        Volume {
-            bar: bar
-        }
-
-        IdleInhibit {
-            bar: bar
-        }
-
-        Battery {}
-
-        WallpaperButton {
-            bar: bar
-        }
-
-        Power {}
     }
 }
