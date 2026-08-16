@@ -29,7 +29,7 @@ Item {
     BarWidget {
         id: widget
 
-        text: root.muted ? "" : root.volume >= 0.66 ? "" : root.volume >= 0.33 ? "" : ""
+        text: root.muted ? "󰖁" : root.volume >= 0.66 ? "󰕾" : root.volume >= 0.33 ? "󰖀" : "󰕿"
         baseColor: root.muted ? Config.base08 : Config.base03
         onClicked: popup.visible = !popup.visible
         onRightClicked: {
