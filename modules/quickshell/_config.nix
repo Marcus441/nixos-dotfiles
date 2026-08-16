@@ -62,6 +62,7 @@
   configQml = pkgs.writeText "quickshell-Config.qml" ''
     pragma Singleton
     import Quickshell
+    import QtQuick
 
     Singleton {
     ${colorProps}
