@@ -10,9 +10,18 @@ _: {
         mainMod = "SUPER";
         terminal = "uwsm app -- ${config.terminal.command}";
         terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
+        # load-bearing: docs/decisions/sessions.md#monocle-visual-profile
+        hyprCfg = config.wayland.windowManager.hyprland.settings.config;
         # load-bearing: docs/decisions/sessions.md#layout-state-file
         layoutSet = pkgs.writeShellScript "layout-set" ''
-          ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"$1\" } })"
+          case "$1" in
+            monocle)
+              ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"monocle\", gaps_in = 0, gaps_out = 0, border_size = 0 }, animations = { enabled = false } })"
+              ;;
+            *)
+              ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"$1\", gaps_in = ${builtins.toJSON hyprCfg.general.gaps_in}, gaps_out = ${builtins.toJSON hyprCfg.general.gaps_out}, border_size = ${builtins.toJSON hyprCfg.general.border_size} }, animations = { enabled = ${builtins.toJSON hyprCfg.animations.enabled} } })"
+              ;;
+          esac
           CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
           mkdir -p "$CACHE"
           printf '%s\n' "$1" >"$CACHE/hyprland-layout"

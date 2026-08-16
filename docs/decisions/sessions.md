@@ -120,10 +120,30 @@ layouts, and Hyprland emits no IPC event for a runtime config change. The
 layout-set script writes the layout name to the cache file; the indicator
 watches it with a `FileView`. A cache file keeps the coupling one-way —
 `hyprland` files never hold a quickshell store path, and a host without
-`quickshell` just writes a file nobody reads.
+`quickshell` just writes a file nobody reads. layout-set is the single entry
+point — every layout bind routes through it, and it also applies the
+per-layout visual profile (#monocle-visual-profile).
 **Breaks** *Silently, on rename.* The file name is string-matched in two
 aspects (`binds.nix` and `LayoutIndicator.qml`); changing it in one place
 leaves the indicator frozen on its startup `getoption` fallback.
+
+<a id="monocle-visual-profile"></a>
+## `hyprland/binds.nix` — layout-set applies the per-layout visual profile
+
+**Why** Monocle should render edge-to-edge: no gaps, no border, no
+animations. Rules cannot express "when the layout is monocle" — the
+`w[tv1]`/`f[1]` rules only fire with a single tiled window, so a monocle
+workspace with a stacked window kept its gaps and popin artifacts. The
+profile rides the same `hl.config` eval that switches the layout, and the
+restore branch reads gaps, border and animations back from the merged
+`settings.config` values, so it can never drift from
+`general.nix`/`animations.nix`. Disabling `animations.enabled` is a master
+switch — layer animations pause in monocle too; per-leaf runtime control is
+not exposed through `hl.config`.
+**Breaks** A reload or restart while in monocle re-reads the generated
+config — dwindle, normal gaps — which is self-consistent, but the state file
+may still say monocle until the next layout-set. Hardcoding the restore
+values instead of reading them reintroduces drift.
 
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention
