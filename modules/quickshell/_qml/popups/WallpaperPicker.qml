@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import QtQuick.Controls
 import qs
 import qs.lib
 
@@ -97,6 +98,15 @@ Overlay {
             cellWidth: (width - leftMargin - rightMargin) / 4
             cellHeight: 144
             model: root.walls
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+
+                contentItem: Rectangle {
+                    implicitWidth: 6
+                    color: Config.base02
+                }
+            }
 
             delegate: Item {
                 id: cell

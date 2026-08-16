@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Controls
 import qs
 import qs.lib
 
@@ -98,6 +99,15 @@ Overlay {
             model: root.filtered
             currentIndex: root.selected
             highlightMoveDuration: 80
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+
+                contentItem: Rectangle {
+                    implicitWidth: 6
+                    color: Config.base02
+                }
+            }
 
             delegate: Item {
                 id: row
