@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Widgets
 import QtQuick
 import qs
 import qs.lib
@@ -44,25 +45,41 @@ Overlay {
         anchors.margins: 12
         spacing: 10
 
-        TextInput {
-            id: search
-
+        Row {
             width: parent.width
-            color: Config.base05
-            font.family: Config.fontFamily
-            font.pixelSize: Config.fontSize + 4
-            focus: true
-            onTextChanged: root.refilter()
-            Keys.onEscapePressed: root.dismissed()
-            Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
-            Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
-            Keys.onReturnPressed: root.launch(root.filtered[root.selected])
+            spacing: 8
 
             Text {
-                visible: search.text === ""
-                text: "Search applications…"
-                color: Config.base03
-                font: search.font
+                id: searchIcon
+
+                text: "󰍉"
+                color: Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize + 4
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            TextInput {
+                id: search
+
+                width: parent.width - parent.spacing - searchIcon.width
+                color: Config.base05
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize + 4
+                focus: true
+                anchors.verticalCenter: parent.verticalCenter
+                onTextChanged: root.refilter()
+                Keys.onEscapePressed: root.dismissed()
+                Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
+                Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
+                Keys.onReturnPressed: root.launch(root.filtered[root.selected])
+
+                Text {
+                    visible: search.text === ""
+                    text: "Search applications…"
+                    color: Config.base03
+                    font: search.font
+                }
             }
         }
 
@@ -97,9 +114,20 @@ Overlay {
                     color: row.index === root.selected ? Config.base02 : "transparent"
                 }
 
-                Column {
+                IconImage {
+                    id: icon
+
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    implicitSize: 22
+                    asynchronous: true
+                    source: Quickshell.iconPath(row.modelData.icon, true)
+                }
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: icon.right
                     anchors.leftMargin: 8
 
                     Text {
