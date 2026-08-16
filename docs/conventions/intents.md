@@ -17,7 +17,7 @@ Inv. 3 working, not a violation.
 | `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
 | `powerMenu.command` | `powermenu/wleave.nix` | `powermenu/wleave.nix` (`wleave`) |
 | `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
-| `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
+| `systemMonitor.command` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
 | `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`), `quickshell/quickshell.nix` (`quickshell`) |
 

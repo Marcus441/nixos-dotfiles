@@ -89,19 +89,6 @@ lazily and the first window pays the startup cost.
 **Breaks** `core` used to point every host at `thunar.desktop`, including the
 one with no thunar installed.
 
-<a id="btop-views"></a>
-## `cli/btop.nix` — a view is a whole config file, not a `--preset`
-
-**Why** A preset chooses boxes and nothing else, but each readout wants its own
-`proc_sorting` and `proc_tree` — config keys with no flag behind them. So the
-three views are three generated configs passed to `--config`, and `shown_boxes`
-states the layout by name rather than by an index into a `presets` string.
-**Breaks** `save_config_on_exit` defaults to true and these paths are in the
-store, so each view turns it off; without that btop tries to write a read-only
-file on quit. The same read-only-ness is why a setting changed inside a
-bar-opened btop is gone at exit — by design, and only there. `programs.btop.settings`
-is the interactive config and keeps the tree.
-
 <a id="impala-argv"></a>
 ## `network/impala.nix` — impala over NetworkManager's iwd
 
@@ -111,7 +98,7 @@ to the same daemon.
 NM's state can disagree until it resyncs.
 **Also** the spawn is `compactArgv`, not `transientArgv`. Every bar click lands
 in the same `1200 600` float, so the font was the only thing making impala a
-different terminal from btop's three.
+different terminal from btop.
 
 <a id="impala-darkgray"></a>
 ## `network/impala.nix` — every `DarkGray` background is repainted, and one is not
