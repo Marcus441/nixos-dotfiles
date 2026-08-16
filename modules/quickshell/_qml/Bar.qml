@@ -44,11 +44,11 @@ PanelWindow {
         anchors.topMargin: 8
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
-        Workspaces {
+        LayoutIndicator {
             bar: bar
         }
 
-        LayoutIndicator {
+        Workspaces {
             bar: bar
         }
 
