@@ -120,7 +120,7 @@ its name, so `walker-style.nix` owns it alone.
 
 **Why** The daemon lived in `palette` and `stylix`.
 **Breaks** A dwl host taking neither got no notifications at all, while
-`dwl.nix`'s autostart still invoked `mako` by bare name.
+`dwl/dwl.nix`'s autostart still invoked `mako` by bare name.
 
 <a id="fastfetch-palette"></a>
 ## `fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names

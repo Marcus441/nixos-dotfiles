@@ -31,9 +31,9 @@ _: {
         config,
         ...
       }: let
-        ocr-copy = pkgs.callPackage ./_pkgs/ocr-copy.nix {};
+        ocr-copy = pkgs.callPackage ../_pkgs/ocr-copy.nix {};
 
-        configH = pkgs.writeText "dwl-config.h" (import ./_dwl/config-h.nix {
+        configH = pkgs.writeText "dwl-config.h" (import ./_config-h.nix {
           inherit lib pkgs config ocr-copy;
         });
 

@@ -1,5 +1,5 @@
 ---
-paths: "modules/hyprland-rules.nix,modules/dwl.nix,modules/hyprland.nix"
+paths: "modules/hyprland-rules.nix,modules/dwl/dwl.nix,modules/hyprland.nix"
 ---
 
 # `windowTags`: many setters, one reader

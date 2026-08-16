@@ -3,7 +3,7 @@
 dwl, Hyprland, and the bars.
 
 <a id="dwl-column0"></a>
-## `dwl.nix` — nothing may be spliced at column 0
+## `dwl/dwl.nix` — nothing may be spliced at column 0
 
 **Why** dwl is configured at compile time; each generated fragment lands at
 column 0 of the output.
@@ -12,20 +12,20 @@ column 0 of the output.
 zero and reindents the entire generated file. `toggleBarKey` sits inside an
 array, so it carries the two spaces `''` would otherwise have stripped.
 
-## `dwl.nix` — two escapers, `argvC` and `cEsc`
+## `dwl/dwl.nix` — two escapers, `argvC` and `cEsc`
 
 **Why** dwl's binds are a C argv array, but the intent options hold *shell*
 commands and `SHCMD` embeds those in a C string literal.
 **Breaks** Using one where the other belongs compiles, then misbehaves at
 runtime.
 
-## `dwl.nix` — the status pipe is dropped, not fed from `/dev/null`
+## `dwl/dwl.nix` — the status pipe is dropped, not fed from `/dev/null`
 
 **Why** An unpatched dwl reads nothing from stdin.
 **Breaks** Feeding it anyway is a loop running forever for nobody.
 
 <a id="dwl-session"></a>
-## `dwl.nix` — the session runs the user's profile copy
+## `dwl/dwl.nix` — the session runs the user's profile copy
 
 **Why** dwl is compiled in the dwl *home* aspect, so the session launches
 `~/.nix-profile`'s copy.
@@ -33,7 +33,7 @@ runtime.
 needed anyway for bash, the terminal, fonts and dwl-monitors.
 
 <a id="dwl-autostart-core"></a>
-## `dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
+## `dwl/dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
 
 **Why** The terminal server is an autostart entry now, and the aspect that owns
 it is a terminal, not a session — it cannot know whether the host runs dwl. So
@@ -49,7 +49,7 @@ entry inertly, which is the point.
 measured (AGENTS.md §5).
 
 <a id="dwl-autostart"></a>
-## `dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
+## `dwl/dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
 
 **Why** `graphical-session.target` is never reached on swift5: `ly.nix` marks
 the display manager `X-NIXOS-SYSTEMD-AWARE`, which suppresses nixpkgs'

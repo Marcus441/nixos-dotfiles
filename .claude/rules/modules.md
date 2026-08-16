@@ -33,7 +33,7 @@ is what the dendritic README's "Not declaring options" anti-pattern asks for.
   `desktop.syntaxTheme` in `core`, read by `bat.nix` and `yazi-style.nix`.
 - `modules/ccache.nix` — declares `dev` beside files declaring `core`. Nothing
   about its location says which. Inv. 4 demonstrated.
-- `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both classes.
+- `modules/dwl/dwl.nix`, `modules/hyprland.nix` — one concern spanning both classes.
 
 The single-aspect file is the majority but not the model — copying an arbitrary
 neighbour reproduces the majority and misses the second direction of the merge.
@@ -80,7 +80,7 @@ is a valid outcome. Full table: `docs/conventions/intents.md`.
 
 `brightnessctl.nix` declares **both** `hyprland` and `laptop`, installing the
 same package twice. That is correct — one file, several memberships — not an
-Inv. 3 failure. Where the consumer can hold a store path instead (`dwl.nix`
+Inv. 3 failure. Where the consumer can hold a store path instead (`dwl/dwl.nix`
 interpolates it into C code), prefer that.
 
 ## Directories
