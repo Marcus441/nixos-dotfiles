@@ -45,10 +45,12 @@ PanelWindow {
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
         LayoutIndicator {
+            Layout.alignment: Qt.AlignHCenter
             bar: bar
         }
 
         Workspaces {
+            Layout.alignment: Qt.AlignHCenter
             bar: bar
         }
 
@@ -76,55 +78,68 @@ PanelWindow {
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
         Tray {
+            Layout.alignment: Qt.AlignHCenter
             bar: bar
         }
 
         Perf {
+            Layout.alignment: Qt.AlignHCenter
             bar: bar
         }
 
         GridLayout {
             id: statusGroup
 
+            Layout.alignment: Qt.AlignHCenter
             flow: endGroup.flow
             rowSpacing: 8
             columnSpacing: 8
 
             Wifi {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
             Bluetooth {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
             Volume {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
-            Battery {}
+            Battery {
+                Layout.alignment: Qt.AlignHCenter
+            }
         }
 
         GridLayout {
             id: actionGroup
 
+            Layout.alignment: Qt.AlignHCenter
             flow: endGroup.flow
             rowSpacing: 8
             columnSpacing: 8
 
             Notifications {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
             IdleInhibit {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
             WallpaperButton {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
 
             Power {
+                Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
         }
