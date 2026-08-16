@@ -85,14 +85,18 @@ interpolates it into C code), prefer that.
 
 ## Directories
 
-**Test:** if every file inside declares the same declining aspect, the directory
-is redundant and the files should be flat. If the files span declining aspects,
-it is pure navigation and is fine. **`core` does not count** — every host takes
-it.
+**Test:** a directory is named for a feature and exists because that feature
+outgrew one file. The files inside may span declining aspects (`lock/`,
+`launcher/`) or all declare the same one (`hyprland/`, `gaming/`) — both are
+navigation, and neither carries system-meaning. Prohibited: a directory named
+for a class, host, or magnitude; a grab-bag no single feature names; a
+directory holding one module file (flatten it).
 
 `/_` is for non-modules only: values consumed by `import`, derivations consumed
 by `callPackage`, dormant code. **It is not a grouping mechanism.**
-`import-tree` skips any path matching `hasInfix "/_"`.
+`import-tree` skips any path matching `hasInfix "/_"`. A helper may live inside
+its feature's directory (`wallpaper/_wallpapers.nix`, `launcher/_walker/`) —
+`hasInfix "/_"` still skips it.
 
 ## Things that fail silently rather than loudly
 

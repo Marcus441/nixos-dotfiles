@@ -19,9 +19,9 @@ or `modules/aspects.nix`.
 Walk `AGENTS.md` §1 (invariants) and §9 (anti-pattern table). If the change
 would violate one, **stop and say so** — do not silently bend a rule.
 
-The directory test: if every file inside declares the same *declining* aspect,
-the directory is redundant and the files should be flat. `core` does not count
-toward "several aspects".
+The directory test: a directory names one feature that outgrew one file.
+Same-aspect contents are fine; class, host, magnitude, and grab-bag "type"
+names are not. A directory holding one module file is flattened.
 
 ## 2. Ordering
 

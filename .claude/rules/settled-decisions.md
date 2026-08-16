@@ -1,5 +1,5 @@
 ---
-paths: "modules/waybar.nix,modules/wleave.nix,modules/bar/**,modules/dwl.nix,modules/hyprland.nix,modules/terminal.nix,modules/terminal/**,statix.toml"
+paths: "modules/wleave.nix,modules/bar/**,modules/dwl.nix,modules/hyprland.nix,modules/terminal.nix,modules/terminal/**,statix.toml"
 ---
 
 # Settled decisions — do not re-propose
