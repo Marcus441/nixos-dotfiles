@@ -10,10 +10,29 @@ _: {
         mainMod = "SUPER";
         terminal = "uwsm app -- ${config.terminal.command}";
         terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
+        # load-bearing: docs/decisions/sessions.md#layout-state-file
+        layoutSet = pkgs.writeShellScript "layout-set" ''
+          ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"$1\" } })"
+          CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
+          mkdir -p "$CACHE"
+          printf '%s\n' "$1" >"$CACHE/hyprland-layout"
+        '';
         layoutToggle = pkgs.writeShellScript "layout-toggle" ''
           case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
-            *monocle*) ${pkgs.hyprland}/bin/hyprctl keyword general:layout dwindle ;;
-            *) ${pkgs.hyprland}/bin/hyprctl keyword general:layout monocle ;;
+            *monocle*) exec ${layoutSet} dwindle ;;
+            *) exec ${layoutSet} monocle ;;
+          esac
+        '';
+        cycleNext = pkgs.writeShellScript "cycle-next" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cyclenext")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.cycle_next()' ;;
+          esac
+        '';
+        cyclePrev = pkgs.writeShellScript "cycle-prev" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cycleprev")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.cycle_next({ next = false })' ;;
           esac
         '';
       in {
@@ -108,13 +127,13 @@ _: {
             {
               _args = [
                 "${mainMod} + M"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${pkgs.hyprland}/bin/hyprctl keyword general:layout monocle\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} monocle\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + T"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${pkgs.hyprland}/bin/hyprctl keyword general:layout dwindle\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} dwindle\")")
               ];
             }
             {
@@ -126,7 +145,7 @@ _: {
             {
               _args = [
                 "${mainMod} + Tab"
-                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next()")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cycleNext}\")")
               ];
             }
             {
@@ -175,13 +194,13 @@ _: {
             {
               _args = [
                 "${mainMod} + K"
-                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next({ next = false })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cyclePrev}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + J"
-                (lib.generators.mkLuaInline "hl.dsp.window.cycle_next()")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cycleNext}\")")
               ];
             }
 

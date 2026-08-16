@@ -112,6 +112,19 @@ inhibition is the Wayland protocol, which hypridle honours.
 rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
 screen.
 
+<a id="layout-state-file"></a>
+## `hyprland/binds.nix` — layout scripts write `$XDG_CACHE_HOME/hyprland-layout`
+
+**Why** The bar's layout indicator needs to react the instant a bind switches
+layouts, and Hyprland emits no IPC event for a runtime config change. The
+layout-set script writes the layout name to the cache file; the indicator
+watches it with a `FileView`. A cache file keeps the coupling one-way —
+`hyprland` files never hold a quickshell store path, and a host without
+`quickshell` just writes a file nobody reads.
+**Breaks** *Silently, on rename.* The file name is string-matched in two
+aspects (`binds.nix` and `LayoutIndicator.qml`); changing it in one place
+leaves the indicator frozen on its startup `getoption` fallback.
+
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention
 
