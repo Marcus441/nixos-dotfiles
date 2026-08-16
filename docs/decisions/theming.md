@@ -87,7 +87,7 @@ Both belong to every host. Point size comes from the host record, being a
 property of the panel and not the theme.
 
 <a id="neovide-font-size"></a>
-## `neovide.nix` — the point size is coerced to a float
+## `editor/neovide.nix` — the point size is coerced to a float
 
 **Why** Neovide's `FontSettings.size` is an `f32` and is not optional, while
 `desktop.font.size` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
@@ -105,25 +105,25 @@ file, which is how a hardcoded family outlived two attempts to change it.
 highlights get transparency without a second colour format.
 
 <a id="lazygit"></a>
-## `lazygit.nix` — `selectedLineBgColor = ["default"]`
+## `git/lazygit.nix` — `selectedLineBgColor = ["default"]`
 
 **Why** `default` keeps the terminal's own background, so the cursor line does
 not fight it — whichever terminal the host took.
 
 <a id="walker-style"></a>
-## `walker.nix` — the launcher names no theme
+## `launcher/walker.nix` — the launcher names no theme
 
 **Why** Setting `theme` at all overrides `services.walker.settings.theme` with
-its name, so `walker-style.nix` owns it alone.
+its name, so `launcher/walker-style.nix` owns it alone.
 
 ## `mako.nix` — notifications are a capability, not a theme
 
 **Why** The daemon lived in `palette` and `stylix`.
 **Breaks** A dwl host taking neither got no notifications at all, while
-`dwl.nix`'s autostart still invoked `mako` by bare name.
+`dwl/dwl.nix`'s autostart still invoked `mako` by bare name.
 
 <a id="fastfetch-palette"></a>
-## `fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names
+## `cli/fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names
 
 **Why** fastfetch parses `#rrggbb` into a 24-bit SGR itself, so this is the one
 consumer that needs no conversion and the leading `#` passes straight through —
@@ -134,7 +134,7 @@ The swatch row is the deliberate exception: it draws SGR 40–47/100–107, i.e.
 **Breaks** *Loudly.* A malformed colour is a fastfetch parse error on stderr.
 
 <a id="fastfetch-rules"></a>
-## `fastfetch.nix` — box rules are counted, and the right edge is open
+## `cli/fastfetch.nix` — box rules are counted, and the right edge is open
 
 **Why** `lib.stringLength` counts bytes, so measuring a section name with a
 non-ASCII character in it would shorten that section's rule; the three names are
@@ -146,7 +146,7 @@ dynamic — a closing `│` could not be placed.
 typo rather than a bug. `width` is the one number to retune if a value grows.
 
 <a id="fastfetch-percent-type"></a>
-## `fastfetch.nix` — `display.percent.type = 11` is what makes the bars appear
+## `cli/fastfetch.nix` — `display.percent.type = 11` is what makes the bars appear
 
 **Why** `{percentage-bar}` in a module `format` expands to nothing unless
 `percent.type` has the bar bit set; `type` is not merely a default output style

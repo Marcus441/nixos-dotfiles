@@ -31,9 +31,10 @@ is what the dendritic README's "Not declaring options" anti-pattern asks for.
   **This is the file to copy.**
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares
   `desktop.syntaxTheme` in `core`, read by `bat.nix` and `yazi-style.nix`.
-- `modules/ccache.nix` — declares `dev` beside files declaring `core`. Nothing
-  about its location says which. Inv. 4 demonstrated.
-- `modules/dwl.nix`, `modules/hyprland.nix` — one concern spanning both classes.
+- `modules/dev/ccache.nix` — declares `dev`; `modules/dev/direnv.nix` beside it
+  declares `apps`. The directory names the feature area; the file still
+  declares its own membership. Inv. 4 demonstrated.
+- `modules/dwl/dwl.nix`, `modules/hyprland/hyprland.nix` — one concern spanning both classes.
 
 The single-aspect file is the majority but not the model — copying an arbitrary
 neighbour reproduces the majority and misses the second direction of the merge.
@@ -68,8 +69,8 @@ When two implementations share an intent but no code, the portable part is an
 The setter sits in the provider's file, not the namespace's — otherwise the
 namespace file would be edited every time a provider changed (Inv. 3 inverted).
 
-`launcher.nix` declares `launcher.argv` in `core`; `walker.nix` sets it from
-`hyprland`, `wmenu.nix` from `dwl`.
+`launcher/launcher.nix` declares `launcher.argv` in `core`; `launcher/walker.nix` sets it from
+`hyprland`, `launcher/wmenu.nix` from `dwl`.
 
 **A shared namespace is sometimes empty.** `clipboard`, `lock` and `screenshot`
 share intent across sessions but were never abstracted — the shared config is
@@ -80,19 +81,23 @@ is a valid outcome. Full table: `docs/conventions/intents.md`.
 
 `brightnessctl.nix` declares **both** `hyprland` and `laptop`, installing the
 same package twice. That is correct — one file, several memberships — not an
-Inv. 3 failure. Where the consumer can hold a store path instead (`dwl.nix`
+Inv. 3 failure. Where the consumer can hold a store path instead (`dwl/dwl.nix`
 interpolates it into C code), prefer that.
 
 ## Directories
 
-**Test:** if every file inside declares the same declining aspect, the directory
-is redundant and the files should be flat. If the files span declining aspects,
-it is pure navigation and is fine. **`core` does not count** — every host takes
-it.
+**Test:** a directory is named for a feature and exists because that feature
+outgrew one file. The files inside may span declining aspects (`lock/`,
+`launcher/`) or all declare the same one (`hyprland/`, `gaming/`) — both are
+navigation, and neither carries system-meaning. Prohibited: a directory named
+for a class, host, or magnitude; a grab-bag no single feature names; a
+directory holding one module file (flatten it).
 
 `/_` is for non-modules only: values consumed by `import`, derivations consumed
 by `callPackage`, dormant code. **It is not a grouping mechanism.**
-`import-tree` skips any path matching `hasInfix "/_"`.
+`import-tree` skips any path matching `hasInfix "/_"`. A helper may live inside
+its feature's directory (`wallpaper/_wallpapers.nix`, `launcher/_walker/`) —
+`hasInfix "/_"` still skips it.
 
 ## Things that fail silently rather than loudly
 

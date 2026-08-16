@@ -5,7 +5,7 @@ _: {
         home.packages = [
           pkgs.grimblast
           pkgs.hyprpicker
-          (pkgs.callPackage ./_pkgs/ocr-copy.nix {})
+          (pkgs.callPackage ../_pkgs/ocr-copy.nix {})
         ];
       }
     )

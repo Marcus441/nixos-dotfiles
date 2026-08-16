@@ -27,7 +27,7 @@ Two rules that are easy to get backwards:
 Not interchangeable: Qt wants `#aarrggbb`, girara
 (zathura) wants `#rrggbbaa`, dwl's colour tables want `0xrrggbbff`, and
 hyprlang (hyprlock) wants `rgb(rrggbb)` or `rgba(rrggbbaa)` — it rejects a bare
-`#rrggbb`, because `#` opens a comment. `hyprlock.nix` therefore maps the
+`#rrggbb`, because `#` opens a comment. `lock/hyprlock.nix` therefore maps the
 palette through `rgb(…)` rather than stripping the `#` and pasting it.
 
 Full traps: `.claude/rules/theming-hazards.md`.

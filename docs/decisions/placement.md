@@ -25,7 +25,7 @@ runs on the desktops too. A too-small aspect is recoverable where a broken power
 path is not.
 
 <a id="unfree-nixos"></a>
-## `game-launchers.nix`, `nvtop.nix` — `nixos`, because unfree cannot be home
+## `gaming/launchers.nix`, `nvidia/nvtop.nix` — `nixos`, because unfree cannot be home
 
 **Why** Not about the packages: **an unfree package cannot go in `home.packages`
 at all here.** `unfree.nix` sets `allowUnfree` on **nixos `core` only**, and Home
@@ -58,39 +58,39 @@ Both sessions bind a clipboard-history key, and the picker renders through the
 same menu program as the launcher — so the aspect providing one provides the
 other.
 
-## `wmenu.nix` — theming belongs to neither intent
+## `launcher/wmenu.nix` — theming belongs to neither intent
 
 Two intents render through wmenu (launcher and clipboard picker), so its theming
 is an option both read. Both hold the store path, so wmenu is on PATH only for
 the human.
 
-## `elephant.nix` — named explicitly
+## `launcher/elephant.nix` — named explicitly
 
 Walker's data-provider backend, with its own daemon and config tree that
-`hyprpaper-picker.nix` writes into. The walker flake's module enabled it
+`wallpaper/picker.nix` writes into. The walker flake's module enabled it
 implicitly; the home-manager module does not.
 
-## `hyprland.nix` — the GTK portal
+## `hyprland/hyprland.nix` — the GTK portal
 
 File choosers and settings. dwl declares its portals on the nixos side via
 `xdg.portal.extraPortals`.
 
-## `hyprland-screenshot.nix` — follows the session
+## `hyprland/screenshot.nix` — follows the session
 
-Bound to keys in `hyprland-binds.nix`, so it follows the session rather than the
+Bound to keys in `hyprland/binds.nix`, so it follows the session rather than the
 app set. dwl builds its own ocr-copy against its own keybind.
 
-## `neovim.nix` / `neovide.nix` — headless vs GUI
+## `editor/neovim.nix` / `editor/neovide.nix` — headless vs GUI
 
-`neovim.nix` is `core` and provides the headless `nvim` both profiles share;
+`editor/neovim.nix` is `core` and provides the headless `nvim` both profiles share;
 Neovide is the GUI front-end and is `apps` only.
 
 <a id="man-pager-colours"></a>
-## `man.nix` — the pager colours are `home.sessionVariables`
+## `cli/man.nix` — the pager colours are `home.sessionVariables`
 
 **Why** `LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables no shell
 interprets, so re-emitting them from each shell's rc would be duplication with a
-drift risk. They sat in `bash.nix` because the hex → `r;g;b` helper did;
+drift risk. They sat in `shell/bash.nix` because the hex → `r;g;b` helper did;
 `desktop.colorsRgb` ended that. Coverage is equal or better: bash reaches
 `hm-session-vars.sh` through `~/.profile`, which `xsession-wrapper` also sources
 before any session; zsh sources it from `~/.zshenv` and `~/.zprofile`.
@@ -103,8 +103,8 @@ one but `man`.
 
 ## Small ones
 
-- `git.nix` — the GitHub CLI is system-wide because it was; only its home changed.
+- `git/git.nix` — the GitHub CLI is system-wide because it was; only its home changed.
 - `home-manager.nix` — the CLI belongs with the module;
   `home-manager switch` is how a host is driven.
-- `ccache.nix` — ccache plus the CMake launcher env, for
+- `dev/ccache.nix` — ccache plus the CMake launcher env, for
   out-of-nix C/C++ builds.

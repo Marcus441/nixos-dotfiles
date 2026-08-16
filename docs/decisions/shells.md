@@ -39,7 +39,7 @@ overriding.
 connects to the breakage. `history.path` defaults to `${dotDir}/.zsh_history`,
 so moving `dotDir` alone would file 100 000 lines of history under `~/.config`.
 History is state.
-**Breaks** Session startup. `hyprland.nix` puts the uwsm start in
+**Breaks** Session startup. `hyprland/hyprland.nix` puts the uwsm start in
 `programs.zsh.profileExtra`, now `~/.config/zsh/.zprofile` — a path zsh reads
 only because Home Manager keeps a `~/.zshenv` stub exporting `ZDOTDIR`. Deleting
 that stub as stray leaves no error and no session.

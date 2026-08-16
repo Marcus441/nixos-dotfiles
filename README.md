@@ -48,7 +48,7 @@ by **vic** (pinned in `flake.nix` from its `denful/import-tree` location).
 `flake.nix` is a manifest only because this exists. Its rule that paths
 containing `/_` are skipped — `hasInfix "/_"` against the full path — is the
 only way anything under `modules/` escapes auto-discovery, which is what
-`modules/_pkgs` and `modules/_walker` both depend on.
+`modules/_pkgs` and `modules/launcher/_walker` both depend on.
 
 **[Search for best dotfiles structure: Dendritic
 edition](https://discourse.nixos.org/t/search-for-best-dotfiles-structure-dendritic-edition/75134)**

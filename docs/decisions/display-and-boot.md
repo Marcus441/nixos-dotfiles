@@ -8,7 +8,7 @@ port. wlr-randr and dwl have no equivalent, so they always take the connector.
 **Also** `assertionsFor` lives here because monitors are only read by home
 modules, so that is where a bad layout gets caught.
 
-## `hyprlock.nix` — font size scales with physical height
+## `lock/hyprlock.nix` — font size scales with physical height
 
 **Why** `height / 11` keeps the physical size consistent: 1080 / 11 ≈ 98,
 2160 / 11 ≈ 196. The date takes `height / 30` and sits one clock-font-size
@@ -18,7 +18,7 @@ than being a fixed pixel count that closes up on a 4K panel.
 flake-parts modules and reach `flake.lib` directly.
 
 <a id="hyprlock-flat"></a>
-## `hyprlock.nix` — the background is dimmed instead of the text being shadowed
+## `lock/hyprlock.nix` — the background is dimmed instead of the text being shadowed
 
 **Why** Every other surface in the desktop is flat — wleave kills libadwaita's
 shadow outright — but hyprlock draws over a screenshot, and unshadowed `base05`

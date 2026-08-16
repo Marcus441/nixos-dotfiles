@@ -1,5 +1,5 @@
 ---
-paths: "modules/waybar.nix,modules/wleave.nix,modules/bar/**,modules/dwl.nix,modules/hyprland.nix,modules/terminal.nix,modules/terminal/**,statix.toml"
+paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,modules/terminal/**,statix.toml"
 ---
 
 # Settled decisions — do not re-propose
@@ -10,12 +10,12 @@ human makes, not a cleanup you offer.
 - **Waybar's opt-in shape is finished.** `waybar` and `wleave` are separate
   aspects, `aspectRequires.waybar = ["hyprland"]` rejects dwl hosts, and
   `waybar.nix` embeds wleave gated on `powerMenu.command`.
-- **dwl's bar is `dwl-bar`; its shape is settled.** `dwl.nix` declares `dwl.bar`
+- **dwl's bar is `dwl-bar`; its shape is settled.** `dwl/dwl.nix` declares `dwl.bar`
   in `homeManager.dwl`; `bar/dwl-bar.nix` sets it and declares
   `aspectRequires.dwl-bar = ["dwl"]`. Silent failure by construction — a dwl
   host without `dwl-bar` builds a working bar-less dwl.
 - **The terminal is an aspect, and its namespace file names no terminal.**
-  `terminal.nix` declares `terminal.*` in `core` and sets `transientArgv` from
+  `terminal/terminal.nix` declares `terminal.*` in `core` and sets `transientArgv` from
   `hyprland` through `appIdArgv`; `terminal/{foot,alacritty,ghostty,kitty}.nix`
   implement it. `desktopFile` and `binary` carry no default on purpose — they
   are the only scalars, and so the only thing that rejects a host taking two

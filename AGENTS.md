@@ -85,8 +85,8 @@ modules/
   hosts/generator.nix        # the ONE permitted central wiring point
   hosts/record.nix           # the typed host record the generator consumes
   hosts/<hostname>.nix       # what this machine IS: aspects + machine facts
-  <concern>.nix              # declares its own aspect membership
-  <intent>/                  # implementations of one intent, in different aspects
+  <concern>.nix              # single-file feature; declares its own aspect membership
+  <feature>/                 # a feature that outgrew one file; contents may span aspects or share one
   **/_*                      # ignored by import-tree (hasInfix "/_" on full path)
 ```
 
@@ -94,9 +94,14 @@ modules/
 `pkgs/`, `overlays/`, `profiles/` (break feature closure); `lib/` (not a
 flake-parts module — Inv. 1).
 
-**Permitted:** anything whose name does **not** predict the aspect or class of
-every file inside. `filemanager/` is fine; `hyprland/` holding only `hyprland`
-files is not.
+**Permitted:** any directory named for a **feature** — a concern a reader would
+look up by that name. A feature directory earns its existence when the feature
+outgrows one file; a single-file feature stays flat. Its files may span aspects
+(`filemanager/`, `lock/`) or all declare the same one (`hyprland/`, `gaming/`) —
+the path still carries no system-meaning, because the generator never reads it
+(Inv. 4). Still prohibited: directories named for a class, host, or magnitude,
+and grab-bag "type" directories (`system/`, `desktop/`, `misc/`) that group by
+anything other than one nameable feature.
 
 ## 5. Ordering and store paths
 

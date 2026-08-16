@@ -10,19 +10,19 @@ Inv. 3 working, not a violation.
 
 | Namespace | Declared in (its `core` block) | Set from |
 | --- | --- | --- |
-| `launcher.argv` / `.command` | `launcher.nix` | `wmenu.nix` (`dwl`), `walker.nix` (`hyprland`) |
-| `terminal.*` | `terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal.nix` itself sets `transientArgv` from `hyprland` |
+| `launcher.argv` / `.command` | `launcher/launcher.nix` | `launcher/wmenu.nix` (`dwl`), `launcher/walker.nix` (`hyprland`) |
+| `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
-| `lock.command` | `lock.nix` | `lock.nix` (`hyprland`, `dwl`) |
-| `logout.command` | `logout.nix` | `logout.nix` (`hyprland`) |
-| `powerMenu.command` | `wleave.nix` | `wleave.nix` (`wleave`) |
-| `networkManager.command` | `impala.nix` | `impala.nix` (`impala`) |
+| `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
+| `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
+| `powerMenu.command` | `powermenu/wleave.nix` | `powermenu/wleave.nix` (`wleave`) |
+| `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
 | `systemMonitor.command` / `.memoryCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/waybar.nix` | `bar/waybar.nix` (`waybar`) |
 
 `launcher` and `terminal` have files to themselves, because their
 implementations genuinely compete — the namespace file must not name any of
-them. `terminal.nix` also holds a setter, which is only allowed because that
+them. `terminal/terminal.nix` also holds a setter, which is only allowed because that
 setter is implementation-independent: it composes through `appIdArgv` and so
 never needs editing when a terminal is added.
 
@@ -44,7 +44,7 @@ Consumers guard on the empty default and emit **nothing**:
 ```
 
 A keybind that runs nothing looks like a broken machine. An absent bind explains
-itself. Sites: `hyprland-binds.nix`, `bar/waybar.nix`, `wleave.nix`.
+itself. Sites: `hyprland/binds.nix`, `bar/waybar.nix`, `powermenu/wleave.nix`.
 
 ## The aspect that installs the tool names it
 
@@ -58,7 +58,7 @@ dwl's binds are a **C argv array**; Hyprland's are **shell strings**.
 
 **Compose at argv level and render once.** `terminal.transientCommand` is
 already escaped — appending to it escapes twice. Build the full argv and call
-`lib.escapeShellArgs` exactly once (`filemanager/yazi.nix`, `impala.nix`).
+`lib.escapeShellArgs` exactly once (`filemanager/yazi.nix`, `network/impala.nix`).
 
 ## Bind the value; do not read the merged option back
 

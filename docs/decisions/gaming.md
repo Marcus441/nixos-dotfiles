@@ -1,7 +1,7 @@
 # Gaming
 
 <a id="preempt-dynamic"></a>
-## `preempt.nix` — a boot parameter instead of a kernel build
+## `gaming/preempt.nix` — a boot parameter instead of a kernel build
 
 **Why** This is the whole of what a custom kernel would have bought. Stock
 `linuxPackages_latest` already ships `CONFIG_HZ_1000`, `NO_HZ_FULL`,
@@ -16,12 +16,12 @@ forever, for one flag.
 **Also** `gaming` rather than the host file, even though gpc is the only host
 taking it. "Favour latency over throughput" is a decision that follows from
 being a gaming machine, not a fact about this machine — the same reason
-`scx.nix` and ntsync live on the aspect. Machine facts (Inv. 7) are things like
+`gaming/scx.nix` and ntsync live on the aspect. Machine facts (Inv. 7) are things like
 UM790pro's `usbcore.autosuspend=-1`. Transparent hugepages stay on `madvise`:
 `always` is double-edged for games, and Proton opts in explicitly.
 
 <a id="proton-compat-path"></a>
-## `proton.nix` — `extraCompatPackages`, not a path plus a fetcher
+## `gaming/proton.nix` — `extraCompatPackages`, not a path plus a fetcher
 
 **Why** `programs.steam.package` carries an `apply` that derives
 `STEAM_EXTRA_COMPAT_TOOLS_PATHS` from `extraCompatPackages` and injects it into
@@ -38,7 +38,7 @@ overrides the package so it inherits the same `extraCompatPaths`, which a bare
 package does not get.
 
 <a id="ntsync-module"></a>
-## `proton.nix` — `ntsync` is loaded, not built
+## `gaming/proton.nix` — `ntsync` is loaded, not built
 
 **Why** `CONFIG_NTSYNC=m` already in stock `linuxPackages_latest`. The
 in-kernel synchronisation primitive that replaces esync/fsync is compiled and
@@ -51,7 +51,7 @@ actually took.
 it, and `PROTON_USE_NTSYNC=1` forces it per-title.
 
 <a id="scx-package"></a>
-## `scx.nix` — `rustscheds`, not the default `scx.full`
+## `gaming/scx.nix` — `rustscheds`, not the default `scx.full`
 
 **Why** `services.scx.package` defaults to `pkgs.scx.full`, which has no
 substitute in this pin and pulls `scx_cscheds` in behind it for schedulers
@@ -66,7 +66,7 @@ driven by gamemode's `custom.start`/`custom.end` is the per-game alternative,
 at the cost of more moving parts.
 
 <a id="gamemode-governor"></a>
-## `gamemode.nix` — renice only, and the governor stays with PPD
+## `gaming/gamemode.nix` — renice only, and the governor stays with PPD
 
 **Why** `renice` is the one general setting gamemode does not already default
 to; `inhibit_screensaver` is on, `softrealtime` needs SCHED_ISO that no
@@ -86,7 +86,7 @@ created by the module and read by nothing — renice comes from the
 the user to that group would be cargo.
 
 <a id="gamescope-wrapper"></a>
-## `gamescope.nix` — `capSysNice` moves the binary
+## `gaming/gamescope.nix` — `capSysNice` moves the binary
 
 **Why** `--rt` asks for realtime scheduling and needs CAP_SYS_NICE to get it;
 `capSysNice` is what grants it. `enable` is left to the steam module's
@@ -104,7 +104,7 @@ than the raw package. gamescope on NVIDIA is the most fragile piece in this
 stack — if the Steam session stops starting, turn this off first.
 
 <a id="dualsense-no-driver"></a>
-## `dualsense.nix` — a tool, not a driver
+## `gaming/dualsense.nix` — a tool, not a driver
 
 **Why** `hid-playstation` has been in-tree since 6.2, so the DualSense already
 works as a gamepad with nothing declared. `dualsensectl` only adds what the
@@ -120,7 +120,7 @@ Wireless Dongle, and enabling it blacklists `mt76x2u`, a MediaTek Wi-Fi
 driver, on a host that cannot be tested from here.
 
 <a id="mangohud-fhs"></a>
-## `mangohud.nix` — the package is installed twice, on purpose
+## `gaming/mangohud.nix` — the package is installed twice, on purpose
 
 **Why** Steam runs inside a bubblewrap FHS with its own view of the
 filesystem, so the Vulkan implicit layer that MangoHud registers under the home
@@ -136,7 +136,7 @@ duplication. `font_size` takes the host's `fontSize`, the same machine fact the
 terminals scale from, so the overlay matches the display it is drawn on.
 
 <a id="nvidia-preserve-vram"></a>
-## `nvidia.nix` — `powerManagement.enable` is how VRAM survives suspend
+## `nvidia/nvidia.nix` — `powerManagement.enable` is how VRAM survives suspend
 
 **Why** It reads like a laptop option and is not. The module derives
 `moduleParams.nvidia.NVreg_PreserveVideoMemoryAllocations = 1` from it, which
@@ -154,7 +154,7 @@ follow from `modesetting.enable` and must not be restated. Both arrive through
 module *generates* that string, so writing it by hand fights the generator.
 
 <a id="vaapi-decode-only"></a>
-## `nvidia-vaapi.nix` — the driver is decode-only, and the variable is global
+## `nvidia/vaapi.nix` — the driver is decode-only, and the variable is global
 
 **Why** Only the variables are declared here — `hardware.nvidia.videoAcceleration`
 defaults true and the module already adds `nvidia-vaapi-driver`, so listing it
@@ -170,7 +170,7 @@ the fix is to scope both variables to Firefox.
 `home.sessionVariablesPackage`, not any Hyprland-specific mechanism.
 
 <a id="tearing-intersection"></a>
-## `tearing.nix` — an aspect for `gaming ∧ hyprland`
+## `gaming/tearing.nix` — an aspect for `gaming ∧ hyprland`
 
 **Why** These settings need *both*. `aspectRequires.gaming = ["hyprland"]` is
 wrong in the other direction — it forbids a dwl host from ever taking `gaming` —
@@ -179,11 +179,11 @@ between dwl and Hyprland" anti-pattern. There is no intersection operator, so
 the intersection gets a name and `aspectRequires` lists both parents.
 **Breaks** `allow_tearing` cannot be added additively. `settings` bottoms out
 in `bool`, whose merge is `mergeEqualOption`, so two definitions of it are a
-hard eval error rather than a last-wins. `hyprland-general.nix` therefore holds
+hard eval error rather than a last-wins. `hyprland/general.nix` therefore holds
 it as `lib.mkDefault false` — priority only, and measured byte-identical on
 UM790pro. If that ever stops holding, the fallback is `lib.mkForce true` here,
 which works but hides the coupling from the file being overridden.
 **Also** only `no-anim` goes through `windowTags` — the one tag whose behaviour
-row already exists in `hyprland-rules.nix` and the one genuinely inert on dwl.
+row already exists in `hyprland/rules.nix` and the one genuinely inert on dwl.
 `immediate`, `content` and `idle_inhibit` are Hyprland vocabulary with no dwl
 analogue, so they stay here with their regex.

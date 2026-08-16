@@ -11,16 +11,16 @@ of those also has a hand-settable variable — `INPUTRC`, `GTK2_RC_FILES`,
 `LAZYGIT_NEW_DIR_FILE` — and setting one is strictly worse, because
 home-manager keeps writing the old path.
 **Breaks** *Silently.* An `INPUTRC` set in `xdg-app-dirs.nix` would point
-readline at a file nothing generates, discarding every setting in `bash.nix`'s
+readline at a file nothing generates, discarding every setting in `shell/bash.nix`'s
 `programs.readline` with no error and no missing file.
 **Also** `xdg.enable` is what exports the four `XDG_*_HOME` variables, into
-`systemd.user.sessionVariables` as well as the login shell. `hyprpaper-service.nix`
+`systemd.user.sessionVariables` as well as the login shell. `wallpaper/service.nix`
 depends on the systemd half for its `%C` specifier.
 
 ## `xdg-app-dirs.nix` — `dev`, not `core`
 
 **Why** Rust, Gradle, Android, .NET, npm and Docker are toolchain state, and
-`gpc` takes neither the toolchains nor `dev`. It is the same test `ccache.nix`
+`gpc` takes neither the toolchains nor `dev`. It is the same test `dev/ccache.nix`
 already passes, in the same aspect. `XCOMPOSECACHE` is not a toolchain, so it
 is the one variable in that file declaring `core`.
 

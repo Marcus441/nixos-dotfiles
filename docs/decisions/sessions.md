@@ -3,7 +3,7 @@
 dwl, Hyprland, and the bars.
 
 <a id="dwl-column0"></a>
-## `dwl.nix` — nothing may be spliced at column 0
+## `dwl/dwl.nix` — nothing may be spliced at column 0
 
 **Why** dwl is configured at compile time; each generated fragment lands at
 column 0 of the output.
@@ -12,20 +12,20 @@ column 0 of the output.
 zero and reindents the entire generated file. `toggleBarKey` sits inside an
 array, so it carries the two spaces `''` would otherwise have stripped.
 
-## `dwl.nix` — two escapers, `argvC` and `cEsc`
+## `dwl/dwl.nix` — two escapers, `argvC` and `cEsc`
 
 **Why** dwl's binds are a C argv array, but the intent options hold *shell*
 commands and `SHCMD` embeds those in a C string literal.
 **Breaks** Using one where the other belongs compiles, then misbehaves at
 runtime.
 
-## `dwl.nix` — the status pipe is dropped, not fed from `/dev/null`
+## `dwl/dwl.nix` — the status pipe is dropped, not fed from `/dev/null`
 
 **Why** An unpatched dwl reads nothing from stdin.
 **Breaks** Feeding it anyway is a loop running forever for nobody.
 
 <a id="dwl-session"></a>
-## `dwl.nix` — the session runs the user's profile copy
+## `dwl/dwl.nix` — the session runs the user's profile copy
 
 **Why** dwl is compiled in the dwl *home* aspect, so the session launches
 `~/.nix-profile`'s copy.
@@ -33,7 +33,7 @@ runtime.
 needed anyway for bash, the terminal, fonts and dwl-monitors.
 
 <a id="dwl-autostart-core"></a>
-## `dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
+## `dwl/dwl.nix` — `dwl.autostart` is declared in `core`, `statusCommand` in `dwl`
 
 **Why** The terminal server is an autostart entry now, and the aspect that owns
 it is a terminal, not a session — it cannot know whether the host runs dwl. So
@@ -49,7 +49,7 @@ entry inertly, which is the point.
 measured (AGENTS.md §5).
 
 <a id="dwl-autostart"></a>
-## `dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
+## `dwl/dwl.nix` — `dwl.autostart`, because the `-s` string is the only channel
 
 **Why** `graphical-session.target` is never reached on swift5: `ly.nix` marks
 the display manager `X-NIXOS-SYSTEMD-AWARE`, which suppresses nixpkgs'
@@ -63,7 +63,7 @@ foot's own `foot.service` already does not. And the `-s` argument is single-quot
 entry containing `'` truncates the session script.
 
 <a id="dwl-idle-dpms"></a>
-## `swayidle.nix` — `-w` with `-f`, `wlopm` for the screen, one saved brightness
+## `lock/swayidle.nix` — `-w` with `-f`, `wlopm` for the screen, one saved brightness
 
 **Why** `-w` holds swayidle's logind sleep inhibitor open until `before-sleep`
 returns, so the lock surface exists before the machine goes down; dwl 0.8
@@ -77,7 +77,7 @@ steps never fire — a lit lock screen until the battery is flat. `wlr-randr
 clients elsewhere. And a second `-s` further down the ladder overwrites the
 saved level with the dimmed one, so `-r` restores 30 for good.
 
-## `swayidle.nix` — no `unlock` event
+## `lock/swayidle.nix` — no `unlock` event
 
 **Why** `loginctl unlock-session` needs no authentication from inside the
 session it unlocks. hypridle answers no such signal either.
@@ -85,10 +85,10 @@ session it unlocks. hypridle answers no such signal either.
 formality that any process in the session can dismiss.
 
 <a id="swaylock-pam"></a>
-## `swaylock.nix` — the PAM service is ours to declare
+## `lock/swaylock.nix` — the PAM service is ours to declare
 
 **Why** nixpkgs supplies `security.pam.services.swaylock` only from
-`wayland-session.nix`, which the dwl session does not use. `hyprland.nix` keeps
+`wayland-session.nix`, which the dwl session does not use. `hyprland/hyprland.nix` keeps
 hyprlock's line for the same reason.
 **Breaks** *At the worst moment.* The lock screen appears and the correct
 password is refused; the way out is a VT switch.
@@ -109,7 +109,7 @@ target only uwsm-under-Hyprland creates.
 instead of a rejection.
 
 <a id="floating-appid"></a>
-## `floating-windows.nix` — the limit of the app-id convention
+## `hyprland/floating-windows.nix` — the limit of the app-id convention
 
 **Why** An app that can name itself opts in at spawn time:
 `footclient --app-id term.floating` floats, plain `footclient` tiles.
@@ -120,7 +120,7 @@ match their real class — which floats **every** instance. Accepted: a title
 match or a rename wrapper both break silently instead.
 
 <a id="floating-gtk-id"></a>
-## `floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
+## `hyprland/floating-windows.nix` — the app-ids are dotted, and the regex escapes the dot
 
 **Why** ghostty parses `--class` as a GTK application ID, which must carry at
 least one period. `floating-term` is not one, so the id both terminals and GUI
@@ -132,11 +132,11 @@ And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matche
 `termXfloating` — so the value goes through `lib.escapeRegex`.
 
 <a id="wleave-no-anim"></a>
-## `wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
+## `powermenu/wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
 
 **Why** Two animators, neither of which is wleave: Hyprland fades the layer
 surface in, and libadwaita transitions the button that keyboard focus lands on.
-The layer rule in `hyprland-rules.nix` kills the first, `transition: none` on
+The layer rule in `hyprland/rules.nix` kills the first, `transition: none` on
 `*` kills the second. wleave itself ships no CSS animation at all.
 **Breaks** Fixing one leaves the other, and the reset has to be an override
 rather than an absence — deleting our own `transition` does not reach
@@ -145,7 +145,7 @@ libadwaita's. Same rule is why `button` restates `background-image: none` and
 that library.
 
 <a id="wleave-focus"></a>
-## `wleave-style.nix` — the keybind dims by opacity, not by colour
+## `powermenu/wleave-style.nix` — the keybind dims by opacity, not by colour
 
 **Why** The per-button hues are ID selectors (`#lock`, `#shutdown`, …) and the
 icons are `currentColor` SVGs, so one `color` sets icon and label together. An
@@ -158,7 +158,7 @@ focusing reflows nothing. Resting `base03`, focused `base0D` — Hyprland's
 `base02` is the hover *background*.
 
 <a id="wleave-service"></a>
-## `wleave.nix` — the unit names the config files it is already reading
+## `powermenu/wleave.nix` — the unit names the config files it is already reading
 
 **Why** wleave is a `gio` application run with `--service`: it holds itself
 alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
@@ -170,7 +170,7 @@ home-manager's sd-switch see a changed unit and restart it; pointed at
 the old one until reboot.
 
 <a id="wleave-toggle"></a>
-## `wleave.nix` — the bind toggles, because a resident wleave will not
+## `powermenu/wleave.nix` — the bind toggles, because a resident wleave will not
 
 **Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
 resident instance grows one layer surface per keypress, and `app/mod.rs` guards
@@ -185,7 +185,7 @@ limit and leaving the unit dead with no menu at all. Detection is
 there is no compositor.
 
 <a id="hyprland-rules-regex"></a>
-## `hyprland-rules.nix` — one rule per regex, not one alternation
+## `hyprland/rules.nix` — one rule per regex, not one alternation
 
 **Why** The regexes arrive from separate files, so joining them would mean
 wrapping each in a group the contributing file cannot see it needs.
@@ -197,7 +197,7 @@ wrapping each in a group the contributing file cannot see it needs.
 them from the login shell, so swift5 has no use for the file.
 
 <a id="uwsm-login-shell"></a>
-## `hyprland.nix` — session startup lives in the `hyprland` aspect
+## `hyprland/hyprland.nix` — session startup lives in the `hyprland` aspect
 
 **Why** Session startup wearing shell clothing: the login shell is only the
 channel, the decision is Hyprland. It held it for as long as there was one

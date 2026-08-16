@@ -55,7 +55,7 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathur
 - **`#` opens a comment in hyprlang, so a bare `#rrggbb` never reaches
   hyprlock.** Colours go through `rgb(…)`. The same rule bites pango markup in
   a hyprlock text field, where a hex colour has to be written `##rrggbb` —
-  which is why `hyprlock.nix` mutes the date with a `color` key on its own
+  which is why `lock/hyprlock.nix` mutes the date with a `color` key on its own
   label rather than a `<span foreground=…>` inside one.
 - **hyprlock ignores config keys it does not know, and says so only on
   stderr.** Parse-check a generated config without locking the screen:
