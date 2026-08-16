@@ -28,6 +28,13 @@
     ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
   '';
 
+  disableRotator = pkgs.writeShellScript "qs-disable-rotator" ''
+    CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
+    rm -f "$CACHE/wallpaper_rotator_enabled"
+    ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
+    ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper Rotator" "Automatic rotation disabled"
+  '';
+
   metrics = pkgs.writeShellScript "qs-metrics" ''
     read -r total idle <<<"$(${pkgs.gawk}/bin/awk '/^cpu /{print $2+$3+$4+$5+$6+$7+$8, $5}' /proc/stat)"
     sensor="" label=""
@@ -84,6 +91,7 @@
         readonly property string wallsDir: "${walls}"
         readonly property string setWallpaperScript: "${setWallpaper}"
         readonly property string enableRotatorScript: "${enableRotator}"
+        readonly property string disableRotatorScript: "${disableRotator}"
         readonly property string metricsScript: "${metrics}"
         readonly property string sh: "${pkgs.runtimeShell}"
         readonly property string hyprctl: "${pkgs.hyprland}/bin/hyprctl"

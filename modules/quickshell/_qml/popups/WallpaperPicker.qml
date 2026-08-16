@@ -11,6 +11,7 @@ Overlay {
     contentHeight: 560
 
     property var walls: []
+    property bool rotatorEnabled: false
 
     function prettyName(path) {
         const parts = path.slice(Config.wallsDir.length + 1).split("/");
@@ -24,6 +25,11 @@ Overlay {
         root.dismissed();
     }
 
+    function toggleRotator() {
+        rotatorToggle.command = [root.rotatorEnabled ? Config.disableRotatorScript : Config.enableRotatorScript];
+        rotatorToggle.running = true;
+    }
+
     Process {
         id: findProc
 
@@ -33,6 +39,21 @@ Overlay {
         stdout: StdioCollector {
             onStreamFinished: root.walls = text.split("\n").filter(line => line !== "").sort()
         }
+    }
+
+    Process {
+        id: rotatorToggle
+
+        onExited: rotatorCheck.running = true
+    }
+
+    Process {
+        id: rotatorCheck
+
+        command: [Config.sh, "-c", "test -f \"${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper_rotator_enabled\""]
+        running: true
+
+        onExited: exitCode => root.rotatorEnabled = exitCode === 0
     }
 
     Column {
@@ -53,21 +74,15 @@ Overlay {
             }
 
             Text {
-                text: " random / enable rotator"
-                color: rotatorMouse.containsMouse ? Config.base0D : Config.base04
+                text: root.rotatorEnabled ? "󰒝 shuffle on" : "󰒝 shuffle off"
+                color: root.rotatorEnabled ? Config.base0D : Config.base04
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
                 anchors.verticalCenter: parent.verticalCenter
 
                 MouseArea {
-                    id: rotatorMouse
-
                     anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        Quickshell.execDetached([Config.enableRotatorScript]);
-                        root.dismissed();
-                    }
+                    onClicked: root.toggleRotator()
                 }
             }
         }
