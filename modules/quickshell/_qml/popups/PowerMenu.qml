@@ -1,13 +1,12 @@
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 import qs
-import qs.lib
 
-Overlay {
+PanelWindow {
     id: root
 
-    contentWidth: root.actions.length * 108 + (root.actions.length - 1) * 12 + 48
-    contentHeight: 180
+    signal dismissed
 
     property int selected: 0
 
@@ -60,6 +59,24 @@ Overlay {
         root.dismissed();
     }
 
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+    exclusionMode: ExclusionMode.Ignore
+    color: Config.base10
+
+    anchors {
+        left: true
+        right: true
+        top: true
+        bottom: true
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.dismissed()
+    }
+
     Item {
         anchors.fill: parent
         focus: true
@@ -89,11 +106,9 @@ Overlay {
                     required property int index
                     readonly property bool active: mouse.containsMouse || root.selected === index
 
-                    width: 108
-                    height: 132
+                    width: 180
+                    height: 200
                     color: tile.active ? Config.base02 : Config.base01
-                    border.width: 2
-                    border.color: tile.active ? Config.base0D : Config.base03
 
                     Behavior on color {
                         ColorAnimation {
@@ -101,22 +116,16 @@ Overlay {
                         }
                     }
 
-                    Behavior on border.color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-
                     Column {
                         anchors.centerIn: parent
-                        spacing: 8
+                        spacing: 12
 
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: tile.modelData.glyph
                             color: tile.modelData.tint
                             font.family: Config.iconFamily
-                            font.pixelSize: Config.fontSize + 20
+                            font.pixelSize: Config.fontSize + 28
                         }
 
                         Text {
@@ -124,7 +133,7 @@ Overlay {
                             text: tile.modelData.label
                             color: Config.base05
                             font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize + 2
+                            font.pixelSize: Config.fontSize + 4
                         }
 
                         Text {
@@ -132,7 +141,7 @@ Overlay {
                             text: tile.modelData.key
                             color: tile.active ? Config.base05 : Config.base03
                             font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize - 1
+                            font.pixelSize: Config.fontSize
                         }
                     }
 
