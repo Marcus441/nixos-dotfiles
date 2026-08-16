@@ -86,7 +86,7 @@ app set. dwl builds its own ocr-copy against its own keybind.
 Neovide is the GUI front-end and is `apps` only.
 
 <a id="man-pager-colours"></a>
-## `man.nix` — the pager colours are `home.sessionVariables`
+## `cli/man.nix` — the pager colours are `home.sessionVariables`
 
 **Why** `LESS_TERMCAP_*` and `GROFF_NO_SGR` are exported variables no shell
 interprets, so re-emitting them from each shell's rc would be duplication with a

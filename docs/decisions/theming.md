@@ -123,7 +123,7 @@ its name, so `launcher/walker-style.nix` owns it alone.
 `dwl/dwl.nix`'s autostart still invoked `mako` by bare name.
 
 <a id="fastfetch-palette"></a>
-## `fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names
+## `cli/fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names
 
 **Why** fastfetch parses `#rrggbb` into a 24-bit SGR itself, so this is the one
 consumer that needs no conversion and the leading `#` passes straight through —
@@ -134,7 +134,7 @@ The swatch row is the deliberate exception: it draws SGR 40–47/100–107, i.e.
 **Breaks** *Loudly.* A malformed colour is a fastfetch parse error on stderr.
 
 <a id="fastfetch-rules"></a>
-## `fastfetch.nix` — box rules are counted, and the right edge is open
+## `cli/fastfetch.nix` — box rules are counted, and the right edge is open
 
 **Why** `lib.stringLength` counts bytes, so measuring a section name with a
 non-ASCII character in it would shorten that section's rule; the three names are
@@ -146,7 +146,7 @@ dynamic — a closing `│` could not be placed.
 typo rather than a bug. `width` is the one number to retune if a value grows.
 
 <a id="fastfetch-percent-type"></a>
-## `fastfetch.nix` — `display.percent.type = 11` is what makes the bars appear
+## `cli/fastfetch.nix` — `display.percent.type = 11` is what makes the bars appear
 
 **Why** `{percentage-bar}` in a module `format` expands to nothing unless
 `percent.type` has the bar bit set; `type` is not merely a default output style
