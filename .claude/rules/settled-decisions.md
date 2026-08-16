@@ -10,7 +10,7 @@ human makes, not a cleanup you offer.
 - **Waybar's opt-in shape is finished.** `waybar` and `wleave` are separate
   aspects, `aspectRequires.waybar = ["hyprland"]` rejects dwl hosts, and
   `waybar.nix` embeds wleave gated on `powerMenu.command`.
-- **dwl's bar is `dwl-bar`; its shape is settled.** `dwl.nix` declares `dwl.bar`
+- **dwl's bar is `dwl-bar`; its shape is settled.** `dwl/dwl.nix` declares `dwl.bar`
   in `homeManager.dwl`; `bar/dwl-bar.nix` sets it and declares
   `aspectRequires.dwl-bar = ["dwl"]`. Silent failure by construction — a dwl
   host without `dwl-bar` builds a working bar-less dwl.
