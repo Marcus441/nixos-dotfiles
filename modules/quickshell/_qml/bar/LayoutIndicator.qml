@@ -49,7 +49,7 @@ Item {
     Text {
         id: glyph
 
-        text: root.monocle ? "󰝤" : "󰙀"
+        text: root.monocle ? "" : "󰙀"
         color: root.monocle ? Config.base0D : Config.base04
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
