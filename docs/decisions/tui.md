@@ -103,9 +103,9 @@ bar-opened btop is gone at exit — by design, and only there. `programs.btop.se
 is the interactive config and keeps the tree.
 
 <a id="impala-argv"></a>
-## `impala.nix` — impala over NetworkManager's iwd
+## `network/impala.nix` — impala over NetworkManager's iwd
 
-**Why** `net.nix` runs NetworkManager with `wifi.backend = "iwd"`, so both talk
+**Why** `network/net.nix` runs NetworkManager with `wifi.backend = "iwd"`, so both talk
 to the same daemon.
 **Breaks** A connection impala makes is one NetworkManager did not author, so
 NM's state can disagree until it resyncs.
@@ -114,7 +114,7 @@ in the same `1200 600` float, so the font was the only thing making impala a
 different terminal from btop's three.
 
 <a id="impala-darkgray"></a>
-## `impala.nix` — every `DarkGray` background is repainted, and one is not
+## `network/impala.nix` — every `DarkGray` background is repainted, and one is not
 
 **Why** impala has a config file and it carries keybindings only; every colour
 is a ratatui constant. `DarkGray` is ANSI 8, which in this palette is the
