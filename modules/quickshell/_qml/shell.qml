@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import qs.popups
+import qs.services
 
 ShellRoot {
     id: shellRoot
@@ -49,6 +50,12 @@ ShellRoot {
         PowerMenu {
             onDismissed: powerLoader.active = false
         }
+    }
+
+    LazyLoader {
+        active: Notifs.popups.length > 0
+
+        Toasts {}
     }
 
     function toggleLauncher(): void {

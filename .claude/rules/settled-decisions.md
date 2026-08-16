@@ -11,8 +11,9 @@ human makes, not a cleanup you offer.
   rejects dwl hosts, the Hyprland binds drive it over `qs ipc call` through the
   `bar.toggle` / `launcher` / `clipboard.history` / `wallpaperMenu.command` /
   `powerMenu.command` intents, the power menu is a quickshell overlay (wleave
-  is retired), and `walker` is its own aspect that no host currently takes.
-  Waybar is retired.
+  is retired), the shell owns `org.freedesktop.Notifications` on Hyprland
+  hosts (mako serves only dwl), and `walker` is its own aspect that no host
+  currently takes. Waybar is retired.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle

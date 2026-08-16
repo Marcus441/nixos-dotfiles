@@ -112,6 +112,23 @@ inhibition is the Wayland protocol, which hypridle honours.
 rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
 screen.
 
+## `quickshell/_qml/services/Notifs.qml` — the shell owns notifications
+
+**Why** On Hyprland hosts the shell claims `org.freedesktop.Notifications`
+itself (`NotificationServer` in a singleton), so toasts and the bar's
+notification center share one in-process state instead of shelling out to a
+daemon. The server cannot be lazy — the D-Bus name must be claimed at startup
+— so `shell.qml` instantiates the singleton through the `Toasts` loader's
+`active` binding while the toast window itself only exists while a toast is
+showing. Do-not-disturb is a `PersistentProperties` bool: it survives QML
+reloads but deliberately not restarts — no state file. History is
+`trackedNotifications` directly, capped at 50; visible toasts cap at 5; the
+only timers are per-toast, so an idle shell holds zero timers.
+**Breaks** A second daemon racing for the D-Bus name — mako serves only dwl
+for exactly this reason. Critical toasts persist until dismissed and DND
+suppresses toasts for every urgency (history still records); both are
+deliberate deltas from the old mako behaviour.
+
 <a id="layout-state-file"></a>
 ## `hyprland/binds.nix` — layout scripts write `$XDG_CACHE_HOME/hyprland-layout`
 

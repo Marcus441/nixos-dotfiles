@@ -112,6 +112,10 @@ PanelWindow {
             rowSpacing: 8
             columnSpacing: 8
 
+            Notifications {
+                bar: bar
+            }
+
             IdleInhibit {
                 bar: bar
             }
