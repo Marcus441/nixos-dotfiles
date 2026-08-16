@@ -29,10 +29,28 @@ _: {
             *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.cycle_next()' ;;
           esac
         '';
-        cyclePrev = pkgs.writeShellScript "cycle-prev" ''
+        focusLeft = pkgs.writeShellScript "focus-left" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ workspace = "m-1" })' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "l" })' ;;
+          esac
+        '';
+        focusRight = pkgs.writeShellScript "focus-right" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ workspace = "m+1" })' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "r" })' ;;
+          esac
+        '';
+        focusUp = pkgs.writeShellScript "focus-up" ''
           case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
             *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cycleprev")' ;;
-            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.cycle_next({ next = false })' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "u" })' ;;
+          esac
+        '';
+        focusDown = pkgs.writeShellScript "focus-down" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cyclenext")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "d" })' ;;
           esac
         '';
       in {
@@ -182,25 +200,25 @@ _: {
             {
               _args = [
                 "${mainMod} + H"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"l\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusLeft}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + L"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"r\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusRight}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + K"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cyclePrev}\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusUp}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + J"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cycleNext}\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusDown}\")")
               ];
             }
 
