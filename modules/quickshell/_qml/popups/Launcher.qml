@@ -1,0 +1,130 @@
+import Quickshell
+import QtQuick
+import qs
+import qs.lib
+
+Overlay {
+    id: root
+
+    contentWidth: 560
+    contentHeight: 420
+
+    readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name))
+    property var filtered: apps
+    property int selected: 0
+
+    function refilter() {
+        const q = search.text.toLowerCase();
+        if (q === "") {
+            filtered = apps;
+        } else {
+            const starts = [];
+            const contains = [];
+            for (const app of apps) {
+                const name = app.name.toLowerCase();
+                if (name.startsWith(q))
+                    starts.push(app);
+                else if (name.includes(q) || (app.comment ?? "").toLowerCase().includes(q))
+                    contains.push(app);
+            }
+            filtered = starts.concat(contains);
+        }
+        selected = 0;
+    }
+
+    function launch(app) {
+        if (!app)
+            return;
+        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${app.id}.desktop`]);
+        root.dismissed();
+    }
+
+    Column {
+        anchors.fill: parent
+        anchors.margins: 12
+        spacing: 10
+
+        TextInput {
+            id: search
+
+            width: parent.width
+            color: Config.base05
+            font.family: Config.fontFamily
+            font.pixelSize: Config.fontSize + 4
+            focus: true
+            onTextChanged: root.refilter()
+            Keys.onEscapePressed: root.dismissed()
+            Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
+            Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
+            Keys.onReturnPressed: root.launch(root.filtered[root.selected])
+
+            Text {
+                visible: search.text === ""
+                text: "Search applications…"
+                color: Config.base03
+                font: search.font
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 1
+            color: Config.base02
+        }
+
+        ListView {
+            id: list
+
+            width: parent.width
+            height: parent.height - search.height - 21
+            clip: true
+            model: root.filtered
+            currentIndex: root.selected
+            highlightMoveDuration: 80
+
+            delegate: Item {
+                id: row
+
+                required property var modelData
+                required property int index
+
+                width: list.width
+                height: 34
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 6
+                    color: row.index === root.selected ? Config.base02 : "transparent"
+                }
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+
+                    Text {
+                        text: row.modelData.name
+                        color: Config.base05
+                        font.family: Config.fontFamily
+                        font.pixelSize: Config.fontSize
+                    }
+
+                    Text {
+                        visible: (row.modelData.comment ?? "") !== ""
+                        text: row.modelData.comment ?? ""
+                        color: Config.base03
+                        font.family: Config.fontFamily
+                        font.pixelSize: Config.fontSize - 2
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: root.selected = row.index
+                    onClicked: root.launch(row.modelData)
+                }
+            }
+        }
+    }
+}

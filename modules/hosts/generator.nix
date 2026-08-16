@@ -70,6 +70,7 @@
     monitors,
     input,
     fontSize,
+    bar,
     packages,
     nixos,
   }:
@@ -95,6 +96,7 @@
     monitors,
     input,
     fontSize,
+    bar,
     ...
   }:
     home-manager.lib.homeManagerConfiguration {
@@ -103,7 +105,8 @@
         {
           _module.args =
             {inherit hostname monitors fontSize;}
-            // {inherit (input) sensitivity;};
+            // {inherit (input) sensitivity;}
+            // {barPosition = bar.position;};
         }
         {
           imports = [

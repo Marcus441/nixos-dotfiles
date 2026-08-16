@@ -34,6 +34,7 @@ Enumerate the files behind any row with
 | `kitty` | `homeManager nixos` | 2 |
 | `laptop` | `homeManager nixos` | 3 |
 | `nvidia` | `homeManager nixos` | 4 |
+| `quickshell` | `homeManager` | 2 |
 | `tearing` | `homeManager` | 1 |
 | `thunar` | `homeManager nixos` | 2 |
 | `waybar` | `homeManager` | 5 |
@@ -49,6 +50,7 @@ Declared in the file that creates the dependency, never in a central table.
 | --- | --- | --- |
 | `dwl-bar` | `dwl` | `bar/dwl-bar.nix` |
 | `waybar` | `hyprland` | `bar/waybar.nix` |
+| `quickshell` | `hyprland` | `quickshell/quickshell.nix` |
 | `tearing` | `gaming hyprland` | `gaming/tearing.nix` |
 | `yazi` | `apps` | `filemanager/yazi.nix` |
 
@@ -56,7 +58,7 @@ Declared in the file that creates the dependency, never in a central table.
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 120 |
+| files declaring at least one aspect | 122 |
 | of those, declaring more than one aspect or class | 33 |
 | `load-bearing:` pointers | 120 |
 | anchors defined in `docs/` | 100 |

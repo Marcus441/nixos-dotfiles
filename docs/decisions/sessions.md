@@ -100,6 +100,18 @@ password is refused; the way out is a VT switch.
 that pipe is in the nixos half, which cannot see homeManager config.
 **Breaks** Declaring it home-side leaves the pipe with nothing to carry.
 
+<a id="quickshell-requires"></a>
+## `quickshell/quickshell.nix` — requires `hyprland`, and never locks
+
+**Why** The shell reads Hyprland IPC for workspaces, binds a systemd target
+only uwsm-under-Hyprland creates, and drives hyprpaper over `hyprctl`. It
+stays out of the security surface on purpose: locking is only ever
+`lock.command` (`loginctl lock-session`, so hypridle runs hyprlock), and idle
+inhibition is the Wayland protocol, which hypridle honours.
+**Breaks** Without the requirement a dwl host gets a dead bar instead of a
+rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
+screen.
+
 <a id="waybar-requires"></a>
 ## `bar/waybar.nix` — requires `hyprland`
 
