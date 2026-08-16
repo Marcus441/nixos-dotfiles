@@ -194,7 +194,7 @@ _: {
             {
               _args = [
                 "${mainMod} + Z"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ${config.powerMenu.command}\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.powerMenu.command}\")")
               ];
             }
           ]

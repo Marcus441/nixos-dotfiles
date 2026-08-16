@@ -168,59 +168,6 @@ warning nobody reads, falls back to `com.mitchellh.ghostty`, and the TUI tiles.
 And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matches
 `termXfloating` — so the value goes through `lib.escapeRegex`.
 
-<a id="wleave-no-anim"></a>
-## `powermenu/wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
-
-**Why** Two animators, neither of which is wleave: Hyprland fades the layer
-surface in, and libadwaita transitions the button that keyboard focus lands on.
-The layer rule in `hyprland/rules.nix` kills the first, `transition: none` on
-`*` kills the second. wleave itself ships no CSS animation at all.
-**Breaks** Fixing one leaves the other, and the reset has to be an override
-rather than an absence — deleting our own `transition` does not reach
-libadwaita's. Same rule is why `button` restates `background-image: none` and
-`box-shadow: none`. wleave is GTK4, not GTK3, so check any new property against
-that library.
-
-<a id="wleave-focus"></a>
-## `powermenu/wleave-style.nix` — the keybind dims by opacity, not by colour
-
-**Why** The per-button hues are ID selectors (`#lock`, `#shutdown`, …) and the
-icons are `currentColor` SVGs, so one `color` sets icon and label together. An
-ID outranks `button label.keybind`, so muting the keybind with `color` would
-lose the cascade silently; `opacity` sidesteps specificity entirely. Upstream's
-own sheet mutes it the same way.
-**Also** the border stays 2px in every state and only changes colour, so
-focusing reflows nothing. Resting `base03`, focused `base0D` — Hyprland's
-`inactive_border`/`active_border` pair verbatim. Only the frame carries state;
-`base02` is the hover *background*.
-
-<a id="wleave-service"></a>
-## `powermenu/wleave.nix` — the unit names the config files it is already reading
-
-**Why** wleave is a `gio` application run with `--service`: it holds itself
-alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
-unchanged. Upstream warns that the resident instance owns the configuration
-until it restarts.
-**Breaks** *Silently.* Passing `--layout`/`--css` by store path is what makes
-home-manager's sd-switch see a changed unit and restart it; pointed at
-`%h/.config` instead, the unit never changes and an edited menu keeps rendering
-the old one until reboot.
-
-<a id="wleave-toggle"></a>
-## `powermenu/wleave.nix` — the bind toggles, because a resident wleave will not
-
-**Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
-resident instance grows one layer surface per keypress, and `app/mod.rs` guards
-close-on-lost-focus with `&& !service_mode`, so none close. `powerMenu.command`
-is therefore a script: restart the unit if a wleave layer is mapped, activate if
-none is. Restarting is the only close available from outside, since a layer
-surface is not a window a compositor can shut.
-**Breaks** *Silently, and only under a held key.* `StartLimitIntervalSec = 0` is
-what keeps the toggle from tripping systemd's default five-starts-in-ten-seconds
-limit and leaving the unit dead with no menu at all. Detection is
-`namespace: wleave` from `hyprctl layers`, called by bare name and skipped where
-there is no compositor.
-
 <a id="hyprland-rules-regex"></a>
 ## `hyprland/rules.nix` — one rule per regex, not one alternation
 

@@ -120,7 +120,9 @@ PanelWindow {
                 bar: bar
             }
 
-            Power {}
+            Power {
+                bar: bar
+            }
         }
     }
 }

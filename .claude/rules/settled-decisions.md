@@ -7,11 +7,12 @@ paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,m
 These shapes were argued to a conclusion. Changing one is a new decision the
 human makes, not a cleanup you offer.
 
-- **Quickshell's shape is settled.** `quickshell` and `wleave` are separate
-  aspects, `aspectRequires.quickshell = ["hyprland"]` rejects dwl hosts, the
-  Hyprland binds drive it over `qs ipc call` through the `bar.toggle` /
-  `launcher` / `clipboard.history` / `wallpaperMenu.command` intents, and
-  `walker` is its own aspect that no host currently takes. Waybar is retired.
+- **Quickshell's shape is settled.** `aspectRequires.quickshell = ["hyprland"]`
+  rejects dwl hosts, the Hyprland binds drive it over `qs ipc call` through the
+  `bar.toggle` / `launcher` / `clipboard.history` / `wallpaperMenu.command` /
+  `powerMenu.command` intents, the power menu is a quickshell overlay (wleave
+  is retired), and `walker` is its own aspect that no host currently takes.
+  Waybar is retired.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle

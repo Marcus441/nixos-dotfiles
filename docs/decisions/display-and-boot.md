@@ -20,9 +20,8 @@ flake-parts modules and reach `flake.lib` directly.
 <a id="hyprlock-flat"></a>
 ## `lock/hyprlock.nix` — the background is dimmed instead of the text being shadowed
 
-**Why** Every other surface in the desktop is flat — wleave kills libadwaita's
-shadow outright — but hyprlock draws over a screenshot, and unshadowed `base05`
-needs a dark enough field to read on. `brightness = 0.35` with `vibrancy = 0.0`
+**Why** Every other surface in the desktop is flat, but hyprlock draws over a
+screenshot, and unshadowed `base05` needs a dark enough field to read on. `brightness = 0.35` with `vibrancy = 0.0`
 sinks the blurred desktop far enough that the shadow is unnecessary, which is
 what lets the clock, the date and the input field all go flat.
 **Breaks** The trade is against a bright wallpaper. If the clock ever washes

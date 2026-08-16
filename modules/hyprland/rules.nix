@@ -94,11 +94,6 @@ _: {
               match = {namespace = "selection";};
               no_anim = true;
             }
-            {
-              name = "no-anim-wleave";
-              match = {namespace = "wleave";};
-              no_anim = true;
-            }
           ];
         };
       }

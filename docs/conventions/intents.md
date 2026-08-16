@@ -15,7 +15,7 @@ Inv. 3 working, not a violation.
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
-| `powerMenu.command` | `powermenu/wleave.nix` | `powermenu/wleave.nix` (`wleave`) |
+| `powerMenu.command` | `powermenu/powermenu.nix` | `quickshell/quickshell.nix` (`quickshell`) |
 | `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
 | `systemMonitor.command` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
@@ -45,7 +45,7 @@ Consumers guard on the empty default and emit **nothing**:
 ```
 
 A keybind that runs nothing looks like a broken machine. An absent bind explains
-itself. Sites: `hyprland/binds.nix`, `quickshell/_qml/`, `powermenu/wleave.nix`.
+itself. Sites: `hyprland/binds.nix`, `quickshell/_qml/`.
 
 ## The aspect that installs the tool names it
 

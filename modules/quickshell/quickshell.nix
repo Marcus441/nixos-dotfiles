@@ -15,6 +15,7 @@ _: {
       in {
         bar.toggle = "${qs} -c default ipc call bar toggle";
         wallpaperMenu.command = "${qs} -c default ipc call wallpaper toggle";
+        powerMenu.command = "${qs} -c default ipc call powermenu toggle";
 
         programs.quickshell = {
           enable = true;
@@ -23,7 +24,6 @@ _: {
             inherit pkgs barPosition;
             colors = config.desktop.colors;
             font = config.desktop.font;
-            powerMenuCommand = config.powerMenu.command;
             lockCommand = config.lock.command;
             logoutCommand = config.logout.command;
             systemMonitorCommand = config.systemMonitor.command;

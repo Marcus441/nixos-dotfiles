@@ -3,7 +3,6 @@
   colors,
   font,
   barPosition,
-  powerMenuCommand,
   lockCommand,
   logoutCommand,
   systemMonitorCommand,
@@ -84,7 +83,6 @@
         readonly property real weatherLon: 153.0260
         readonly property string weatherTimezone: "Australia/Brisbane"
 
-        readonly property string powerMenuCommand: "${powerMenuCommand}"
         readonly property string lockCommand: "${lockCommand}"
         readonly property string logoutCommand: "${logoutCommand}"
         readonly property string systemMonitorCommand: "${systemMonitorCommand}"

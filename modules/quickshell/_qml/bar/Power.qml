@@ -4,10 +4,11 @@ import qs
 import qs.lib
 
 BarWidget {
-    visible: Config.powerMenuCommand !== ""
+    property var bar
+
     text: "󰤆"
     baseColor: Config.base08
-    onClicked: Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.powerMenuCommand}`])
+    onClicked: bar.shell.togglePower()
     onRightClicked: {
         if (Config.lockCommand !== "")
             Quickshell.execDetached([Config.sh, "-c", Config.lockCommand]);
