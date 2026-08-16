@@ -111,10 +111,10 @@ highlights get transparency without a second colour format.
 not fight it — whichever terminal the host took.
 
 <a id="walker-style"></a>
-## `walker.nix` — the launcher names no theme
+## `launcher/walker.nix` — the launcher names no theme
 
 **Why** Setting `theme` at all overrides `services.walker.settings.theme` with
-its name, so `walker-style.nix` owns it alone.
+its name, so `launcher/walker-style.nix` owns it alone.
 
 ## `mako.nix` — notifications are a capability, not a theme
 

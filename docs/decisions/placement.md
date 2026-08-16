@@ -58,13 +58,13 @@ Both sessions bind a clipboard-history key, and the picker renders through the
 same menu program as the launcher — so the aspect providing one provides the
 other.
 
-## `wmenu.nix` — theming belongs to neither intent
+## `launcher/wmenu.nix` — theming belongs to neither intent
 
 Two intents render through wmenu (launcher and clipboard picker), so its theming
 is an option both read. Both hold the store path, so wmenu is on PATH only for
 the human.
 
-## `elephant.nix` — named explicitly
+## `launcher/elephant.nix` — named explicitly
 
 Walker's data-provider backend, with its own daemon and config tree that
 `wallpaper/picker.nix` writes into. The walker flake's module enabled it

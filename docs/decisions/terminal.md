@@ -6,7 +6,7 @@ that have to carry one are in `tui.md`.
 <a id="terminal-namespace"></a>
 ## `terminal/terminal.nix` — the namespace is a file of its own, naming no terminal
 
-**Why** Four terminals compete for `terminal.*`, the same reason `launcher.nix`
+**Why** Four terminals compete for `terminal.*`, the same reason `launcher/launcher.nix`
 sits apart from wmenu and walker. The `hyprland` setter lives here too and stays
 terminal-agnostic by going through `appIdArgv`.
 **Breaks** Left in `foot.nix`, that setter fires for *any* Hyprland host and

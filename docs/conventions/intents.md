@@ -10,7 +10,7 @@ Inv. 3 working, not a violation.
 
 | Namespace | Declared in (its `core` block) | Set from |
 | --- | --- | --- |
-| `launcher.argv` / `.command` | `launcher.nix` | `wmenu.nix` (`dwl`), `walker.nix` (`hyprland`) |
+| `launcher.argv` / `.command` | `launcher/launcher.nix` | `launcher/wmenu.nix` (`dwl`), `launcher/walker.nix` (`hyprland`) |
 | `terminal.*` | `terminal/terminal.nix` | `terminal/foot.nix` (`foot`), and `terminal/terminal.nix` itself sets `transientArgv` from `hyprland` |
 | `fileManager.command` | `filemanager/thunar.nix` | `thunar.nix`, `filemanager/yazi.nix` |
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |

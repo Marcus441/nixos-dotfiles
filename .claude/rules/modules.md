@@ -69,8 +69,8 @@ When two implementations share an intent but no code, the portable part is an
 The setter sits in the provider's file, not the namespace's — otherwise the
 namespace file would be edited every time a provider changed (Inv. 3 inverted).
 
-`launcher.nix` declares `launcher.argv` in `core`; `walker.nix` sets it from
-`hyprland`, `wmenu.nix` from `dwl`.
+`launcher/launcher.nix` declares `launcher.argv` in `core`; `launcher/walker.nix` sets it from
+`hyprland`, `launcher/wmenu.nix` from `dwl`.
 
 **A shared namespace is sometimes empty.** `clipboard`, `lock` and `screenshot`
 share intent across sessions but were never abstracted — the shared config is
