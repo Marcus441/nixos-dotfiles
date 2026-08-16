@@ -31,8 +31,28 @@ PanelWindow {
         width: parent.width
         spacing: 10
 
+        add: Transition {
+            NumberAnimation {
+                property: "x"
+                from: column.width
+                to: 0
+                duration: 200
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        move: Transition {
+            NumberAnimation {
+                property: "y"
+                duration: 150
+                easing.type: Easing.OutCubic
+            }
+        }
+
         Repeater {
-            model: Notifs.popups
+            model: ScriptModel {
+                values: Notifs.popups
+            }
 
             Rectangle {
                 id: card
@@ -71,28 +91,31 @@ PanelWindow {
                 }
 
                 Rectangle {
-                    width: 2
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    color: card.accent
-                }
-
-                Rectangle {
                     id: header
 
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.leftMargin: 2
                     height: summaryText.implicitHeight + 16
                     color: Config.base01
 
                     Text {
-                        id: summaryText
+                        id: urgencyIcon
 
                         anchors.left: parent.left
                         anchors.leftMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "󰋼"
+                        color: card.accent
+                        font.family: Config.iconFamily
+                        font.pixelSize: Config.fontSize
+                    }
+
+                    Text {
+                        id: summaryText
+
+                        anchors.left: urgencyIcon.right
+                        anchors.leftMargin: 8
                         anchors.right: appLabel.left
                         anchors.rightMargin: 8
                         anchors.verticalCenter: parent.verticalCenter
@@ -149,7 +172,6 @@ PanelWindow {
                     anchors.top: header.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.leftMargin: 2
                     height: Math.max(bodyText.implicitHeight, icon.visible ? icon.height : 0) + 16
 
                     IconImage {
