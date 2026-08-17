@@ -128,6 +128,7 @@ _: {
             "ctrl+0" = "goto_tab 10";
 
             "ctrl+shift+t" = "new_tab_with_cwd";
+            "ctrl+shift+o" = "select_tab";
             "alt+l" = "clear_terminal to_cursor_scroll active";
 
             "XF86Copy" = "copy_to_clipboard";
