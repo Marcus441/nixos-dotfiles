@@ -1,10 +1,8 @@
 import QtQuick
-import qs
 import qs.lib
+import qs.services
 
 BarWidget {
-    property var bar
-
     text: "󰸉"
-    onClicked: bar.shell.toggleWallpaper()
+    onClicked: Popups.toggle("wallpaper")
 }

@@ -16,39 +16,38 @@ ShellRoot {
             required property var modelData
             screen: modelData
             visible: shellRoot.barVisible
-            shell: shellRoot
         }
     }
 
     LazyLoader {
-        id: launcherLoader
+        active: Popups.launcherOpen
 
         Launcher {
-            onDismissed: launcherLoader.active = false
+            onDismissed: Popups.launcherOpen = false
         }
     }
 
     LazyLoader {
-        id: clipboardLoader
+        active: Popups.clipboardOpen
 
         Clipboard {
-            onDismissed: clipboardLoader.active = false
+            onDismissed: Popups.clipboardOpen = false
         }
     }
 
     LazyLoader {
-        id: wallpaperLoader
+        active: Popups.wallpaperOpen
 
         WallpaperPicker {
-            onDismissed: wallpaperLoader.active = false
+            onDismissed: Popups.wallpaperOpen = false
         }
     }
 
     LazyLoader {
-        id: powerLoader
+        active: Popups.powerOpen
 
         PowerMenu {
-            onDismissed: powerLoader.active = false
+            onDismissed: Popups.powerOpen = false
         }
     }
 
@@ -64,22 +63,6 @@ ShellRoot {
         value: shellRoot.barVisible
     }
 
-    function toggleLauncher(): void {
-        launcherLoader.active = !launcherLoader.active;
-    }
-
-    function toggleClipboard(): void {
-        clipboardLoader.active = !clipboardLoader.active;
-    }
-
-    function toggleWallpaper(): void {
-        wallpaperLoader.active = !wallpaperLoader.active;
-    }
-
-    function togglePower(): void {
-        powerLoader.active = !powerLoader.active;
-    }
-
     IpcHandler {
         target: "bar"
 
@@ -92,7 +75,7 @@ ShellRoot {
         target: "launcher"
 
         function toggle(): void {
-            shellRoot.toggleLauncher();
+            Popups.toggle("launcher");
         }
     }
 
@@ -100,7 +83,7 @@ ShellRoot {
         target: "clipboard"
 
         function toggle(): void {
-            shellRoot.toggleClipboard();
+            Popups.toggle("clipboard");
         }
     }
 
@@ -108,7 +91,7 @@ ShellRoot {
         target: "wallpaper"
 
         function toggle(): void {
-            shellRoot.toggleWallpaper();
+            Popups.toggle("wallpaper");
         }
     }
 
@@ -116,7 +99,7 @@ ShellRoot {
         target: "powermenu"
 
         function toggle(): void {
-            shellRoot.togglePower();
+            Popups.toggle("powermenu");
         }
     }
 }

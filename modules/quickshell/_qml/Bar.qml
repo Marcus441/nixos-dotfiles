@@ -7,7 +7,6 @@ import qs.bar
 PanelWindow {
     id: bar
 
-    property var shell
     readonly property bool vertical: Config.barPosition === "left" || Config.barPosition === "right"
 
     anchors {
@@ -134,12 +133,10 @@ PanelWindow {
 
             WallpaperButton {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
 
             Power {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
         }
     }

@@ -1,14 +1,12 @@
-import Quickshell
 import QtQuick
 import qs
 import qs.lib
+import qs.services
 
 BarWidget {
-    property var bar
-
     text: "󰤆"
     baseColor: Config.base08
-    onClicked: bar.shell.togglePower()
+    onClicked: Popups.toggle("powermenu")
     onRightClicked: {
         if (Config.lockCommand !== "")
             Config.launch(Config.lockCommand);
