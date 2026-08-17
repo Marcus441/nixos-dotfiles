@@ -59,7 +59,7 @@ Item {
                 text: `󰔏 ${Metrics.tempChip}    ${Metrics.tempC}°C`,
                 command: Config.temperatureCommand
             }, {
-                text: ` Memory     ${Metrics.memUsed.toFixed(1)}G / ${Metrics.memTotal.toFixed(1)}G`,
+                text: ` Memory     ${Metrics.memUsed.toFixed(1)}G / ${Metrics.memTotal.toFixed(1)}G`,
                 command: Config.memoryCommand
             }, {
                 text: `󰋊 Disk /     ${Metrics.diskPct}%`,
