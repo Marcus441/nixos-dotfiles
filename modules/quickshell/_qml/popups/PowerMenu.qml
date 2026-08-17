@@ -16,7 +16,6 @@ PanelWindow {
         {
             glyph: "󰌾",
             label: "Lock",
-            key: "l",
             tint: Config.base0D,
             cmd: [Config.sh, "-c", Config.lockCommand],
             show: Config.lockCommand !== ""
@@ -24,7 +23,6 @@ PanelWindow {
         {
             glyph: "󰍃",
             label: "Logout",
-            key: "e",
             tint: Config.base0C,
             cmd: [Config.sh, "-c", Config.logoutCommand],
             show: Config.logoutCommand !== ""
@@ -32,7 +30,6 @@ PanelWindow {
         {
             glyph: "󰒲",
             label: "Suspend",
-            key: "u",
             tint: Config.base0A,
             cmd: [Config.systemctl, "suspend"],
             show: true
@@ -40,7 +37,6 @@ PanelWindow {
         {
             glyph: "󰜉",
             label: "Reboot",
-            key: "r",
             tint: Config.base0E,
             cmd: [Config.systemctl, "reboot"],
             show: true
@@ -48,7 +44,6 @@ PanelWindow {
         {
             glyph: "󰐥",
             label: "Shutdown",
-            key: "s",
             tint: Config.base08,
             cmd: [Config.systemctl, "poweroff"],
             show: true
@@ -85,13 +80,6 @@ PanelWindow {
         Keys.onLeftPressed: root.selected = Math.max(0, root.selected - 1)
         Keys.onRightPressed: root.selected = Math.min(root.actions.length - 1, root.selected + 1)
         Keys.onReturnPressed: root.activate(root.actions[root.selected])
-        Keys.onPressed: event => {
-            const hit = root.actions.find(a => a.key === event.text);
-            if (hit) {
-                root.activate(hit);
-                event.accepted = true;
-            }
-        }
 
         Row {
             anchors.centerIn: parent
@@ -135,14 +123,6 @@ PanelWindow {
                             color: Config.base05
                             font.family: Config.fontFamily
                             font.pixelSize: Theme.fontLg
-                        }
-
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: tile.modelData.key
-                            color: tile.active ? Config.base05 : Config.base03
-                            font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize
                         }
                     }
 
