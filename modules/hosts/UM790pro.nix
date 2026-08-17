@@ -11,7 +11,7 @@ _: {
 
     monitors = [
       {
-        name = "HDMI-A-1";
+        name = "DP-11";
         description = "Dell Inc. DELL S2725QC B1WK464";
         width = 3840;
         height = 2160;
