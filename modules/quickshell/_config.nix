@@ -3,6 +3,7 @@
   colors,
   font,
   barPosition,
+  cacheDir,
   lockCommand,
   logoutCommand,
   systemMonitorCommand,
@@ -10,34 +11,13 @@
   memoryCommand,
   temperatureCommand,
   networkManagerCommand,
+  wallpaperSet,
+  wallpaperEnableRotator,
+  wallpaperDisableRotator,
+  wallpaperDirectory,
 }: let
   inherit (pkgs) lib;
   qml = lib.replaceStrings ["\\" "\""] ["\\\\" "\\\""];
-  walls = import ../wallpaper/_wallpapers.nix {inherit pkgs;};
-
-  setWallpaper = pkgs.writeShellScript "qs-set-wallpaper" ''
-    [ -f "$1" ] || exit 1
-    CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
-    rm -f "$CACHE/wallpaper_rotator_enabled"
-    ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
-    ln -sf "$1" "$CACHE/current_wallpaper.img"
-    ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
-    ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper" "$(basename "$1")"
-  '';
-
-  enableRotator = pkgs.writeShellScript "qs-enable-rotator" ''
-    CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
-    touch "$CACHE/wallpaper_rotator_enabled"
-    ${pkgs.systemd}/bin/systemctl --user start wallpaper-rotator.service
-    ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
-  '';
-
-  disableRotator = pkgs.writeShellScript "qs-disable-rotator" ''
-    CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
-    rm -f "$CACHE/wallpaper_rotator_enabled"
-    ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
-    ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper Rotator" "Automatic rotation disabled"
-  '';
 
   metrics = pkgs.writeShellScript "qs-metrics" ''
     read -r total idle <<<"$(${pkgs.gawk}/bin/awk '/^cpu /{print $2+$3+$4+$5+$6+$7+$8, $5}' /proc/stat)"
@@ -97,10 +77,11 @@
         readonly property string temperatureCommand: "${qml temperatureCommand}"
         readonly property string networkManagerCommand: "${qml networkManagerCommand}"
 
-        readonly property string wallsDir: "${walls}"
-        readonly property string setWallpaperScript: "${setWallpaper}"
-        readonly property string enableRotatorScript: "${enableRotator}"
-        readonly property string disableRotatorScript: "${disableRotator}"
+        readonly property string cacheDir: "${qml cacheDir}"
+        readonly property string wallsDir: "${qml wallpaperDirectory}"
+        readonly property string setWallpaperScript: "${qml wallpaperSet}"
+        readonly property string enableRotatorScript: "${qml wallpaperEnableRotator}"
+        readonly property string disableRotatorScript: "${qml wallpaperDisableRotator}"
         readonly property string metricsScript: "${metrics}"
         readonly property string sh: "${pkgs.runtimeShell}"
         readonly property string systemctl: "${pkgs.systemd}/bin/systemctl"

@@ -52,7 +52,7 @@ Overlay {
     Process {
         id: rotatorCheck
 
-        command: [Config.sh, "-c", "test -f \"${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper_rotator_enabled\""]
+        command: [Config.sh, "-c", `test -f "${Config.cacheDir}/wallpaper_rotator_enabled"`]
         running: true
 
         onExited: exitCode => root.rotatorEnabled = exitCode === 0

@@ -20,7 +20,7 @@ Singleton {
     FileView {
         id: stateFile
 
-        path: `${Quickshell.env("XDG_CACHE_HOME") || Quickshell.env("HOME") + "/.cache"}/hyprland-layout`
+        path: `${Config.cacheDir}/hyprland-layout`
         watchChanges: true
         printErrors: false
         onFileChanged: reload()

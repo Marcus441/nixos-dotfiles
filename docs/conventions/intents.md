@@ -20,6 +20,7 @@ Inv. 3 working, not a violation.
 | `systemMonitor.command` / `.processorCommand` / `.memoryCommand` / `.temperatureCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
 | `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`), `quickshell/quickshell.nix` (`quickshell`) |
+| `wallpaper.set` / `.enableRotator` / `.disableRotator` / `.directory` | `wallpaper/actions.nix` | `wallpaper/actions.nix` (`hyprland`) |
 
 `launcher`, `terminal` and `wallpaperMenu` have files to themselves, because
 their implementations genuinely compete — the namespace file must not name any

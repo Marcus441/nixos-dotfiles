@@ -25,6 +25,7 @@ _: {
             inherit pkgs barPosition;
             colors = config.desktop.colors;
             font = config.desktop.font;
+            cacheDir = config.xdg.cacheHome;
             lockCommand = config.lock.command;
             logoutCommand = config.logout.command;
             systemMonitorCommand = config.systemMonitor.command;
@@ -32,6 +33,10 @@ _: {
             memoryCommand = config.systemMonitor.memoryCommand;
             temperatureCommand = config.systemMonitor.temperatureCommand;
             networkManagerCommand = config.networkManager.command;
+            wallpaperSet = config.wallpaper.set;
+            wallpaperEnableRotator = config.wallpaper.enableRotator;
+            wallpaperDisableRotator = config.wallpaper.disableRotator;
+            wallpaperDirectory = config.wallpaper.directory;
           };
           systemd = {
             enable = true;
