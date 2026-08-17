@@ -100,13 +100,68 @@ password is refused; the way out is a VT switch.
 that pipe is in the nixos half, which cannot see homeManager config.
 **Breaks** Declaring it home-side leaves the pipe with nothing to carry.
 
-<a id="waybar-requires"></a>
-## `bar/waybar.nix` — requires `hyprland`
+<a id="quickshell-requires"></a>
+## `quickshell/quickshell.nix` — requires `hyprland`, and never locks
 
-**Why** It reads `hyprland/window`, shells to `hyprctl`, and binds a systemd
-target only uwsm-under-Hyprland creates.
-**Breaks** Without the requirement a dwl host is handed three dead modules
-instead of a rejection.
+**Why** The shell reads Hyprland IPC for workspaces, binds a systemd target
+only uwsm-under-Hyprland creates, and drives hyprpaper over `hyprctl`. It
+stays out of the security surface on purpose: locking is only ever
+`lock.command` (`loginctl lock-session`, so hypridle runs hyprlock), and idle
+inhibition is the Wayland protocol, which hypridle honours.
+**Breaks** Without the requirement a dwl host gets a dead bar instead of a
+rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
+screen.
+
+<a id="quickshell-notifs"></a>
+## `quickshell/_qml/services/Notifs.qml` — the shell owns notifications
+
+**Why** On Hyprland hosts the shell claims `org.freedesktop.Notifications`
+itself (`NotificationServer` in a singleton), so toasts and the bar's
+notification center share one in-process state instead of shelling out to a
+daemon. The server cannot be lazy — the D-Bus name must be claimed at startup
+— so `shell.qml` instantiates the singleton through the `Toasts` loader's
+`active` binding while the toast window itself only exists while a toast is
+showing. Do-not-disturb is a `PersistentProperties` bool: it survives QML
+reloads but deliberately not restarts — no state file. History is
+`trackedNotifications` directly, capped at 50; visible toasts cap at 5; the
+only timers are per-toast, so an idle shell holds zero timers.
+**Breaks** A second daemon racing for the D-Bus name — mako serves only dwl
+for exactly this reason. Critical toasts persist until dismissed and DND
+suppresses toasts for every urgency (history still records); both are
+deliberate deltas from the old mako behaviour.
+
+<a id="layout-state-file"></a>
+## `hyprland/binds.nix` — layout scripts write `$XDG_CACHE_HOME/hyprland-layout`
+
+**Why** The bar's layout indicator needs to react the instant a bind switches
+layouts, and Hyprland emits no IPC event for a runtime config change. The
+layout-set script writes the layout name to the cache file; the LayoutState
+singleton watches it with a `FileView`. A cache file keeps the coupling one-way —
+`hyprland` files never hold a quickshell store path, and a host without
+`quickshell` just writes a file nobody reads. layout-set is the single entry
+point — every layout bind routes through it, and it also applies the
+per-layout visual profile (#monocle-visual-profile).
+**Breaks** *Silently, on rename.* The file name is string-matched in two
+aspects (`binds.nix` and `LayoutState.qml`); changing it in one place
+leaves the indicator frozen on its startup `getoption` fallback.
+
+<a id="monocle-visual-profile"></a>
+## `hyprland/binds.nix` — layout-set applies the per-layout visual profile
+
+**Why** Monocle should render edge-to-edge: no gaps, no border, no
+animations. Rules cannot express "when the layout is monocle" — the
+`w[tv1]`/`f[1]` rules only fire with a single tiled window, so a monocle
+workspace with a stacked window kept its gaps and popin artifacts. The
+profile rides the same `hl.config` eval that switches the layout, and the
+restore branch reads gaps, border and animations back from the merged
+`settings.config` values, so it can never drift from
+`general.nix`/`animations.nix`. Disabling `animations.enabled` is a master
+switch — layer animations pause in monocle too; per-leaf runtime control is
+not exposed through `hl.config`.
+**Breaks** A reload or restart while in monocle re-reads the generated
+config — dwindle, normal gaps — which is self-consistent, but the state file
+may still say monocle until the next layout-set. Hardcoding the restore
+values instead of reading them reintroduces drift.
 
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention
@@ -130,59 +185,6 @@ terminals accept.
 warning nobody reads, falls back to `com.mitchellh.ghostty`, and the TUI tiles.
 And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matches
 `termXfloating` — so the value goes through `lib.escapeRegex`.
-
-<a id="wleave-no-anim"></a>
-## `powermenu/wleave-style.nix` — appearing instantly takes a rule and a stylesheet, not one
-
-**Why** Two animators, neither of which is wleave: Hyprland fades the layer
-surface in, and libadwaita transitions the button that keyboard focus lands on.
-The layer rule in `hyprland/rules.nix` kills the first, `transition: none` on
-`*` kills the second. wleave itself ships no CSS animation at all.
-**Breaks** Fixing one leaves the other, and the reset has to be an override
-rather than an absence — deleting our own `transition` does not reach
-libadwaita's. Same rule is why `button` restates `background-image: none` and
-`box-shadow: none`. wleave is GTK4, not GTK3, so check any new property against
-that library.
-
-<a id="wleave-focus"></a>
-## `powermenu/wleave-style.nix` — the keybind dims by opacity, not by colour
-
-**Why** The per-button hues are ID selectors (`#lock`, `#shutdown`, …) and the
-icons are `currentColor` SVGs, so one `color` sets icon and label together. An
-ID outranks `button label.keybind`, so muting the keybind with `color` would
-lose the cascade silently; `opacity` sidesteps specificity entirely. Upstream's
-own sheet mutes it the same way.
-**Also** the border stays 2px in every state and only changes colour, so
-focusing reflows nothing. Resting `base03`, focused `base0D` — Hyprland's
-`inactive_border`/`active_border` pair verbatim. Only the frame carries state;
-`base02` is the hover *background*.
-
-<a id="wleave-service"></a>
-## `powermenu/wleave.nix` — the unit names the config files it is already reading
-
-**Why** wleave is a `gio` application run with `--service`: it holds itself
-alive and D-Bus activates on the next bare `wleave`, so `powerMenu.command` is
-unchanged. Upstream warns that the resident instance owns the configuration
-until it restarts.
-**Breaks** *Silently.* Passing `--layout`/`--css` by store path is what makes
-home-manager's sd-switch see a changed unit and restart it; pointed at
-`%h/.config` instead, the unit never changes and an edited menu keeps rendering
-the old one until reboot.
-
-<a id="wleave-toggle"></a>
-## `powermenu/wleave.nix` — the bind toggles, because a resident wleave will not
-
-**Why** wleave 0.7.1's `connect_activate` builds a window unconditionally, so a
-resident instance grows one layer surface per keypress, and `app/mod.rs` guards
-close-on-lost-focus with `&& !service_mode`, so none close. `powerMenu.command`
-is therefore a script: restart the unit if a wleave layer is mapped, activate if
-none is. Restarting is the only close available from outside, since a layer
-surface is not a window a compositor can shut.
-**Breaks** *Silently, and only under a held key.* `StartLimitIntervalSec = 0` is
-what keeps the toggle from tripping systemd's default five-starts-in-ten-seconds
-limit and leaving the unit dead with no menu at all. Detection is
-`namespace: wleave` from `hyprctl layers`, called by bare name and skipped where
-there is no compositor.
 
 <a id="hyprland-rules-regex"></a>
 ## `hyprland/rules.nix` — one rule per regex, not one alternation

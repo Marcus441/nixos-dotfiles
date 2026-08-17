@@ -14,7 +14,7 @@ _: {
           settings = {
             color = base00;
             font = font.name;
-            font-size = font.size;
+            font-size = font.terminalSize;
 
             indicator-radius = 100;
             indicator-thickness = 8;

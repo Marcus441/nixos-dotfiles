@@ -19,7 +19,7 @@ facts (hostname, `hostPlatform`, `stateVersion`, disk layout, monitors).
 **When an aspect depends on another, declare `aspectRequires` in the file that
 creates the dependency** — a central table would not know when a file stops
 reading. Example: `bar/dwl-bar.nix` declares `aspectRequires.dwl-bar =
-["dwl"]`; `waybar.nix` declares `aspectRequires.waybar = ["hyprland"]`.
+["dwl"]`; `quickshell.nix` declares `aspectRequires.quickshell = ["hyprland"]`.
 
 ## Aspect order is load-bearing
 
@@ -42,8 +42,8 @@ to `home-manager.nixosModules.home-manager`.**
 
 `launcher`, `screenshot`, `clipboard`, and `lock` are option namespaces in
 `core`, set by `hyprland` and `dwl`. `notifications` is deliberately **not**
-one — mako serves both sessions from one file and nothing invokes it by
-command.
+one — mako serves dwl from the `dwl` aspect, quickshell claims the D-Bus name
+on Hyprland hosts, and nothing invokes either by command.
 
 ## The Mac
 

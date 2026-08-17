@@ -16,7 +16,7 @@ _: {
         fontAt = size:
           "${font.name}:size=${toString size}"
           + lib.optionalString (!font.ligatures) ":fontfeatures=-calt,-liga,-clig,-dlig";
-        fontStr = fontAt font.size;
+        fontStr = fontAt font.terminalSize;
 
         strip = c: lib.removePrefix "#" c;
       in {

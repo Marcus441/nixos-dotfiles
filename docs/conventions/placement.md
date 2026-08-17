@@ -29,7 +29,8 @@ Not by a central table, which would drift. The generator rejects a host that
 leaves one unmet, naming the host and the aspect.
 
 - `bar/dwl-bar.nix` → `dwl`
-- `bar/waybar.nix` → `hyprland`
+- `quickshell/quickshell.nix` → `hyprland`
+- `launcher/walker.nix` → `hyprland`
 - `filemanager/yazi.nix` → `apps`
 
 ## Prefer a store path; bare name only where PATH is required

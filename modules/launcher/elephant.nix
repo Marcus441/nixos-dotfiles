@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.walker = [
     {services.elephant.enable = true;}
   ];
 }

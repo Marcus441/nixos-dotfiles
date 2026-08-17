@@ -60,12 +60,6 @@ _: {
             bezier = "default";
           }
           {
-            leaf = "border";
-            enabled = true;
-            speed = 5.39;
-            bezier = "easeOutQuint";
-          }
-          {
             leaf = "windows";
             enabled = true;
             speed = 4.79;

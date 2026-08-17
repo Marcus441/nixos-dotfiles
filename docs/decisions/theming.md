@@ -20,7 +20,7 @@ a near-white bar across the current line. So base03 takes `dragonAsh`
 (`#737c73`, dragon's own comment colour, which is what base03 means) and
 `dragonGray` goes to base04, which ANSI 8 reads instead.
 **Breaks** *Silently, in the other direction.* Every base04 consumer is a dim
-foreground — waybar's readouts, zathura's status bar, qt's placeholder — and
+foreground — the bar's readouts, zathura's status bar, qt's placeholder — and
 they all get brighter. `dragonBlack5` and `dragonBlack6` leave the palette;
 nothing outside the terminals wanted them.
 **Also** the consumers that read base02 as a neutral raised surface rather than
@@ -83,14 +83,15 @@ the generator.
 ## `theme/font.nix` — option and packages both in `core`
 
 **Why** The option is what other files read; the packages put fonts on disk.
-Both belong to every host. Point size comes from the host record, being a
-property of the panel and not the theme.
+Both belong to every host. Two sizes: `terminalSize` comes from the host
+record, being a property of the panel and not the theme; `size` is the desktop
+UI (shell) size, a plain default because 12 suits every panel the shell runs on.
 
 <a id="neovide-font-size"></a>
 ## `editor/neovide.nix` — the point size is coerced to a float
 
 **Why** Neovide's `FontSettings.size` is an `f32` and is not optional, while
-`desktop.font.size` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
+`desktop.font.terminalSize` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
 is what lands the host's `fontSize` in the file as `20.0` rather than `20`.
 **Breaks** *Silently.* The type error rejects the whole config file, not just
 the `[font]` table, so Neovide falls back to its own font at its own size — and
@@ -116,11 +117,14 @@ not fight it — whichever terminal the host took.
 **Why** Setting `theme` at all overrides `services.walker.settings.theme` with
 its name, so `launcher/walker-style.nix` owns it alone.
 
-## `mako.nix` — notifications are a capability, not a theme
+## `mako.nix` — mako is dwl's notifier
 
-**Why** The daemon lived in `palette` and `stylix`.
-**Breaks** A dwl host taking neither got no notifications at all, while
-`dwl/dwl.nix`'s autostart still invoked `mako` by bare name.
+**Why** The daemon once lived in `palette` and `stylix`, then in `core`; now
+quickshell owns `org.freedesktop.Notifications` on Hyprland hosts, so mako's
+membership is `dwl` (plus the `laptop` battery timeout, inert without it).
+**Breaks** `dwl/dwl.nix`'s session string invokes `mako` by bare name, so
+`services.mako.enable` must stay under `dwl` to keep the package installed;
+under `core` it would race quickshell for the D-Bus name.
 
 <a id="fastfetch-palette"></a>
 ## `cli/fastfetch.nix` — colours are `#rrggbb` from `desktop.colors`, not ANSI names

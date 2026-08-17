@@ -4,11 +4,64 @@ _: {
       {
         lib,
         config,
+        pkgs,
         ...
       }: let
         mainMod = "SUPER";
         terminal = "uwsm app -- ${config.terminal.command}";
         terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
+        # load-bearing: docs/decisions/sessions.md#monocle-visual-profile
+        hyprCfg = config.wayland.windowManager.hyprland.settings.config;
+        # load-bearing: docs/decisions/sessions.md#layout-state-file
+        layoutSet = pkgs.writeShellScript "layout-set" ''
+          case "$1" in
+            monocle)
+              ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"monocle\", gaps_in = 0, gaps_out = 0, border_size = 0 }, animations = { enabled = false } })"
+              ;;
+            *)
+              ${pkgs.hyprland}/bin/hyprctl eval "hl.config({ general = { layout = \"$1\", gaps_in = ${builtins.toJSON hyprCfg.general.gaps_in}, gaps_out = ${builtins.toJSON hyprCfg.general.gaps_out}, border_size = ${builtins.toJSON hyprCfg.general.border_size} }, animations = { enabled = ${builtins.toJSON hyprCfg.animations.enabled} } })"
+              ;;
+          esac
+          CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}"
+          mkdir -p "$CACHE"
+          printf '%s\n' "$1" >"$CACHE/hyprland-layout"
+        '';
+        layoutToggle = pkgs.writeShellScript "layout-toggle" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${layoutSet} dwindle ;;
+            *) exec ${layoutSet} monocle ;;
+          esac
+        '';
+        cycleNext = pkgs.writeShellScript "cycle-next" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cyclenext")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.cycle_next()' ;;
+          esac
+        '';
+        focusLeft = pkgs.writeShellScript "focus-left" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ workspace = "m-1" })' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "l" })' ;;
+          esac
+        '';
+        focusRight = pkgs.writeShellScript "focus-right" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ workspace = "m+1" })' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "r" })' ;;
+          esac
+        '';
+        focusUp = pkgs.writeShellScript "focus-up" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cycleprev")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "u" })' ;;
+          esac
+        '';
+        focusDown = pkgs.writeShellScript "focus-down" ''
+          case "$(${pkgs.hyprland}/bin/hyprctl getoption general:layout)" in
+            *monocle*) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.layout("cyclenext")' ;;
+            *) exec ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.focus({ direction = "d" })' ;;
+          esac
+        '';
       in {
         wayland.windowManager.hyprland.settings.bind =
           [
@@ -100,8 +153,26 @@ _: {
             }
             {
               _args = [
+                "${mainMod} + M"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} monocle\")")
+              ];
+            }
+            {
+              _args = [
+                "${mainMod} + T"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} dwindle\")")
+              ];
+            }
+            {
+              _args = [
+                "${mainMod} + space"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutToggle}\")")
+              ];
+            }
+            {
+              _args = [
                 "${mainMod} + Tab"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m windows\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cycleNext}\")")
               ];
             }
             {
@@ -110,10 +181,12 @@ _: {
                 (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.clipboard.history}\")")
               ];
             }
+          ]
+          ++ lib.optionals (config.wallpaperMenu.command != "") [
             {
               _args = [
                 "${mainMod} + W"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"walker -m menus:wallpapers\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.wallpaperMenu.command}\")")
               ];
             }
           ]
@@ -121,7 +194,7 @@ _: {
             {
               _args = [
                 "${mainMod} + Z"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ${config.powerMenu.command}\")")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.powerMenu.command}\")")
               ];
             }
           ]
@@ -136,25 +209,25 @@ _: {
             {
               _args = [
                 "${mainMod} + H"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"l\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusLeft}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + L"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"r\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusRight}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + K"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"u\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusUp}\")")
               ];
             }
             {
               _args = [
                 "${mainMod} + J"
-                (lib.generators.mkLuaInline "hl.dsp.focus({ direction = \"d\" })")
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusDown}\")")
               ];
             }
 

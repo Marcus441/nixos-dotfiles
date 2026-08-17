@@ -95,11 +95,13 @@ one with no thunar installed.
 **Why** A preset chooses boxes and nothing else, but each readout wants its own
 `proc_sorting` and `proc_tree` — config keys with no flag behind them. So the
 three views are three generated configs passed to `--config`, and `shown_boxes`
-states the layout by name rather than by an index into a `presets` string.
+states the layout by name rather than by an index into a `presets` string. The
+bare `systemMonitor.command` stays outside the views: the overlay's header
+click gets a plain btop reading the interactive config.
 **Breaks** `save_config_on_exit` defaults to true and these paths are in the
 store, so each view turns it off; without that btop tries to write a read-only
 file on quit. The same read-only-ness is why a setting changed inside a
-bar-opened btop is gone at exit — by design, and only there. `programs.btop.settings`
+row-opened btop is gone at exit — by design, and only there. `programs.btop.settings`
 is the interactive config and keeps the tree.
 
 <a id="impala-argv"></a>
@@ -110,7 +112,7 @@ to the same daemon.
 **Breaks** A connection impala makes is one NetworkManager did not author, so
 NM's state can disagree until it resyncs.
 **Also** the spawn is `compactArgv`, not `transientArgv`. Every bar click lands
-in the same `1200 600` float, so the font was the only thing making impala a
+in the same `1200 760` float, so the font was the only thing making impala a
 different terminal from btop's three.
 
 <a id="impala-darkgray"></a>

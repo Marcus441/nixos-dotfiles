@@ -64,10 +64,11 @@ and per the entry above a single-instance client cannot change the font.
 `--instance-group=compact` makes those spawns a *second* instance, built at
 `compactSize` by the first of them; the rest join it and stay cheap. Dropping
 `--single-instance` instead works but pays full startup on every btop click.
-**Breaks** `compactSize` was measured on **foot**, not kitty — three fifths of
-the host font size is where foot's cell metrics put 24 rows in `1200 600`.
-Verify with `kitty --instance-group=probe -o font_size=12 bash -c 'sleep 1; stty
-size'` and raise the fraction, or the window, if the first number is under 24.
+**Breaks** `compactSize` is where kitty's cell metrics put 24 rows in
+`1200 760` — nine tenths of the host font size, measured at the entry below.
+Verify with `kitty --instance-group=probe -o font_size=18 bash -c 'sleep 1; stty
+size'` and lower the fraction, or raise the window, if the first number is
+under 24.
 
 <a id="ghostty-single-instance"></a>
 ## `terminal/ghostty.nix` — the server serves the plain bind only
@@ -256,18 +257,20 @@ ask for less than one line per notch.
 pair: the settings are analogous, the units are not.
 
 <a id="terminal-compact"></a>
-## `terminal/terminal.nix` — `compactSize` is three fifths of the host font size
+## `terminal/terminal.nix` — `compactSize` is nine tenths of the host font size
 
-**Why** Measured on UM790pro against Hyprland's `floating-size` of `1200 600`:
-20pt gives 17x88, 14pt gives 24x126, 12pt gives 28x148. btop refuses to start
-under 24x60, so the full size misses it by seven rows. Three fifths lands on
-12pt there. The measurement is shared; the flag carrying it is not, because
-foot's override re-renders the whole font spec where the other three take a
-bare number.
+**Why** Measured on UM790pro against Hyprland's `floating-size` of `1200 760`,
+on kitty: 18pt gives 24x98 and 19pt gives 23x93. btop refuses to start under
+24x60, so nine tenths of the 20pt host font is the largest size that still
+opens it — the fraction and the float height were raised together, from `3 / 5`
+against a `600`-tall float where 14pt was already the ceiling. The measurement
+is shared; the flag carrying it is not, because foot's override re-renders the
+whole font spec where the other three take a bare number.
 **Breaks** btop exits with "Terminal size too small" rather than opening. Any
 change to `floating-size`, a host's `fontSize`, or this fraction moves the row
-count — measure with `footclient -o main.font=... bash -c 'sleep 1; stty size'`.
-Write `font.size * 3 / 5` with the spaces: `3/5` is a path literal.
+count — measure with `kitty --class term.floating -o font_size=... sh -c 'sleep
+1; stty size'`, which lands in the real float.
+Write `font.size * 9 / 10` with the spaces: `9/10` is a path literal.
 
 <a id="terminal-appid"></a>
 ## `terminal/terminal.nix` — `appIdArgv` is a function, not a flag name

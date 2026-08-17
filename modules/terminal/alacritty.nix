@@ -54,7 +54,7 @@ _: {
           enable = true;
           settings = {
             font = {
-              inherit (font) size;
+              size = font.terminalSize;
               normal.family = font.name;
             };
 

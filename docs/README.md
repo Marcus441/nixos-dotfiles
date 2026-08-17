@@ -9,7 +9,6 @@ conventions/   patterns that recur across many files
   intents.md     option in core, implementation per session
   placement.md   which aspect, which class
   colour.md      one palette, four renderings
-  bar-glyphs.md  optical gaps in the bar
 
 decisions/     why one file made its call, grouped by area
   wiring.md            generator, host record, aspect options

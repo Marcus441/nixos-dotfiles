@@ -66,30 +66,12 @@ _: {
               {
                 name = "floating-size";
                 match = {tag = "floating-window";};
-                size = "1200 600";
+                size = "1200 760";
               }
               {
                 name = "no-anim";
                 match = {tag = "no-anim";};
                 no_anim = true;
-              }
-              {
-                name = "no-gaps-wtv1";
-                match = {
-                  float = false;
-                  workspace = "w[tv1]";
-                };
-                border_size = 0;
-                rounding = 0;
-              }
-              {
-                name = "no-gaps-f1";
-                match = {
-                  float = false;
-                  workspace = "f[1]";
-                };
-                border_size = 0;
-                rounding = 0;
               }
             ];
 
@@ -110,16 +92,6 @@ _: {
             {
               name = "no-anim-selection";
               match = {namespace = "selection";};
-              no_anim = true;
-            }
-            {
-              name = "no-anim-walker";
-              match = {namespace = "walker";};
-              no_anim = true;
-            }
-            {
-              name = "no-anim-wleave";
-              match = {namespace = "wleave";};
               no_anim = true;
             }
           ];

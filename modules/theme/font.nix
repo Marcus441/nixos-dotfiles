@@ -14,8 +14,13 @@ _: {
           };
           size = lib.mkOption {
             type = lib.types.int;
+            default = 12;
+            description = "Desktop UI font size, in points; scales the shell.";
+          };
+          terminalSize = lib.mkOption {
+            type = lib.types.int;
             default = fontSize;
-            description = "Default font size, in points.";
+            description = "Terminal and monospace text size, in points.";
           };
           ligatures = lib.mkOption {
             type = lib.types.bool;

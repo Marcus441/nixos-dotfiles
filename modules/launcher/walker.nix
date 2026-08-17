@@ -1,8 +1,18 @@
 _: {
-  flake.modules.homeManager.hyprland = [
+  aspectRequires.walker = ["hyprland"];
+
+  flake.modules.homeManager.walker = [
     {
       launcher.argv = ["walker"];
       clipboard.history = "walker -m clipboard";
+
+      wayland.windowManager.hyprland.settings.layer_rule = [
+        {
+          name = "no-anim-walker";
+          match = {namespace = "walker";};
+          no_anim = true;
+        }
+      ];
 
       services.walker = {
         enable = true;

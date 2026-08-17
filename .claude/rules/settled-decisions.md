@@ -1,5 +1,5 @@
 ---
-paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,modules/terminal/**,statix.toml"
+paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,modules/terminal/**,modules/quickshell/**,statix.toml"
 ---
 
 # Settled decisions — do not re-propose
@@ -7,9 +7,20 @@ paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,m
 These shapes were argued to a conclusion. Changing one is a new decision the
 human makes, not a cleanup you offer.
 
-- **Waybar's opt-in shape is finished.** `waybar` and `wleave` are separate
-  aspects, `aspectRequires.waybar = ["hyprland"]` rejects dwl hosts, and
-  `waybar.nix` embeds wleave gated on `powerMenu.command`.
+- **Quickshell's shape is settled.** `aspectRequires.quickshell = ["hyprland"]`
+  rejects dwl hosts, the Hyprland binds drive it over `qs ipc call` through the
+  `bar.toggle` / `launcher` / `clipboard.history` / `wallpaperMenu.command` /
+  `powerMenu.command` intents, the power menu is a quickshell overlay (wleave
+  is retired), the shell owns `org.freedesktop.Notifications` on Hyprland
+  hosts (mako serves only dwl), and `walker` is its own aspect that no host
+  currently takes. Waybar is retired. The Notifs singleton must stay
+  instantiated at startup or the D-Bus name goes unclaimed —
+  `docs/decisions/sessions.md#quickshell-notifs`.
+- **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
+  locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
+  wallpaper switching is hyprpaper IPC plus the cache symlink, and idle
+  inhibition is the Wayland protocol hypridle honours. hyprlock, hypridle and
+  hyprpaper stay in charge.
 - **dwl's bar is `dwl-bar`; its shape is settled.** `dwl/dwl.nix` declares `dwl.bar`
   in `homeManager.dwl`; `bar/dwl-bar.nix` sets it and declares
   `aspectRequires.dwl-bar = ["dwl"]`. Silent failure by construction — a dwl
@@ -25,8 +36,8 @@ human makes, not a cleanup you offer.
   and defaults to 10 MB; the `50000` this config was revived from reads like
   foot's 10 000 lines and is in fact 50 KB.
   `docs/decisions/terminal.md#ghostty-scrollback`.
-- **Deliberately deferred — do not propose unasked:** Quickshell; a dwl host
-  taking `waybar`/`walker` (four blockers in git history).
+- **Deliberately deferred — do not propose unasked:** a dwl host taking
+  `walker` (four blockers in git history).
 - **`statix.toml` disables `repeated_keys`, and it stays disabled.** The rule
   flags the best exemplar files and untouchable hardware configs. Do not
   re-enable.

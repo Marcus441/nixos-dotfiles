@@ -79,6 +79,12 @@
         default = 0;
       };
 
+      bar.position = lib.mkOption {
+        type = lib.types.enum ["top" "bottom" "left" "right"];
+        default = "top";
+        description = "Edge of the screen the bar occupies, for hosts whose aspects provide one.";
+      };
+
       packages = lib.mkOption {
         type = lib.types.deferredModule;
         default = {};

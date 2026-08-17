@@ -1,19 +1,13 @@
 _: {
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.walker = [
     (
       {
         pkgs,
         config,
         ...
-      }: let
-        walls = import ./_wallpapers.nix {inherit pkgs;};
-        update-wallpaper = pkgs.writeShellScript "update-wallpaper" ''
-          if [ -f "$1" ]; then
-            ln -sf "$1" "${config.xdg.cacheHome}/current_wallpaper.img"
-            ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
-          fi
-        '';
-      in {
+      }: {
+        wallpaperMenu.command = "walker -m menus:wallpapers";
+
         xdg.configFile."elephant/menus/wallpapers.lua".text = ''
           Name = "wallpapers"
           NamePretty = "Wallpapers"
@@ -22,24 +16,17 @@ _: {
           FixedOrder = true
 
           Action = "${pkgs.writeShellScript "wp-logic" ''
-            STATE_FILE="${config.xdg.cacheHome}/wallpaper_rotator_enabled"
-
             if [ "$1" = "ENABLE_ROTATOR" ]; then
-              touch "$STATE_FILE"
-              ${pkgs.systemd}/bin/systemctl --user start wallpaper-rotator.service
-              ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
+              ${config.wallpaper.enableRotator}
             else
-              rm -f "$STATE_FILE"
-              ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
-              ${update-wallpaper} "$1"
-              ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper Rotator" "Manual mode: Rotation disabled"
+              ${config.wallpaper.set} "$1"
             fi
           ''} \"%VALUE%\""
 
 
           function GetEntries()
               local entries = {}
-              local wallpaper_dir = "${walls}"
+              local wallpaper_dir = "${config.wallpaper.directory}"
 
               local function to_normal_case(str)
                   local s = str:gsub("[_%-]", " ")

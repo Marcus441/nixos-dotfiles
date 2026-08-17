@@ -93,7 +93,7 @@ _: {
 
           [Fonts]
           general=${qfont config.gtk.font.name config.gtk.font.size}
-          fixed=${qfont config.desktop.font.name config.desktop.font.size}
+          fixed=${qfont config.desktop.font.name config.desktop.font.terminalSize}
         '';
       in {
         qt = {

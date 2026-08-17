@@ -6,7 +6,13 @@ _: {
           command = lib.mkOption {
             type = lib.types.str;
             default = "";
-            description = "Command opening a system monitor on its processor view, bare of any session launcher prefix. Empty when no aspect provides one.";
+            description = "Command opening a system monitor, bare of any session launcher prefix. Empty when no aspect provides one.";
+          };
+
+          processorCommand = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            description = "`command`, opening on the processor view instead. Empty when no aspect provides one.";
           };
 
           memoryCommand = lib.mkOption {
@@ -83,7 +89,11 @@ _: {
           );
       in {
         systemMonitor = {
-          command = atView "processor" {
+          command = lib.escapeShellArgs (
+            config.terminal.compactArgv ++ config.terminal.exec ++ ["${btop}/bin/btop"]
+          );
+
+          processorCommand = atView "processor" {
             shown_boxes = "cpu proc";
             proc_sorting = "cpu direct";
             proc_tree = false;
