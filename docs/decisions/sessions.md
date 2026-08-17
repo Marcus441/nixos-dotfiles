@@ -136,7 +136,10 @@ deliberate deltas from the old mako behaviour.
 **Why** The bar's layout indicator needs to react the instant a bind switches
 layouts, and Hyprland emits no IPC event for a runtime config change. The
 layout-set script writes the layout name to the cache file; the LayoutState
-singleton watches it with a `FileView`. A cache file keeps the coupling one-way —
+singleton watches it with a `FileView`, and reconciles both the indicator and
+the file against `hyprctl getoption` at startup and on `configreloaded` —
+the file outlives the session, so on its own it goes stale whenever Hyprland
+restarts into the generated config. A cache file keeps the coupling one-way —
 `hyprland` files never hold a quickshell store path, and a host without
 `quickshell` just writes a file nobody reads. layout-set is the single entry
 point — every layout bind routes through it, and it also applies the
@@ -159,9 +162,9 @@ restore branch reads gaps, border and animations back from the merged
 switch — layer animations pause in monocle too; per-leaf runtime control is
 not exposed through `hl.config`.
 **Breaks** A reload or restart while in monocle re-reads the generated
-config — dwindle, normal gaps — which is self-consistent, but the state file
-may still say monocle until the next layout-set. Hardcoding the restore
-values instead of reading them reintroduces drift.
+config — dwindle, normal gaps — and LayoutState's `configreloaded` re-query
+(#layout-state-file) keeps the indicator and state file in step with it.
+Hardcoding the restore values instead of reading them reintroduces drift.
 
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention

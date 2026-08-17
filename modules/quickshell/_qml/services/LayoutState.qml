@@ -1,5 +1,6 @@
 pragma Singleton
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
 import qs
@@ -11,10 +12,21 @@ Singleton {
 
     readonly property bool monocle: layout === "monocle"
 
+    Component.onCompleted: queryProc.running = true
+
     function apply(name) {
         const t = name.trim();
         if (t.length > 0)
             root.layout = t;
+    }
+
+    Connections {
+        target: Hyprland
+
+        function onRawEvent(event) {
+            if (event.name === "configreloaded")
+                queryProc.running = true;
+        }
     }
 
     FileView {
@@ -25,11 +37,11 @@ Singleton {
         printErrors: false
         onFileChanged: reload()
         onLoaded: root.apply(text())
-        onLoadFailed: fallbackProc.running = true
+        onLoadFailed: queryProc.running = true
     }
 
     Process {
-        id: fallbackProc
+        id: queryProc
 
         command: [Config.hyprctl, "getoption", "general:layout", "-j"]
 
