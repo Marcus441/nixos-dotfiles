@@ -190,11 +190,27 @@ setting that looks like it is only about focus.
 visible, so they differ only in the single-window case nobody deliberately
 tests. That is how a whole-window fade survived every look at the colours.
 
+<a id="kitty-splits-only"></a>
+## `terminal/kitty.nix` — `splits` is the only layout, so `--location` cannot be ignored
+
+**Why** `launch --location=vsplit` is honoured by the `splits` layout and by
+nothing else. Everywhere else kitty drops the argument, adds the window anyway,
+and the split keys quietly become "replace this pane with a new shell". `stack`
+was the only other layout enabled and nothing reaches for it, so deleting it
+deletes the state the keys degrade in.
+**Breaks** *Silently, and the way in is a key nobody bound.* kitty's stock
+`ctrl+shift+l` is `next_layout`, one slipped shift from the `ctrl+l` that moves
+a pane right, so a tab flips to `stack` without a word and stays there.
+`kitty @ ls | grep '"layout"'` is the check and `kitty @ goto-layout splits` the
+escape; `extraConfig` unbinds the key so the trip cannot be made again.
+**Also** the layout is per tab, so tabs open across the switch keep whatever
+they were on — a config reload re-lays out nothing.
+
 <a id="kitty-borders"></a>
 ## `terminal/kitty.nix` — the split borders are ours, not upstream's
 
 **Why** kanagawa.nvim's `extras/kitty/kanagawa_dragon.conf` sets no border
-colours, so `enabled_layouts = "splits,stack"` drew kitty's stock green, grey
+colours, so the `splits` layout drew kitty's stock green, grey
 and orange. These take base0D/base03/base08, the roles `hyprland/general.nix`
 gives a window border — a kitty split is the same thing one level down.
 **Breaks** *Loudly, but only in a split.* A single window never shows a border,
