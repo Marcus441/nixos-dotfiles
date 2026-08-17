@@ -10,6 +10,10 @@ ShellRoot {
 
     property bool barVisible: true
 
+    // first access kicks DesktopEntries' lazy scan; without it the launcher's
+    // first open races the scan and renders an empty list
+    Component.onCompleted: DesktopEntries.applications.values
+
     Variants {
         model: Quickshell.screens
 
