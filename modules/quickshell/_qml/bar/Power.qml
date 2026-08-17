@@ -11,6 +11,6 @@ BarWidget {
     onClicked: bar.shell.togglePower()
     onRightClicked: {
         if (Config.lockCommand !== "")
-            Quickshell.execDetached([Config.sh, "-c", Config.lockCommand]);
+            Config.launch(Config.lockCommand);
     }
 }

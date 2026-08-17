@@ -15,7 +15,7 @@ Overlay {
     function launch(app) {
         if (!app)
             return;
-        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${app.id}.desktop`]);
+        Config.launchApp(`${app.id}.desktop`);
         root.dismissed();
     }
 
@@ -25,7 +25,7 @@ Overlay {
         anchors.fill: parent
         placeholder: "Search applications…"
         searchIcon: "󰍉"
-        searchPixelSize: Config.fontSize + 8
+        searchPixelSize: Theme.fontXl
         filterFn: q => {
             if (q === "")
                 return root.apps;
@@ -62,7 +62,7 @@ Overlay {
 
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 14
+                anchors.leftMargin: Theme.pad
                 implicitSize: 28
                 asynchronous: true
                 source: Quickshell.iconPath(row.modelData.icon, true)
@@ -71,13 +71,13 @@ Overlay {
             Column {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: icon.right
-                anchors.leftMargin: 8
+                anchors.leftMargin: Theme.gap
 
                 Text {
                     text: row.modelData.name
                     color: Config.base05
                     font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize + 4
+                    font.pixelSize: Theme.fontLg
                 }
 
                 Text {

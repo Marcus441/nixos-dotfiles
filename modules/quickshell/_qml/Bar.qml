@@ -35,13 +35,13 @@ PanelWindow {
         id: startGroup
 
         flow: bar.vertical ? GridLayout.TopToBottom : GridLayout.LeftToRight
-        rowSpacing: 8
-        columnSpacing: 8
+        rowSpacing: Theme.gap
+        columnSpacing: Theme.gap
         anchors.left: bar.vertical ? undefined : parent.left
-        anchors.leftMargin: 8
+        anchors.leftMargin: Theme.gap
         anchors.verticalCenter: bar.vertical ? undefined : parent.verticalCenter
         anchors.top: bar.vertical ? parent.top : undefined
-        anchors.topMargin: 8
+        anchors.topMargin: Theme.gap
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
         LayoutIndicator {
@@ -71,10 +71,10 @@ PanelWindow {
         rowSpacing: 20
         columnSpacing: 20
         anchors.right: bar.vertical ? undefined : parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: Theme.gap
         anchors.verticalCenter: bar.vertical ? undefined : parent.verticalCenter
         anchors.bottom: bar.vertical ? parent.bottom : undefined
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: Theme.gap
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
         Tray {
@@ -92,8 +92,8 @@ PanelWindow {
 
             Layout.alignment: Qt.AlignHCenter
             flow: endGroup.flow
-            rowSpacing: 8
-            columnSpacing: 8
+            rowSpacing: Theme.gap
+            columnSpacing: Theme.gap
 
             Wifi {
                 Layout.alignment: Qt.AlignHCenter
@@ -120,8 +120,8 @@ PanelWindow {
 
             Layout.alignment: Qt.AlignHCenter
             flow: endGroup.flow
-            rowSpacing: 8
-            columnSpacing: 8
+            rowSpacing: Theme.gap
+            columnSpacing: Theme.gap
 
             Notifications {
                 Layout.alignment: Qt.AlignHCenter

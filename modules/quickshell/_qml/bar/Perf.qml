@@ -86,7 +86,7 @@ Item {
                 visible: Config.systemMonitorCommand !== ""
                 text: "󱂬 monitor"
                 onTriggered: {
-                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.systemMonitorCommand}`]);
+                    Config.launchApp(Config.systemMonitorCommand);
                     popup.visible = false;
                 }
             }
@@ -114,7 +114,7 @@ Item {
 
                 hoverable: modelData.command !== ""
                 onClicked: {
-                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${metricRow.modelData.command}`]);
+                    Config.launchApp(metricRow.modelData.command);
                     popup.visible = false;
                 }
 

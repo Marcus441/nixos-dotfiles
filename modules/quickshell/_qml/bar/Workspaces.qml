@@ -63,14 +63,14 @@ Rectangle {
 
                 Behavior on width {
                     NumberAnimation {
-                        duration: 150
+                        duration: Theme.durFast
                         easing.type: Easing.OutCubic
                     }
                 }
 
                 Behavior on height {
                     NumberAnimation {
-                        duration: 150
+                        duration: Theme.durFast
                         easing.type: Easing.OutCubic
                     }
                 }

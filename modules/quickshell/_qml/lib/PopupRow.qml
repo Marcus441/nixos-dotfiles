@@ -10,7 +10,7 @@ Rectangle {
     default property alias content: inner.data
 
     width: parent ? parent.width : implicitWidth
-    implicitWidth: inner.implicitWidth + 28
+    implicitWidth: inner.implicitWidth + Theme.pad * 2
     implicitHeight: inner.implicitHeight + 12
     color: root.hoverable && mouse.containsMouse ? Config.base02 : "transparent"
 
@@ -18,9 +18,9 @@ Rectangle {
         id: inner
 
         anchors.left: parent.left
-        anchors.leftMargin: 14
+        anchors.leftMargin: Theme.pad
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 8
+        spacing: Theme.gap
     }
 
     MouseArea {

@@ -8,7 +8,7 @@ Row {
 
     property var bar
 
-    spacing: 8
+    spacing: Theme.gap
     visible: SystemTray.items.values.length > 0
 
     Repeater {

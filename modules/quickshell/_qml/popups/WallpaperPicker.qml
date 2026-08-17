@@ -72,8 +72,8 @@ Overlay {
 
             Row {
                 anchors.fill: parent
-                anchors.leftMargin: 14
-                anchors.rightMargin: 14
+                anchors.leftMargin: Theme.pad
+                anchors.rightMargin: Theme.pad
                 spacing: 16
 
                 Text {
@@ -82,7 +82,7 @@ Overlay {
                     text: "Wallpapers"
                     color: Config.base05
                     font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize + 4
+                    font.pixelSize: Theme.fontLg
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
@@ -150,7 +150,7 @@ Overlay {
                         horizontalAlignment: Text.AlignHCenter
                         color: cellMouse.containsMouse ? Config.base05 : Config.base04
                         font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize - 2
+                        font.pixelSize: Theme.fontSm
                     }
                 }
 

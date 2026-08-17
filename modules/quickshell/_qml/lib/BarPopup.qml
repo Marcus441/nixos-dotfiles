@@ -37,7 +37,7 @@ PopupWindow {
     anchor.window: root.barWindow
     anchor.edges: root.popupEdge
     anchor.gravity: root.popupEdge
-    implicitWidth: Math.max(root.title !== "" ? headerRow.implicitWidth + 28 : 0, contentColumn.implicitWidth, 240) + (root.vertical ? root.barGap : 0)
+    implicitWidth: Math.max(root.title !== "" ? headerRow.implicitWidth + Theme.pad * 2 : 0, contentColumn.implicitWidth, 240) + (root.vertical ? root.barGap : 0)
     implicitHeight: header.height + contentColumn.implicitHeight + 16 + (root.vertical ? 0 : root.barGap)
     color: "transparent"
 
@@ -80,22 +80,22 @@ PopupWindow {
             id: headerRow
 
             anchors.left: parent.left
-            anchors.leftMargin: 14
+            anchors.leftMargin: Theme.pad
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 14
+            spacing: Theme.pad
 
             Text {
                 text: root.title
                 color: Config.base05
                 font.family: Config.fontFamily
-                font.pixelSize: Config.fontSize + 2
+                font.pixelSize: Theme.fontMd
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             Row {
                 id: headerExtra
 
-                spacing: 14
+                spacing: Theme.pad
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
@@ -105,7 +105,7 @@ PopupWindow {
         id: contentColumn
 
         anchors.top: header.bottom
-        anchors.topMargin: 8
+        anchors.topMargin: Theme.gap
         anchors.left: frame.left
         anchors.right: frame.right
     }

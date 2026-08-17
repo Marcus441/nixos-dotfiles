@@ -12,7 +12,7 @@ Grid {
     property string weatherDesc: ""
 
     columns: vertical ? 1 : 2
-    spacing: 8
+    spacing: Theme.gap
     horizontalItemAlignment: Grid.AlignHCenter
     verticalItemAlignment: Grid.AlignVCenter
 

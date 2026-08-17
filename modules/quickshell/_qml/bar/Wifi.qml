@@ -59,7 +59,7 @@ Item {
                 visible: Config.networkManagerCommand !== ""
                 text: "󱂬 manager"
                 onTriggered: {
-                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
+                    Config.launchApp(Config.networkManagerCommand);
                     popup.visible = false;
                 }
             }
@@ -79,7 +79,7 @@ Item {
                     else if (netRow.modelData.known || netRow.modelData.security === WifiSecurityType.Open)
                         netRow.modelData.connect();
                     else if (Config.networkManagerCommand !== "")
-                        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
+                        Config.launchApp(Config.networkManagerCommand);
                 }
 
                 Text {

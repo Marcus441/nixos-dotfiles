@@ -15,7 +15,7 @@ Overlay {
     function pick(entry) {
         if (!entry)
             return;
-        Quickshell.execDetached([Config.sh, "-c", `${Config.cliphist} decode ${entry.id} | ${Config.wlCopy}`]);
+        Config.launch(`${Config.cliphist} decode ${entry.id} | ${Config.wlCopy}`);
         root.dismissed();
     }
 
@@ -65,8 +65,8 @@ Overlay {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 14
-                width: parent.width - 28
+                anchors.leftMargin: Theme.pad
+                width: parent.width - Theme.pad * 2
                 text: row.modelData.text
                 elide: Text.ElideRight
                 color: Config.base05

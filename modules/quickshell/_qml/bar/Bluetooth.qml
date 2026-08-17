@@ -59,7 +59,7 @@ Item {
             TextAction {
                 text: "󱂬 manager"
                 onTriggered: {
-                    Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
+                    Config.launchApp("blueman-manager");
                     popup.visible = false;
                 }
             }

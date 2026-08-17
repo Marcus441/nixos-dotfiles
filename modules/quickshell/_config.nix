@@ -75,6 +75,8 @@
     import QtQuick
 
     Singleton {
+        id: root
+
     ${colorProps}
         readonly property string fontFamily: "Inter"
         readonly property string monoFamily: "${font.name}"
@@ -106,6 +108,14 @@
         readonly property string fd: "${pkgs.fd}/bin/fd"
         readonly property string cliphist: "${pkgs.cliphist}/bin/cliphist"
         readonly property string wlCopy: "${pkgs.wl-clipboard}/bin/wl-copy"
+
+        function launch(cmd: string): void {
+            Quickshell.execDetached([root.sh, "-c", cmd]);
+        }
+
+        function launchApp(cmd: string): void {
+            root.launch(`uwsm app -- ''${cmd}`);
+        }
     }
   '';
 in

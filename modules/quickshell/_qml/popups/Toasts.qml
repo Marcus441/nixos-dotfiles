@@ -36,7 +36,7 @@ PanelWindow {
                 property: "x"
                 from: column.width
                 to: 0
-                duration: 200
+                duration: Theme.durMed
                 easing.type: Easing.OutCubic
             }
         }
@@ -44,7 +44,7 @@ PanelWindow {
         move: Transition {
             NumberAnimation {
                 property: "y"
-                duration: 150
+                duration: Theme.durFast
                 easing.type: Easing.OutCubic
             }
         }
@@ -115,9 +115,9 @@ PanelWindow {
                         id: summaryText
 
                         anchors.left: urgencyIcon.right
-                        anchors.leftMargin: 8
+                        anchors.leftMargin: Theme.gap
                         anchors.right: appLabel.left
-                        anchors.rightMargin: 8
+                        anchors.rightMargin: Theme.gap
                         anchors.verticalCenter: parent.verticalCenter
                         text: card.modelData.summary !== "" ? card.modelData.summary : card.modelData.appName
                         elide: Text.ElideRight
@@ -135,7 +135,7 @@ PanelWindow {
                         text: card.modelData.appName
                         color: Config.base04
                         font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize - 2
+                        font.pixelSize: Theme.fontSm
                     }
 
                     Text {
@@ -151,7 +151,7 @@ PanelWindow {
 
                         Behavior on color {
                             ColorAnimation {
-                                duration: 150
+                                duration: Theme.durFast
                             }
                         }
 
@@ -211,9 +211,9 @@ PanelWindow {
 
                     anchors.top: bodyBlock.bottom
                     anchors.left: parent.left
-                    anchors.leftMargin: 14
+                    anchors.leftMargin: Theme.pad
                     height: visibleActions.length > 0 ? implicitHeight + 10 : 0
-                    spacing: 14
+                    spacing: Theme.pad
 
                     Repeater {
                         model: actionRow.visibleActions
@@ -230,7 +230,7 @@ PanelWindow {
 
                             Behavior on color {
                                 ColorAnimation {
-                                    duration: 150
+                                    duration: Theme.durFast
                                 }
                             }
 

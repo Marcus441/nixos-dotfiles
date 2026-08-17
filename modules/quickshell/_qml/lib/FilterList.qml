@@ -13,7 +13,7 @@ Column {
     property int selected: 0
     property string placeholder: ""
     property string searchIcon: ""
-    property int searchPixelSize: Config.fontSize + 4
+    property int searchPixelSize: Theme.fontLg
     property alias delegate: list.delegate
 
     function refilter() {
@@ -34,9 +34,9 @@ Column {
 
         Row {
             anchors.fill: parent
-            anchors.leftMargin: 14
-            anchors.rightMargin: 14
-            spacing: 8
+            anchors.leftMargin: Theme.pad
+            anchors.rightMargin: Theme.pad
+            spacing: Theme.gap
 
             Text {
                 id: icon
@@ -79,8 +79,8 @@ Column {
 
         width: parent.width
         height: parent.height - searchBox.height
-        topMargin: 8
-        bottomMargin: 8
+        topMargin: Theme.gap
+        bottomMargin: Theme.gap
         clip: true
         model: root.filtered
         currentIndex: root.selected

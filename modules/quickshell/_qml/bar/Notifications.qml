@@ -78,14 +78,14 @@ Item {
                     id: inner
 
                     anchors.left: parent.left
-                    anchors.leftMargin: 14
+                    anchors.leftMargin: Theme.pad
                     anchors.right: dismissBtn.left
-                    anchors.rightMargin: 8
+                    anchors.rightMargin: Theme.gap
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 2
 
                     Row {
-                        spacing: 8
+                        spacing: Theme.gap
 
                         Text {
                             text: row.modelData.summary !== "" ? row.modelData.summary : row.modelData.appName
@@ -99,7 +99,7 @@ Item {
                             text: row.modelData.appName
                             color: Config.base04
                             font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize - 2
+                            font.pixelSize: Theme.fontSm
                             topPadding: 1
                         }
                     }
@@ -121,7 +121,7 @@ Item {
                     id: dismissBtn
 
                     anchors.right: parent.right
-                    anchors.rightMargin: 14
+                    anchors.rightMargin: Theme.pad
                     anchors.verticalCenter: parent.verticalCenter
                     text: "󰅖"
                     color: rowMouse.containsMouse ? Config.base08 : Config.base04
@@ -130,7 +130,7 @@ Item {
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: 150
+                            duration: Theme.durFast
                         }
                     }
                 }

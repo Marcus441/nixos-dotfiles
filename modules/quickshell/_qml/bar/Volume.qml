@@ -57,7 +57,7 @@ Item {
             TextAction {
                 text: "󰓃 mixer"
                 onTriggered: {
-                    Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
+                    Config.launchApp("pavucontrol");
                     popup.visible = false;
                 }
             }

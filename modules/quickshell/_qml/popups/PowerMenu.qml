@@ -112,7 +112,7 @@ PanelWindow {
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: 150
+                            duration: Theme.durFast
                         }
                     }
 
@@ -133,7 +133,7 @@ PanelWindow {
                             text: tile.modelData.label
                             color: Config.base05
                             font.family: Config.fontFamily
-                            font.pixelSize: Config.fontSize + 4
+                            font.pixelSize: Theme.fontLg
                         }
 
                         Text {
