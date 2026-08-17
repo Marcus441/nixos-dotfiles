@@ -6,6 +6,9 @@
   lockCommand,
   logoutCommand,
   systemMonitorCommand,
+  processorCommand,
+  memoryCommand,
+  temperatureCommand,
   networkManagerCommand,
 }: let
   inherit (pkgs) lib;
@@ -86,6 +89,9 @@
         readonly property string lockCommand: "${lockCommand}"
         readonly property string logoutCommand: "${logoutCommand}"
         readonly property string systemMonitorCommand: "${systemMonitorCommand}"
+        readonly property string processorCommand: "${processorCommand}"
+        readonly property string memoryCommand: "${memoryCommand}"
+        readonly property string temperatureCommand: "${temperatureCommand}"
         readonly property string networkManagerCommand: "${networkManagerCommand}"
 
         readonly property string wallsDir: "${walls}"

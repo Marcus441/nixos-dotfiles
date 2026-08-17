@@ -104,17 +104,33 @@ Item {
         ]
 
         Repeater {
-            model: [`󰻠 CPU        ${root.cpuPct}%`, `󰔏 ${root.tempChip}    ${root.tempC}°C`, ` Memory     ${root.memUsed.toFixed(1)}G / ${root.memTotal.toFixed(1)}G`, `󰋊 Disk /     ${root.diskPct}%`]
+            model: [{
+                text: `󰻠 CPU        ${root.cpuPct}%`,
+                command: Config.processorCommand
+            }, {
+                text: `󰔏 ${root.tempChip}    ${root.tempC}°C`,
+                command: Config.temperatureCommand
+            }, {
+                text: ` Memory     ${root.memUsed.toFixed(1)}G / ${root.memTotal.toFixed(1)}G`,
+                command: Config.memoryCommand
+            }, {
+                text: `󰋊 Disk /     ${root.diskPct}%`,
+                command: ""
+            }]
 
             PopupRow {
                 id: metricRow
 
-                required property string modelData
+                required property var modelData
 
-                hoverable: false
+                hoverable: modelData.command !== ""
+                onClicked: {
+                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${metricRow.modelData.command}`]);
+                    popup.visible = false;
+                }
 
                 Text {
-                    text: metricRow.modelData
+                    text: metricRow.modelData.text
                     color: Config.base05
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize

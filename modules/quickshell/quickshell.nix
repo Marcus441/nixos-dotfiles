@@ -27,6 +27,9 @@ _: {
             lockCommand = config.lock.command;
             logoutCommand = config.logout.command;
             systemMonitorCommand = config.systemMonitor.command;
+            processorCommand = config.systemMonitor.processorCommand;
+            memoryCommand = config.systemMonitor.memoryCommand;
+            temperatureCommand = config.systemMonitor.temperatureCommand;
             networkManagerCommand = config.networkManager.command;
           };
           systemd = {
