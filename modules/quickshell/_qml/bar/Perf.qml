@@ -1,21 +1,12 @@
-import Quickshell
-import Quickshell.Io
 import QtQuick
 import qs
 import qs.lib
+import qs.services
 
 Item {
     id: root
 
     property var bar
-    property real cpuPct: 0
-    property int tempC: 0
-    property string tempChip: ""
-    property real memUsed: 0
-    property real memTotal: 0
-    property int diskPct: 0
-    property real prevTotal: 0
-    property real prevIdle: 0
 
     function stateColor(value, warning, critical) {
         if (value >= critical)
@@ -28,42 +19,11 @@ Item {
     implicitWidth: readout.implicitWidth
     implicitHeight: readout.implicitHeight
 
-    Process {
-        id: metricsProc
-
-        command: [Config.metricsScript]
-
-        stdout: StdioCollector {
-            onStreamFinished: {
-                try {
-                    const m = JSON.parse(text);
-                    if (root.prevTotal > 0 && m.total > root.prevTotal)
-                        root.cpuPct = Math.round(100 * (1 - (m.idle - root.prevIdle) / (m.total - root.prevTotal)));
-                    root.prevTotal = m.total;
-                    root.prevIdle = m.idle;
-                    root.tempC = m.tempC;
-                    root.tempChip = m.tempChip;
-                    root.memUsed = m.memUsed;
-                    root.memTotal = m.memTotal;
-                    root.diskPct = m.diskPct;
-                } catch (e) {}
-            }
-        }
-    }
-
-    Timer {
-        interval: 5000
-        running: root.visible
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: metricsProc.running = true
-    }
-
     Text {
         id: readout
 
         text: "󰓅"
-        color: root.stateColor(Math.max(root.cpuPct, root.diskPct - 10, (root.memUsed / Math.max(root.memTotal, 1)) * 100 - 10), 70, 90)
+        color: root.stateColor(Math.max(Metrics.cpuPct, Metrics.diskPct - 10, (Metrics.memUsed / Math.max(Metrics.memTotal, 1)) * 100 - 10), 70, 90)
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
 
@@ -94,16 +54,16 @@ Item {
 
         Repeater {
             model: [{
-                text: `󰻠 CPU        ${root.cpuPct}%`,
+                text: `󰻠 CPU        ${Metrics.cpuPct}%`,
                 command: Config.processorCommand
             }, {
-                text: `󰔏 ${root.tempChip}    ${root.tempC}°C`,
+                text: `󰔏 ${Metrics.tempChip}    ${Metrics.tempC}°C`,
                 command: Config.temperatureCommand
             }, {
-                text: ` Memory     ${root.memUsed.toFixed(1)}G / ${root.memTotal.toFixed(1)}G`,
+                text: ` Memory     ${Metrics.memUsed.toFixed(1)}G / ${Metrics.memTotal.toFixed(1)}G`,
                 command: Config.memoryCommand
             }, {
-                text: `󰋊 Disk /     ${root.diskPct}%`,
+                text: `󰋊 Disk /     ${Metrics.diskPct}%`,
                 command: ""
             }]
 

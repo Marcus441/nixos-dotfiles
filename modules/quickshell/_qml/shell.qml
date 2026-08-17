@@ -58,6 +58,12 @@ ShellRoot {
         Toasts {}
     }
 
+    Binding {
+        target: Metrics
+        property: "active"
+        value: shellRoot.barVisible
+    }
+
     function toggleLauncher(): void {
         launcherLoader.active = !launcherLoader.active;
     }
