@@ -1,4 +1,4 @@
-import Quickshell
+pragma ComponentBehavior: Bound
 import Quickshell.Networking
 import QtQuick
 import qs
@@ -6,8 +6,6 @@ import qs.lib
 
 Item {
     id: root
-
-    property var bar
 
     readonly property var wifiDev: {
         const wifis = Networking.devices.values.filter(d => d.type === DeviceType.Wifi);

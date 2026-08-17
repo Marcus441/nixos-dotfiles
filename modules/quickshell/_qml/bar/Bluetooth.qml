@@ -1,4 +1,4 @@
-import Quickshell
+pragma ComponentBehavior: Bound
 import Quickshell.Bluetooth
 import QtQuick
 import qs
@@ -7,12 +7,9 @@ import qs.lib
 Item {
     id: root
 
-    property var bar
-    property int devRev: 0
-
-    readonly property var adapter: Bluetooth.defaultAdapter
+    readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
     readonly property bool anyConnected: {
-        devRev;
+        devWatch.rev;
         return Bluetooth.devices.values.some(d => d.connected);
     }
 
@@ -20,16 +17,10 @@ Item {
     implicitWidth: widget.implicitWidth
     implicitHeight: widget.implicitHeight
 
-    Connections {
-        target: Bluetooth.devices
+    ModelWatcher {
+        id: devWatch
 
-        function onObjectInsertedPost() {
-            root.devRev++;
-        }
-
-        function onObjectRemovedPost() {
-            root.devRev++;
-        }
+        model: Bluetooth.devices
     }
 
     BarWidget {
@@ -67,7 +58,7 @@ Item {
 
         Repeater {
             model: {
-                root.devRev;
+                devWatch.rev;
                 return Bluetooth.devices.values.filter(d => d.paired).slice(0, 10);
             }
 

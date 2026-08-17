@@ -6,7 +6,7 @@ import qs.lib
 BarWidget {
     id: root
 
-    readonly property var device: UPower.displayDevice
+    readonly property UPowerDevice device: UPower.displayDevice
     readonly property real pct: (device?.percentage ?? 0) * 100
     readonly property bool charging: device?.state === UPowerDeviceState.Charging
 

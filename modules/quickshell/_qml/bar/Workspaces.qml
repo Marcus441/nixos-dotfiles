@@ -1,15 +1,16 @@
+pragma ComponentBehavior: Bound
 import Quickshell.Hyprland
 import QtQuick
 import qs
+import qs.lib
 
 Rectangle {
     id: root
 
-    property var bar
-    property int wsRev: 0
+    required property Bar bar
 
     readonly property var wsIds: {
-        wsRev;
+        wsWatch.rev;
         const ids = new Set([1, 2, 3, 4, 5]);
         for (const ws of Hyprland.workspaces.values)
             ids.add(ws.id);
@@ -21,16 +22,10 @@ Rectangle {
     implicitWidth: bar.vertical ? 22 : row.implicitWidth + 8
     implicitHeight: bar.vertical ? row.implicitHeight + 8 : 20
 
-    Connections {
-        target: Hyprland.workspaces
+    ModelWatcher {
+        id: wsWatch
 
-        function onObjectInsertedPost() {
-            root.wsRev++;
-        }
-
-        function onObjectRemovedPost() {
-            root.wsRev++;
-        }
+        model: Hyprland.workspaces
     }
 
     Grid {
@@ -49,7 +44,7 @@ Rectangle {
                 required property int modelData
 
                 readonly property var ws: {
-                    root.wsRev;
+                    wsWatch.rev;
                     return Hyprland.workspaces.values.find(w => w.id === pill.modelData) ?? null;
                 }
                 readonly property bool focused: Hyprland.focusedWorkspace?.id === pill.modelData

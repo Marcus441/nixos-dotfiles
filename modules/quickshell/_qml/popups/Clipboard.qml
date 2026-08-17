@@ -1,4 +1,4 @@
-import Quickshell
+pragma ComponentBehavior: Bound
 import Quickshell.Io
 import QtQuick
 import qs

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import qs
 import qs.lib
@@ -5,8 +6,6 @@ import qs.services
 
 Item {
     id: root
-
-    property var bar
 
     function stateColor(value, warning, critical) {
         if (value >= critical)

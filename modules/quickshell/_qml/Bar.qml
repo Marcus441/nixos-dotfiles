@@ -82,7 +82,6 @@ PanelWindow {
 
         Perf {
             Layout.alignment: Qt.AlignHCenter
-            bar: bar
         }
 
         GridLayout {
@@ -95,17 +94,14 @@ PanelWindow {
 
             Wifi {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
 
             Bluetooth {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
 
             Volume {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
 
             Battery {
@@ -123,7 +119,6 @@ PanelWindow {
 
             Notifications {
                 Layout.alignment: Qt.AlignHCenter
-                bar: bar
             }
 
             IdleInhibit {

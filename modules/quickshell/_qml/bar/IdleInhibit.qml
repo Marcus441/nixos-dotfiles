@@ -6,7 +6,7 @@ import qs.lib
 BarWidget {
     id: root
 
-    property var bar
+    required property Bar bar
     property bool active: false
 
     text: active ? "󰅶" : "󰛊"

@@ -1,4 +1,3 @@
-import Quickshell
 import Quickshell.Services.Pipewire
 import QtQuick
 import qs
@@ -7,8 +6,7 @@ import qs.lib
 Item {
     id: root
 
-    property var bar
-    readonly property var sink: Pipewire.defaultAudioSink
+    readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property real volume: sink?.audio?.volume ?? 0
 

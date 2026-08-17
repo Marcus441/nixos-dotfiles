@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import QtQuick
@@ -6,7 +7,7 @@ import qs
 Row {
     id: root
 
-    property var bar
+    required property Bar bar
 
     spacing: Theme.gap
     visible: SystemTray.items.values.length > 0

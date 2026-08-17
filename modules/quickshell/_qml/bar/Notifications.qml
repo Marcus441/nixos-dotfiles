@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import qs
@@ -6,8 +7,6 @@ import qs.services
 
 Item {
     id: root
-
-    property var bar
 
     readonly property int count: Notifs.tracked.length
 
