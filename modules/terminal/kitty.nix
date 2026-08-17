@@ -117,6 +117,11 @@ _: {
             "ctrl+k" = "neighboring_window up";
             "ctrl+l" = "neighboring_window right";
 
+            "alt+h" = "kitten relative_resize.py left 3 alt+h";
+            "alt+j" = "kitten relative_resize.py down 3 alt+j";
+            "alt+k" = "kitten relative_resize.py up 3 alt+k";
+            "alt+l" = "kitten relative_resize.py right 3 alt+l";
+
             "ctrl+1" = "goto_tab 1";
             "ctrl+2" = "goto_tab 2";
             "ctrl+3" = "goto_tab 3";
@@ -144,6 +149,11 @@ _: {
             map --when-focus-on var:IS_NVIM ctrl+j
             map --when-focus-on var:IS_NVIM ctrl+k
             map --when-focus-on var:IS_NVIM ctrl+l
+
+            map --when-focus-on var:IS_NVIM alt+h
+            map --when-focus-on var:IS_NVIM alt+j
+            map --when-focus-on var:IS_NVIM alt+k
+            map --when-focus-on var:IS_NVIM alt+l
           '';
         };
 

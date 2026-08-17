@@ -299,12 +299,13 @@ ghostty have no equivalent, so choosing another terminal quietly reverts it.
 **Why** kitty sees the keypress before the program does, so
 `map ctrl+h neighboring_window left` alone would take `C-h` from Neovim
 entirely. smart-splits.nvim writes an `IS_NVIM` user-var over OSC 1337, and the
-four `map --when-focus-on var:IS_NVIM ctrl+h` lines with an empty action unbind
-the key again *for windows that have it*. The reverse trip is
+eight `map --when-focus-on var:IS_NVIM` lines with an empty action unbind the
+key again *for windows that have it*. The reverse trip is
 `kitty @ kitten neighboring_window.py` over the socket — hence
 `allow_remote_control` and `listen_on` — and a bare kitten name resolves
 against the config dir, so `xdg.configFile` installs the kittens from
-`pkgs.vimPlugins.smart-splits-nvim` (`relative_resize.py` carries `A-hjkl`).
+`pkgs.vimPlugins.smart-splits-nvim`. `A-hjkl` resizes ride the same rails —
+kitty maps them to `relative_resize.py`, gated by the same unbinds.
 **Breaks** Silently, twice over. `listen_on` puts `KITTY_LISTEN_ON` in the
 environment, the *only* thing smart-splits tests to decide it is talking to
 kitty — drop it and the plugin reports no multiplexer; a missing kitten is a
@@ -327,5 +328,7 @@ child should have had the key first. The divergence is the decision, not drift.
 way — most of the time you would test it — and the moment a Ghostty split *and*
 a Neovim window both sit left, Ghostty wins and that window is unreachable.
 smart-splits closed its Ghostty backend (PR #433) on exactly this.
-**Also** ghostty is in no host's aspect list today, so this costs nothing now;
-it is written down so the arrows are not "fixed" into `hjkl` later.
+**Also** `resize_split` sits on `alt+arrows` for the same reason `goto_split`
+sits on `ctrl+arrows`: `alt+hjkl` would take Neovim's resize keys with no way
+to give them back. ghostty is in no host's aspect list today, so this costs
+nothing now; it is written down so neither set is "fixed" into `hjkl` later.

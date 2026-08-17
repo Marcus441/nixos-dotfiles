@@ -95,6 +95,11 @@ _: {
               "ctrl+up=goto_split:up"
               "ctrl+right=goto_split:right"
 
+              "alt+left=resize_split:left,40"
+              "alt+down=resize_split:down,40"
+              "alt+up=resize_split:up,40"
+              "alt+right=resize_split:right,40"
+
               "ctrl+1=goto_tab:1"
               "ctrl+2=goto_tab:2"
               "ctrl+3=goto_tab:3"
