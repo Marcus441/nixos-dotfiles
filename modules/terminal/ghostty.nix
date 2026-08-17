@@ -106,7 +106,7 @@ _: {
               "ctrl+9=goto_tab:9"
               "ctrl+0=goto_tab:10"
 
-              "alt+l=clear_screen"
+              "ctrl+shift+l=clear_screen"
 
               "ctrl+shift+t=new_tab"
               "ctrl+shift+o=toggle_tab_overview"

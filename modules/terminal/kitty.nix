@@ -130,7 +130,8 @@ _: {
 
             "ctrl+shift+t" = "new_tab_with_cwd";
             "ctrl+shift+o" = "select_tab";
-            "alt+l" = "clear_terminal to_cursor_scroll active";
+            # load-bearing: docs/decisions/terminal.md#kitty-splits-only
+            "ctrl+shift+l" = "clear_terminal to_cursor_scroll active";
 
             "XF86Copy" = "copy_to_clipboard";
             "XF86Cut" = "copy_or_noop";
@@ -139,8 +140,6 @@ _: {
 
           # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
           extraConfig = ''
-            map ctrl+shift+l
-
             map --when-focus-on var:IS_NVIM ctrl+h
             map --when-focus-on var:IS_NVIM ctrl+j
             map --when-focus-on var:IS_NVIM ctrl+k

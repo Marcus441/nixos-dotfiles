@@ -203,7 +203,9 @@ deletes the state the keys degrade in.
 `ctrl+shift+l` is `next_layout`, one slipped shift from the `ctrl+l` that moves
 a pane right, so a tab flips to `stack` without a word and stays there.
 `kitty @ ls | grep '"layout"'` is the check and `kitty @ goto-layout splits` the
-escape; `extraConfig` unbinds the key so the trip cannot be made again.
+escape; the key is rebound to `clear_terminal` so the trip cannot be made
+again. Clear cannot sit on `alt+l` instead — kitty would consume it before the
+`A-l` smart-splits resize ever reached Neovim.
 **Also** the layout is per tab, so tabs open across the switch keep whatever
 they were on — a config reload re-lays out nothing.
 
