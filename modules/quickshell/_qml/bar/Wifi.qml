@@ -33,11 +33,14 @@ Item {
             return "󰤮";
         }
         baseColor: root.activeNet || root.wiredDev?.connected ? Config.base03 : Config.base08
-        onClicked: {
-            popup.visible = !popup.visible;
-            if (root.wifiDev)
-                root.wifiDev.scannerEnabled = popup.visible;
-        }
+        onClicked: popup.visible = !popup.visible
+    }
+
+    Binding {
+        target: root.wifiDev
+        property: "scannerEnabled"
+        value: popup.visible
+        when: root.wifiDev !== null
     }
 
     BarPopup {
