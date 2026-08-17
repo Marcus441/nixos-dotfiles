@@ -13,6 +13,11 @@ Overlay {
 
     readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name))
 
+    onAppsChanged: {
+        if (filterList)
+            filterList.refilter();
+    }
+
     function launch(app) {
         if (!app)
             return;
