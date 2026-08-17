@@ -12,10 +12,11 @@ _: {
         ...
       }: let
         qs = lib.getExe pkgs.quickshell;
+        ipc = target: "${qs} -c default ipc call ${target} toggle";
       in {
-        bar.toggle = "${qs} -c default ipc call bar toggle";
-        wallpaperMenu.command = "${qs} -c default ipc call wallpaper toggle";
-        powerMenu.command = "${qs} -c default ipc call powermenu toggle";
+        bar.toggle = ipc "bar";
+        wallpaperMenu.command = ipc "wallpaper";
+        powerMenu.command = ipc "powermenu";
 
         programs.quickshell = {
           enable = true;

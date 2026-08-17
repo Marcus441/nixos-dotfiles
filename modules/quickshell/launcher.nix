@@ -7,9 +7,10 @@ _: {
         ...
       }: let
         qs = lib.getExe pkgs.quickshell;
+        ipc = target: "${qs} -c default ipc call ${target} toggle";
       in {
         launcher.argv = [qs "-c" "default" "ipc" "call" "launcher" "toggle"];
-        clipboard.history = "${qs} -c default ipc call clipboard toggle";
+        clipboard.history = ipc "clipboard";
 
         services.cliphist = {
           enable = true;

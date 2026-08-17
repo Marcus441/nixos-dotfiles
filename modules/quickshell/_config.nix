@@ -12,6 +12,7 @@
   networkManagerCommand,
 }: let
   inherit (pkgs) lib;
+  qml = lib.replaceStrings ["\\" "\""] ["\\\\" "\\\""];
   walls = import ../wallpaper/_wallpapers.nix {inherit pkgs;};
 
   setWallpaper = pkgs.writeShellScript "qs-set-wallpaper" ''
@@ -79,7 +80,7 @@
 
     ${colorProps}
         readonly property string fontFamily: "Inter"
-        readonly property string monoFamily: "${font.name}"
+        readonly property string monoFamily: "${qml font.name}"
         readonly property string iconFamily: "Symbols Nerd Font Mono"
         readonly property int fontSize: 12
         readonly property string barPosition: "${barPosition}"
@@ -88,13 +89,13 @@
         readonly property real weatherLon: 153.0260
         readonly property string weatherTimezone: "Australia/Brisbane"
 
-        readonly property string lockCommand: "${lockCommand}"
-        readonly property string logoutCommand: "${logoutCommand}"
-        readonly property string systemMonitorCommand: "${systemMonitorCommand}"
-        readonly property string processorCommand: "${processorCommand}"
-        readonly property string memoryCommand: "${memoryCommand}"
-        readonly property string temperatureCommand: "${temperatureCommand}"
-        readonly property string networkManagerCommand: "${networkManagerCommand}"
+        readonly property string lockCommand: "${qml lockCommand}"
+        readonly property string logoutCommand: "${qml logoutCommand}"
+        readonly property string systemMonitorCommand: "${qml systemMonitorCommand}"
+        readonly property string processorCommand: "${qml processorCommand}"
+        readonly property string memoryCommand: "${qml memoryCommand}"
+        readonly property string temperatureCommand: "${qml temperatureCommand}"
+        readonly property string networkManagerCommand: "${qml networkManagerCommand}"
 
         readonly property string wallsDir: "${walls}"
         readonly property string setWallpaperScript: "${setWallpaper}"
@@ -121,6 +122,6 @@
 in
   pkgs.runCommand "quickshell-default-config" {} ''
     mkdir -p $out
-    cp -r ${./_qml}/. $out/
+    cp -r --no-preserve=mode ${./_qml}/. $out/
     cp ${configQml} $out/Config.qml
   ''
