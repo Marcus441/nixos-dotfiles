@@ -16,8 +16,8 @@ PanelWindow {
         bottom: Config.barPosition !== "top"
     }
 
-    implicitHeight: 26
-    implicitWidth: 30
+    implicitHeight: Config.fontSize + Theme.pad
+    implicitWidth: Config.fontSize + Theme.pad + 4
     color: Config.base00
 
     Rectangle {

@@ -67,7 +67,7 @@
         readonly property string fontFamily: "Inter"
         readonly property string monoFamily: "${qml font.name}"
         readonly property string iconFamily: "Symbols Nerd Font Mono"
-        readonly property int fontSize: 12
+        readonly property int fontSize: ${toString font.size}
         readonly property string barPosition: "${barPosition}"
 
         readonly property real weatherLat: ${weatherLatitude}
