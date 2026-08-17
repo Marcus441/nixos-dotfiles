@@ -11,6 +11,11 @@
   memoryCommand,
   temperatureCommand,
   networkManagerCommand,
+  bluetoothManagerCommand,
+  audioMixerCommand,
+  weatherLatitude,
+  weatherLongitude,
+  weatherTimezone,
   wallpaperSet,
   wallpaperEnableRotator,
   wallpaperDisableRotator,
@@ -65,9 +70,9 @@
         readonly property int fontSize: 12
         readonly property string barPosition: "${barPosition}"
 
-        readonly property real weatherLat: -27.4705
-        readonly property real weatherLon: 153.0260
-        readonly property string weatherTimezone: "Australia/Brisbane"
+        readonly property real weatherLat: ${weatherLatitude}
+        readonly property real weatherLon: ${weatherLongitude}
+        readonly property string weatherTimezone: "${qml weatherTimezone}"
 
         readonly property string lockCommand: "${qml lockCommand}"
         readonly property string logoutCommand: "${qml logoutCommand}"
@@ -76,6 +81,8 @@
         readonly property string memoryCommand: "${qml memoryCommand}"
         readonly property string temperatureCommand: "${qml temperatureCommand}"
         readonly property string networkManagerCommand: "${qml networkManagerCommand}"
+        readonly property string bluetoothManagerCommand: "${qml bluetoothManagerCommand}"
+        readonly property string audioMixerCommand: "${qml audioMixerCommand}"
 
         readonly property string cacheDir: "${qml cacheDir}"
         readonly property string wallsDir: "${qml wallpaperDirectory}"

@@ -48,9 +48,10 @@ Item {
                 }
             },
             TextAction {
+                visible: Config.bluetoothManagerCommand !== ""
                 text: "󱂬 manager"
                 onTriggered: {
-                    Config.launchApp("blueman-manager");
+                    Config.launchApp(Config.bluetoothManagerCommand);
                     popup.visible = false;
                 }
             }

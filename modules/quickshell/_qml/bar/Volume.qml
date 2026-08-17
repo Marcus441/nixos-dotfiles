@@ -53,9 +53,10 @@ Item {
                 }
             },
             TextAction {
+                visible: Config.audioMixerCommand !== ""
                 text: "󰓃 mixer"
                 onTriggered: {
-                    Config.launchApp("pavucontrol");
+                    Config.launchApp(Config.audioMixerCommand);
                     popup.visible = false;
                 }
             }
