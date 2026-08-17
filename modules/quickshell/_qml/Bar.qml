@@ -46,7 +46,6 @@ PanelWindow {
 
         LayoutIndicator {
             Layout.alignment: Qt.AlignHCenter
-            bar: bar
         }
 
         Workspaces {
