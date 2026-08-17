@@ -4,25 +4,19 @@ import Quickshell
 Singleton {
     id: root
 
-    property bool launcherOpen: false
-    property bool clipboardOpen: false
-    property bool wallpaperOpen: false
-    property bool powerOpen: false
+    property string open: ""
+
+    readonly property bool launcherOpen: open === "launcher"
+    readonly property bool clipboardOpen: open === "clipboard"
+    readonly property bool wallpaperOpen: open === "wallpaper"
+    readonly property bool powerOpen: open === "powermenu"
 
     function toggle(name: string): void {
-        switch (name) {
-        case "launcher":
-            launcherOpen = !launcherOpen;
-            break;
-        case "clipboard":
-            clipboardOpen = !clipboardOpen;
-            break;
-        case "wallpaper":
-            wallpaperOpen = !wallpaperOpen;
-            break;
-        case "powermenu":
-            powerOpen = !powerOpen;
-            break;
-        }
+        open = open === name ? "" : name;
+    }
+
+    function close(name: string): void {
+        if (open === name)
+            open = "";
     }
 }

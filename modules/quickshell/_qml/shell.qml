@@ -24,7 +24,7 @@ ShellRoot {
         active: Popups.launcherOpen
 
         Launcher {
-            onDismissed: Popups.launcherOpen = false
+            onDismissed: Popups.close("launcher")
         }
     }
 
@@ -32,7 +32,7 @@ ShellRoot {
         active: Popups.clipboardOpen
 
         Clipboard {
-            onDismissed: Popups.clipboardOpen = false
+            onDismissed: Popups.close("clipboard")
         }
     }
 
@@ -40,7 +40,7 @@ ShellRoot {
         active: Popups.wallpaperOpen
 
         WallpaperPicker {
-            onDismissed: Popups.wallpaperOpen = false
+            onDismissed: Popups.close("wallpaper")
         }
     }
 
@@ -48,7 +48,7 @@ ShellRoot {
         active: Popups.powerOpen
 
         PowerMenu {
-            onDismissed: Popups.powerOpen = false
+            onDismissed: Popups.close("powermenu")
         }
     }
 
