@@ -47,40 +47,18 @@ Item {
         visible: false
 
         headerContent: [
-            Text {
+            TextAction {
                 text: root.muted ? "󰖁 unmute" : "󰕾 mute"
-                color: muteMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: muteMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if (root.sink?.audio)
-                            root.sink.audio.muted = !root.sink.audio.muted;
-                    }
+                onTriggered: {
+                    if (root.sink?.audio)
+                        root.sink.audio.muted = !root.sink.audio.muted;
                 }
             },
-            Text {
+            TextAction {
                 text: "󰓃 mixer"
-                color: mixerMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: mixerMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
-                        popup.visible = false;
-                    }
+                onTriggered: {
+                    Quickshell.execDetached([Config.sh, "-c", "uwsm app -- pavucontrol"]);
+                    popup.visible = false;
                 }
             }
         ]

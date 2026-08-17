@@ -48,37 +48,19 @@ Item {
         visible: false
 
         headerContent: [
-            Text {
+            TextAction {
                 text: root.adapter?.enabled ? "󰂯 on" : "󰂲 off"
-                color: root.adapter?.enabled ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if (root.adapter)
-                            root.adapter.enabled = !root.adapter.enabled;
-                    }
+                active: root.adapter?.enabled ?? false
+                onTriggered: {
+                    if (root.adapter)
+                        root.adapter.enabled = !root.adapter.enabled;
                 }
             },
-            Text {
+            TextAction {
                 text: "󱂬 manager"
-                color: managerMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: managerMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
-                        popup.visible = false;
-                    }
+                onTriggered: {
+                    Quickshell.execDetached([Config.sh, "-c", "uwsm app -- blueman-manager"]);
+                    popup.visible = false;
                 }
             }
         ]

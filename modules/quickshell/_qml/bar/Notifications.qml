@@ -31,33 +31,15 @@ Item {
         visible: false
 
         headerContent: [
-            Text {
+            TextAction {
                 text: "󰂛 dnd"
-                color: Notifs.dnd ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Notifs.dnd = !Notifs.dnd
-                }
+                active: Notifs.dnd
+                onTriggered: Notifs.dnd = !Notifs.dnd
             },
-            Text {
+            TextAction {
                 visible: root.count > 0
                 text: "󰆴 clear"
-                color: clearMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: clearMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Notifs.clearAll()
-                }
+                onTriggered: Notifs.clearAll()
             }
         ]
 

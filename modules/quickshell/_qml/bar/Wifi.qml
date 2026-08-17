@@ -50,35 +50,17 @@ Item {
         visible: false
 
         headerContent: [
-            Text {
+            TextAction {
                 text: Networking.wifiEnabled ? "󰤨 on" : "󰤮 off"
-                color: Networking.wifiEnabled ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
-                }
+                active: Networking.wifiEnabled
+                onTriggered: Networking.wifiEnabled = !Networking.wifiEnabled
             },
-            Text {
+            TextAction {
                 visible: Config.networkManagerCommand !== ""
                 text: "󱂬 manager"
-                color: managerMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: managerMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
-                        popup.visible = false;
-                    }
+                onTriggered: {
+                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.networkManagerCommand}`]);
+                    popup.visible = false;
                 }
             }
         ]

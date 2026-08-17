@@ -86,18 +86,11 @@ Overlay {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                Text {
+                TextAction {
                     text: root.rotatorEnabled ? "󰒝 shuffle on" : "󰒝 shuffle off"
-                    color: root.rotatorEnabled ? Config.base0D : Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
+                    active: root.rotatorEnabled
                     anchors.verticalCenter: parent.verticalCenter
-
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleRotator()
-                    }
+                    onTriggered: root.toggleRotator()
                 }
             }
         }

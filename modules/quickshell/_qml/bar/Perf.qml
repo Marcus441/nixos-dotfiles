@@ -82,23 +82,12 @@ Item {
         visible: false
 
         headerContent: [
-            Text {
+            TextAction {
                 visible: Config.systemMonitorCommand !== ""
                 text: "󱂬 monitor"
-                color: monitorMouse.containsMouse ? Config.base0D : Config.base04
-                font.family: Config.iconFamily
-                font.pixelSize: Config.fontSize
-
-                MouseArea {
-                    id: monitorMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.systemMonitorCommand}`]);
-                        popup.visible = false;
-                    }
+                onTriggered: {
+                    Quickshell.execDetached([Config.sh, "-c", `uwsm app -- ${Config.systemMonitorCommand}`]);
+                    popup.visible = false;
                 }
             }
         ]
