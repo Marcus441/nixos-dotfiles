@@ -69,7 +69,8 @@ _: {
               cursor_trail = 3;
               cursor_trail_start_threshold = 2;
 
-              enabled_layouts = "splits,stack";
+              # load-bearing: docs/decisions/terminal.md#kitty-splits-only
+              enabled_layouts = "splits";
               # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
               allow_remote_control = "socket-only";
               listen_on = "unix:@mykitty";
@@ -127,6 +128,7 @@ _: {
             "ctrl+0" = "goto_tab 10";
 
             "ctrl+shift+t" = "new_tab_with_cwd";
+            "ctrl+shift+o" = "select_tab";
             "alt+l" = "clear_terminal to_cursor_scroll active";
 
             "XF86Copy" = "copy_to_clipboard";
@@ -136,6 +138,8 @@ _: {
 
           # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
           extraConfig = ''
+            map ctrl+shift+l
+
             map --when-focus-on var:IS_NVIM ctrl+h
             map --when-focus-on var:IS_NVIM ctrl+j
             map --when-focus-on var:IS_NVIM ctrl+k
