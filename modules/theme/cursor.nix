@@ -44,4 +44,15 @@ _: {
       }
     )
   ];
+
+  flake.modules.homeManager.hyprland = [
+    (
+      {pkgs, ...}: {
+        desktop.cursor = {
+          name = "Adwaita";
+          package = pkgs.adwaita-icon-theme;
+        };
+      }
+    )
+  ];
 }
