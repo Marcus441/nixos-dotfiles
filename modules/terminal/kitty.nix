@@ -49,7 +49,8 @@ _: {
 
           # load-bearing: docs/decisions/terminal.md#kitty-font-option
           font = {
-            inherit (font) name size;
+            inherit (font) name;
+            size = font.terminalSize;
             package = null;
           };
 

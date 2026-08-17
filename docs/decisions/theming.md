@@ -83,14 +83,15 @@ the generator.
 ## `theme/font.nix` — option and packages both in `core`
 
 **Why** The option is what other files read; the packages put fonts on disk.
-Both belong to every host. Point size comes from the host record, being a
-property of the panel and not the theme.
+Both belong to every host. Two sizes: `terminalSize` comes from the host
+record, being a property of the panel and not the theme; `size` is the desktop
+UI (shell) size, a plain default because 12 suits every panel the shell runs on.
 
 <a id="neovide-font-size"></a>
 ## `editor/neovide.nix` — the point size is coerced to a float
 
 **Why** Neovide's `FontSettings.size` is an `f32` and is not optional, while
-`desktop.font.size` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
+`desktop.font.terminalSize` is an `int` that `pkgs.formats.toml` writes as one. `0.0 +`
 is what lands the host's `fontSize` in the file as `20.0` rather than `20`.
 **Breaks** *Silently.* The type error rejects the whole config file, not just
 the `[font]` table, so Neovide falls back to its own font at its own size — and

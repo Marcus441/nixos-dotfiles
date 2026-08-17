@@ -92,5 +92,6 @@ paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathur
   terminals render).
 - `modules/theme/tmtheme.nix` — provider/consumer split: declares `desktop.syntaxTheme`
   in `core`, read by `bat.nix` and `filemanager/yazi-style.nix`.
-- `modules/theme/font.nix` — the option is `core`; point size comes from the
-  host record, because it is a property of the panel and not of the theme.
+- `modules/theme/font.nix` — the options are `core`; `terminalSize` comes from
+  the host record, because it is a property of the panel and not of the theme,
+  while `size` is the desktop UI (shell) size with a plain default.

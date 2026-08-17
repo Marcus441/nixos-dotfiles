@@ -48,7 +48,7 @@ _: {
           compactSize = lib.mkOption {
             type = lib.types.int;
             readOnly = true;
-            default = config.desktop.font.size * 9 / 10;
+            default = config.desktop.font.terminalSize * 9 / 10;
             description = "Font size at which a TUI needing 24 rows fits a session's floating window.";
           };
 

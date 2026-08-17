@@ -28,7 +28,7 @@
             font = {
               normal = [config.desktop.font.name];
               # load-bearing: docs/decisions/theming.md#neovide-font-size
-              size = 0.0 + config.desktop.font.size;
+              size = 0.0 + config.desktop.font.terminalSize;
             };
           };
         };

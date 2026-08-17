@@ -26,7 +26,7 @@ _: {
         inherit (config.desktop) colors font;
       in {
         services.mako.settings = {
-          font = "${font.name} ${toString font.size}";
+          font = "${font.name} ${toString font.terminalSize}";
           background-color = colors.base00;
           text-color = colors.base05;
           border-color = colors.base0D;

@@ -34,7 +34,7 @@ _: {
           systemd.enable = true;
           settings = {
             font-family = font.name;
-            font-size = font.size;
+            font-size = font.terminalSize;
             font-feature = lib.optionals (!font.ligatures) ["-calt" "-liga" "-clig" "-dlig"];
             # load-bearing: docs/decisions/terminal.md#terminal-stroke-weight
             alpha-blending = "linear";
