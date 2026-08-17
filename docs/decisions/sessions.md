@@ -112,6 +112,7 @@ inhibition is the Wayland protocol, which hypridle honours.
 rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
 screen.
 
+<a id="quickshell-notifs"></a>
 ## `quickshell/_qml/services/Notifs.qml` — the shell owns notifications
 
 **Why** On Hyprland hosts the shell claims `org.freedesktop.Notifications`
@@ -134,14 +135,14 @@ deliberate deltas from the old mako behaviour.
 
 **Why** The bar's layout indicator needs to react the instant a bind switches
 layouts, and Hyprland emits no IPC event for a runtime config change. The
-layout-set script writes the layout name to the cache file; the indicator
-watches it with a `FileView`. A cache file keeps the coupling one-way —
+layout-set script writes the layout name to the cache file; the LayoutState
+singleton watches it with a `FileView`. A cache file keeps the coupling one-way —
 `hyprland` files never hold a quickshell store path, and a host without
 `quickshell` just writes a file nobody reads. layout-set is the single entry
 point — every layout bind routes through it, and it also applies the
 per-layout visual profile (#monocle-visual-profile).
 **Breaks** *Silently, on rename.* The file name is string-matched in two
-aspects (`binds.nix` and `LayoutIndicator.qml`); changing it in one place
+aspects (`binds.nix` and `LayoutState.qml`); changing it in one place
 leaves the indicator frozen on its startup `getoption` fallback.
 
 <a id="monocle-visual-profile"></a>

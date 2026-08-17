@@ -1,5 +1,5 @@
 ---
-paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,modules/terminal/**,statix.toml"
+paths: "modules/powermenu/**,modules/bar/**,modules/dwl/**,modules/hyprland/**,modules/terminal/**,modules/quickshell/**,statix.toml"
 ---
 
 # Settled decisions — do not re-propose
@@ -13,7 +13,9 @@ human makes, not a cleanup you offer.
   `powerMenu.command` intents, the power menu is a quickshell overlay (wleave
   is retired), the shell owns `org.freedesktop.Notifications` on Hyprland
   hosts (mako serves only dwl), and `walker` is its own aspect that no host
-  currently takes. Waybar is retired.
+  currently takes. Waybar is retired. The Notifs singleton must stay
+  instantiated at startup or the D-Bus name goes unclaimed —
+  `docs/decisions/sessions.md#quickshell-notifs`.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle

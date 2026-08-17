@@ -1,5 +1,5 @@
 ---
-paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix"
+paths: "**/terminal/*.nix,**/qt.nix,**/bat.nix,**/yazi*.nix,**/gtk.nix,**/zathura.nix,**/*theme*.nix,**/colors.nix,modules/quickshell/**"
 ---
 
 # Theming hazards — colours and syntax themes
