@@ -116,24 +116,7 @@ Overlay {
             cellHeight: 144
             model: root.walls
 
-            ScrollBar.vertical: ScrollBar {
-                id: scrollbar
-
-                policy: ScrollBar.AsNeeded
-
-                contentItem: Rectangle {
-                    implicitWidth: 8
-                    radius: width / 2
-                    color: Config.base03
-                    opacity: scrollbar.active ? 0.6 : 0
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: 200
-                        }
-                    }
-                }
-            }
+            ScrollBar.vertical: ThinScrollBar {}
 
             delegate: Item {
                 id: cell
