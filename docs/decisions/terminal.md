@@ -298,13 +298,16 @@ ghostty have no equivalent, so choosing another terminal quietly reverts it.
 `map ctrl+h neighboring_window left` alone would take `C-h` from Neovim
 entirely. smart-splits.nvim writes an `IS_NVIM` user-var over OSC 1337, and the
 four `map --when-focus-on var:IS_NVIM ctrl+h` lines with an empty action unbind
-the key again *for windows that have it*. The reverse trip goes over `kitty @`,
-which is what `allow_remote_control` and `listen_on` are for.
-**Breaks** Silently, and `listen_on` is the sharp half: it puts
-`KITTY_LISTEN_ON` in the environment, the *only* thing smart-splits tests to
-decide it is talking to kitty. Drop it and the plugin reports no multiplexer,
-navigation stops at the last Neovim window, and nothing says why.
-`echo $KITTY_LISTEN_ON` is the check.
+the key again *for windows that have it*. The reverse trip is
+`kitty @ kitten neighboring_window.py` over the socket — hence
+`allow_remote_control` and `listen_on` — and a bare kitten name resolves
+against the config dir, so `xdg.configFile` installs the kittens from
+`pkgs.vimPlugins.smart-splits-nvim` (`relative_resize.py` carries `A-hjkl`).
+**Breaks** Silently, twice over. `listen_on` puts `KITTY_LISTEN_ON` in the
+environment, the *only* thing smart-splits tests to decide it is talking to
+kitty — drop it and the plugin reports no multiplexer; a missing kitten is a
+swallowed non-zero exit. Either way navigation stops at the last Neovim
+window. `echo $KITTY_LISTEN_ON`, then `ls ~/.config/kitty/*.py`, is the check.
 **Also** the unbind lines live in `extraConfig` because their action is empty
 and the `keybindings` attrset cannot express that; the default order 1000 lands
 after `settings` (540) and `keybindings` (560) in the same string.

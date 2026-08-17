@@ -147,6 +147,15 @@ _: {
             map --when-focus-on var:IS_NVIM ctrl+l
           '';
         };
+
+        # load-bearing: docs/decisions/terminal.md#kitty-split-navigation
+        xdg.configFile = let
+          kittens = "${pkgs.vimPlugins.smart-splits-nvim}/kitty";
+        in {
+          "kitty/neighboring_window.py".source = "${kittens}/neighboring_window.py";
+          "kitty/relative_resize.py".source = "${kittens}/relative_resize.py";
+          "kitty/split_window.py".source = "${kittens}/split_window.py";
+        };
       }
     )
   ];
