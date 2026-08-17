@@ -46,7 +46,9 @@ Singleton {
                     root.icon = icon[0];
                     root.desc = icon[1];
                     root.temp = `${Math.round(current.temperature_2m)}°C`;
-                } catch (e) {}
+                } catch (e) {
+                    console.warn("Weather: unparseable forecast response:", e.message);
+                }
             }
         }
     }

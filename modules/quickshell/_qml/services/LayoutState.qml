@@ -37,7 +37,9 @@ Singleton {
             onStreamFinished: {
                 try {
                     root.apply(JSON.parse(text).str);
-                } catch (e) {}
+                } catch (e) {
+                    console.warn("LayoutState: unparseable hyprctl output:", e.message);
+                }
                 stateFile.setText(root.layout + "\n");
             }
         }

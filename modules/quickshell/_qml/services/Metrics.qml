@@ -35,7 +35,9 @@ Singleton {
                     root.memUsed = m.memUsed;
                     root.memTotal = m.memTotal;
                     root.diskPct = m.diskPct;
-                } catch (e) {}
+                } catch (e) {
+                    console.warn("Metrics: unparseable collector output:", e.message);
+                }
             }
         }
     }
