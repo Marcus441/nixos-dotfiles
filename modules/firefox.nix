@@ -295,6 +295,8 @@ _: {
               "font.name-list.emoji" = "emoji";
 
               "general.autoScroll" = true;
+              # load-bearing: docs/decisions/firefox.md#main-thread-autoscroll
+              "apz.autoscroll.enabled" = false;
               "general.smoothScroll" = true;
               "general.smoothScroll.msdPhysics.enabled" = true;
               "general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS" = 12;
