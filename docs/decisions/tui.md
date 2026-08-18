@@ -160,3 +160,18 @@ read-only, which disables the two commands that write it back:
 **Breaks** Nothing in normal use; loudly if either command is reached for.
 Custom keybindings belong in `settings.keys`, where a reinstall cannot revert
 them.
+
+## `editor/claude-code.nix` — the package, not `programs.claude-code`
+
+**Why** claude-code is unfree, so it cannot go in `home.packages` here at all
+(`placement.md#unfree-nixos`) — which settles it, because `programs.claude-code`
+is a home-manager module with no NixOS side. Worth knowing before anyone
+reaches for `allowUnfreePredicate` to get the module back: its `settings` would
+install `settings.json` mode 444 and symlink it, and two writers need that file
+mutable. Claude Code's own `/config` writes `model`, `theme` and `tui` from
+inside the running app, and `herdr integration install claude` injects its
+`SessionStart` hook there.
+**Breaks** *Silently, then in the wrong place.* Declaring those settings means
+the next `herdr integration install claude` cannot write its hook;
+`herdr integration status` reports claude missing, and nothing in that message
+points at Nix.
