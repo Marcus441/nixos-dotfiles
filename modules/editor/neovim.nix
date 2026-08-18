@@ -34,13 +34,7 @@
         neovim = inputs.neovim-config.packages.${system};
       in {
         editor.package = neovim.full;
-      }
-    )
-  ];
 
-  flake.modules.homeManager.apps = [
-    (
-      {pkgs, ...}: {
         home.packages = with pkgs; [
           ghostscript
           tectonic

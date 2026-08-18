@@ -22,7 +22,7 @@ Enumerate the files behind any row with
 | Aspect | Classes | Files |
 | --- | --- | --- |
 | `alacritty` | `homeManager nixos` | 2 |
-| `apps` | `homeManager nixos` | 16 |
+| `apps` | `homeManager nixos` | 15 |
 | `core` | `homeManager nixos` | 65 |
 | `dev` | `homeManager nixos` | 6 |
 | `dwl` | `homeManager nixos` | 11 |
