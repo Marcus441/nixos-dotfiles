@@ -125,12 +125,45 @@ _: {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
               };
+
+              "@testpilot-containers" = {
+                installation_mode = "force_installed";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi";
+              };
             };
           };
 
           profiles.default = {
             id = 0;
             isDefault = true;
+
+            containersForce = true;
+            containers = {
+              personal = {
+                id = 1;
+                name = "Personal";
+                color = "blue";
+                icon = "fingerprint";
+              };
+              work = {
+                id = 2;
+                name = "Work";
+                color = "orange";
+                icon = "briefcase";
+              };
+              shopping = {
+                id = 3;
+                name = "Shopping";
+                color = "pink";
+                icon = "cart";
+              };
+              banking = {
+                id = 4;
+                name = "Banking";
+                color = "green";
+                icon = "dollar";
+              };
+            };
 
             search = {
               force = true;
