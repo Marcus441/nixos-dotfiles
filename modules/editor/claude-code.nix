@@ -1,9 +1,9 @@
 _: {
-  flake.modules.nixos.apps = [
+  flake.modules.homeManager.apps = [
     (
       {pkgs, ...}: {
-        # load-bearing: docs/decisions/placement.md#unfree-nixos
-        environment.systemPackages = [pkgs.claude-code];
+        # load-bearing: docs/decisions/placement.md#unfree-home
+        home.packages = [pkgs.claude-code];
       }
     )
   ];

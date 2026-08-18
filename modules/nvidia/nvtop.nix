@@ -1,9 +1,9 @@
 _: {
-  flake.modules.nixos.nvidia = [
+  flake.modules.homeManager.nvidia = [
     (
       {pkgs, ...}: {
-        # load-bearing: docs/decisions/placement.md#unfree-nixos
-        environment.systemPackages = [pkgs.nvtopPackages.nvidia];
+        # load-bearing: docs/decisions/placement.md#unfree-home
+        home.packages = [pkgs.nvtopPackages.nvidia];
       }
     )
   ];

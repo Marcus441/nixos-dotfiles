@@ -24,26 +24,26 @@ power-profiles-daemon and upower stay in `core` because the bar's battery
 widget runs on the desktops too. A too-small aspect is recoverable where a
 broken power path is not.
 
-<a id="unfree-nixos"></a>
-## `gaming/launchers.nix`, `nvidia/nvtop.nix` — `nixos`, because unfree cannot be home
+<a id="unfree-home"></a>
+## `editor/claude-code.nix`, `gaming/launchers.nix`, `nvidia/nvtop.nix` — `homeManager`, unfree included
 
-**Why** Not about the packages: **an unfree package cannot go in `home.packages`
-at all here.** `unfree.nix` sets `allowUnfree` on **nixos `core` only**, and Home
-Manager is standalone on a *fixed* `nixpkgs.legacyPackages.${system}`. `lutris`
-pulls unfree `pkgs.steam` through `steamSupport ? true`; `nvtopPackages.nvidia`
-pulls `cuda_nvml_dev` under the CUDA EULA.
-**Breaks** *Silently, then loudly in the wrong place.* Setting
-`nixpkgs.config.allowUnfree` in a home module is accepted and then ignored, and
-the build fails on the licence with no hint that the option it names is inert —
-the overlay trap in `host-wiring.md` wearing a different hat.
-**Also** the alternatives were worse: `steamSupport = false` trades a licence
-boundary for lost functionality, and giving the generator an `allowUnfree` pkgs
-instance moves every home closure on all three hosts to fix two packages on one.
+**Why** User apps default to `homeManager` (AGENTS.md §6), and unfree is no
+bar: `unfree.nix` sets `nixpkgs.config.allowUnfree` in **both classes**, and
+standalone Home Manager honours the home-module option — its `misc/nixpkgs.nix`
+re-imports `pkgs.path` with it and injects the result as `pkgs`. An earlier
+entry here recorded the opposite ("accepted and then ignored"); that was wrong
+for the pinned home-manager, and `verify.sh` measured the grant itself as a
+six-target no-op — `allowUnfree` gates evaluation, not derivations. The unfree
+reach is real: `lutris` pulls unfree `pkgs.steam` through `steamSupport ? true`;
+`nvtopPackages.nvidia` pulls `cuda_nvml_dev` under the CUDA EULA.
+**Breaks** Loudly on the licence if `unfree.nix` loses its `homeManager.core`
+half — the nixos half does not reach the standalone home build. `steam` itself
+stays `nixos`: `programs.steam` has no home-manager side (32-bit GL, firewall).
 
 ## `unfree.nix` — `core`, not `gaming`
 
-Not a gaming fact. It was only ever in gpc's host file because that is where the
-first unfree package happened to be needed.
+Not a gaming fact, and one file for both classes. It was only ever in gpc's
+host file because that is where the first unfree package happened to be needed.
 
 ## `brightnessctl.nix` — two audiences, neither `core`
 

@@ -33,10 +33,11 @@ where the old one sat. Measure with the diff-closures recipe
 `homeConfigurations."marcus@<host>"`, activated separately. **Do not convert it
 to `home-manager.nixosModules.home-manager`.**
 
-> **Overlay trap:** home configs are built on `nixpkgs.legacyPackages.${system}`,
-> so an overlay declared in the flake reaches NixOS and **silently does not
-> exist for Home Manager.** `callPackage` directly, or change the generator
-> deliberately.
+> **Overlay trap:** an overlay declared on the NixOS side reaches NixOS and
+> **silently does not exist for Home Manager** — the standalone home build
+> re-imports nixpkgs, honouring only *home-module* `nixpkgs.config` and
+> `nixpkgs.overlays` (how `unfree.nix` allows unfree in both classes). Declare
+> in both classes, `callPackage` directly, or change the generator deliberately.
 
 ## Cross-platform intents
 

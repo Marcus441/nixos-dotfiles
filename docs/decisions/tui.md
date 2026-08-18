@@ -181,11 +181,9 @@ them.
 
 ## `editor/claude-code.nix` — the package, not `programs.claude-code`
 
-**Why** claude-code is unfree, so it cannot go in `home.packages` here at all
-(`placement.md#unfree-nixos`) — which settles it, because `programs.claude-code`
-is a home-manager module with no NixOS side. Worth knowing before anyone
-reaches for `allowUnfreePredicate` to get the module back: its `settings` would
-install `settings.json` mode 444 and symlink it, and two writers need that file
+**Why** Not the licence — unfree is fine in `home.packages` now
+(`placement.md#unfree-home`) — but the module's `settings` would install
+`settings.json` mode 444 and symlink it, and two writers need that file
 mutable. Claude Code's own `/config` writes `model`, `theme` and `tui` from
 inside the running app, and `herdr integration install claude` injects its
 `SessionStart` hook there.

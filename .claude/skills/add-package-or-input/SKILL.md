@@ -14,9 +14,11 @@ description: >-
 `perSystem.packages.<name>` **in the file that uses it.** Never in a `pkgs/`
 or `overlays/` directory — those break feature closure (Inv. 4, Inv. 1).
 
-> **Trap:** home configs are built on `nixpkgs.legacyPackages.${system}`, so an
-> overlay declared in the flake reaches NixOS and **silently does not exist for
-> Home Manager.** `callPackage` directly, or change the generator deliberately.
+> **Trap:** an overlay declared on the NixOS side reaches NixOS and **silently
+> does not exist for Home Manager** — the standalone home build re-imports
+> nixpkgs, honouring only *home-module* `nixpkgs.config` and `nixpkgs.overlays`
+> (how `unfree.nix` allows unfree in both classes). Declare in both classes,
+> `callPackage` directly, or change the generator deliberately.
 
 Platform-gate by attribute, not by value — `mkIf` gates the value but still
 evaluates it:

@@ -1,9 +1,9 @@
 _: {
-  flake.modules.nixos.gaming = [
+  flake.modules.homeManager.gaming = [
     (
       {pkgs, ...}: {
-        # load-bearing: docs/decisions/placement.md#unfree-nixos
-        environment.systemPackages = with pkgs; [
+        # load-bearing: docs/decisions/placement.md#unfree-home
+        home.packages = with pkgs; [
           lutris
           heroic
           bottles
