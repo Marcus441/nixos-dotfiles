@@ -80,10 +80,17 @@ File choosers and settings. dwl declares its portals on the nixos side via
 Bound to keys in `hyprland/binds.nix`, so it follows the session rather than the
 app set. dwl builds its own ocr-copy against its own keybind.
 
-## `editor/neovim.nix` / `editor/neovide.nix` — headless vs GUI
+## `editor/neovim.nix` / `editor/neovide.nix` — the toolchain follows `dev`
 
-`editor/neovim.nix` is `core` and provides the headless `nvim` both profiles share;
-Neovide is the GUI front-end and is `apps` only.
+**Why** The two upstream builds differ by an LSP toolchain, not by a feature
+flag: `full` carries ~6.0 GiB of store paths `min` does not — kotlin-lsp,
+clang/llvm, the dotnet SDK, a JDK, basedpyright. `core` therefore installs
+`min`, the notepad every host needs, through `editor.package`; `dev` sets that
+option to `full`. A host that does not develop does not pay for a language
+server it cannot invoke.
+**Also** Neovide is `dev` for the same reason and not because it is a GUI:
+it drives `neovim.gui`, whose closure is that toolchain again — measured at 7
+paths over `full`, so free beside it and the whole 6.4 GiB without it.
 
 <a id="man-pager-colours"></a>
 ## `cli/man.nix` — the pager colours are `home.sessionVariables`

@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.homeManager.apps = [
+  flake.modules.homeManager.dev = [
     (
       {
         config,
