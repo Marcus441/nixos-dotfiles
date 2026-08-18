@@ -50,6 +50,11 @@ _: {
 
             Permissions = {
               Notifications = {
+                Allow = [
+                  "https://mail.google.com"
+                  "https://outlook.live.com"
+                  "https://outlook.office.com"
+                ];
                 BlockNewRequests = true;
                 Locked = false;
               };
