@@ -168,6 +168,24 @@ _: {
                 color = "green";
                 icon = "dollar";
               };
+              email-1 = {
+                id = 5;
+                name = "Email 1";
+                color = "turquoise";
+                icon = "circle";
+              };
+              email-2 = {
+                id = 6;
+                name = "Email 2";
+                color = "yellow";
+                icon = "circle";
+              };
+              email-3 = {
+                id = 7;
+                name = "Email 3";
+                color = "purple";
+                icon = "circle";
+              };
             };
 
             search = {
