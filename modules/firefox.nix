@@ -286,9 +286,6 @@ _: {
               "widget.use-xdg-desktop-portal.file-picker" = 2;
               "widget.use-xdg-desktop-portal.mime-handler" = 1;
 
-              "gfx.webrender.all" = true;
-              "gfx.webrender.compositor" = true;
-              "media.hardware-video-decoding.force-enabled" = true;
               "media.ffmpeg.vaapi.enabled" = true;
               "media.rdd-ffmpeg.enabled" = true;
               "media.av1.enabled" = true;
