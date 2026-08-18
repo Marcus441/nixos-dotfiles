@@ -1,7 +1,8 @@
 # TUIs and file managers
 
-The programs that have to carry a terminal with them, and the two file managers.
-The terminals themselves are in `terminal.md`.
+The programs that have to carry a terminal with them, the two file managers, and
+the multiplexer the rest of them sit inside. The terminals themselves are in
+`terminal.md`.
 
 ## `filemanager/yazi.nix` — the program is `apps`, the role is its own aspect
 
@@ -129,3 +130,33 @@ known networks, where `#a6a69c` is the right answer. That is why the match is
 on `bg(` and not on the colour alone. `--replace-fail` aborts the build when a
 version bump moves the pattern, which is the only notice that the patch has
 gone stale.
+
+<a id="herdr-python"></a>
+## `herdr.nix` — `python3Minimal` is what makes the Claude integration work
+
+**Why** `herdr integration install claude` writes a `SessionStart` hook that
+reaches herdr's socket through `python3`, behind a
+`command -v python3 || exit 0` guard. Nothing here put python3 on a profile, so
+that guard returned 0 on every session start and herdr never learned which pane
+held a Claude session. The opencode integration is a JS plugin on `node:net`
+and was never affected, which is why exactly one of the two agents went
+untracked. Minimal is enough: the hook imports `json`, `os`, `random`,
+`socket` and `time`.
+**Breaks** *Silently, and it already had.* The guard exists so a missing
+interpreter can never stop a session from starting, so removing python3 ends
+agent tracking with no error in the hook, in Claude, or in the herdr log. The
+symptom is a sidebar that never shows Claude activity, which reads as a herdr
+bug rather than as a missing package.
+**Also** the hook script carries "managed by herdr; reinstalling or updating
+the integration overwrites this file", so it is herdr's to write and must stay
+undeclared. Only the dependency is ours.
+
+## `herdr.nix` — declaring the config retires `herdr update`
+
+**Why** `settings` renders `config.toml` into the store and symlinks it
+read-only, which disables the two commands that write it back:
+`herdr config reset-keys` and `herdr channel set`. Both exist to serve
+`herdr update`, and that is the wrong way to move a version the flake pins.
+**Breaks** Nothing in normal use; loudly if either command is reached for.
+Custom keybindings belong in `settings.keys`, where a reinstall cannot revert
+them.

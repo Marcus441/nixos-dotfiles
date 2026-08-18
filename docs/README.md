@@ -16,7 +16,7 @@ decisions/     why one file made its call, grouped by area
   sessions.md          dwl, Hyprland, the bars
   shells.md            bash, zsh, and which host logs into which
   terminal.md          the four terminals and the keys they intercept
-  tui.md               yazi, thunar, btop, impala
+  tui.md               yazi, thunar, btop, impala, herdr
   theming.md           colour, fonts, the two toolkits
   placement.md         why a file is not in the obvious aspect
   display-and-boot.md  monitors, hyprlock, boot
