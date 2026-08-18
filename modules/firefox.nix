@@ -364,6 +364,10 @@ _: {
               "browser.urlbar.unitConversion.enabled" = true;
               "findbar.highlightAll" = true;
 
+              "browser.quitShortcut.disabled" = true;
+              "browser.sessionstore.interval" = 60000;
+              "browser.aboutConfig.showWarning" = false;
+              "browser.download.manager.addToRecentDocs" = false;
               "browser.download.alwaysOpenPanel" = false;
               "browser.translations.automaticallyPopup" = false;
               "cookiebanners.service.mode" = 2;
