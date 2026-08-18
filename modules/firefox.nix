@@ -268,7 +268,6 @@ _: {
               "network.http.referer.XOriginTrimmingPolicy" = 2;
 
               "dom.security.https_only_mode" = true;
-              "dom.security.https_only_mode_ever_enabled" = true;
 
               "media.peerconnection.ice.default_address_only" = true;
 
@@ -319,10 +318,6 @@ _: {
               "widget.use-xdg-desktop-portal.file-picker" = 2;
               "widget.use-xdg-desktop-portal.mime-handler" = 1;
 
-              "media.ffmpeg.vaapi.enabled" = true;
-              "media.rdd-ffmpeg.enabled" = true;
-              "media.av1.enabled" = true;
-
               "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
               "gfx.font_rendering.opentype_svg.enabled" = false;
               "font.name-list.emoji" = "emoji";
@@ -340,13 +335,8 @@ _: {
               "general.smoothScroll.msdPhysics.slowdownSpringConstant" = 250;
               "apz.gtk.kinetic_scroll.enabled" = false;
 
-              "browser.cache.memory.capacity" = -1;
-              "browser.cache.memory.enable" = true;
-              "browser.cache.disk.enable" = true;
-
               "network.http.max-persistent-connections-per-server" = 10;
               "network.http.max-urgent-start-excessive-connections-per-host" = 5;
-              "network.http.http3.enabled" = true;
 
               "browser.startup.page" = 3;
               "browser.startup.homepage" = "about:home";
