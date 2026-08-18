@@ -131,25 +131,43 @@ on `bg(` and not on the colour alone. `--replace-fail` aborts the build when a
 version bump moves the pattern, which is the only notice that the patch has
 gone stale.
 
-<a id="herdr-python"></a>
-## `herdr.nix` — `python3Minimal` is what makes the Claude integration work
+<a id="herdr-bare-names"></a>
+## `herdr.nix` — the two helpers herdr spawns by bare name
 
-**Why** `herdr integration install claude` writes a `SessionStart` hook that
-reaches herdr's socket through `python3`, behind a
-`command -v python3 || exit 0` guard. Nothing here put python3 on a profile, so
-that guard returned 0 on every session start and herdr never learned which pane
-held a Claude session. The opencode integration is a JS plugin on `node:net`
-and was never affected, which is why exactly one of the two agents went
-untracked. Minimal is enough: the hook imports `json`, `os`, `random`,
-`socket` and `time`.
-**Breaks** *Silently, and it already had.* The guard exists so a missing
-interpreter can never stop a session from starting, so removing python3 ends
-agent tracking with no error in the hook, in Claude, or in the herdr log. The
-symptom is a sidebar that never shows Claude activity, which reads as a herdr
-bug rather than as a missing package.
+**Why** herdr is compiled and reaches its helpers by name, so each has to be on
+the profile: `python3` for the `SessionStart` hook that
+`herdr integration install claude` writes, and `notify-send` for
+`ui.toast.delivery = "system"`. Neither was here. python3Minimal is enough —
+the hook imports only `json`, `os`, `random`, `socket` and `time` — and
+libnotify is what carries notify-send. Everything else in this tree holds
+libnotify by store path, which is the preference in
+`conventions/placement.md`; herdr cannot, so the corollary there applies and
+the package goes on PATH.
+**Breaks** *Silently, and the python half already had.* The hook guards on
+`command -v python3 || exit 0` so a missing interpreter never blocks a session
+from starting: a 182 KiB herdr-server.log held zero `report_agent_session`
+calls, and herdr had never once learned which pane held a Claude session. A
+missing notify-send drops every system toast the same quiet way. Both read as
+a herdr bug rather than as a missing package.
 **Also** the hook script carries "managed by herdr; reinstalling or updating
 the integration overwrites this file", so it is herdr's to write and must stay
-undeclared. Only the dependency is ours.
+undeclared. Only the dependencies are ours.
+
+<a id="herdr-theme-tokens"></a>
+## `herdr.nix` — eleven tokens over a base theme, not a palette
+
+**Why** `[theme.custom]` overrides individual tokens on top of a built-in
+theme rather than defining one, and the accepted set is in neither herdr's docs
+nor its config template. Read off `herdr config check`, which names every key
+it rejects: `panel_bg`, `surface_dim`, `text`, `accent`, `blue`, `teal`,
+`green`, `yellow`, `peach`, `red` and `mauve`. The seven hues land exactly on
+base08–base0E, so only the two surfaces are a judgement — the panel takes
+base00 to sit flush with the terminal, and the raised surface takes base01, the
+same split `#yazi-frames` draws. `kanagawa` is the base because the palette is
+Kanagawa Dragon, so the tokens left unset are already close.
+**Breaks** A key outside that set is reported by `herdr config check` and then
+ignored, leaving one colour at the base theme's value with nothing failing.
+The set is not stable API — re-check it after a version bump.
 
 ## `herdr.nix` — declaring the config retires `herdr update`
 
