@@ -7,6 +7,11 @@ _: {
         pkgs,
         ...
       }: let
+        inherit (lib.generators) mkLuaInline;
+        bind = keys: dsp: {_args = [keys (mkLuaInline dsp)];};
+        bindOpts = keys: dsp: opts: {_args = [keys (mkLuaInline dsp) opts];};
+        exec = keys: cmd: bind keys ''hl.dsp.exec_cmd("${cmd}")'';
+        execOpts = keys: cmd: opts: bindOpts keys ''hl.dsp.exec_cmd("${cmd}")'' opts;
         mainMod = "SUPER";
         terminal = "uwsm app -- ${config.terminal.command}";
         terminalFallback = "uwsm app -- ${config.terminal.fallbackCommand}";
@@ -65,334 +70,90 @@ _: {
       in {
         wayland.windowManager.hyprland.settings.bind =
           [
-            {
-              _args = [
-                "${mainMod} + SHIFT + C"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- hyprpicker -an\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + S"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.screenshot.screen}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + Z"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm stop\")")
-              ];
-            }
+            (exec "${mainMod} + SHIFT + C" "uwsm app -- hyprpicker -an")
+            (exec "${mainMod} + SHIFT + S" config.screenshot.screen)
+            (exec "${mainMod} + SHIFT + Z" "uwsm stop")
           ]
           ++ lib.optionals (config.bar.toggle != "") [
-            {
-              _args = [
-                "${mainMod} + B"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.bar.toggle}\")")
-              ];
-            }
+            (exec "${mainMod} + B" config.bar.toggle)
           ]
           ++ [
-            {
-              _args = [
-                "${mainMod} + C"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ocr-copy\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + D"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.launcher.command}\")")
-              ];
-            }
+            (exec "${mainMod} + C" "uwsm app -- ocr-copy")
+            (exec "${mainMod} + D" config.launcher.command)
           ]
           ++ lib.optionals (config.fileManager.command != "") [
-            {
-              _args = [
-                "${mainMod} + E"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"uwsm app -- ${config.fileManager.command}\")")
-              ];
-            }
+            (exec "${mainMod} + E" "uwsm app -- ${config.fileManager.command}")
           ]
           ++ [
-            {
-              _args = [
-                "${mainMod} + F"
-                (lib.generators.mkLuaInline "hl.dsp.window.float({ action = \"toggle\" })")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + Q"
-                (lib.generators.mkLuaInline "hl.dsp.window.close()")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + Return"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${terminal}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + Return"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${terminalFallback}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + S"
-                (lib.generators.mkLuaInline "hl.dsp.layout(\"togglesplit\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + P"
-                (lib.generators.mkLuaInline "hl.dsp.window.pseudo()")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + M"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} monocle\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + T"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutSet} dwindle\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + space"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${layoutToggle}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + Tab"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${cycleNext}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + V"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.clipboard.history}\")")
-              ];
-            }
+            (bind "${mainMod} + F" ''hl.dsp.window.float({ action = "toggle" })'')
+            (bind "${mainMod} + Q" "hl.dsp.window.close()")
+            (exec "${mainMod} + Return" terminal)
+            (exec "${mainMod} + SHIFT + Return" terminalFallback)
+            (bind "${mainMod} + S" ''hl.dsp.layout("togglesplit")'')
+            (bind "${mainMod} + P" "hl.dsp.window.pseudo()")
+            (exec "${mainMod} + M" "${layoutSet} monocle")
+            (exec "${mainMod} + T" "${layoutSet} dwindle")
+            (exec "${mainMod} + space" "${layoutToggle}")
+            (exec "${mainMod} + Tab" "${cycleNext}")
+            (exec "${mainMod} + V" config.clipboard.history)
           ]
           ++ lib.optionals (config.wallpaperMenu.command != "") [
-            {
-              _args = [
-                "${mainMod} + W"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.wallpaperMenu.command}\")")
-              ];
-            }
+            (exec "${mainMod} + W" config.wallpaperMenu.command)
           ]
           ++ lib.optionals (config.powerMenu.command != "") [
-            {
-              _args = [
-                "${mainMod} + Z"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.powerMenu.command}\")")
-              ];
-            }
+            (exec "${mainMod} + Z" config.powerMenu.command)
           ]
           ++ [
-            {
-              _args = [
-                "Print"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${config.screenshot.area}\")")
-              ];
-            }
+            (exec "Print" config.screenshot.area)
 
-            {
-              _args = [
-                "${mainMod} + H"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusLeft}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + L"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusRight}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + K"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusUp}\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + J"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${focusDown}\")")
-              ];
-            }
+            (exec "${mainMod} + H" "${focusLeft}")
+            (exec "${mainMod} + L" "${focusRight}")
+            (exec "${mainMod} + K" "${focusUp}")
+            (exec "${mainMod} + J" "${focusDown}")
 
-            {
-              _args = [
-                "${mainMod} + SHIFT + H"
-                (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"l\" })")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + L"
-                (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"r\" })")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + K"
-                (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"u\" })")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + J"
-                (lib.generators.mkLuaInline "hl.dsp.window.swap({ direction = \"d\" })")
-              ];
-            }
+            (bind "${mainMod} + SHIFT + H" ''hl.dsp.window.swap({ direction = "l" })'')
+            (bind "${mainMod} + SHIFT + L" ''hl.dsp.window.swap({ direction = "r" })'')
+            (bind "${mainMod} + SHIFT + K" ''hl.dsp.window.swap({ direction = "u" })'')
+            (bind "${mainMod} + SHIFT + J" ''hl.dsp.window.swap({ direction = "d" })'')
+          ]
+          ++ map (i: bind "${mainMod} + ${toString i}" "hl.dsp.focus({ workspace = ${toString i} })") (lib.range 1 9)
+          ++ map (i: bind "${mainMod} + SHIFT + ${toString i}" "hl.dsp.window.move({ workspace = ${toString i} })") (lib.range 1 9)
+          ++ [
+            (bind "${mainMod} + 0" ''hl.dsp.workspace.toggle_special("magic")'')
+            (bind "${mainMod} + SHIFT + 0" ''hl.dsp.window.move({ workspace = "special:magic" })'')
 
-            {_args = ["${mainMod} + 1" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 1 })")];}
-            {_args = ["${mainMod} + 2" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 2 })")];}
-            {_args = ["${mainMod} + 3" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 3 })")];}
-            {_args = ["${mainMod} + 4" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 4 })")];}
-            {_args = ["${mainMod} + 5" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 5 })")];}
-            {_args = ["${mainMod} + 6" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 6 })")];}
-            {_args = ["${mainMod} + 7" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 7 })")];}
-            {_args = ["${mainMod} + 8" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 8 })")];}
-            {_args = ["${mainMod} + 9" (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = 9 })")];}
+            (bindOpts "${mainMod} + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
+            (bindOpts "${mainMod} + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
 
-            {_args = ["${mainMod} + SHIFT + 1" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 1 })")];}
-            {_args = ["${mainMod} + SHIFT + 2" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 2 })")];}
-            {_args = ["${mainMod} + SHIFT + 3" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 3 })")];}
-            {_args = ["${mainMod} + SHIFT + 4" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 4 })")];}
-            {_args = ["${mainMod} + SHIFT + 5" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 5 })")];}
-            {_args = ["${mainMod} + SHIFT + 6" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 6 })")];}
-            {_args = ["${mainMod} + SHIFT + 7" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 7 })")];}
-            {_args = ["${mainMod} + SHIFT + 8" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 8 })")];}
-            {_args = ["${mainMod} + SHIFT + 9" (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = 9 })")];}
+            (execOpts "XF86AudioRaiseVolume" "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+" {
+              repeating = true;
+              locked = true;
+            })
+            (execOpts "XF86AudioLowerVolume" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-" {
+              repeating = true;
+              locked = true;
+            })
+            (execOpts "XF86AudioMute" "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" {
+              repeating = true;
+              locked = true;
+            })
+            (execOpts "XF86AudioMicMute" "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" {
+              repeating = true;
+              locked = true;
+            })
+            (execOpts "${mainMod} + bracketright" "brightnessctl s 10%+" {
+              repeating = true;
+              locked = true;
+            })
+            (execOpts "${mainMod} + bracketleft" "brightnessctl s 10%-" {
+              repeating = true;
+              locked = true;
+            })
 
-            {
-              _args = [
-                "${mainMod} + 0"
-                (lib.generators.mkLuaInline "hl.dsp.workspace.toggle_special(\"magic\")")
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + SHIFT + 0"
-                (lib.generators.mkLuaInline "hl.dsp.window.move({ workspace = \"special:magic\" })")
-              ];
-            }
-
-            {
-              _args = [
-                "${mainMod} + mouse:272"
-                (lib.generators.mkLuaInline "hl.dsp.window.drag()")
-                {mouse = true;}
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + mouse:273"
-                (lib.generators.mkLuaInline "hl.dsp.window.resize()")
-                {mouse = true;}
-              ];
-            }
-
-            {
-              _args = [
-                "XF86AudioRaiseVolume"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioLowerVolume"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioMute"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioMicMute"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + bracketright"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl s 10%+\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-            {
-              _args = [
-                "${mainMod} + bracketleft"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl s 10%-\")")
-                {
-                  repeating = true;
-                  locked = true;
-                }
-              ];
-            }
-
-            {
-              _args = [
-                "XF86AudioNext"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"playerctl next\")")
-                {locked = true;}
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioPause"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"playerctl play-pause\")")
-                {locked = true;}
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioPlay"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"playerctl play-pause\")")
-                {locked = true;}
-              ];
-            }
-            {
-              _args = [
-                "XF86AudioPrev"
-                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"playerctl previous\")")
-                {locked = true;}
-              ];
-            }
+            (execOpts "XF86AudioNext" "playerctl next" {locked = true;})
+            (execOpts "XF86AudioPause" "playerctl play-pause" {locked = true;})
+            (execOpts "XF86AudioPlay" "playerctl play-pause" {locked = true;})
+            (execOpts "XF86AudioPrev" "playerctl previous" {locked = true;})
           ];
       }
     )
