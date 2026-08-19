@@ -24,20 +24,14 @@ Singleton {
         target: Hyprland
 
         function onRawEvent(event) {
-            if (event.name === "configreloaded")
+            if (event.name === "custom") {
+                const m = event.data.match(/^layout,(.+)$/);
+                if (m)
+                    root.apply(m[1]);
+            } else if (event.name === "configreloaded") {
                 queryProc.running = true;
+            }
         }
-    }
-
-    FileView {
-        id: stateFile
-
-        path: `${Config.cacheDir}/hyprland-layout`
-        watchChanges: true
-        printErrors: false
-        onFileChanged: reload()
-        onLoaded: root.apply(text())
-        onLoadFailed: queryProc.running = true
     }
 
     Process {
@@ -52,7 +46,6 @@ Singleton {
                 } catch (e) {
                     console.warn("LayoutState: unparseable hyprctl output:", e.message);
                 }
-                stateFile.setText(root.layout + "\n");
             }
         }
     }

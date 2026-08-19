@@ -20,6 +20,12 @@ in {
           portalPackage = null;
         };
 
+        # load-bearing: docs/decisions/sessions.md#hyprland-luarc
+        xdg.configFile."hypr/.luarc.json".text = builtins.toJSON {
+          workspace.library = ["${pkgs.hyprland}/share/hypr/stubs"];
+          diagnostics.globals = ["hl"];
+        };
+
         home.packages = [pkgs.xdg-desktop-portal-gtk];
 
         windowTags.floating-window = ["^(xdg-desktop-portal-gtk)$"];

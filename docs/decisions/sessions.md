@@ -130,41 +130,60 @@ for exactly this reason. Critical toasts persist until dismissed and DND
 suppresses toasts for every urgency (history still records); both are
 deliberate deltas from the old mako behaviour.
 
-<a id="layout-state-file"></a>
-## `hyprland/binds.nix` — layout scripts write `$XDG_CACHE_HOME/hyprland-layout`
+<a id="layout-event"></a>
+## `hyprland/_layout.lua` — layout changes announce a `custom>>layout,` event
 
 **Why** The bar's layout indicator needs to react the instant a bind switches
-layouts, and Hyprland emits no IPC event for a runtime config change. The
-layout-set script writes the layout name to the cache file; the LayoutState
-singleton watches it with a `FileView`, and reconciles both the indicator and
-the file against `hyprctl getoption` at startup and on `configreloaded` —
-the file outlives the session, so on its own it goes stale whenever Hyprland
-restarts into the generated config. A cache file keeps the coupling one-way —
-`hyprland` files never hold a quickshell store path, and a host without
-`quickshell` just writes a file nobody reads. layout-set is the single entry
-point — every layout bind routes through it, and it also applies the
-per-layout visual profile (#monocle-visual-profile).
-**Breaks** *Silently, on rename.* The file name is string-matched in two
-aspects (`binds.nix` and `LayoutState.qml`); changing it in one place
-leaves the indicator frozen on its startup `getoption` fallback.
+layouts, and Hyprland emits no IPC event for a runtime config change — so
+`layout.set` emits one itself: `hl.dsp.event("layout," .. name)` lands on
+socket2 as `custom>>layout,<name>`, where the LayoutState singleton's
+existing `onRawEvent` picks it up. Events are ephemeral, so LayoutState still
+reconciles against `hyprctl getoption` at startup and on `configreloaded` —
+a restart re-reads the generated config and no event fires for that. The
+event keeps the coupling one-way — `hyprland` files never hold a quickshell
+store path, and a host without `quickshell` emits an event nobody hears.
+`layout.set` is the single entry point — every layout bind routes through
+it, and it also applies the per-layout visual profile
+(#monocle-visual-profile). This replaced a `$XDG_CACHE_HOME/hyprland-layout`
+file written by shell scripts — an event cannot go stale the way the file
+outliving the session did.
+**Breaks** *Silently, on rename.* The `layout,` payload prefix is
+string-matched in two aspects (`_layout.lua` and `LayoutState.qml`);
+changing it in one place leaves the indicator frozen on its startup
+`getoption` fallback.
 
 <a id="monocle-visual-profile"></a>
-## `hyprland/binds.nix` — layout-set applies the per-layout visual profile
+## `hyprland/_layout.lua` — layout.set applies the per-layout visual profile
 
 **Why** Monocle should render edge-to-edge: no gaps, no border, no
 animations. Rules cannot express "when the layout is monocle" — the
 `w[tv1]`/`f[1]` rules only fire with a single tiled window, so a monocle
 workspace with a stacked window kept its gaps and popin artifacts. The
-profile rides the same `hl.config` eval that switches the layout, and the
-restore branch reads gaps, border and animations back from the merged
-`settings.config` values, so it can never drift from
-`general.nix`/`animations.nix`. Disabling `animations.enabled` is a master
-switch — layer animations pause in monocle too; per-leaf runtime control is
-not exposed through `hl.config`.
+profile rides the same `hl.config` call that switches the layout, and the
+restore branch replays a snapshot that entering monocle took from the live
+values (`hl.get_config`), so it can never drift from
+`general.nix`/`animations.nix` — it restores whatever the generated config
+set. The snapshot is only taken when not already in monocle, so a repeated
+`layout.set("monocle")` cannot capture the zeroed profile. Disabling
+`animations.enabled` is a master switch — layer animations pause in monocle
+too; per-leaf runtime control is not exposed through `hl.config`.
 **Breaks** A reload or restart while in monocle re-reads the generated
 config — dwindle, normal gaps — and LayoutState's `configreloaded` re-query
-(#layout-state-file) keeps the indicator and state file in step with it.
-Hardcoding the restore values instead of reading them reintroduces drift.
+(#layout-event) keeps the indicator in step with it; the snapshot dies with
+the Lua state, which is correct because the profile it saved died too.
+Hardcoding the restore values instead of snapshotting reintroduces drift.
+
+<a id="hyprland-luarc"></a>
+## `hyprland/hyprland.nix` — the `.luarc.json` is hand-written
+
+**Why** Home Manager generates `hypr/.luarc.json` (lua-language-server
+wired to Hyprland's official `hl` API stubs) only when it owns the Hyprland
+package, and this config sets `package = null` because the NixOS module
+installs Hyprland. The hand-written copy restores LSP for `_layout.lua`
+using the same `pkgs.hyprland` the system installs.
+**Breaks** *Loudly, on un-nulling.* If `package` ever stops being null,
+Home Manager defines the same `xdg.configFile` path and the build fails on
+the conflict — delete this block then.
 
 <a id="floating-appid"></a>
 ## `hyprland/floating-windows.nix` — the limit of the app-id convention
