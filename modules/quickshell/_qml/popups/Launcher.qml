@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 import qs
@@ -7,6 +8,8 @@ import qs.lib
 
 Overlay {
     id: root
+
+    WlrLayershell.namespace: "quickshell-launcher"
 
     contentWidth: 680
     contentHeight: 500
