@@ -16,6 +16,8 @@ human makes, not a cleanup you offer.
   currently takes. Waybar is retired. The Notifs singleton must stay
   instantiated at startup or the D-Bus name goes unclaimed —
   `docs/decisions/sessions.md#quickshell-notifs`.
+  The tray's right-click menu is drawn in QML, not handed to `display()` —
+  `docs/decisions/sessions.md#quickshell-tray-menu`.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle

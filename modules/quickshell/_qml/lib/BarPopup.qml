@@ -9,6 +9,7 @@ PopupWindow {
     property Item anchorItem
     property string title: ""
     property int barGap: 4
+    property int minWidth: 240
     default property alias content: contentColumn.data
     property alias headerContent: headerExtra.data
 
@@ -37,7 +38,7 @@ PopupWindow {
     anchor.window: root.barWindow
     anchor.edges: root.popupEdge
     anchor.gravity: root.popupEdge
-    implicitWidth: Math.max(root.title !== "" ? headerRow.implicitWidth + Theme.pad * 2 : 0, contentColumn.implicitWidth, 240) + (root.vertical ? root.barGap : 0)
+    implicitWidth: Math.max(root.title !== "" ? headerRow.implicitWidth + Theme.pad * 2 : 0, contentColumn.implicitWidth, root.minWidth) + (root.vertical ? root.barGap : 0)
     implicitHeight: header.height + contentColumn.implicitHeight + 16 + (root.vertical ? 0 : root.barGap)
     color: "transparent"
 

@@ -112,6 +112,25 @@ inhibition is the Wayland protocol, which hypridle honours.
 rejection; a `WlSessionLock` in the shell would make a QML crash unlock the
 screen.
 
+<a id="quickshell-tray-menu"></a>
+## `quickshell/_qml/lib/MenuList.qml` — the tray menu is drawn, not delegated
+
+**Why** `SystemTrayItem.display()` renders a Qt Widgets `QMenu`, which needs
+`//@ pragma UseQApplication` on the root QML file and then takes its palette
+from qt6ct rather than from `Config`. So the D-Bus menu is rendered here
+instead, from `QsMenuOpener.children`. Three details are load-bearing.
+`QsMenuEntry` has no `trigger()`: you emit `entry.triggered()`, and attaching
+the opener is itself what sends `AboutToShow` and `Event("opened")`, so the
+handle is bound through the popup's `visible` to keep open/close paired.
+A QML file may not instantiate itself, so the submenu level goes through a
+`Loader` on the file's own URL. And `BarPopup`'s `contentColumn.implicitWidth`
+term is inert — a `Column` measures children's *width*, and `PopupRow` binds
+`width: parent.width` — so a menu that sizes to its longest label has to be a
+`ColumnLayout`, which measures `implicitWidth` instead.
+**Breaks** Restoring `display()` restores a right-click that only logs. A zero
+`minWidth` is a `wl_surface` "Invalid size" protocol kill the moment the menu
+opens before its D-Bus layout arrives, which is why the floor is 160.
+
 <a id="quickshell-notifs"></a>
 ## `quickshell/_qml/services/Notifs.qml` — the shell owns notifications
 
