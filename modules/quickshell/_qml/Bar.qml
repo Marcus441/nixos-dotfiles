@@ -77,7 +77,6 @@ PanelWindow {
 
         Tray {
             Layout.alignment: Qt.AlignHCenter
-            bar: bar
         }
 
         Perf {
