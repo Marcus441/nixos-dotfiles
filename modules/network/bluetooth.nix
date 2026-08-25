@@ -4,6 +4,11 @@ _: {
       hardware = {
         bluetooth.enable = true;
         bluetooth.powerOnBoot = true;
+        # load-bearing: docs/decisions/audio.md#le-audio
+        bluetooth.settings.General = {
+          Experimental = true;
+          KernelExperimental = "6fbaf188-05e0-496a-9885-d6ddfdb4e03e";
+        };
       };
       services.blueman.enable = true;
     }
