@@ -21,6 +21,7 @@ decisions/     why one file made its call, grouped by area
   placement.md         why a file is not in the obvious aspect
   display-and-boot.md  monitors, hyprlock, boot
   gaming.md            Steam, Proton, the scheduler, the GPU
+  audio.md             PipeWire, BlueZ, and what LE Audio switches on
   xdg.md               which app state leaves $HOME, and which stays
 ```
 
