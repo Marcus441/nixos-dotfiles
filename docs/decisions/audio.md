@@ -18,3 +18,16 @@ classic BR/EDR, without LC3. The only symptom is the missing BAP profile in
 **Also** A dual-mode headset paired before this change stays on its old
 transport; forget and re-pair to negotiate LE Audio. When BlueZ stabilises
 LE Audio, delete both settings and this entry in the same commit.
+
+<a id="mpris-proxy"></a>
+## `bluetooth.nix` — mpris-proxy registers players with bluetoothd
+
+**Why** Headset buttons already reach the compositors as AVRCP uinput key
+events, but two-way playback status needs a player registered with
+bluetoothd: the WH-1000XM wear-detection pause keys off it, and LE Audio's
+MCP replaces AVRCP with no uinput fallback. mpris-proxy bridges MPRIS
+players into BlueZ's player API.
+**Breaks** Quietly: buttons keep working over classic AVRCP via the
+compositor binds; take-off-to-pause and LE Audio media control stop.
+**Also** If one press ever toggles play-pause twice, this proxy and the
+compositor bind are double-handling the same press — disable one.

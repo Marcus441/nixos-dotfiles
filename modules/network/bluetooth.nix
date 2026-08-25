@@ -27,6 +27,8 @@ _: {
     {
       bluetoothManager.command = "blueman-manager";
       windowTags.floating-window = ["^(blueman-manager)$"];
+      # load-bearing: docs/decisions/audio.md#mpris-proxy
+      services.mpris-proxy.enable = true;
     }
   ];
 }
