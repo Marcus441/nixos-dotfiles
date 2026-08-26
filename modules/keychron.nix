@@ -11,6 +11,8 @@ _: {
           settings.main = {
             leftalt = "leftmeta";
             leftmeta = "leftalt";
+            rightalt = "rightmeta";
+            rightmeta = "rightalt";
           };
         };
       };
