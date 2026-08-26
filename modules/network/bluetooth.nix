@@ -14,6 +14,12 @@ _: {
     }
   ];
 
+  flake.modules.homeManager.quickshell = [
+    {
+      services.blueman-applet.enable = true;
+    }
+  ];
+
   flake.modules.homeManager.core = [
     (
       {lib, ...}: {

@@ -254,3 +254,15 @@ a shell prompt where the compositor should have been.
 then fails because ly set `XDG_SESSION_TYPE` before PAM. What reaches the block
 is a VT login or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start` is
 empty while Hyprland runs.
+
+<a id="applet-sni"></a>
+## `network/nm-applet.nix` — applets must register as StatusNotifierItems
+
+**Why** quickshell's tray speaks StatusNotifierWatcher only; there is no XEmbed
+fallback. nm-applet defaults to XEmbed and gains SNI (`--indicator`) solely
+from Home Manager's `xsession.preferStatusNotifierItems`. The applets are the
+wifi/bluetooth management surface — the shell itself only toggles.
+**Breaks** *Silently.* Dropping the flag leaves nm-applet running and healthy
+in `systemctl --user` while its icon appears nowhere, so wifi management has no
+UI. Home Manager's `wayland.nix` supplies the `tray.target` the applet units
+require — nothing in this repo declares it, so do not "fix" its absence here.
