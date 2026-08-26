@@ -23,7 +23,7 @@ Enumerate the files behind any row with
 | --- | --- | --- |
 | `alacritty` | `homeManager nixos` | 2 |
 | `apps` | `homeManager nixos` | 15 |
-| `core` | `homeManager nixos` | 65 |
+| `core` | `homeManager nixos` | 64 |
 | `dev` | `homeManager nixos` | 6 |
 | `dwl` | `homeManager nixos` | 11 |
 | `dwl-bar` | `homeManager nixos` | 2 |
@@ -58,7 +58,7 @@ Declared in the file that creates the dependency, never in a central table.
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 123 |
+| files declaring at least one aspect | 122 |
 | of those, declaring more than one aspect or class | 34 |
-| `load-bearing:` pointers | 128 |
-| anchors defined in `docs/` | 108 |
+| `load-bearing:` pointers | 126 |
+| anchors defined in `docs/` | 106 |

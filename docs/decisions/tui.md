@@ -105,32 +105,6 @@ file on quit. The same read-only-ness is why a setting changed inside a
 row-opened btop is gone at exit — by design, and only there. `programs.btop.settings`
 is the interactive config and keeps the tree.
 
-<a id="impala-argv"></a>
-## `network/impala.nix` — impala over NetworkManager's iwd
-
-**Why** `network/net.nix` runs NetworkManager with `wifi.backend = "iwd"`, so both talk
-to the same daemon.
-**Breaks** A connection impala makes is one NetworkManager did not author, so
-NM's state can disagree until it resyncs.
-**Also** the spawn is `compactArgv`, not `transientArgv`. Every bar click lands
-in the same `1200 760` float, so the font was the only thing making impala a
-different terminal from btop's three.
-
-<a id="impala-darkgray"></a>
-## `network/impala.nix` — every `DarkGray` background is repainted, and one is not
-
-**Why** impala has a config file and it carries keybindings only; every colour
-is a ratatui constant. `DarkGray` is ANSI 8, which in this palette is the
-*light* neutral `#a6a69c` (`theming.md#colors-neutrals`), so a selected row
-drew `#c5c9c5` on it at 1.4:1 and a passphrase field the same. The 71
-background uses become base02 where the style is a selection and base01
-everywhere else — the split `#yazi-frames` already draws.
-**Breaks** The 72nd use is a *foreground*, the dimmed rows for unavailable
-known networks, where `#a6a69c` is the right answer. That is why the match is
-on `bg(` and not on the colour alone. `--replace-fail` aborts the build when a
-version bump moves the pattern, which is the only notice that the patch has
-gone stale.
-
 <a id="herdr-bare-names"></a>
 ## `herdr.nix` — the two helpers herdr spawns by bare name
 

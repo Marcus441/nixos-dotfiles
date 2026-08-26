@@ -16,8 +16,6 @@ Inv. 3 working, not a violation.
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
 | `powerMenu.command` | `powermenu/powermenu.nix` | `quickshell/quickshell.nix` (`quickshell`) |
-| `networkManager.command` | `network/impala.nix` | `network/impala.nix` (`impala`) |
-| `bluetoothManager.command` | `network/bluetooth.nix` | `network/bluetooth.nix` (`core`) |
 | `audioMixer.command` | `media/toolbox.nix` | `media/toolbox.nix` (`core`) |
 | `systemMonitor.command` / `.processorCommand` / `.memoryCommand` / `.temperatureCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
@@ -63,7 +61,7 @@ dwl's binds are a **C argv array**; Hyprland's are **shell strings**.
 
 **Compose at argv level and render once.** `terminal.transientCommand` is
 already escaped — appending to it escapes twice. Build the full argv and call
-`lib.escapeShellArgs` exactly once (`filemanager/yazi.nix`, `network/impala.nix`).
+`lib.escapeShellArgs` exactly once (`filemanager/yazi.nix`).
 
 ## Bind the value; do not read the merged option back
 

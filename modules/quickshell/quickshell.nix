@@ -32,8 +32,6 @@ _: {
             processorCommand = config.systemMonitor.processorCommand;
             memoryCommand = config.systemMonitor.memoryCommand;
             temperatureCommand = config.systemMonitor.temperatureCommand;
-            networkManagerCommand = config.networkManager.command;
-            bluetoothManagerCommand = config.bluetoothManager.command;
             audioMixerCommand = config.audioMixer.command;
             weatherLatitude = config.weather.latitude;
             weatherLongitude = config.weather.longitude;

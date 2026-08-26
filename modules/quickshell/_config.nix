@@ -10,8 +10,6 @@
   processorCommand,
   memoryCommand,
   temperatureCommand,
-  networkManagerCommand,
-  bluetoothManagerCommand,
   audioMixerCommand,
   weatherLatitude,
   weatherLongitude,
@@ -80,8 +78,6 @@
         readonly property string processorCommand: "${qml processorCommand}"
         readonly property string memoryCommand: "${qml memoryCommand}"
         readonly property string temperatureCommand: "${qml temperatureCommand}"
-        readonly property string networkManagerCommand: "${qml networkManagerCommand}"
-        readonly property string bluetoothManagerCommand: "${qml bluetoothManagerCommand}"
         readonly property string audioMixerCommand: "${qml audioMixerCommand}"
 
         readonly property string cacheDir: "${qml cacheDir}"
