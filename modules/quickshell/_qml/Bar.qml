@@ -91,15 +91,7 @@ PanelWindow {
             rowSpacing: Theme.gap
             columnSpacing: Theme.gap
 
-            Wifi {
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            Bluetooth {
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            Volume {
+            ControlCenter {
                 Layout.alignment: Qt.AlignHCenter
             }
 
