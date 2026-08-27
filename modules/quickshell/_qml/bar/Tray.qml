@@ -9,6 +9,7 @@ Row {
     id: root
 
     property var openMenu: null
+    property bool expanded: false
 
     spacing: Theme.gap
     visible: SystemTray.items.values.length > 0
@@ -20,40 +21,94 @@ Row {
         root.openMenu = popup.visible ? popup : null;
     }
 
-    Repeater {
-        model: SystemTray.items
+    Text {
+        id: chevron
 
-        IconImage {
-            id: item
+        anchors.verticalCenter: parent.verticalCenter
+        text: root.expanded ? "󰅂" : "󰅁"
+        color: chevronMouse.containsMouse ? Config.base05 : Config.base03
+        font.family: Config.iconFamily
+        font.pixelSize: Config.fontSize
 
-            required property var modelData
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.durFast
+            }
+        }
 
-            source: modelData.icon
-            implicitSize: 14
-            anchors.verticalCenter: parent.verticalCenter
+        MouseArea {
+            id: chevronMouse
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: mouseEvent => {
-                    if (mouseEvent.button === Qt.LeftButton && !item.modelData.onlyMenu)
-                        item.modelData.activate();
-                    else if (item.modelData.hasMenu)
-                        root.toggleMenu(menu);
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                root.expanded = !root.expanded;
+                if (!root.expanded && root.openMenu) {
+                    root.openMenu.visible = false;
+                    root.openMenu = null;
                 }
             }
+        }
+    }
 
-            BarPopup {
-                id: menu
+    Item {
+        id: drawer
 
-                anchorItem: item
-                minWidth: 160
-                visible: false
+        clip: true
+        width: root.expanded ? icons.implicitWidth : 0
+        height: icons.implicitHeight
+        anchors.verticalCenter: parent.verticalCenter
+        visible: width > 0
 
-                MenuList {
-                    handle: menu.visible ? item.modelData.menu : null
-                    onActivated: menu.visible = false
+        Behavior on width {
+            NumberAnimation {
+                duration: Theme.durMed
+                easing.type: Easing.InOutQuad
+            }
+        }
+
+        Row {
+            id: icons
+
+            spacing: Theme.gap
+
+            Repeater {
+                model: SystemTray.items
+
+                IconImage {
+                    id: item
+
+                    required property var modelData
+
+                    source: modelData.icon
+                    implicitSize: 14
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onClicked: mouseEvent => {
+                            if (mouseEvent.button === Qt.LeftButton && !item.modelData.onlyMenu)
+                                item.modelData.activate();
+                            else if (item.modelData.hasMenu)
+                                root.toggleMenu(menu);
+                        }
+                    }
+
+                    BarPopup {
+                        id: menu
+
+                        anchorItem: item
+                        minWidth: 160
+                        visible: false
+
+                        MenuList {
+                            handle: menu.visible ? item.modelData.menu : null
+                            onActivated: menu.visible = false
+                        }
+                    }
                 }
             }
         }
