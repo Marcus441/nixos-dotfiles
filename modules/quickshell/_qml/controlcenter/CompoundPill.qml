@@ -18,12 +18,22 @@ Rectangle {
     width: parent ? parent.width : 220
     height: 48
     radius: 8
-    color: bodyMouse.containsMouse ? Config.base02 : Config.base01
+    color: pillMouse.containsMouse || tileMouse.containsMouse ? Config.base02 : Config.base01
 
     Behavior on color {
         ColorAnimation {
             duration: Theme.durFast
         }
+    }
+
+    MouseArea {
+        id: pillMouse
+
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.showExpandArea ? root.expandClicked() : root.toggled()
+        onWheel: wheel => root.wheelEvent(wheel)
     }
 
     Row {
@@ -64,6 +74,7 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: root.toggled()
+                onWheel: wheel => root.wheelEvent(wheel)
             }
         }
 
@@ -98,15 +109,6 @@ Rectangle {
                     font.pixelSize: Theme.fontSm
                 }
             }
-
-            MouseArea {
-                id: bodyMouse
-
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.showExpandArea ? root.expandClicked() : root.toggled()
-            }
         }
 
         Text {
@@ -115,7 +117,7 @@ Rectangle {
             visible: root.showExpandArea
             anchors.verticalCenter: parent.verticalCenter
             text: root.expanded ? "󰅀" : "󰅂"
-            color: bodyMouse.containsMouse ? Config.base05 : Config.base04
+            color: pillMouse.containsMouse ? Config.base05 : Config.base04
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
 
@@ -125,11 +127,5 @@ Rectangle {
                 }
             }
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        onWheel: wheel => root.wheelEvent(wheel)
     }
 }
