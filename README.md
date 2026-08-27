@@ -117,17 +117,36 @@ separately rather than as a NixOS module.
 
    ```bash
    git add -A
-   ./scripts/verify.sh build     # all six targets
+   ./scripts/verify.sh build     # every target the flake produces
    ```
 
-   Then apply it with `nixos-rebuild` and `home-manager` for the first install,
-   and `nh os` / `nh home` as the daily driver.
+   The target list is read out of the flake rather than written down in the
+   script, so the host added in step 3 is built here instead of being silently
+   skipped in favour of the machines that already existed.
+
+   Then activate, in this order:
+
+   ```bash
+   sudo nixos-rebuild switch --flake .#<hostname>
+   home-manager switch --flake .#<user>@<hostname>
+   ```
+
+   The order is load-bearing on a machine that has never run this config: the
+   `home-manager` CLI arrives with the NixOS switch (`modules/home-manager.nix`),
+   so going home-first needs `nix run nixpkgs#home-manager --` instead. The
+   extra substituters are part of the config being installed too, so the first
+   build cannot use them and compiles locally whatever `nvf.cachix.org` would
+   have served; passing them by hand only works as root, because
+   `trusted-users = root` makes `--option extra-substituters` a no-op for
+   anyone else.
+
+   After that it is `nh os` / `nh home` as the daily driver.
 
 ## Verifying
 
 ```bash
-./scripts/verify.sh build       # build all six targets
-./scripts/verify.sh [<ref>]     # compare six targets against a ref (default HEAD~1)
+./scripts/verify.sh build       # build every target the flake produces
+./scripts/verify.sh [<ref>]     # compare every target against a ref (default HEAD~1)
 ./scripts/docs-check.sh         # decision register: pointers, orphans, budgets
 ./scripts/inventory.sh          # regenerate docs/inventory.md
 nix flake check                 # cheap eval sweep
