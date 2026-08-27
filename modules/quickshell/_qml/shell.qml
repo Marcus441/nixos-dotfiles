@@ -41,14 +41,6 @@ ShellRoot {
     }
 
     LazyLoader {
-        active: Popups.wallpaperOpen
-
-        WallpaperPicker {
-            onDismissed: Popups.close("wallpaper")
-        }
-    }
-
-    LazyLoader {
         active: Popups.powerOpen
 
         PowerMenu {
@@ -89,14 +81,6 @@ ShellRoot {
 
         function toggle(): void {
             Popups.toggle("clipboard");
-        }
-    }
-
-    IpcHandler {
-        target: "wallpaper"
-
-        function toggle(): void {
-            Popups.toggle("wallpaper");
         }
     }
 

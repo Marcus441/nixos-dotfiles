@@ -38,7 +38,7 @@ _: {
             wallpaperSet = config.wallpaper.set;
             wallpaperEnableRotator = config.wallpaper.enableRotator;
             wallpaperDisableRotator = config.wallpaper.disableRotator;
-            wallpaperDirectory = config.wallpaper.directory;
+            wallpaperThumbnailManifest = config.wallpaper.thumbnailManifest;
           };
           systemd = {
             enable = true;

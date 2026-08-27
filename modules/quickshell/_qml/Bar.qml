@@ -117,7 +117,7 @@ PanelWindow {
                 bar: bar
             }
 
-            WallpaperButton {
+            Wallpaper {
                 Layout.alignment: Qt.AlignHCenter
             }
 

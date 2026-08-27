@@ -17,7 +17,7 @@
   wallpaperSet,
   wallpaperEnableRotator,
   wallpaperDisableRotator,
-  wallpaperDirectory,
+  wallpaperThumbnailManifest,
 }: let
   inherit (pkgs) lib;
   qml = lib.replaceStrings ["\\" "\""] ["\\\\" "\\\""];
@@ -85,7 +85,7 @@
         readonly property string audioMixerCommand: "${qml audioMixerCommand}"
 
         readonly property string cacheDir: "${qml cacheDir}"
-        readonly property string wallsDir: "${qml wallpaperDirectory}"
+        readonly property string wallpaperManifest: "${qml wallpaperThumbnailManifest}"
         readonly property string setWallpaperScript: "${qml wallpaperSet}"
         readonly property string enableRotatorScript: "${qml wallpaperEnableRotator}"
         readonly property string disableRotatorScript: "${qml wallpaperDisableRotator}"
@@ -95,7 +95,6 @@
         readonly property string systemctl: "${pkgs.systemd}/bin/systemctl"
         readonly property string hyprctl: "${pkgs.hyprland}/bin/hyprctl"
         readonly property string curl: "${pkgs.curl}/bin/curl"
-        readonly property string fd: "${pkgs.fd}/bin/fd"
         readonly property string cliphist: "${pkgs.cliphist}/bin/cliphist"
         readonly property string wlCopy: "${pkgs.wl-clipboard}/bin/wl-copy"
 
