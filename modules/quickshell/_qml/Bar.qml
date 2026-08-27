@@ -75,6 +75,11 @@ PanelWindow {
         anchors.bottomMargin: Theme.gap
         anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
 
+        Media {
+            Layout.alignment: Qt.AlignHCenter
+            vertical: bar.vertical
+        }
+
         Tray {
             Layout.alignment: Qt.AlignHCenter
         }
