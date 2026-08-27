@@ -12,11 +12,6 @@ Item {
     implicitWidth: grid.implicitWidth
     implicitHeight: grid.implicitHeight
 
-    function strengthIcon(strength) {
-        const icons = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"];
-        return icons[Math.min(4, Math.floor(strength * 5))];
-    }
-
     GridLayout {
         id: grid
 
@@ -30,7 +25,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: {
                 if (NetworkService.wifiConnected)
-                    return root.strengthIcon(NetworkService.wifiSignalStrength);
+                    return NetworkService.signalIcon(NetworkService.wifiSignalStrength);
                 if (NetworkService.ethernetConnected)
                     return "󱘖";
                 return "󰤮";

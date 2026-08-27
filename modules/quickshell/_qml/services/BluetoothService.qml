@@ -18,6 +18,10 @@ Singleton {
         devWatch.rev;
         return Bluetooth.devices.values.filter(d => d.connected);
     }
+    readonly property var pairedDevices: {
+        devWatch.rev;
+        return Bluetooth.devices.values.filter(d => d.paired);
+    }
 
     function setBluetoothEnabled(en: bool): void {
         if (adapter)

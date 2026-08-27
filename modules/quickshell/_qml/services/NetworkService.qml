@@ -26,7 +26,14 @@ Singleton {
         return "disconnected";
     }
 
+    readonly property var knownNetworks: (wifiDevice?.networks.values ?? []).filter(n => n.known).sort((a, b) => b.signalStrength - a.signalStrength)
+
     function toggleWifiRadio(): void {
         Networking.wifiEnabled = !Networking.wifiEnabled;
+    }
+
+    function signalIcon(strength: real): string {
+        const icons = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"];
+        return icons[Math.min(4, Math.floor(strength * 5))];
     }
 }

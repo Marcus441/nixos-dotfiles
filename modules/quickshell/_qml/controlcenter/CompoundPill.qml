@@ -5,10 +5,13 @@ Rectangle {
     id: root
 
     signal toggled
+    signal expandClicked
     signal wheelEvent(var wheel)
 
     property string iconName: ""
     property bool isActive: false
+    property bool expanded: false
+    property bool showExpandArea: true
     property string primaryText: ""
     property string secondaryText: ""
 
@@ -16,6 +19,12 @@ Rectangle {
     height: 48
     radius: 8
     color: bodyMouse.containsMouse ? Config.base02 : Config.base01
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Theme.durFast
+        }
+    }
 
     Row {
         id: row
@@ -33,6 +42,12 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             radius: 6
             color: root.isActive ? Config.base0D : Config.base02
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.durFast
+                }
+            }
 
             Text {
                 anchors.centerIn: parent
@@ -55,7 +70,7 @@ Rectangle {
         Item {
             id: body
 
-            width: row.width - iconTile.width - row.spacing - row.anchors.leftMargin - row.anchors.rightMargin
+            width: row.width - iconTile.width - row.spacing - row.anchors.leftMargin - row.anchors.rightMargin - (chevron.visible ? chevron.width + row.spacing : 0)
             height: row.height
 
             Column {
@@ -90,7 +105,25 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: root.toggled()
+                onClicked: root.showExpandArea ? root.expandClicked() : root.toggled()
+            }
+        }
+
+        Text {
+            id: chevron
+
+            visible: root.showExpandArea
+            width: visible ? implicitWidth : 0
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.expanded ? "󰅀" : "󰅂"
+            color: bodyMouse.containsMouse ? Config.base05 : Config.base04
+            font.family: Config.iconFamily
+            font.pixelSize: Config.fontSize
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.durFast
+                }
             }
         }
     }
