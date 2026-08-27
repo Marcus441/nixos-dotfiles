@@ -332,3 +332,16 @@ smart-splits closed its Ghostty backend (PR #433) on exactly this.
 sits on `ctrl+arrows`: `alt+hjkl` would take Neovim's resize keys with no way
 to give them back. ghostty is in no host's aspect list today, so this costs
 nothing now; it is written down so neither set is "fixed" into `hjkl` later.
+
+<a id="xdg-terminals-list"></a>
+## `terminal/xdg-terminals.nix` — uwsm is told the terminal by name
+
+**Why** `uwsm app -- <entry>.desktop` with `Terminal=true` scans for a
+`TerminalEmulator` entry when no `xdg-terminals.list` names one, and the scan
+finds `kitty-open.desktop` — kitty's URL handler carries that category too and
+sorts first. Every launcher-opened TUI then runs `kitty +open %U -e <cmd>`,
+which is an "Unknown URL type" error window, not a terminal.
+**Breaks** *Only from the launcher.* Keybound TUIs go through `terminal.argv`
+and keep working; a `Terminal=true` entry through `uwsm app` is the one path
+that consults this list, so the regression hides until something is launched
+by search.

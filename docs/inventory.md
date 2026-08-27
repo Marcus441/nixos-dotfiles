@@ -30,7 +30,7 @@ Enumerate the files behind any row with
 | `foot` | `homeManager nixos` | 2 |
 | `gaming` | `homeManager nixos` | 11 |
 | `ghostty` | `homeManager nixos` | 2 |
-| `hyprland` | `homeManager nixos` | 22 |
+| `hyprland` | `homeManager nixos` | 23 |
 | `keychron` | `nixos` | 1 |
 | `kitty` | `homeManager nixos` | 2 |
 | `laptop` | `homeManager nixos` | 3 |
@@ -58,7 +58,7 @@ Declared in the file that creates the dependency, never in a central table.
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 123 |
+| files declaring at least one aspect | 124 |
 | of those, declaring more than one aspect or class | 35 |
-| `load-bearing:` pointers | 128 |
-| anchors defined in `docs/` | 108 |
+| `load-bearing:` pointers | 129 |
+| anchors defined in `docs/` | 109 |
