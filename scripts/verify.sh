@@ -17,16 +17,39 @@
 
 set -uo pipefail
 
-HOSTS=(swift5 gpc UM790pro)
-USER_NAME=marcus
 REPO=$(git rev-parse --show-toplevel) || exit 2
 
 fail=0
 pass=0
 
+# A machine that has never switched to this config has flakes off: enabling
+# them is part of the config being installed (modules/nix.nix), so the first
+# build predates its own prerequisite. nixos-rebuild passes these itself; a
+# bare `nix build` does not.
+nl=$'\n'
+export NIX_CONFIG="${NIX_CONFIG:+$NIX_CONFIG$nl}extra-experimental-features = nix-command flakes"
+
 # Flakes only see tracked files. This is the single most common cause of
 # spurious "path does not exist" errors.
 git add -A >/dev/null 2>&1 || true
+
+# The target list is measured, not written down: a host is verified the moment
+# the flake produces it, and the username lives in the generator, not here. A
+# hardcoded list silently builds three other machines and reports OK.
+attrnames() {
+  nix eval --raw ".#$1" \
+    --apply 'o: builtins.concatStringsSep "\n" (builtins.attrNames o)' 2>/dev/null
+}
+
+mapfile -t HOSTS < <(attrnames nixosConfigurations)
+mapfile -t HOME_NAMES < <(attrnames homeConfigurations)
+USER_NAME=${HOME_NAMES[0]:-}
+USER_NAME=${USER_NAME%@*}
+
+if ((${#HOSTS[@]} == 0)) || [[ -z $USER_NAME ]]; then
+  echo "error: the flake produced no targets; 'nix flake check' will say why"
+  exit 2
+fi
 
 targets() {
   local h=$1
