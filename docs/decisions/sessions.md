@@ -255,6 +255,18 @@ then fails because ly set `XDG_SESSION_TYPE` before PAM. What reaches the block
 is a VT login or `ssh`. Proven on UM790pro: `journalctl -b -t uwsm_start` is
 empty while Hyprland runs.
 
+<a id="blueman-autostart"></a>
+## `network/bluetooth.nix` — the system service already autostarts the applet
+
+**Why** `services.blueman.enable` puts blueman's XDG autostart entry in the
+system profile, and systemd's xdg-autostart generator runs it as
+`app-blueman@autostart.service` in every graphical session — so the tray
+applet needs no unit from this repo.
+**Breaks** Adding Home Manager's `services.blueman-applet` starts a second
+instance that loses the obex-agent race (`org.bluez.obex.Error.AlreadyExists`)
+and exits 0 — a dead unit and a logged ERROR every login, while the tray icon
+keeps working from the autostart copy. Measured on UM790pro, 2026-08-27.
+
 <a id="applet-sni"></a>
 ## `network/nm-applet.nix` — applets must register as StatusNotifierItems
 

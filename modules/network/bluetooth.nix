@@ -10,13 +10,8 @@ _: {
           KernelExperimental = "6fbaf188-05e0-496a-9885-d6ddfdb4e03e";
         };
       };
+      # load-bearing: docs/decisions/sessions.md#blueman-autostart
       services.blueman.enable = true;
-    }
-  ];
-
-  flake.modules.homeManager.quickshell = [
-    {
-      services.blueman-applet.enable = true;
     }
   ];
 
