@@ -91,4 +91,20 @@ ShellRoot {
             Popups.toggle("powermenu");
         }
     }
+
+    IpcHandler {
+        target: "media"
+
+        function playPause(): void {
+            MediaService.playPause();
+        }
+
+        function next(): void {
+            MediaService.next();
+        }
+
+        function previous(): void {
+            MediaService.previous();
+        }
+    }
 }

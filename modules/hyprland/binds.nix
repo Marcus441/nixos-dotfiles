@@ -103,11 +103,17 @@ _: {
                 repeating = true;
                 locked = true;
               })
-
-              (execOpts "XF86AudioNext" "playerctl next" {locked = true;})
-              (execOpts "XF86AudioPause" "playerctl play-pause" {locked = true;})
-              (execOpts "XF86AudioPlay" "playerctl play-pause" {locked = true;})
-              (execOpts "XF86AudioPrev" "playerctl previous" {locked = true;})
+            ]
+            # load-bearing: docs/decisions/audio.md#media-keys-ipc
+            ++ lib.optionals (config.media.next != "") [
+              (execOpts "XF86AudioNext" config.media.next {locked = true;})
+            ]
+            ++ lib.optionals (config.media.playPause != "") [
+              (execOpts "XF86AudioPause" config.media.playPause {locked = true;})
+              (execOpts "XF86AudioPlay" config.media.playPause {locked = true;})
+            ]
+            ++ lib.optionals (config.media.previous != "") [
+              (execOpts "XF86AudioPrev" config.media.previous {locked = true;})
             ];
         };
       }
