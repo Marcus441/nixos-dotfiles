@@ -40,3 +40,20 @@ that same source, so pinning a `pt` in the sheet would fight
 `browser.uidensity = 1` rather than agree with it.
 **Breaks** A pinned size shows up as clipped tab labels at compact density, not
 as a parse error.
+
+<a id="content-backgrounds"></a>
+## `firefox/style.nix` — namespaced tokens run loose, generic ones are fenced
+
+**Why** `userContent.css` reaches every page, so the split is by how ownable
+the name is. `--newtab-*` cannot collide with a site, and running it unfenced
+is what makes it independent of the URL the new tab page is served from — it is
+a built-in extension whose document lives under `resource://newtab/`, and
+whether the sheet sees that or `about:newtab` is a property of the redirect.
+`--text-color` and `--background-color-canvas` are generic enough for a site to
+own, so those stay behind `@-moz-document`.
+**Breaks** *Silently.* Fencing the newtab tokens on the wrong URL leaves the
+page on Firefox's own `#2B2A33`.
+**Also** the blank background between page loads is deliberately not themed.
+Its only lever, `browser.display.background_color`, is inert unless
+`browser.display.document_color_use = 2` — measured — and that overrides every
+site's own colours.

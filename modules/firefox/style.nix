@@ -61,6 +61,29 @@ _: {
             }
           '';
 
+          # load-bearing: docs/decisions/firefox.md#content-backgrounds
+          userContent = ''
+            :root {
+              /* --newtab-* is namespaced, so it needs no fence; hover and
+                 overlay derive from the page colour. */
+              --newtab-background-color: #${c.base00} !important;
+              --newtab-background-color-secondary: #${c.base01} !important;
+              --newtab-background-card: #${c.base01} !important;
+              --newtab-text-primary-color: #${c.base05} !important;
+              --newtab-text-secondary-text: #${c.base04} !important;
+              --newtab-primary-action-background: #${c.base0D} !important;
+              --newtab-wordmark-color: #${c.base05} !important;
+            }
+
+            @-moz-document url-prefix(about:) {
+              :root {
+                /* generic names a site could own, so these stay fenced. */
+                --background-color-canvas: #${c.base00} !important;
+                --text-color: #${c.base05} !important;
+              }
+            }
+          '';
+
           settings = {
             "font.name.sans-serif.x-western" = ui;
             "font.name.serif.x-western" = "Noto Serif";
