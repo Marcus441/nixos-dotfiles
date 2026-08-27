@@ -267,6 +267,21 @@ instance that loses the obex-agent race (`org.bluez.obex.Error.AlreadyExists`)
 and exits 0 — a dead unit and a logged ERROR every login, while the tray icon
 keeps working from the autostart copy. Measured on UM790pro, 2026-08-27.
 
+<a id="quickshell-wallpaper-thumbs"></a>
+## `wallpaper/thumbnails.nix` — thumbnails and the manifest are built by Nix
+
+**Why** The walls fetch is 364 images at 4K (1 GB); decoding those to draw
+126 px cells stalled the shell, and PNG gets no scaled decode at all. The
+derivation renders every image once to a 240 px-wide JPEG (uniform decode
+cost) and emits `manifest.json` — categories with counts, covers and
+per-image `{name, path, thumb}` — so the shell runs no `fd` and computes
+nothing: covers are the first file alphabetically, chosen at build time.
+`path` keys stay full-resolution store paths so a click hands the original
+to `wallpaper.set`.
+**Breaks** Pointing the shell back at the image directory restores in-shell
+4K decodes. The manifest's paths self-reference the derivation and the walls
+fetch — relativizing them breaks every consumer that resolves `file://` URLs.
+
 <a id="applet-sni"></a>
 ## `network/nm-applet.nix` — applets must register as StatusNotifierItems
 

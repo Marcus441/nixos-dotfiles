@@ -21,6 +21,7 @@ Inv. 3 working, not a violation.
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
 | `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`), `quickshell/quickshell.nix` (`quickshell`) |
 | `wallpaper.set` / `.enableRotator` / `.disableRotator` / `.directory` | `wallpaper/actions.nix` | `wallpaper/actions.nix` (`hyprland`) |
+| `wallpaper.thumbnailManifest` | `wallpaper/thumbnails.nix` | `wallpaper/thumbnails.nix` (`hyprland`) |
 | `editor.package` (defaults to `neovim.min`, not empty) | `editor/neovim.nix` | `editor/neovim.nix` (`dev`) |
 
 `launcher`, `terminal` and `wallpaperMenu` have files to themselves, because
