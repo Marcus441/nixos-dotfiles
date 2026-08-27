@@ -83,7 +83,6 @@ Row {
 
                     source: modelData.icon
                     implicitSize: 14
-                    anchors.verticalCenter: parent.verticalCenter
 
                     MouseArea {
                         anchors.fill: parent
