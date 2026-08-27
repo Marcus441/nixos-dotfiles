@@ -19,7 +19,7 @@ Inv. 3 working, not a violation.
 | `audioMixer.command` | `media/toolbox.nix` | `media/toolbox.nix` (`core`) |
 | `systemMonitor.command` / `.processorCommand` / `.memoryCommand` / `.temperatureCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
-| `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`), `quickshell/quickshell.nix` (`quickshell`) |
+| `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`) |
 | `wallpaper.set` / `.enableRotator` / `.disableRotator` / `.directory` | `wallpaper/actions.nix` | `wallpaper/actions.nix` (`hyprland`) |
 | `wallpaper.thumbnailManifest` | `wallpaper/thumbnails.nix` | `wallpaper/thumbnails.nix` (`hyprland`) |
 | `editor.package` (defaults to `neovim.min`, not empty) | `editor/neovim.nix` | `editor/neovim.nix` (`dev`) |

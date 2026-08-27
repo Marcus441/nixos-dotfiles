@@ -15,7 +15,6 @@ _: {
         ipc = target: "${qs} -c default ipc call ${target} toggle";
       in {
         bar.toggle = ipc "bar";
-        wallpaperMenu.command = ipc "wallpaper";
         powerMenu.command = ipc "powermenu";
 
         programs.quickshell = {

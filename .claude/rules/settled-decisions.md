@@ -9,11 +9,14 @@ human makes, not a cleanup you offer.
 
 - **Quickshell's shape is settled.** `aspectRequires.quickshell = ["hyprland"]`
   rejects dwl hosts, the Hyprland binds drive it over `qs ipc call` through the
-  `bar.toggle` / `launcher` / `clipboard.history` / `wallpaperMenu.command` /
-  `powerMenu.command` intents, the power menu is a quickshell overlay (wleave
-  is retired), the shell owns `org.freedesktop.Notifications` on Hyprland
-  hosts (mako serves only dwl), and `walker` is its own aspect that no host
-  currently takes. Waybar is retired. The Notifs singleton must stay
+  `bar.toggle` / `launcher` / `clipboard.history` / `powerMenu.command`
+  intents, the power menu is a quickshell overlay (wleave is retired), the
+  wallpaper picker is opened from its bar button only — quickshell sets no
+  `wallpaperMenu.command`, so no keybind renders; walker's implementation
+  remains for a future walker host — the shell owns
+  `org.freedesktop.Notifications` on Hyprland hosts (mako serves only dwl),
+  and `walker` is its own aspect that no host currently takes. Waybar is
+  retired. The Notifs singleton must stay
   instantiated at startup or the D-Bus name goes unclaimed —
   `docs/decisions/sessions.md#quickshell-notifs`.
   The tray's right-click menu is drawn in QML, not handed to `display()` —
