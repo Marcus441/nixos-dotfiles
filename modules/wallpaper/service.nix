@@ -23,9 +23,14 @@ _: {
           Service = {
             ExecStart = "${pkgs.writeShellScript "rotate" ''
               CACHE_FILE="${config.xdg.cacheHome}/current_wallpaper.img"
+              FLAG_FILE="${config.xdg.cacheHome}/wallpaper_rotator_enabled"
 
               while true; do
-                WALL=$(${pkgs.fd}/bin/fd . ${walls} -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
+                CATEGORY=""
+                [ -r "$FLAG_FILE" ] && CATEGORY=$(<"$FLAG_FILE")
+                SCOPE="${walls}/walled_tiers/4k/$CATEGORY"
+                { [ -n "$CATEGORY" ] && [ -d "$SCOPE" ]; } || SCOPE="${walls}"
+                WALL=$(${pkgs.fd}/bin/fd . "$SCOPE" -e jpg -e png -e webp | ${pkgs.coreutils}/bin/shuf -n 1)
 
                 if [ -n "$WALL" ]; then
                   ln -sf "$WALL" "$CACHE_FILE"

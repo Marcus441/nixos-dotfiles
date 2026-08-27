@@ -21,6 +21,8 @@ Item {
         },
         ...root.categories]
     property bool rotatorEnabled: false
+    property string rotatorCategory: ""
+    readonly property bool rotatorMatchesView: root.rotatorEnabled && root.rotatorCategory === root.currentCategory
 
     implicitWidth: widget.implicitWidth
     implicitHeight: widget.implicitHeight
@@ -33,7 +35,7 @@ Item {
     }
 
     function toggleRotator() {
-        rotatorToggle.command = [root.rotatorEnabled ? Config.disableRotatorScript : Config.enableRotatorScript];
+        rotatorToggle.command = root.rotatorMatchesView ? [Config.disableRotatorScript] : [Config.enableRotatorScript, root.currentCategory];
         rotatorToggle.running = true;
     }
 
@@ -65,8 +67,12 @@ Item {
     Process {
         id: rotatorCheck
 
-        command: [Config.sh, "-c", `test -f "${Config.cacheDir}/wallpaper_rotator_enabled"`]
+        command: [Config.sh, "-c", `cat "${Config.cacheDir}/wallpaper_rotator_enabled" 2>/dev/null`]
         running: true
+
+        stdout: StdioCollector {
+            onStreamFinished: root.rotatorCategory = text.trim()
+        }
 
         onExited: exitCode => root.rotatorEnabled = exitCode === 0
     }
@@ -93,8 +99,8 @@ Item {
 
         headerContent: [
             TextAction {
-                text: root.rotatorEnabled ? "󰒝 shuffle on" : "󰒝 shuffle off"
-                active: root.rotatorEnabled
+                text: root.rotatorEnabled ? "󰒝 shuffle: " + (root.rotatorCategory || "all") : "󰒝 shuffle off"
+                active: root.rotatorMatchesView
                 onTriggered: root.toggleRotator()
             }
         ]

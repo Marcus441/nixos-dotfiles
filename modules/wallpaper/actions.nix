@@ -11,7 +11,7 @@ _: {
       in {
         options.wallpaper = {
           set = action "Command that sets the wallpaper from the image path it is given. Empty when no aspect provides one.";
-          enableRotator = action "Command that starts automatic wallpaper rotation. Empty when no aspect provides one.";
+          enableRotator = action "Command that starts automatic wallpaper rotation, scoped to the category named by an optional first argument. Empty when no aspect provides one.";
           disableRotator = action "Command that stops automatic wallpaper rotation. Empty when no aspect provides one.";
           directory = action "Directory the pickers enumerate for wallpaper images. Empty when no aspect provides one.";
         };
@@ -40,9 +40,9 @@ _: {
             ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper" "$(${pkgs.coreutils}/bin/basename "$1")"
           ''}";
           enableRotator = "${pkgs.writeShellScript "enable-rotator" ''
-            ${pkgs.coreutils}/bin/touch "${cache}/wallpaper_rotator_enabled"
-            ${pkgs.systemd}/bin/systemctl --user start wallpaper-rotator.service
-            ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled"
+            ${pkgs.coreutils}/bin/printf '%s' "''${1-}" >"${cache}/wallpaper_rotator_enabled"
+            ${pkgs.systemd}/bin/systemctl --user restart wallpaper-rotator.service
+            ${pkgs.libnotify}/bin/notify-send -u low -i media-playlist-shuffle "Wallpaper Rotator" "Automatic rotation enabled''${1:+ ($1)}"
           ''}";
           disableRotator = "${pkgs.writeShellScript "disable-rotator" ''
             ${pkgs.coreutils}/bin/rm -f "${cache}/wallpaper_rotator_enabled"
