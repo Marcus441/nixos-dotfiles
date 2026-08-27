@@ -31,6 +31,7 @@ Item {
 
     function pick(path) {
         Quickshell.execDetached([Config.setWallpaperScript, path]);
+        root.rotatorEnabled = false;
         popup.visible = false;
     }
 
@@ -81,6 +82,7 @@ Item {
         id: widget
 
         text: "󰸉"
+        baseColor: root.rotatorEnabled ? Config.base0B : Config.base03
         onClicked: popup.visible = !popup.visible
     }
 
