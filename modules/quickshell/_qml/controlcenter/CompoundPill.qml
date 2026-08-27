@@ -113,7 +113,6 @@ Rectangle {
             id: chevron
 
             visible: root.showExpandArea
-            width: visible ? implicitWidth : 0
             anchors.verticalCenter: parent.verticalCenter
             text: root.expanded ? "󰅀" : "󰅂"
             color: bodyMouse.containsMouse ? Config.base05 : Config.base04
