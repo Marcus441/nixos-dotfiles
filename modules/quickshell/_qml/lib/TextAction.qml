@@ -12,6 +12,12 @@ Text {
     font.family: Config.iconFamily
     font.pixelSize: Config.fontSize
 
+    Behavior on color {
+        ColorAnimation {
+            duration: Theme.durFast
+        }
+    }
+
     MouseArea {
         id: mouse
 

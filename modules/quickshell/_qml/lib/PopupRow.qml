@@ -14,6 +14,12 @@ Rectangle {
     implicitHeight: inner.implicitHeight + 12
     color: root.hoverable && mouse.containsMouse ? Config.base02 : "transparent"
 
+    Behavior on color {
+        ColorAnimation {
+            duration: Theme.durFast
+        }
+    }
+
     Row {
         id: inner
 
