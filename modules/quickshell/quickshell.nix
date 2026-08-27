@@ -12,10 +12,14 @@ _: {
         ...
       }: let
         qs = lib.getExe pkgs.quickshell;
-        ipc = target: "${qs} -c default ipc call ${target} toggle";
+        ipc = target: fn: "${qs} -c default ipc call ${target} ${fn}";
       in {
-        bar.toggle = ipc "bar";
-        powerMenu.command = ipc "powermenu";
+        bar.toggle = ipc "bar" "toggle";
+        powerMenu.command = ipc "powermenu" "toggle";
+
+        media.playPause = ipc "media" "playPause";
+        media.next = ipc "media" "next";
+        media.previous = ipc "media" "previous";
 
         programs.quickshell = {
           enable = true;

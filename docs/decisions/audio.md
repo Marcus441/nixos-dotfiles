@@ -31,3 +31,20 @@ players into BlueZ's player API.
 compositor binds; take-off-to-pause and LE Audio media control stop.
 **Also** If one press ever toggles play-pause twice, this proxy and the
 compositor bind are double-handling the same press — disable one.
+
+<a id="media-keys-ipc"></a>
+## `binds.nix` — the media keys ask the shell, not playerctl
+
+**Why** The bar shows one player and the keys must act on that one. Bare
+`playerctl` picks its own target when several MPRIS players are registered, so
+a key could pause Firefox while the bar showed mpv. The binds now call
+`qs ipc call media …`, which lands in the same `MediaService` the bar reads —
+the choice of player is made once, in the shell. `locked = true` still holds:
+the IPC socket answers over the lock screen just as playerctl did.
+**Breaks** Loudly, and only for the whole namespace at once. A Hyprland host
+that does not take `quickshell` sets nothing, so `lib.optionals` emits no media
+binds at all rather than binds that do nothing. If the shell is dead the keys
+are dead — playerctl did not need it running. `playerctl` stays installed for
+CLI use, and dwl binds it independently.
+**Also** [#mpris-proxy](#mpris-proxy) still applies. Routing through the shell
+replaced the playerctl handler; it did not add a second one.
