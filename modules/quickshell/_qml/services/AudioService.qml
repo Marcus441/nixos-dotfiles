@@ -1,6 +1,8 @@
 pragma Singleton
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
+import qs
 
 Singleton {
     id: root
@@ -13,6 +15,7 @@ Singleton {
         if (sink?.ready && sink?.audio) {
             sink.audio.muted = false;
             sink.audio.volume = Math.max(0, Math.min(1, value));
+            feedback.running = true;
         }
     }
 
@@ -29,5 +32,11 @@ Singleton {
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
+    }
+
+    Process {
+        id: feedback
+
+        command: [Config.volumeSoundScript]
     }
 }

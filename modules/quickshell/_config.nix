@@ -47,6 +47,10 @@
       "$total" "$idle" "$temp" "$label" "$memUsed" "$memTotal" "''${diskPct:-0}"
   '';
 
+  volumeSound = pkgs.writeShellScript "qs-volume-sound" ''
+    exec ${pkgs.pulseaudio}/bin/paplay ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga
+  '';
+
   colorProps =
     lib.concatStrings
     (lib.mapAttrsToList
@@ -86,6 +90,7 @@
         readonly property string enableRotatorScript: "${qml wallpaperEnableRotator}"
         readonly property string disableRotatorScript: "${qml wallpaperDisableRotator}"
         readonly property string metricsScript: "${metrics}"
+        readonly property string volumeSoundScript: "${volumeSound}"
         readonly property string sh: "${pkgs.runtimeShell}"
         readonly property string systemctl: "${pkgs.systemd}/bin/systemctl"
         readonly property string hyprctl: "${pkgs.hyprland}/bin/hyprctl"
