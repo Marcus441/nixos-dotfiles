@@ -19,10 +19,12 @@ Overlay {
     property var collapsed: ({})
     property var pointer: null
 
-    readonly property bool showMonitor: Hyprland.monitors.values.length > 1
+    readonly property bool showMonitor: {
+        monWatch.rev;
+        return Hyprland.monitors.values.length > 1;
+    }
 
     readonly property var groups: {
-        wsWatch.rev;
         tlWatch.rev;
 
         const wins = {};
@@ -37,18 +39,13 @@ Overlay {
                 kind: "win",
                 wsId: ws.id,
                 tl: tl,
-                appId: appId
+                appId: appId,
+                icon: Quickshell.iconPath(DesktopEntries.heuristicLookup(appId)?.icon ?? appId, true)
             });
         }
 
-        const live = {};
-        const ids = new Set([1, 2, 3, 4, 5]);
-        for (const ws of Hyprland.workspaces.values) {
-            live[ws.id] = ws;
-            ids.add(ws.id);
-        }
-
-        return Array.from(ids).filter(id => id > 0 || (wins[id] ?? []).length > 0).sort((a, b) => (a > 0) === (b > 0) ? a - b : b - a).map(id => {
+        const live = WorkspaceState.byId;
+        return WorkspaceState.ids.filter(id => id > 0 || (wins[id] ?? []).length > 0).sort((a, b) => (a > 0) === (b > 0) ? a - b : b - a).map(id => {
             const ws = live[id] ?? null;
             const children = wins[id] ?? [];
             const name = ws?.name ?? `${id}`;
@@ -141,15 +138,15 @@ Overlay {
     }
 
     ModelWatcher {
-        id: wsWatch
-
-        model: Hyprland.workspaces
-    }
-
-    ModelWatcher {
         id: tlWatch
 
         model: Hyprland.toplevels
+    }
+
+    ModelWatcher {
+        id: monWatch
+
+        model: Hyprland.monitors
     }
 
     Component.onCompleted: Hyprland.refreshToplevels()
@@ -180,8 +177,8 @@ Overlay {
                 root.activate(row);
         }
 
-        // a query force-expands the tree, so folding under one records hidden
-        // state and moves the cursor for nothing -- the rule Enter follows
+        // a query force-expands the tree, so folding under one would record
+        // hidden state and move the cursor for nothing -- the rule Enter follows
         onCollapsed: {
             const row = filterList.filtered[filterList.selected];
             if (row && filterList.query === "")
@@ -204,102 +201,21 @@ Overlay {
             required property var modelData
             required property int index
 
-            readonly property bool isNode: modelData.kind === "ws"
             readonly property bool current: index === filterList.selected
 
             width: filterList.width
-            height: isNode ? 32 : 40
+            height: modelData.kind === "ws" ? 32 : 40
 
             Rectangle {
                 anchors.fill: parent
                 color: row.current ? Config.base02 : "transparent"
             }
 
-            Row {
-                visible: row.isNode
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.pad
-                spacing: Theme.gap
+            Loader {
+                anchors.fill: parent
+                sourceComponent: row.modelData.kind === "ws" ? nodeRow : leafRow
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: row.modelData.count > 0
-                    text: root.collapsed[row.modelData.id] ? "󰅂" : "󰅀"
-                    color: Config.base04
-                    font.family: Config.iconFamily
-                    font.pixelSize: Config.fontSize
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: row.isNode ? row.modelData.name : ""
-                    color: row.modelData.ws?.urgent ? Config.base08 : row.modelData.ws?.focused ? Config.base0D : Config.base05
-                    font.family: Config.fontFamily
-                    font.pixelSize: Theme.fontMd
-                    font.weight: 600
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: !row.isNode ? "" : row.modelData.count === 0 ? "empty" : row.modelData.count === 1 ? "1 window" : `${row.modelData.count} windows`
-                    color: Config.base03
-                    font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize
-                }
-            }
-
-            Text {
-                visible: row.isNode && root.showMonitor && row.modelData.monitor !== ""
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: Theme.pad
-                text: row.isNode ? row.modelData.monitor : ""
-                color: Config.base03
-                font.family: Config.fontFamily
-                font.pixelSize: Config.fontSize
-            }
-
-            IconImage {
-                id: icon
-
-                visible: !row.isNode
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.pad * 2 + Theme.gap
-                implicitSize: 22
-                asynchronous: true
-                source: row.isNode ? "" : Quickshell.iconPath(DesktopEntries.heuristicLookup(row.modelData.appId)?.icon ?? row.modelData.appId, true)
-            }
-
-            Row {
-                visible: !row.isNode
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: icon.right
-                anchors.leftMargin: Theme.gap
-                anchors.right: parent.right
-                anchors.rightMargin: Theme.pad
-                spacing: Theme.gap
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: Math.min(implicitWidth, parent.width - appLabel.width - parent.spacing)
-                    text: row.isNode ? "" : row.modelData.tl.title
-                    elide: Text.ElideRight
-                    color: !row.isNode && row.modelData.tl.wayland === ToplevelManager.activeToplevel ? Config.base0D : Config.base05
-                    font.family: Config.fontFamily
-                    font.pixelSize: Theme.fontMd
-                }
-
-                Text {
-                    id: appLabel
-
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: row.isNode ? "" : row.modelData.appId
-                    color: Config.base03
-                    font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize
-                }
+                readonly property var entry: row.modelData
             }
 
             MouseArea {
@@ -313,10 +229,115 @@ Overlay {
                     root.hoverSelect(row.index, p.x, p.y);
                 }
                 onClicked: mouse => {
-                    if (row.isNode && mouse.x < Theme.pad * 2 + Theme.gap && row.modelData.count > 0)
-                        root.setCollapsed(row.modelData.id, !root.collapsed[row.modelData.id]);
+                    const entry = row.modelData;
+                    if (entry.kind === "ws" && mouse.x < Theme.pad * 2 + Theme.gap && entry.count > 0)
+                        root.setCollapsed(entry.id, !root.collapsed[entry.id]);
                     else
-                        root.activate(row.modelData);
+                        root.activate(entry);
+                }
+            }
+        }
+    }
+
+    Component {
+        id: nodeRow
+
+        Item {
+            id: node
+
+            readonly property var entry: parent.entry
+
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.pad
+                spacing: Theme.gap
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: node.entry.count > 0
+                    text: root.collapsed[node.entry.id] ? "󰅂" : "󰅀"
+                    color: Config.base04
+                    font.family: Config.iconFamily
+                    font.pixelSize: Config.fontSize
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: node.entry.name
+                    color: node.entry.ws?.urgent ? Config.base08 : node.entry.ws?.focused ? Config.base0D : Config.base05
+                    font.family: Config.fontFamily
+                    font.pixelSize: Theme.fontMd
+                    font.weight: 600
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: node.entry.count === 0 ? "empty" : node.entry.count === 1 ? "1 window" : `${node.entry.count} windows`
+                    color: Config.base03
+                    font.family: Config.fontFamily
+                    font.pixelSize: Config.fontSize
+                }
+            }
+
+            Text {
+                visible: root.showMonitor && node.entry.monitor !== ""
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.pad
+                text: node.entry.monitor
+                color: Config.base03
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize
+            }
+        }
+    }
+
+    Component {
+        id: leafRow
+
+        Item {
+            id: leaf
+
+            readonly property var entry: parent.entry
+
+            IconImage {
+                id: icon
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.pad * 2 + Theme.gap
+                implicitSize: 22
+                asynchronous: true
+                source: leaf.entry.icon
+            }
+
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: icon.right
+                anchors.leftMargin: Theme.gap
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.pad
+                spacing: Theme.gap
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: Math.min(implicitWidth, parent.width - appLabel.width - parent.spacing)
+                    text: leaf.entry.tl.title
+                    elide: Text.ElideRight
+                    color: leaf.entry.tl.wayland === ToplevelManager.activeToplevel ? Config.base0D : Config.base05
+                    font.family: Config.fontFamily
+                    font.pixelSize: Theme.fontMd
+                }
+
+                Text {
+                    id: appLabel
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: leaf.entry.appId
+                    color: Config.base03
+                    font.family: Config.fontFamily
+                    font.pixelSize: Config.fontSize
                 }
             }
         }
