@@ -48,7 +48,12 @@ _: {
               (bind "${mainMod} + M" ''layout.set("monocle")'')
               (bind "${mainMod} + T" ''layout.set("dwindle")'')
               (bind "${mainMod} + space" "layout.toggle")
-              (bind "${mainMod} + Tab" "layout.cycle_next")
+              (bind "${mainMod} + SHIFT + Tab" "layout.cycle_next")
+            ]
+            ++ lib.optionals (config.switcher.command != "") [
+              (exec "${mainMod} + Tab" config.switcher.command)
+            ]
+            ++ [
               (exec "${mainMod} + V" config.clipboard.history)
             ]
             ++ lib.optionals (config.wallpaperMenu.command != "") [
