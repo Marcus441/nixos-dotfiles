@@ -41,6 +41,14 @@ ShellRoot {
     }
 
     LazyLoader {
+        active: Popups.switcherOpen
+
+        Switcher {
+            onDismissed: Popups.close("switcher")
+        }
+    }
+
+    LazyLoader {
         active: Popups.powerOpen
 
         PowerMenu {
@@ -81,6 +89,14 @@ ShellRoot {
 
         function toggle(): void {
             Popups.toggle("clipboard");
+        }
+    }
+
+    IpcHandler {
+        target: "switcher"
+
+        function toggle(): void {
+            Popups.toggle("switcher");
         }
     }
 

@@ -8,6 +8,7 @@ Singleton {
 
     readonly property bool launcherOpen: open === "launcher"
     readonly property bool clipboardOpen: open === "clipboard"
+    readonly property bool switcherOpen: open === "switcher"
     readonly property bool powerOpen: open === "powermenu"
 
     function toggle(name: string): void {
