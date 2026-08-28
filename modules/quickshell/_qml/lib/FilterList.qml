@@ -11,6 +11,7 @@ Column {
     signal expanded
 
     property var filterFn: q => []
+    property var selectFn: null
     property var filtered: []
     property int selected: 0
     property string placeholder: ""
@@ -21,8 +22,9 @@ Column {
     readonly property alias query: search.text
 
     function refilter() {
-        filtered = filterFn(search.text.toLowerCase());
-        selected = 0;
+        const q = search.text.toLowerCase();
+        filtered = filterFn(q);
+        selected = selectFn ? selectFn(filtered, q) : 0;
     }
 
     spacing: 0

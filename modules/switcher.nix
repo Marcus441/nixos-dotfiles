@@ -20,7 +20,7 @@ _: {
       }: {
         switcher.command = "${lib.getExe pkgs.quickshell} -c default ipc call switcher toggle";
 
-        # load-bearing: docs/decisions/sessions.md#quickshell-switcher
+        # load-bearing: docs/decisions/switcher.md#quickshell-switcher
         wayland.windowManager.hyprland.settings.layer_rule = [
           {
             name = "no-anim-quickshell-switcher";

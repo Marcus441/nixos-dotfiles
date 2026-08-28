@@ -149,47 +149,6 @@ for exactly this reason. Critical toasts persist until dismissed and DND
 suppresses toasts for every urgency (history still records); both are
 deliberate deltas from the old mako behaviour.
 
-<a id="quickshell-switcher"></a>
-## `quickshell/_qml/popups/Switcher.qml` — the request waits for Hyprland's focus restore
-
-**Why** Hyprland will not move window focus while a layer surface holds
-`WlrKeyboardFocus.Exclusive`, and unmapping that surface makes it *restore*
-focus — to the most recent window of whatever workspace it lands on, on top of
-anything dispatched first. So `activate` hands the request to
-`services/FocusRequest.qml`, which waits for the `activewindowv2` announcing
-that restore before dispatching; its 200 ms timer is the fallback for a restore
-that never announces itself. Measured in monocle: dispatching in the same call
-focused the workspace's last window, not the chosen one, every time. The
-deferral is a singleton so dismissal is immediate and the request cannot die
-with the overlay. `toplevel.wayland.activate()` is inert here in every state —
-it only marked the workspace urgent, the bar's red pill — and
-`HyprlandToplevel.address` carries no `0x`, so the request puts it back.
-**Breaks** *Silently, and it reads as the picker's fault.* Dispatching without
-the wait still picks the right window on a one-window workspace, so the bug
-survives every single-window test and appears only where a workspace holds two.
-**Also** the `quickshell-switcher` layershell namespace is string-matched in two
-aspects — here and the `no_anim` layer rule in `switcher.nix` — the
-#layout-event shape. Renaming it in one place leaves the overlay animating.
-
-## `quickshell/_qml/popups/Switcher.qml` — two Hyprland models had to be measured
-
-**Why** `Hyprland.toplevels` is empty until `refreshToplevels()` runs, so the
-overlay refreshes on open; and `HyprlandToplevel.activated` stays false until a
-focus event *after* startup, so the current-window marker compares
-`ToplevelManager.activeToplevel`, which is populated and survives the overlay
-taking exclusive keyboard focus.
-**Breaks** *Silently, both.* Without the refresh a shell that has seen no window
-open draws an empty tree; reading `activated` draws one where nothing is ever
-marked current.
-
-## `quickshell/_qml/popups/Switcher.qml` — Enter folds an occupied node
-
-**Why** Every leaf already reaches its own workspace, so Enter on an occupied
-node is free to fold it, and an empty node — nothing to fold — navigates. The
-exception is a non-empty search box: a query force-expands the tree, so folding
-under one is a key that visibly does nothing, and Enter navigates there too.
-**Breaks** Dropping the exception restores a dead Enter mid-search.
-
 <a id="layout-event"></a>
 ## `hyprland/_layout.lua` — layout changes announce a `custom>>layout,` event
 

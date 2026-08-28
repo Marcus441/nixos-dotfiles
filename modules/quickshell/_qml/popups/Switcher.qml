@@ -17,6 +17,7 @@ Overlay {
     contentHeight: 520
 
     property var collapsed: ({})
+    property var pointer: null
 
     readonly property bool showMonitor: Hyprland.monitors.values.length > 1
 
@@ -36,8 +37,7 @@ Overlay {
                 kind: "win",
                 wsId: ws.id,
                 tl: tl,
-                appId: appId,
-                search: `${appId} ${tl.title}`.toLowerCase()
+                appId: appId
             });
         }
 
@@ -62,7 +62,8 @@ Overlay {
                     name: name,
                     count: children.length,
                     monitor: ws?.monitor?.name ?? "",
-                    search: name.toLowerCase()
+                    search: name.toLowerCase(),
+                    first: children[0] ?? null
                 }
             };
         });
@@ -72,7 +73,7 @@ Overlay {
         const out = [];
         for (const group of root.groups) {
             const hit = q !== "" && group.header.search.includes(q);
-            const wins = q === "" || hit ? group.wins : group.wins.filter(w => w.search.includes(q));
+            const wins = q === "" || hit ? group.wins : group.wins.filter(w => `${w.appId} ${w.tl.title}`.toLowerCase().includes(q));
             if (q !== "" && !hit && wins.length === 0)
                 continue;
             out.push(group.header);
@@ -96,16 +97,46 @@ Overlay {
         filterList.selected = Math.max(0, filterList.filtered.findIndex(r => r.kind === "ws" && r.id === id));
     }
 
+    // the surface maps under the pointer, and the enter-plus-motion Wayland
+    // sends then makes Qt report a hover with no movement in it; only a
+    // position that actually changed may take the selection
+    function hoverSelect(index, x, y) {
+        const moved = root.pointer !== null && (root.pointer.x !== x || root.pointer.y !== y);
+        root.pointer = Qt.point(x, y);
+        if (moved)
+            filterList.selected = index;
+    }
+
+    function initialIndex(rows, q) {
+        const leaf = rows.findIndex(r => r.kind === "win");
+        if (q !== "")
+            return Math.max(0, leaf);
+        // a bare open is an alt-tab: start on the window focused before this one
+        const previous = rows.findIndex(r => r.kind === "win" && r.tl.lastIpcObject?.focusHistoryID === 1);
+        return previous >= 0 ? previous : Math.max(0, leaf);
+    }
+
+    function windowRequest(address) {
+        return Hyprland.usingLua ? `hl.dsp.focus({ window = "address:0x${address}" })` : `focuswindow address:0x${address}`;
+    }
+
     function request(row) {
-        if (row.kind === "ws")
-            return Hyprland.usingLua ? `hl.dsp.focus({ workspace = "${row.id}" })` : `workspace ${row.id}`;
-        return Hyprland.usingLua ? `hl.dsp.focus({ window = "address:0x${row.tl.address}" })` : `focuswindow address:0x${row.tl.address}`;
+        if (row.kind === "win")
+            return root.windowRequest(row.tl.address);
+        // a negative id is a relative jump to Hyprland, not a workspace; a
+        // special is reached by focusing something inside it
+        if (row.id < 0)
+            return row.first ? root.windowRequest(row.first.tl.address) : "";
+        return Hyprland.usingLua ? `hl.dsp.focus({ workspace = "${row.id}" })` : `workspace ${row.id}`;
     }
 
     function activate(row) {
         if (!row)
             return;
-        FocusRequest.send(root.request(row));
+        const req = root.request(row);
+        if (req === "")
+            return;
+        FocusRequest.send(req);
         root.dismissed();
     }
 
@@ -137,6 +168,7 @@ Overlay {
         searchPixelSize: Theme.fontXl
         treeKeys: true
         filterFn: q => root.rowsFor(q)
+        selectFn: (rows, q) => root.initialIndex(rows, q)
         onDismissed: root.dismissed()
         onAccepted: {
             const row = filterList.filtered[filterList.selected];
@@ -272,7 +304,12 @@ Overlay {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: filterList.selected = row.index
+                // movement, not entry: a reflow under a still pointer would
+                // otherwise discard the selection the list just computed
+                onPositionChanged: mouse => {
+                    const p = row.mapToItem(null, mouse.x, mouse.y);
+                    root.hoverSelect(row.index, p.x, p.y);
+                }
                 onClicked: mouse => {
                     if (row.isNode && mouse.x < Theme.pad * 2 + Theme.gap && row.modelData.count > 0)
                         root.setCollapsed(row.modelData.id, !root.collapsed[row.modelData.id]);
