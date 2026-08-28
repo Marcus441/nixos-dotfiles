@@ -21,13 +21,7 @@ _: {
         switcher.command = "${lib.getExe pkgs.quickshell} -c default ipc call switcher toggle";
 
         # load-bearing: docs/decisions/switcher.md#quickshell-switcher
-        wayland.windowManager.hyprland.settings.layer_rule = [
-          {
-            name = "no-anim-quickshell-switcher";
-            match = {namespace = "quickshell-switcher";};
-            no_anim = true;
-          }
-        ];
+        quickshell.overlayNamespaces = ["quickshell-switcher"];
       }
     )
   ];

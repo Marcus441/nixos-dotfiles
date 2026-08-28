@@ -2,31 +2,19 @@ pragma ComponentBehavior: Bound
 import Quickshell.Hyprland
 import QtQuick
 import qs
-import qs.lib
+import qs.services
 
 Rectangle {
     id: root
 
     required property Bar bar
 
-    readonly property var wsIds: {
-        wsWatch.rev;
-        const ids = new Set([1, 2, 3, 4, 5]);
-        for (const ws of Hyprland.workspaces.values)
-            ids.add(ws.id);
-        return Array.from(ids).filter(i => i > 0).sort((a, b) => a - b);
-    }
+    readonly property var wsIds: WorkspaceState.ids.filter(i => i > 0).sort((a, b) => a - b)
 
     color: Config.base01
     radius: bar.vertical ? 6 : height / 2
     implicitWidth: bar.vertical ? 22 : row.implicitWidth + 8
     implicitHeight: bar.vertical ? row.implicitHeight + 8 : 20
-
-    ModelWatcher {
-        id: wsWatch
-
-        model: Hyprland.workspaces
-    }
 
     Grid {
         id: row
@@ -43,10 +31,7 @@ Rectangle {
 
                 required property int modelData
 
-                readonly property var ws: {
-                    wsWatch.rev;
-                    return Hyprland.workspaces.values.find(w => w.id === pill.modelData) ?? null;
-                }
+                readonly property var ws: WorkspaceState.byId[pill.modelData] ?? null
                 readonly property bool focused: Hyprland.focusedWorkspace?.id === pill.modelData
                 readonly property bool occupied: ws !== null
                 readonly property bool urgent: ws?.urgent ?? false
