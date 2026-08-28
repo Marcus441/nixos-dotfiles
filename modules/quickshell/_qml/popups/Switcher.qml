@@ -30,7 +30,7 @@ Overlay {
             const ws = tl.workspace;
             if (!ws)
                 continue;
-            const appId = tl.wayland?.appId ?? tl.lastIpcObject?.class ?? "";
+            const appId = tl.wayland?.appId || tl.lastIpcObject?.class || "";
             if (!wins[ws.id])
                 wins[ws.id] = [];
             wins[ws.id].push({
@@ -180,15 +180,17 @@ Overlay {
                 root.activate(row);
         }
 
+        // a query force-expands the tree, so folding under one records hidden
+        // state and moves the cursor for nothing -- the rule Enter follows
         onCollapsed: {
             const row = filterList.filtered[filterList.selected];
-            if (row)
+            if (row && filterList.query === "")
                 root.setCollapsed(row.kind === "ws" ? row.id : row.wsId, true);
         }
 
         onExpanded: {
             const row = filterList.filtered[filterList.selected];
-            if (!row || row.kind === "win")
+            if (!row || row.kind === "win" || filterList.query !== "")
                 return;
             if (root.collapsed[row.id])
                 root.setCollapsed(row.id, false);
