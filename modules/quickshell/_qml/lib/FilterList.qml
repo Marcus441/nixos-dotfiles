@@ -7,14 +7,18 @@ Column {
 
     signal dismissed
     signal accepted
+    signal collapsed
+    signal expanded
 
     property var filterFn: q => []
     property var filtered: []
     property int selected: 0
     property string placeholder: ""
     property string searchIcon: ""
+    property bool treeKeys: false
     property int searchPixelSize: Theme.fontLg
     property alias delegate: list.delegate
+    readonly property alias query: search.text
 
     function refilter() {
         filtered = filterFn(search.text.toLowerCase());
@@ -63,6 +67,34 @@ Column {
                 Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
                 Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
                 Keys.onReturnPressed: root.accepted()
+                Keys.onPressed: event => {
+                    if (event.modifiers !== Qt.ControlModifier)
+                        return;
+                    switch (event.key) {
+                    case Qt.Key_N:
+                        root.selected = Math.min(root.filtered.length - 1, root.selected + 1);
+                        break;
+                    case Qt.Key_P:
+                        root.selected = Math.max(0, root.selected - 1);
+                        break;
+                    case Qt.Key_Y:
+                        root.accepted();
+                        break;
+                    case Qt.Key_H:
+                        if (!root.treeKeys)
+                            return;
+                        root.collapsed();
+                        break;
+                    case Qt.Key_L:
+                        if (!root.treeKeys)
+                            return;
+                        root.expanded();
+                        break;
+                    default:
+                        return;
+                    }
+                    event.accepted = true;
+                }
 
                 Text {
                     visible: search.text === ""
