@@ -21,6 +21,14 @@ Column {
     property alias delegate: list.delegate
     readonly property alias query: search.text
 
+    function selectNext() {
+        selected = Math.max(0, Math.min(filtered.length - 1, selected + 1));
+    }
+
+    function selectPrev() {
+        selected = Math.max(0, selected - 1);
+    }
+
     function refilter() {
         const q = search.text.toLowerCase();
         filtered = filterFn(q);
@@ -66,18 +74,18 @@ Column {
                 anchors.verticalCenter: parent.verticalCenter
                 onTextChanged: root.refilter()
                 Keys.onEscapePressed: root.dismissed()
-                Keys.onUpPressed: root.selected = Math.max(0, root.selected - 1)
-                Keys.onDownPressed: root.selected = Math.min(root.filtered.length - 1, root.selected + 1)
+                Keys.onUpPressed: root.selectPrev()
+                Keys.onDownPressed: root.selectNext()
                 Keys.onReturnPressed: root.accepted()
                 Keys.onPressed: event => {
                     if (event.modifiers !== Qt.ControlModifier)
                         return;
                     switch (event.key) {
                     case Qt.Key_N:
-                        root.selected = Math.min(root.filtered.length - 1, root.selected + 1);
+                        root.selectNext();
                         break;
                     case Qt.Key_P:
-                        root.selected = Math.max(0, root.selected - 1);
+                        root.selectPrev();
                         break;
                     case Qt.Key_Y:
                         root.accepted();
