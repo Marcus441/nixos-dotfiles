@@ -375,7 +375,6 @@ _: {
 
               "browser.uidensity" = 1;
               "browser.compactmode.show" = true;
-              "browser.toolbars.bookmarks.visibility" = "newtab";
               "browser.tabs.firefox-view" = false;
 
               "browser.ctrlTab.sortByRecentlyUsed" = true;
