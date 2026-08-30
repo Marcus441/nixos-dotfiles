@@ -165,7 +165,7 @@ _: {
               banking = {
                 id = 4;
                 name = "Banking";
-                color = "green";
+                color = "yellow";
                 icon = "dollar";
               };
               email-1 = {
@@ -177,7 +177,7 @@ _: {
               email-2 = {
                 id = 6;
                 name = "Email 2";
-                color = "yellow";
+                color = "green";
                 icon = "circle";
               };
               email-3 = {
