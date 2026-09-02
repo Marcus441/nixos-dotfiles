@@ -26,6 +26,12 @@ _: {
             default = "";
             description = "`command`, opening on the temperature view instead. Empty when no aspect provides one.";
           };
+
+          diskCommand = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            description = "`command`, opening on the disk view instead. Empty when no aspect provides one.";
+          };
         };
       }
     )
@@ -107,6 +113,13 @@ _: {
 
           temperatureCommand = atView "temperature" {
             shown_boxes = "cpu";
+          };
+
+          diskCommand = atView "disk" {
+            shown_boxes = "mem";
+            mem_graphs = false;
+            show_swap = false;
+            swap_disk = false;
           };
         };
 

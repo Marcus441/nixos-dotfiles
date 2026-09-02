@@ -94,8 +94,8 @@ one with no thunar installed.
 ## `cli/btop.nix` — a view is a whole config file, not a `--preset`
 
 **Why** A preset chooses boxes and nothing else, but each readout wants its own
-`proc_sorting` and `proc_tree` — config keys with no flag behind them. So the
-three views are three generated configs passed to `--config`, and `shown_boxes`
+`proc_sorting`, `proc_tree` or `mem_graphs` — config keys with no flag behind
+them. So the four views are four generated configs passed to `--config`, and `shown_boxes`
 states the layout by name rather than by an index into a `presets` string. The
 bare `systemMonitor.command` stays outside the views: the overlay's header
 click gets a plain btop reading the interactive config.
