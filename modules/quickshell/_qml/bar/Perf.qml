@@ -39,7 +39,7 @@ Item {
         id: readout
 
         text: "󰓅"
-        color: root.severityColor(root.severity(Math.max(Metrics.cpuPct, Metrics.diskPct - 10, root.memPct - 10), 70, 90))
+        color: root.severityColor(root.severity(Math.max(Metrics.cpuPct, root.memPct - 10), 70, 90))
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
 
@@ -136,8 +136,8 @@ Item {
                 showExpandArea: false
                 hoverable: false
                 iconName: "󰋊"
-                primaryText: "Disk /"
-                secondaryText: `${Metrics.diskPct}%`
+                primaryText: Metrics.diskDev ? `Disk ${Metrics.diskDev}` : "Disk"
+                secondaryText: `${Metrics.diskPct}% busy`
                 isActive: true
                 accentColor: root.tint(root.diskLevel)
                 meterValue: Metrics.diskPct / 100

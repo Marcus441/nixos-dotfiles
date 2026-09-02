@@ -42,9 +42,14 @@
     temp=0
     [ -r "$sensor" ] && temp=$(($(<"$sensor") / 1000))
     read -r memUsed memTotal <<<"$(${pkgs.gawk}/bin/awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%.1f %.1f", (t-a)/1048576, t/1048576}' /proc/meminfo)"
-    diskPct=$(${pkgs.coreutils}/bin/df --output=pcent / | ${pkgs.coreutils}/bin/tail -1 | ${pkgs.coreutils}/bin/tr -dc 0-9)
-    printf '{"total":%s,"idle":%s,"tempC":%s,"tempChip":"%s","memUsed":%s,"memTotal":%s,"diskPct":%s}\n' \
-      "$total" "$idle" "$temp" "$label" "$memUsed" "$memTotal" "''${diskPct:-0}"
+    majmin=$(${pkgs.gawk}/bin/awk '$5 == "/" {print $3; exit}' /proc/self/mountinfo)
+    sysdev=/sys/dev/block/$majmin
+    [ -e "$sysdev/partition" ] && sysdev=$sysdev/..
+    diskDev=$(${pkgs.gawk}/bin/awk -F= '/^DEVNAME=/{print $2; exit}' "$sysdev/uevent" 2>/dev/null)
+    ioMs=$(${pkgs.gawk}/bin/awk -v d="$diskDev" '$3 == d {print $13; exit}' /proc/diskstats)
+    read -r upSec _ < /proc/uptime
+    printf '{"total":%s,"idle":%s,"tempC":%s,"tempChip":"%s","memUsed":%s,"memTotal":%s,"diskDev":"%s","ioMs":%s,"upSec":%s}\n' \
+      "$total" "$idle" "$temp" "$label" "$memUsed" "$memTotal" "$diskDev" "''${ioMs:-0}" "$upSec"
   '';
 
   volumeSound = pkgs.writeShellScript "qs-volume-sound" ''

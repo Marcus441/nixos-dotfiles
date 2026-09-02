@@ -14,8 +14,11 @@ Singleton {
     property real memUsed: 0
     property real memTotal: 0
     property int diskPct: 0
+    property string diskDev: ""
     property real prevTotal: 0
     property real prevIdle: 0
+    property real prevIoMs: 0
+    property real prevUpSec: 0
 
     Process {
         id: metricsProc
@@ -34,7 +37,11 @@ Singleton {
                     root.tempChip = m.tempChip;
                     root.memUsed = m.memUsed;
                     root.memTotal = m.memTotal;
-                    root.diskPct = m.diskPct;
+                    root.diskDev = m.diskDev;
+                    if (root.prevUpSec > 0 && m.upSec > root.prevUpSec)
+                        root.diskPct = Math.max(0, Math.min(100, Math.round((m.ioMs - root.prevIoMs) / ((m.upSec - root.prevUpSec) * 1000) * 100)));
+                    root.prevUpSec = m.upSec;
+                    root.prevIoMs = m.ioMs;
                 } catch (e) {
                     console.warn("Metrics: unparseable collector output:", e.message);
                 }
