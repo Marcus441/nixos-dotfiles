@@ -156,13 +156,14 @@ Item {
                     hoverable: Config.diskCommand !== ""
                     iconName: "󰋊"
                     primaryText: diskCard.modelData
-                    secondaryText: diskCard.totalK > 0 ? `${diskCard.busy}% busy  ${root.capacity(diskCard.usedK)} / ${root.capacity(diskCard.totalK)}` : `${diskCard.busy}% busy  not mounted`
+                    secondaryText: `I/O  ${diskCard.busy}%`
                     isActive: true
                     accentColor: root.tint(Math.max(diskCard.ioLevel, diskCard.capLevel))
                     meterValue: diskCard.busy / 100
                     meterColor: root.tint(diskCard.ioLevel)
                     subMeterValue: diskCard.totalK > 0 ? diskCard.usedK / diskCard.totalK : -1
                     subMeterColor: diskCard.capLevel > 0 ? root.severityColor(diskCard.capLevel) : Config.base03
+                    subMeterLabel: diskCard.totalK > 0 ? `Storage  ${root.capacity(diskCard.usedK)} / ${root.capacity(diskCard.totalK)}` : "Storage  not mounted"
                     onToggled: {
                         Config.launchApp(Config.diskCommand);
                         popup.visible = false;

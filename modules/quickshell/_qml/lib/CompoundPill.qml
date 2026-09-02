@@ -20,12 +20,13 @@ Rectangle {
     property color meterColor: Config.base0D
     property real subMeterValue: -1
     property color subMeterColor: Config.base03
+    property string subMeterLabel: ""
 
     readonly property bool hasMeter: root.meterValue >= 0
     readonly property bool hasSubMeter: root.subMeterValue >= 0
 
     width: parent ? parent.width : 220
-    height: 48 + (root.hasMeter ? meterTrack.height + bodyColumn.spacing : 0) + (root.hasSubMeter ? subMeterTrack.height + bodyColumn.spacing : 0)
+    height: Math.max(48, bodyColumn.implicitHeight + 18)
     radius: 8
     color: root.hoverable && (pillMouse.containsMouse || tileMouse.containsMouse) ? Config.base02 : Config.base01
 
@@ -129,6 +130,16 @@ Rectangle {
                     width: parent.width
                     value: root.meterValue
                     fill: root.meterColor
+                }
+
+                Text {
+                    width: parent.width
+                    text: root.subMeterLabel
+                    visible: root.hasSubMeter && text.length > 0
+                    color: Config.base04
+                    elide: Text.ElideRight
+                    font.family: Config.fontFamily
+                    font.pixelSize: Theme.fontSm
                 }
 
                 Meter {
