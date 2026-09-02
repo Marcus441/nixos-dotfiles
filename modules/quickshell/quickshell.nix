@@ -35,6 +35,7 @@ _: {
             processorCommand = config.systemMonitor.processorCommand;
             memoryCommand = config.systemMonitor.memoryCommand;
             temperatureCommand = config.systemMonitor.temperatureCommand;
+            diskCommand = config.systemMonitor.diskCommand;
             audioMixerCommand = config.audioMixer.command;
             weatherLatitude = config.weather.latitude;
             weatherLongitude = config.weather.longitude;

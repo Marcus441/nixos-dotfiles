@@ -10,6 +10,7 @@
   processorCommand,
   memoryCommand,
   temperatureCommand,
+  diskCommand,
   audioMixerCommand,
   weatherLatitude,
   weatherLongitude,
@@ -42,14 +43,30 @@
     temp=0
     [ -r "$sensor" ] && temp=$(($(<"$sensor") / 1000))
     read -r memUsed memTotal <<<"$(${pkgs.gawk}/bin/awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%.1f %.1f", (t-a)/1048576, t/1048576}' /proc/meminfo)"
-    majmin=$(${pkgs.gawk}/bin/awk '$5 == "/" {print $3; exit}' /proc/self/mountinfo)
-    sysdev=/sys/dev/block/$majmin
-    [ -e "$sysdev/partition" ] && sysdev=$sysdev/..
-    diskDev=$(${pkgs.gawk}/bin/awk -F= '/^DEVNAME=/{print $2; exit}' "$sysdev/uevent" 2>/dev/null)
-    ioMs=$(${pkgs.gawk}/bin/awk -v d="$diskDev" '$3 == d {print $13; exit}' /proc/diskstats)
+    disks=""
+    for blk in /sys/block/*; do
+      dev=''${blk##*/}
+      case "$dev" in loop* | zram* | ram* | sr* | md* | dm-*) continue ;; esac
+      sectors=$(<"$blk/size") || continue
+      [ "''${sectors:-0}" -gt 0 ] || continue
+      ioMs=$(${pkgs.gawk}/bin/awk -v d="$dev" '$3 == d {print $13; exit}' /proc/diskstats)
+      disks="$disks{\"name\":\"$dev\",\"ioMs\":''${ioMs:-0}},"
+    done
+    mounts=""
+    while read -r src blocks used; do
+      part=''${src##*/}
+      [ -r "/sys/class/block/$part/dev" ] || continue
+      node="/sys/dev/block/$(<"/sys/class/block/$part/dev")"
+      [ -e "/sys/class/block/$part/partition" ] && node="$node/.."
+      name=$(${pkgs.gawk}/bin/awk -F= '/^DEVNAME=/{print $2; exit}' "$node/uevent" 2>/dev/null)
+      [ -n "$name" ] && mounts="$mounts{\"dev\":\"$name\",\"blocks\":$blocks,\"used\":$used},"
+    done <<EOF
+    $(${pkgs.coreutils}/bin/df -l --output=source,size,used 2>/dev/null |
+      ${pkgs.gawk}/bin/awk 'NR > 1 && $1 ~ "^/dev/" && !seen[$1]++')
+    EOF
     read -r upSec _ < /proc/uptime
-    printf '{"total":%s,"idle":%s,"tempC":%s,"tempChip":"%s","memUsed":%s,"memTotal":%s,"diskDev":"%s","ioMs":%s,"upSec":%s}\n' \
-      "$total" "$idle" "$temp" "$label" "$memUsed" "$memTotal" "$diskDev" "''${ioMs:-0}" "$upSec"
+    printf '{"total":%s,"idle":%s,"tempC":%s,"tempChip":"%s","memUsed":%s,"memTotal":%s,"upSec":%s,"disks":[%s],"mounts":[%s]}\n' \
+      "$total" "$idle" "$temp" "$label" "$memUsed" "$memTotal" "$upSec" "''${disks%,}" "''${mounts%,}"
   '';
 
   volumeSound = pkgs.writeShellScript "qs-volume-sound" ''
@@ -87,6 +104,7 @@
         readonly property string processorCommand: "${qml processorCommand}"
         readonly property string memoryCommand: "${qml memoryCommand}"
         readonly property string temperatureCommand: "${qml temperatureCommand}"
+        readonly property string diskCommand: "${qml diskCommand}"
         readonly property string audioMixerCommand: "${qml audioMixerCommand}"
 
         readonly property string cacheDir: "${qml cacheDir}"

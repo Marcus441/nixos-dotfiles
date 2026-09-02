@@ -18,11 +18,14 @@ Rectangle {
     property color accentColor: Config.base0D
     property real meterValue: -1
     property color meterColor: Config.base0D
+    property real subMeterValue: -1
+    property color subMeterColor: Config.base03
 
     readonly property bool hasMeter: root.meterValue >= 0
+    readonly property bool hasSubMeter: root.subMeterValue >= 0
 
     width: parent ? parent.width : 220
-    height: 48 + (root.hasMeter ? meterTrack.height + bodyColumn.spacing : 0)
+    height: 48 + (root.hasMeter ? meterTrack.height + bodyColumn.spacing : 0) + (root.hasSubMeter ? subMeterTrack.height + bodyColumn.spacing : 0)
     radius: 8
     color: root.hoverable && (pillMouse.containsMouse || tileMouse.containsMouse) ? Config.base02 : Config.base01
 
@@ -119,27 +122,22 @@ Rectangle {
                     font.pixelSize: Theme.fontSm
                 }
 
-                Rectangle {
+                Meter {
                     id: meterTrack
 
                     visible: root.hasMeter
                     width: parent.width
-                    height: 6
-                    radius: 3
-                    color: Config.base02
+                    value: root.meterValue
+                    fill: root.meterColor
+                }
 
-                    Rectangle {
-                        width: meterTrack.width * Math.max(0, Math.min(root.meterValue, 1))
-                        height: parent.height
-                        radius: 3
-                        color: root.meterColor
+                Meter {
+                    id: subMeterTrack
 
-                        Behavior on width {
-                            NumberAnimation {
-                                duration: Theme.durMed
-                            }
-                        }
-                    }
+                    visible: root.hasSubMeter
+                    width: parent.width
+                    value: root.subMeterValue
+                    fill: root.subMeterColor
                 }
             }
         }
