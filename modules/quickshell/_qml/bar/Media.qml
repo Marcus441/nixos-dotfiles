@@ -15,9 +15,11 @@ Item {
 
     function clock(seconds: real): string {
         const total = Math.max(0, Math.floor(seconds));
-        const mins = Math.floor(total / 60);
+        const hours = Math.floor(total / 3600);
+        const mins = Math.floor(total / 60) % 60;
         const secs = total % 60;
-        return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        const pad = n => n < 10 ? `0${n}` : `${n}`;
+        return hours > 0 ? `${hours}:${pad(mins)}:${pad(secs)}` : `${mins}:${pad(secs)}`;
     }
 
     visible: MediaService.hasPlayer
@@ -234,7 +236,7 @@ Item {
         Item {
             id: seekRow
 
-            readonly property int stampWidth: 44
+            readonly property int stampWidth: MediaService.length >= 3600 ? 62 : 44
             readonly property real fraction: seekRow.scrub >= 0 ? seekRow.scrub : MediaService.length > 0 ? Math.min(1, MediaService.position / MediaService.length) : 0
 
             property real scrub: -1
