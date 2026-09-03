@@ -38,7 +38,7 @@ Item {
         BarWidget {
             id: glyph
 
-            text: MediaService.isPlaying ? "󰐊" : "󰏤"
+            text: MediaService.isPlaying ? "󰏤" : "󰐊"
             baseColor: MediaService.isPlaying ? Config.base0D : Config.base03
             onClicked: popup.visible = !popup.visible
             onRightClicked: MediaService.playPause()
