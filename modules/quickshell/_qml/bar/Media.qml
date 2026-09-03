@@ -35,14 +35,14 @@ Item {
 
         spacing: Theme.gap
 
-        BarWidget {
-            id: glyph
+        Visualiser {
+            id: viz
 
-            text: MediaService.isPlaying ? "󰏤" : "󰐊"
-            baseColor: MediaService.isPlaying ? Config.base0D : Config.base03
-            onClicked: popup.visible = !popup.visible
-            onRightClicked: MediaService.playPause()
-            onScrolled: delta => delta > 0 ? MediaService.previous() : MediaService.next()
+            anchors.verticalCenter: parent.verticalCenter
+            node: AudioService.sink
+            active: MediaService.isPlaying
+            fill: MediaService.isPlaying ? Config.base0D : Config.base03
+            implicitHeight: Math.round(Config.fontSize * 0.85)
         }
 
         Item {
@@ -50,11 +50,11 @@ Item {
 
             readonly property bool overflowing: metrics.advanceWidth > width
             readonly property real span: metrics.advanceWidth + marquee.spacing
-            readonly property bool rolling: (titleMouse.containsMouse || glyph.hover) && overflowing
+            readonly property bool rolling: stripMouse.containsMouse && overflowing
 
             visible: !root.vertical && root.label !== ""
             width: root.titleWidth
-            height: glyph.implicitHeight
+            height: still.implicitHeight
             clip: true
 
             Text {
@@ -116,23 +116,23 @@ Item {
                     duration: titleClip.span * 18
                 }
             }
-
-            MouseArea {
-                id: titleMouse
-
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: mouseEvent => {
-                    if (mouseEvent.button === Qt.RightButton)
-                        MediaService.playPause();
-                    else
-                        popup.visible = !popup.visible;
-                }
-                onWheel: wheelEvent => wheelEvent.angleDelta.y > 0 ? MediaService.previous() : MediaService.next()
-            }
         }
+    }
+
+    MouseArea {
+        id: stripMouse
+
+        anchors.fill: strip
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: mouseEvent => {
+            if (mouseEvent.button === Qt.RightButton)
+                MediaService.playPause();
+            else
+                popup.visible = !popup.visible;
+        }
+        onWheel: wheelEvent => wheelEvent.angleDelta.y > 0 ? MediaService.previous() : MediaService.next()
     }
 
     Timer {
