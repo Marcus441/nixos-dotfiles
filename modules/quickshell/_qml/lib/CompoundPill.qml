@@ -64,7 +64,7 @@ Rectangle {
             height: 36
             anchors.verticalCenter: parent.verticalCenter
             radius: 6
-            color: root.isActive ? root.accentColor : Config.base02
+            color: root.isActive ? root.accentColor : Config.base08
 
             Behavior on color {
                 ColorAnimation {
@@ -75,7 +75,7 @@ Rectangle {
             Text {
                 anchors.centerIn: parent
                 text: root.iconName
-                color: root.isActive ? Config.base00 : Config.base04
+                color: Config.base00
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
