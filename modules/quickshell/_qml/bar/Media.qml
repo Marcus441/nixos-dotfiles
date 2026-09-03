@@ -326,7 +326,7 @@ Item {
             implicitHeight: play.implicitHeight + 12
 
             TextAction {
-                visible: MediaService.canGoPrevious
+                visible: MediaService.canGoBack
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.pad
                 anchors.verticalCenter: parent.verticalCenter

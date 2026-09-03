@@ -49,6 +49,7 @@ Singleton {
     readonly property bool seekable: root.canSeek && root.length > 1
     readonly property bool canGoNext: root.active?.canGoNext ?? false
     readonly property bool canGoPrevious: root.active?.canGoPrevious ?? false
+    readonly property bool canGoBack: root.canGoPrevious || root.seekable
     readonly property bool canRaise: root.active?.canRaise ?? false
     readonly property bool shuffleSupported: root.active?.shuffleSupported ?? false
     readonly property bool shuffle: root.active?.shuffle ?? false
@@ -138,6 +139,11 @@ Singleton {
     }
 
     function previous(): void {
+        if (root.seekable && root.position > 8) {
+            root.seekTo(0);
+            root.refreshPosition();
+            return;
+        }
         if (root.canGoPrevious)
             root.active.previous();
     }
