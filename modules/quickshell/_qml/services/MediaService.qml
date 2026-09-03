@@ -97,9 +97,18 @@ Singleton {
         if (root.rawAlbum !== "")
             root.album = root.rawAlbum;
         if (root.rawArtUrl !== "")
-            root.artUrl = root.rawArtUrl;
+            root.artUrl = root.artSource(root.rawArtUrl);
         if (root.rawLength > 1)
             root.length = root.rawLength;
+    }
+
+    // spotify:image:<hash> and open.spotify.com/image/<hash> both 404; the same
+    // hash on i.scdn.co serves the cover, and a bare path needs a scheme
+    function artSource(url: string): string {
+        const spotify = url.match(/^(?:spotify:image:|https?:\/\/open\.spotify\.com\/image\/)(.+)$/);
+        if (spotify)
+            return `https://i.scdn.co/image/${spotify[1]}`;
+        return url.startsWith("/") ? `file://${url}` : url;
     }
 
     function clearMetadata(): void {
