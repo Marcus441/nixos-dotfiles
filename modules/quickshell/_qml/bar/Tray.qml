@@ -8,13 +8,13 @@ import qs.lib
 Row {
     id: root
 
-    property var openMenu: null
+    property BarPopup openMenu: null
     property bool expanded: false
 
     spacing: Theme.gap
     visible: SystemTray.items.values.length > 0
 
-    function toggleMenu(popup) {
+    function toggleMenu(popup: BarPopup): void {
         if (root.openMenu && root.openMenu !== popup)
             root.openMenu.visible = false;
         popup.visible = !popup.visible;
@@ -79,9 +79,11 @@ Row {
                 IconImage {
                     id: item
 
-                    required property var modelData
+                    required property SystemTrayItem modelData
 
-                    source: modelData.icon
+                    readonly property string iconSource: item.modelData?.icon ?? ""
+
+                    source: item.iconSource
                     implicitSize: 14
 
                     MouseArea {
@@ -89,6 +91,8 @@ Row {
                         cursorShape: Qt.PointingHandCursor
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
                         onClicked: mouseEvent => {
+                            if (!item.modelData)
+                                return;
                             if (mouseEvent.button === Qt.LeftButton && !item.modelData.onlyMenu)
                                 item.modelData.activate();
                             else if (item.modelData.hasMenu)
@@ -104,7 +108,7 @@ Row {
                         visible: false
 
                         MenuList {
-                            handle: menu.visible ? item.modelData.menu : null
+                            handle: menu.visible ? item.modelData?.menu ?? null : null
                             onActivated: menu.visible = false
                         }
                     }
