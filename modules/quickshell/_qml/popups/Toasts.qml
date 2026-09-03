@@ -58,16 +58,16 @@ PanelWindow {
             Rectangle {
                 id: card
 
-                required property var modelData
-                readonly property color accent: modelData.urgency === NotificationUrgency.Critical ? Config.base08 : modelData.urgency === NotificationUrgency.Low ? Config.base03 : Config.base0D
-                readonly property string iconSource: modelData.image !== "" ? modelData.image : modelData.appIcon !== "" ? Quickshell.iconPath(modelData.appIcon, true) : ""
+                required property Notification modelData
+                readonly property color accent: card.modelData?.urgency === NotificationUrgency.Critical ? Config.base08 : card.modelData?.urgency === NotificationUrgency.Low ? Config.base03 : Config.base0D
+                readonly property string iconSource: card.modelData?.image ? card.modelData.image : card.modelData?.appIcon ? Quickshell.iconPath(card.modelData.appIcon, true) : ""
 
                 width: column.width
                 height: header.height + bodyBlock.height + actionRow.height
                 color: Config.base10
 
                 Timer {
-                    interval: Notifs.timeoutFor(card.modelData)
+                    interval: card.modelData ? Notifs.timeoutFor(card.modelData) : 0
                     running: interval > 0
                     onTriggered: Notifs.removePopup(card.modelData)
                 }
@@ -84,7 +84,7 @@ PanelWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        const def = card.modelData.actions.find(a => a.identifier === "default");
+                        const def = card.modelData?.actions?.find(a => a.identifier === "default");
                         if (def)
                             def.invoke();
                         Notifs.removePopup(card.modelData);
@@ -120,7 +120,7 @@ PanelWindow {
                         anchors.right: appLabel.left
                         anchors.rightMargin: Theme.gap
                         anchors.verticalCenter: parent.verticalCenter
-                        text: card.modelData.summary !== "" ? card.modelData.summary : card.modelData.appName
+                        text: card.modelData?.summary ? card.modelData.summary : card.modelData?.appName ?? ""
                         elide: Text.ElideRight
                         color: Config.base05
                         font.family: Config.fontFamily
@@ -133,7 +133,7 @@ PanelWindow {
                         anchors.right: closeBtn.left
                         anchors.rightMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
-                        text: card.modelData.appName
+                        text: card.modelData?.appName ?? ""
                         color: Config.base04
                         font.family: Config.fontFamily
                         font.pixelSize: Theme.fontSm
@@ -194,7 +194,7 @@ PanelWindow {
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
-                        text: card.modelData.body
+                        text: card.modelData?.body ?? ""
                         textFormat: Text.PlainText
                         wrapMode: Text.Wrap
                         maximumLineCount: 3
@@ -208,7 +208,7 @@ PanelWindow {
                 Row {
                     id: actionRow
 
-                    readonly property var visibleActions: card.modelData.actions.filter(a => a.identifier !== "default")
+                    readonly property var visibleActions: card.modelData?.actions?.filter(a => a.identifier !== "default") ?? []
 
                     anchors.top: bodyBlock.bottom
                     anchors.left: parent.left
@@ -222,9 +222,9 @@ PanelWindow {
                         Text {
                             id: actionText
 
-                            required property var modelData
+                            required property NotificationAction modelData
 
-                            text: modelData.text
+                            text: actionText.modelData?.text ?? ""
                             color: actionMouse.containsMouse ? Config.base0D : Config.base04
                             font.family: Config.fontFamily
                             font.pixelSize: Config.fontSize
@@ -242,7 +242,7 @@ PanelWindow {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    actionText.modelData.invoke();
+                                    actionText.modelData?.invoke();
                                     Notifs.removePopup(card.modelData);
                                 }
                             }
