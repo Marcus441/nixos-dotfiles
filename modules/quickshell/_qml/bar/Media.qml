@@ -133,7 +133,7 @@ Item {
     }
 
     Timer {
-        running: popup.visible && MediaService.seekable
+        running: popup.visible && MediaService.seekable && MediaService.isPlaying
         interval: 1000
         repeat: true
         triggeredOnStart: true
@@ -147,6 +147,10 @@ Item {
         title: "Media"
         minWidth: 320
         visible: false
+        onVisibleChanged: {
+            if (popup.visible)
+                MediaService.refreshPosition();
+        }
 
         headerContent: [
             TextAction {
