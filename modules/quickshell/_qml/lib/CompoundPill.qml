@@ -7,6 +7,7 @@ Rectangle {
     signal toggled
     signal expandClicked
     signal wheelEvent(var wheel)
+    signal meterMoved(real fraction)
 
     property string iconName: ""
     property bool isActive: false
@@ -18,6 +19,7 @@ Rectangle {
     property color accentColor: Config.base0D
     property real meterValue: -1
     property color meterColor: Config.base0D
+    property bool meterInteractive: false
     property real subMeterValue: -1
     property color subMeterColor: Config.base03
     property string subMeterLabel: ""
@@ -130,6 +132,8 @@ Rectangle {
                     width: parent.width
                     value: root.meterValue
                     fill: root.meterColor
+                    interactive: root.meterInteractive
+                    onMoved: fraction => root.meterMoved(fraction)
                 }
 
                 Text {

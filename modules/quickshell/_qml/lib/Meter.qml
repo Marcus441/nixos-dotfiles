@@ -4,8 +4,11 @@ import qs
 Rectangle {
     id: root
 
+    signal moved(real fraction)
+
     property real value: 0
     property color fill: Config.base0D
+    property bool interactive: false
 
     readonly property real fraction: Math.max(0, Math.min(root.value, 1))
 
@@ -20,9 +23,23 @@ Rectangle {
         color: root.fill
 
         Behavior on width {
+            enabled: !root.interactive
+
             NumberAnimation {
                 duration: Theme.durMed
             }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        anchors.margins: -4
+        enabled: root.interactive
+        cursorShape: Qt.PointingHandCursor
+        onPressed: mouseEvent => root.moved(mouseEvent.x / root.width)
+        onPositionChanged: mouseEvent => {
+            if (pressed)
+                root.moved(mouseEvent.x / root.width);
         }
     }
 }
