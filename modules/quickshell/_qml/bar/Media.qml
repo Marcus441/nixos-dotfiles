@@ -48,7 +48,8 @@ Item {
         Item {
             id: titleClip
 
-            readonly property bool overflowing: lead.implicitWidth > width
+            readonly property bool overflowing: metrics.advanceWidth > width
+            readonly property real span: metrics.advanceWidth + marquee.spacing
             readonly property bool rolling: (titleMouse.containsMouse || glyph.hover) && overflowing
 
             visible: !root.vertical && root.label !== ""
@@ -70,6 +71,13 @@ Item {
                 font.pixelSize: Config.fontSize
             }
 
+            TextMetrics {
+                id: metrics
+
+                font: still.font
+                text: root.label
+            }
+
             Row {
                 id: marquee
 
@@ -77,24 +85,17 @@ Item {
                 height: titleClip.height
                 spacing: Theme.pad * 2
 
-                Text {
-                    id: lead
+                Repeater {
+                    model: 2
 
-                    height: titleClip.height
-                    verticalAlignment: Text.AlignVCenter
-                    text: root.label
-                    color: still.color
-                    font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize
-                }
-
-                Text {
-                    height: titleClip.height
-                    verticalAlignment: Text.AlignVCenter
-                    text: root.label
-                    color: still.color
-                    font.family: Config.fontFamily
-                    font.pixelSize: Config.fontSize
+                    Text {
+                        width: metrics.advanceWidth
+                        height: titleClip.height
+                        verticalAlignment: Text.AlignVCenter
+                        text: still.text
+                        color: still.color
+                        font: still.font
+                    }
                 }
             }
 
@@ -111,8 +112,8 @@ Item {
                     target: marquee
                     property: "x"
                     from: 0
-                    to: -(lead.implicitWidth + marquee.spacing)
-                    duration: (lead.implicitWidth + marquee.spacing) * 18
+                    to: -titleClip.span
+                    duration: titleClip.span * 18
                 }
             }
 
