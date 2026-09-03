@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQml
 import Quickshell
 import Quickshell.Services.Mpris
-import qs.lib
 
 Singleton {
     id: root
@@ -11,10 +10,7 @@ Singleton {
     property MprisPlayer picked: null
     property MprisPlayer recent: null
 
-    readonly property var players: {
-        playerWatch.rev;
-        return Mpris.players.values.filter(p => p.canControl);
-    }
+    readonly property var players: Mpris.players.values.filter(p => p.canControl)
 
     readonly property MprisPlayer active: {
         const list = root.players;
@@ -148,11 +144,6 @@ Singleton {
             root.active.previous();
     }
 
-    function stop(): void {
-        if (root.active)
-            root.active.stop();
-    }
-
     function raise(): void {
         if (root.canRaise)
             root.active.raise();
@@ -189,12 +180,6 @@ Singleton {
 
         interval: 1200
         onTriggered: root.clearMetadata()
-    }
-
-    ModelWatcher {
-        id: playerWatch
-
-        model: Mpris.players
     }
 
     Instantiator {
