@@ -252,7 +252,7 @@ Overlay {
             id: node
 
             readonly property var entry: parent.entry
-            readonly property var ws: WorkspaceState.byId[node.entry.id] ?? null
+            readonly property HyprlandWorkspace ws: WorkspaceState.byId[node.entry.id] ?? null
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
