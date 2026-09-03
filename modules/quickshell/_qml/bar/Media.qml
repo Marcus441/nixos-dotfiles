@@ -235,9 +235,26 @@ Item {
 
             property real scrub: -1
 
+            function abortScrub(): void {
+                settle.stop();
+                seekRow.scrub = -1;
+            }
+
             visible: MediaService.seekable
             width: parent.width
             implicitHeight: elapsed.implicitHeight + 12
+
+            Connections {
+                target: MediaService
+
+                function onActiveChanged(): void {
+                    seekRow.abortScrub();
+                }
+
+                function onTitleChanged(): void {
+                    seekRow.abortScrub();
+                }
+            }
 
             Timer {
                 id: settle
@@ -291,6 +308,8 @@ Item {
                     seekRow.scrub = Math.max(0, Math.min(1, fraction));
                 }
                 onReleased: {
+                    if (seekRow.scrub < 0)
+                        return;
                     MediaService.seekTo(seekRow.scrub * MediaService.length);
                     settle.restart();
                 }
