@@ -72,14 +72,6 @@ PanelWindow {
                     onTriggered: Notifs.removePopup(card.modelData)
                 }
 
-                Connections {
-                    target: card.modelData
-
-                    function onClosed() {
-                        Notifs.removePopup(card.modelData);
-                    }
-                }
-
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
