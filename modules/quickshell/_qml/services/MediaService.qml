@@ -10,17 +10,6 @@ Singleton {
 
     property MprisPlayer picked: null
     property MprisPlayer recent: null
-    property real heldLength: 0
-
-    onReportedLengthChanged: {
-        if (root.reportedLength > 1)
-            root.heldLength = root.reportedLength;
-    }
-    onTitleChanged: {
-        if (root.title !== "")
-            root.heldLength = 0;
-    }
-    onActiveChanged: root.heldLength = 0
 
     readonly property var players: {
         playerWatch.rev;
@@ -43,12 +32,18 @@ Singleton {
 
     readonly property bool hasPlayer: root.active !== null
     readonly property bool isPlaying: root.active?.playbackState === MprisPlaybackState.Playing
-    readonly property string title: root.active?.trackTitle ?? ""
-    readonly property string artist: root.active?.trackArtist ?? ""
-    readonly property string album: root.active?.trackAlbum ?? ""
-    readonly property string artUrl: root.active?.trackArtUrl ?? ""
-    readonly property real reportedLength: (root.active?.lengthSupported ?? false) ? root.active.length : 0
-    readonly property real length: root.heldLength > 1 ? root.heldLength : root.reportedLength
+    readonly property string rawTitle: root.active?.trackTitle ?? ""
+    readonly property string rawArtist: root.active?.trackArtist ?? ""
+    readonly property string rawAlbum: root.active?.trackAlbum ?? ""
+    readonly property string rawArtUrl: root.active?.trackArtUrl ?? ""
+    readonly property real rawLength: (root.active?.lengthSupported ?? false) ? root.active.length : 0
+
+    property string title: ""
+    property string artist: ""
+    property string album: ""
+    property string artUrl: ""
+    property real length: 0
+
     readonly property real position: root.active?.position ?? 0
     readonly property bool canSeek: (root.active?.canSeek ?? false) && (root.active?.positionSupported ?? false)
     readonly property bool seekable: root.canSeek && root.length > 1
@@ -68,6 +63,51 @@ Singleton {
         default:
             return "none";
         }
+    }
+
+    onRawTitleChanged: Qt.callLater(root.syncMetadata)
+    onRawArtistChanged: Qt.callLater(root.syncMetadata)
+    onRawAlbumChanged: Qt.callLater(root.syncMetadata)
+    onRawArtUrlChanged: Qt.callLater(root.syncMetadata)
+    onRawLengthChanged: Qt.callLater(root.syncMetadata)
+    onActiveChanged: {
+        dropout.stop();
+        root.clearMetadata();
+        root.syncMetadata();
+    }
+
+    // one metadataChanged carries title, length and art, so their QML change
+    // signals arrive in an undefined order -- reconcile once, after the burst
+    function syncMetadata(): void {
+        if (root.rawTitle === "") {
+            if (root.hasPlayer)
+                dropout.restart();
+            return;
+        }
+        dropout.stop();
+        if (root.rawTitle !== root.title) {
+            root.title = root.rawTitle;
+            root.artist = "";
+            root.album = "";
+            root.artUrl = "";
+            root.length = 0;
+        }
+        if (root.rawArtist !== "")
+            root.artist = root.rawArtist;
+        if (root.rawAlbum !== "")
+            root.album = root.rawAlbum;
+        if (root.rawArtUrl !== "")
+            root.artUrl = root.rawArtUrl;
+        if (root.rawLength > 1)
+            root.length = root.rawLength;
+    }
+
+    function clearMetadata(): void {
+        root.title = "";
+        root.artist = "";
+        root.album = "";
+        root.artUrl = "";
+        root.length = 0;
     }
 
     function isPlayerPlaying(player: MprisPlayer): bool {
@@ -127,6 +167,13 @@ Singleton {
             root.active.loopState = MprisLoopState.Track;
         else
             root.active.loopState = MprisLoopState.None;
+    }
+
+    Timer {
+        id: dropout
+
+        interval: 1200
+        onTriggered: root.clearMetadata()
     }
 
     ModelWatcher {
