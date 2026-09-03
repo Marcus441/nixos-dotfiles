@@ -1,4 +1,5 @@
 pragma ComponentBehavior: Bound
+import Quickshell.Networking
 import QtQuick
 import qs
 import qs.lib
@@ -15,9 +16,11 @@ Column {
         PopupRow {
             id: netRow
 
-            required property var modelData
+            required property WifiNetwork modelData
 
             onClicked: {
+                if (!netRow.modelData)
+                    return;
                 if (netRow.modelData.connected)
                     netRow.modelData.disconnect();
                 else
@@ -25,15 +28,15 @@ Column {
             }
 
             Text {
-                text: NetworkService.signalIcon(netRow.modelData.signalStrength)
-                color: netRow.modelData.connected ? Config.base0D : Config.base04
+                text: NetworkService.signalIcon(netRow.modelData?.signalStrength ?? 0)
+                color: netRow.modelData?.connected ? Config.base0D : Config.base04
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
 
             Text {
-                text: netRow.modelData.name
-                color: netRow.modelData.connected ? Config.base05 : Config.base04
+                text: netRow.modelData?.name ?? ""
+                color: netRow.modelData?.connected ? Config.base05 : Config.base04
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }

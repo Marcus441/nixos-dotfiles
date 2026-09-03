@@ -1,4 +1,5 @@
 pragma ComponentBehavior: Bound
+import Quickshell.Services.Pipewire
 import QtQuick
 import qs
 import qs.lib
@@ -17,11 +18,14 @@ Column {
         PopupRow {
             id: sinkRow
 
-            required property var modelData
+            required property PwNode modelData
 
             readonly property bool current: sinkRow.modelData === AudioService.sink
 
-            onClicked: AudioService.setSink(sinkRow.modelData)
+            onClicked: {
+                if (sinkRow.modelData)
+                    AudioService.setSink(sinkRow.modelData);
+            }
 
             Text {
                 text: "󰓃"

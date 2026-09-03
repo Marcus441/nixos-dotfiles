@@ -1,4 +1,5 @@
 pragma ComponentBehavior: Bound
+import Quickshell.Bluetooth
 import QtQuick
 import qs
 import qs.lib
@@ -15,9 +16,11 @@ Column {
         PopupRow {
             id: devRow
 
-            required property var modelData
+            required property BluetoothDevice modelData
 
             onClicked: {
+                if (!devRow.modelData)
+                    return;
                 if (devRow.modelData.connected)
                     devRow.modelData.disconnect();
                 else
@@ -26,10 +29,12 @@ Column {
 
             Text {
                 text: {
+                    if (!devRow.modelData)
+                        return "";
                     const battery = devRow.modelData.batteryAvailable ? `  ${Math.round(devRow.modelData.battery * 100)}%` : "";
                     return `${devRow.modelData.connected ? "󰂱" : "󰂯"} ${devRow.modelData.name}${battery}`;
                 }
-                color: devRow.modelData.connected ? Config.base05 : Config.base04
+                color: devRow.modelData?.connected ? Config.base05 : Config.base04
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
