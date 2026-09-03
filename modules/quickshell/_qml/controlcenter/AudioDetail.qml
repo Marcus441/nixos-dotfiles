@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import qs
 import qs.lib
@@ -10,45 +11,65 @@ Column {
 
     width: parent ? parent.width : implicitWidth
 
-    PopupRow {
-        hoverable: false
+    Repeater {
+        model: AudioService.sinks
 
-        Rectangle {
-            id: track
+        PopupRow {
+            id: sinkRow
 
-            width: 220
-            height: 6
-            radius: 3
-            anchors.verticalCenter: parent.verticalCenter
-            color: Config.base02
+            required property var modelData
 
-            Rectangle {
-                width: track.width * Math.min(AudioService.volume, 1)
-                height: parent.height
-                radius: 3
-                color: AudioService.muted ? Config.base08 : Config.base0D
+            readonly property bool current: sinkRow.modelData === AudioService.sink
+
+            onClicked: AudioService.setSink(sinkRow.modelData)
+
+            Text {
+                text: "󰓃"
+                color: sinkRow.current ? Config.base0D : Config.base04
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
             }
 
-            MouseArea {
-                anchors.fill: parent
-                anchors.margins: -6
-                cursorShape: Qt.PointingHandCursor
-                onPressed: mouseEvent => AudioService.setVolume(mouseEvent.x / track.width)
-                onPositionChanged: mouseEvent => {
-                    if (pressed)
-                        AudioService.setVolume(mouseEvent.x / track.width);
-                }
+            Text {
+                text: AudioService.displayName(sinkRow.modelData)
+                color: sinkRow.current ? Config.base05 : Config.base04
+                font.family: Config.fontFamily
+                font.pixelSize: Config.fontSize
             }
         }
+    }
 
-        TextAction {
-            visible: Config.audioMixerCommand !== ""
-            text: "󰓃"
-            anchors.verticalCenter: parent.verticalCenter
-            onTriggered: {
-                Config.launchApp(Config.audioMixerCommand);
-                root.dismissRequested();
-            }
+    PopupRow {
+        hoverable: false
+        visible: AudioService.sinks.length === 0
+
+        Text {
+            text: "no outputs"
+            color: Config.base04
+            font.family: Config.fontFamily
+            font.pixelSize: Theme.fontSm
+        }
+    }
+
+    PopupRow {
+        visible: Config.audioMixerCommand !== ""
+        onClicked: {
+            Config.launchApp(Config.audioMixerCommand);
+            root.dismissRequested();
+        }
+
+        Text {
+            text: "󰘮"
+            color: Config.base04
+            font.family: Config.iconFamily
+            font.pixelSize: Config.fontSize
+        }
+
+        Text {
+            text: "mixer"
+            color: Config.base04
+            font.family: Config.fontFamily
+            font.pixelSize: Config.fontSize
         }
     }
 }

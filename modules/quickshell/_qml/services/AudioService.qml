@@ -10,6 +10,7 @@ Singleton {
     readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property real volume: sink?.audio?.volume ?? 0
+    readonly property var sinks: Pipewire.nodes.values.filter(node => node.isSink && !node.isStream)
 
     function setVolume(value: real): void {
         if (sink?.ready && sink?.audio) {
@@ -17,6 +18,10 @@ Singleton {
             sink.audio.volume = Math.max(0, Math.min(1, value));
             feedback.running = true;
         }
+    }
+
+    function setSink(node: PwNode): void {
+        Pipewire.preferredDefaultAudioSink = node;
     }
 
     function toggleMute(): void {
@@ -32,6 +37,10 @@ Singleton {
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
+    }
+
+    PwObjectTracker {
+        objects: root.sinks
     }
 
     Process {
