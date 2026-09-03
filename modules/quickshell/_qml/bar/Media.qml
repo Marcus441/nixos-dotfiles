@@ -364,7 +364,7 @@ Item {
 
                 required property MprisPlayer modelData
 
-                onClicked: MediaService.pick(playerRow.modelData)
+                onClicked: MediaService.pick(playerRow.modelData === MediaService.picked ? null : playerRow.modelData)
 
                 Text {
                     text: MediaService.isPlayerPlaying(playerRow.modelData) ? "󰐊" : "󰏤"
@@ -381,6 +381,15 @@ Item {
                     color: playerRow.modelData === MediaService.active ? Config.base05 : Config.base04
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    visible: playerRow.modelData === MediaService.picked
+                    text: "󰐃"
+                    color: Config.base0D
+                    font.family: Config.iconFamily
+                    font.pixelSize: Theme.fontSm
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
