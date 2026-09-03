@@ -38,7 +38,7 @@ Overlay {
             wins[ws.id].push({
                 kind: "win",
                 wsId: ws.id,
-                tl: tl,
+                address: tl.address,
                 appId: appId,
                 icon: Quickshell.iconPath(DesktopEntries.heuristicLookup(appId)?.icon ?? appId, true)
             });
@@ -55,7 +55,6 @@ Overlay {
                 header: {
                     kind: "ws",
                     id: id,
-                    ws: ws,
                     name: name,
                     count: children.length,
                     monitor: ws?.monitor?.name ?? "",
@@ -66,11 +65,18 @@ Overlay {
         });
     }
 
+    // a row keeps an address, never the toplevel: a JavaScript object is not a
+    // QML property, so nothing nulls a member of one when Hyprland destroys the
+    // window behind it, and a binding would then read freed memory
+    function toplevelFor(address: string): HyprlandToplevel {
+        return Hyprland.toplevels.values.find(t => t.address === address) ?? null;
+    }
+
     function rowsFor(q) {
         const out = [];
         for (const group of root.groups) {
             const hit = q !== "" && group.header.search.includes(q);
-            const wins = q === "" || hit ? group.wins : group.wins.filter(w => `${w.appId} ${w.tl.title}`.toLowerCase().includes(q));
+            const wins = q === "" || hit ? group.wins : group.wins.filter(w => `${w.appId} ${root.toplevelFor(w.address)?.title ?? ""}`.toLowerCase().includes(q));
             if (q !== "" && !hit && wins.length === 0)
                 continue;
             out.push(group.header);
@@ -109,7 +115,7 @@ Overlay {
         if (q !== "")
             return Math.max(0, leaf);
         // a bare open is an alt-tab: start on the window focused before this one
-        const previous = rows.findIndex(r => r.kind === "win" && r.tl.lastIpcObject?.focusHistoryID === 1);
+        const previous = rows.findIndex(r => r.kind === "win" && root.toplevelFor(r.address)?.lastIpcObject?.focusHistoryID === 1);
         return previous >= 0 ? previous : Math.max(0, leaf);
     }
 
@@ -119,11 +125,11 @@ Overlay {
 
     function request(row) {
         if (row.kind === "win")
-            return root.windowRequest(row.tl.address);
+            return root.windowRequest(row.address);
         // a negative id is a relative jump to Hyprland, not a workspace; a
         // special is reached by focusing something inside it
         if (row.id < 0)
-            return row.first ? root.windowRequest(row.first.tl.address) : "";
+            return row.first ? root.windowRequest(row.first.address) : "";
         return Hyprland.usingLua ? `hl.dsp.focus({ workspace = "${row.id}" })` : `workspace ${row.id}`;
     }
 
@@ -246,6 +252,7 @@ Overlay {
             id: node
 
             readonly property var entry: parent.entry
+            readonly property var ws: WorkspaceState.byId[node.entry.id] ?? null
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
@@ -265,7 +272,7 @@ Overlay {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: node.entry.name
-                    color: node.entry.ws?.urgent ? Config.base08 : node.entry.ws?.focused ? Config.base0D : Config.base05
+                    color: node.ws?.urgent ? Config.base08 : node.ws?.focused ? Config.base0D : Config.base05
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontMd
                     font.weight: 600
@@ -300,6 +307,7 @@ Overlay {
             id: leaf
 
             readonly property var entry: parent.entry
+            readonly property HyprlandToplevel tl: root.toplevelFor(leaf.entry.address)
 
             IconImage {
                 id: icon
@@ -323,9 +331,9 @@ Overlay {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     width: Math.min(implicitWidth, parent.width - appLabel.width - parent.spacing)
-                    text: leaf.entry.tl.title
+                    text: leaf.tl?.title ?? ""
                     elide: Text.ElideRight
-                    color: leaf.entry.tl.wayland === ToplevelManager.activeToplevel ? Config.base0D : Config.base05
+                    color: leaf.tl?.wayland === ToplevelManager.activeToplevel ? Config.base0D : Config.base05
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontMd
                 }
