@@ -175,14 +175,18 @@ Item {
             hoverable: false
 
             Image {
-                visible: MediaService.artUrl !== ""
+                id: art
+
+                visible: MediaService.artUrl !== "" && art.status !== Image.Error
                 width: 72
                 height: 72
                 clip: true
                 asynchronous: true
+                cache: false
+                retainWhileLoading: true
                 fillMode: Image.PreserveAspectCrop
-                sourceSize.width: 144
-                sourceSize.height: 144
+                sourceSize.width: art.width * Screen.devicePixelRatio
+                sourceSize.height: art.height * Screen.devicePixelRatio
                 source: MediaService.artUrl
                 anchors.verticalCenter: parent.verticalCenter
             }
