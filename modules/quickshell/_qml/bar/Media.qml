@@ -278,45 +278,23 @@ Item {
                 font.pixelSize: Theme.fontSm
             }
 
-            Rectangle {
-                id: track
-
+            Meter {
                 anchors.left: elapsed.right
                 anchors.right: total.left
                 anchors.leftMargin: Theme.gap
                 anchors.rightMargin: Theme.gap
                 anchors.verticalCenter: parent.verticalCenter
-                height: 6
-                radius: 3
-                color: Config.base02
-
-                Rectangle {
-                    width: track.width * seekRow.fraction
-                    height: parent.height
-                    radius: 3
-                    color: Config.base0D
+                value: seekRow.fraction
+                interactive: true
+                onMoved: fraction => {
+                    settle.stop();
+                    seekRow.scrub = Math.max(0, Math.min(1, fraction));
                 }
-
-                MouseArea {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    height: parent.height + 12
-                    cursorShape: Qt.PointingHandCursor
-                    onPressed: mouseEvent => {
-                        settle.stop();
-                        seekRow.scrub = Math.max(0, Math.min(1, mouseEvent.x / track.width));
-                    }
-                    onPositionChanged: mouseEvent => {
-                        if (pressed)
-                            seekRow.scrub = Math.max(0, Math.min(1, mouseEvent.x / track.width));
-                    }
-                    onReleased: {
-                        MediaService.seekTo(seekRow.scrub * MediaService.length);
-                        settle.restart();
-                    }
-                    onCanceled: seekRow.scrub = -1
+                onReleased: {
+                    MediaService.seekTo(seekRow.scrub * MediaService.length);
+                    settle.restart();
                 }
+                onCanceled: seekRow.scrub = -1
             }
         }
 

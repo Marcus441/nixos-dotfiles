@@ -5,6 +5,8 @@ Rectangle {
     id: root
 
     signal moved(real fraction)
+    signal released
+    signal canceled
 
     property real value: 0
     property color fill: Config.base0D
@@ -41,5 +43,7 @@ Rectangle {
             if (pressed)
                 root.moved(mouseEvent.x / root.width);
         }
+        onReleased: root.released()
+        onCanceled: root.canceled()
     }
 }
