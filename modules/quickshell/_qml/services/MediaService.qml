@@ -8,8 +8,8 @@ import qs.lib
 Singleton {
     id: root
 
-    property var picked: null
-    property var recent: null
+    property MprisPlayer picked: null
+    property MprisPlayer recent: null
     property real heldLength: 0
 
     onReportedLengthChanged: {
@@ -27,7 +27,7 @@ Singleton {
         return Mpris.players.values.filter(p => p.canControl);
     }
 
-    readonly property var active: {
+    readonly property MprisPlayer active: {
         const list = root.players;
         if (list.length === 0)
             return null;
@@ -70,11 +70,11 @@ Singleton {
         }
     }
 
-    function isPlayerPlaying(player: var): bool {
+    function isPlayerPlaying(player: MprisPlayer): bool {
         return player?.playbackState === MprisPlaybackState.Playing;
     }
 
-    function pick(player: var): void {
+    function pick(player: MprisPlayer): void {
         root.picked = player;
     }
 
@@ -139,14 +139,16 @@ Singleton {
         model: root.players
 
         delegate: QtObject {
-            required property var modelData
+            id: entry
+
+            required property MprisPlayer modelData
 
             readonly property Connections conn: Connections {
-                target: modelData
+                target: entry.modelData
 
                 function onPlaybackStateChanged(): void {
-                    if (MediaService.isPlayerPlaying(modelData))
-                        root.recent = modelData;
+                    if (root.isPlayerPlaying(entry.modelData))
+                        root.recent = entry.modelData;
                 }
             }
         }

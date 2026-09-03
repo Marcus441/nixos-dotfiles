@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
+import Quickshell.Services.Mpris
 import qs
 import qs.lib
 import qs.services
@@ -356,7 +357,7 @@ Item {
             PopupRow {
                 id: playerRow
 
-                required property var modelData
+                required property MprisPlayer modelData
 
                 onClicked: MediaService.pick(playerRow.modelData)
 
@@ -371,7 +372,7 @@ Item {
                 Text {
                     width: 240
                     elide: Text.ElideRight
-                    text: playerRow.modelData.trackTitle !== "" ? `${playerRow.modelData.identity} — ${playerRow.modelData.trackTitle}` : playerRow.modelData.identity
+                    text: playerRow.modelData?.trackTitle ? `${playerRow.modelData.identity} — ${playerRow.modelData.trackTitle}` : playerRow.modelData?.identity ?? ""
                     color: playerRow.modelData === MediaService.active ? Config.base05 : Config.base04
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
