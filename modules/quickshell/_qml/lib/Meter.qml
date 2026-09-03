@@ -35,7 +35,8 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        anchors.margins: -4
+        anchors.topMargin: -4
+        anchors.bottomMargin: -4
         enabled: root.interactive
         cursorShape: Qt.PointingHandCursor
         onPressed: mouseEvent => root.moved(mouseEvent.x / root.width)
