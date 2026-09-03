@@ -25,7 +25,7 @@ Rectangle {
         color: root.fill
 
         Behavior on width {
-            enabled: !root.interactive
+            enabled: !dragArea.pressed
 
             NumberAnimation {
                 duration: Theme.durMed
@@ -34,6 +34,8 @@ Rectangle {
     }
 
     MouseArea {
+        id: dragArea
+
         anchors.fill: parent
         anchors.topMargin: -4
         anchors.bottomMargin: -4
