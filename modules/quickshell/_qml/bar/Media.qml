@@ -274,7 +274,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: seekRow.stampWidth
                 elide: Text.ElideRight
-                text: root.clock(seekRow.fraction * MediaService.length)
+                text: root.clock(seekRow.scrub >= 0 ? seekRow.scrub * MediaService.length : MediaService.position)
                 color: Config.base04
                 font.family: Config.fontFamily
                 font.pixelSize: Theme.fontSm
