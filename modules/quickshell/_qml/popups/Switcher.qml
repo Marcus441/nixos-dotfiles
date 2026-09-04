@@ -167,6 +167,7 @@ Overlay {
 
         anchors.fill: parent
         placeholder: "Search windows…"
+        emptyText: "No windows match"
         searchIcon: "󰍉"
         searchPixelSize: Theme.fontXl
         treeKeys: true

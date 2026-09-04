@@ -16,6 +16,7 @@ Column {
     property var filtered: []
     property int selected: 0
     property string placeholder: ""
+    property string emptyText: "No matches"
     property string searchIcon: ""
     property bool treeKeys: false
     property int searchPixelSize: Theme.fontLg
@@ -57,18 +58,31 @@ Column {
         onRightRequested: root.expanded()
     }
 
-    ListView {
-        id: list
-
+    Item {
         width: parent.width
         height: parent.height - searchBox.height
-        topMargin: Theme.gap
-        bottomMargin: Theme.gap
-        clip: true
-        model: root.filtered
-        currentIndex: root.selected
-        highlightMoveDuration: 80
 
-        ScrollBar.vertical: ThinScrollBar {}
+        ListView {
+            id: list
+
+            anchors.fill: parent
+            topMargin: Theme.gap
+            bottomMargin: Theme.gap
+            clip: true
+            model: root.filtered
+            currentIndex: root.selected
+            highlightMoveDuration: 80
+
+            ScrollBar.vertical: ThinScrollBar {}
+        }
+
+        Text {
+            anchors.centerIn: parent
+            visible: root.filtered.length === 0
+            text: root.emptyText
+            color: Config.textMuted
+            font.family: Config.fontFamily
+            font.pixelSize: Config.fontSize
+        }
     }
 }

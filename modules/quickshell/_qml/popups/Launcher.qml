@@ -33,6 +33,7 @@ Overlay {
 
         anchors.fill: parent
         placeholder: "Search applications…"
+        emptyText: "No applications match"
         searchIcon: "󰍉"
         searchPixelSize: Theme.fontXl
         filterFn: q => {
