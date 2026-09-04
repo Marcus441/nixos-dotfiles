@@ -33,6 +33,8 @@ _: {
             ]
             ++ [
               (exec "${mainMod} + C" "uwsm app -- ocr-copy")
+            ]
+            ++ lib.optionals (config.launcher.command != "") [
               (exec "${mainMod} + D" config.launcher.command)
             ]
             ++ lib.optionals (config.fileManager.command != "") [
@@ -53,7 +55,7 @@ _: {
             ++ lib.optionals (config.switcher.command != "") [
               (exec "${mainMod} + Tab" config.switcher.command)
             ]
-            ++ [
+            ++ lib.optionals (config.clipboard.history != "") [
               (exec "${mainMod} + V" config.clipboard.history)
             ]
             ++ lib.optionals (config.wallpaperMenu.command != "") [
