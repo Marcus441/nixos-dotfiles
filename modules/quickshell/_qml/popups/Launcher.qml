@@ -28,6 +28,10 @@ Overlay {
         root.dismissed();
     }
 
+    PointerGuard {
+        id: hoverGuard
+    }
+
     FilterList {
         id: filterList
 
@@ -103,7 +107,11 @@ Overlay {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onEntered: filterList.selected = row.index
+                onPositionChanged: mouse => {
+                    const p = row.mapToItem(null, mouse.x, mouse.y);
+                    if (hoverGuard.moved(p.x, p.y))
+                        filterList.selected = row.index;
+                }
                 onClicked: root.launch(row.modelData)
             }
         }

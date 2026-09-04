@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import qs
+import qs.lib
 
 PanelWindow {
     id: root
@@ -73,6 +74,10 @@ PanelWindow {
         onClicked: root.dismissed()
     }
 
+    PointerGuard {
+        id: hoverGuard
+    }
+
     Item {
         anchors.fill: parent
         focus: true
@@ -133,7 +138,11 @@ PanelWindow {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onEntered: root.selected = tile.index
+                        onPositionChanged: mouse => {
+                            const p = tile.mapToItem(null, mouse.x, mouse.y);
+                            if (hoverGuard.moved(p.x, p.y))
+                                root.selected = tile.index;
+                        }
                         onClicked: root.activate(tile.modelData)
                     }
                 }
