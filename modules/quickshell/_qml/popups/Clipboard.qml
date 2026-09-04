@@ -67,6 +67,12 @@ Overlay {
             Rectangle {
                 anchors.fill: parent
                 color: row.index === filterList.selected ? Config.selection : "transparent"
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.durFast
+                    }
+                }
             }
 
             Text {

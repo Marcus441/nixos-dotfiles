@@ -73,6 +73,12 @@ Item {
                 height: inner.implicitHeight + 12
                 color: rowMouse.containsMouse ? Config.selection : "transparent"
 
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.durFast
+                    }
+                }
+
                 Column {
                     id: inner
 
