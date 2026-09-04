@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Io
+import Quickshell.Widgets
 import QtQuick
 import QtQuick.Controls
 import qs
@@ -110,67 +111,41 @@ Item {
         Row {
             id: panes
 
+            rightPadding: 4
+
             ListView {
                 id: sidebar
 
-                width: 150
-                height: 460
+                width: 170
+                height: 400
                 clip: true
                 model: root.sidebarModel
 
                 ScrollBar.vertical: ThinScrollBar {}
 
-                delegate: Rectangle {
+                delegate: PopupRow {
                     id: catRow
 
                     required property var modelData
 
                     readonly property bool selected: catRow.modelData.all ? root.currentCategory === "" : root.currentCategory === catRow.modelData.name
 
-                    width: sidebar.width
-                    height: catName.implicitHeight + 12
-                    color: selected ? Config.selection : catMouse.containsMouse ? Config.chrome : "transparent"
+                    highlighted: catRow.selected
+                    onClicked: root.currentCategory = catRow.modelData.all ? "" : catRow.modelData.name
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durFast
-                        }
-                    }
-
-                    Text {
-                        id: catName
-
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.pad
-                        anchors.right: catCount.left
-                        anchors.rightMargin: Theme.gap
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: catRow.modelData.name
-                        elide: Text.ElideRight
-                        color: catRow.selected || catMouse.containsMouse ? Config.textPrimary : Config.textSecondary
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
-                    }
-
-                    Text {
-                        id: catCount
-
-                        anchors.right: parent.right
-                        anchors.rightMargin: Theme.pad
-                        anchors.verticalCenter: parent.verticalCenter
+                    trailing: Text {
                         text: catRow.modelData.count
                         color: Config.textMuted
                         font.family: Config.fontFamily
                         font.pixelSize: Theme.fontSm
                     }
 
-                    MouseArea {
-                        id: catMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.currentCategory = catRow.modelData.all ? "" : catRow.modelData.name
+                    Text {
+                        text: catRow.modelData.name
+                        elide: Text.ElideRight
+                        color: catRow.selected || catRow.hovered ? Config.textPrimary : Config.textSecondary
+                        font.family: Config.fontFamily
+                        font.pixelSize: Config.fontSize
                     }
                 }
             }
@@ -185,7 +160,7 @@ Item {
                 id: grid
 
                 width: 480
-                height: 460
+                height: 400
                 clip: true
                 cellWidth: width / 3
                 cellHeight: 104
@@ -206,20 +181,27 @@ Item {
                         anchors.margins: 4
                         spacing: 4
 
-                        Image {
+                        ClippingRectangle {
                             width: parent.width
                             height: parent.height - label.height - parent.spacing
-                            source: "file://" + cell.modelData.thumb
-                            sourceSize.width: 240
-                            fillMode: Image.PreserveAspectCrop
-                            clip: true
-                            asynchronous: true
+                            radius: Theme.radius
+                            color: "transparent"
+                            border.width: cellMouse.containsMouse ? 1 : 0
+                            border.color: Config.textSecondary
                             opacity: cellMouse.containsMouse ? 1 : 0.82
 
                             Behavior on opacity {
                                 NumberAnimation {
                                     duration: Theme.durFast
                                 }
+                            }
+
+                            Image {
+                                anchors.fill: parent
+                                source: "file://" + cell.modelData.thumb
+                                sourceSize.width: 240
+                                fillMode: Image.PreserveAspectCrop
+                                asynchronous: true
                             }
                         }
 
