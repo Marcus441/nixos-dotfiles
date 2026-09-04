@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs
 import qs.bar
+import qs.services
 
 PanelWindow {
     id: bar
@@ -33,7 +34,7 @@ PanelWindow {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        onClicked: wallpaperPicker.toggle()
+        onClicked: Popups.toggle("wallpaper")
     }
 
     GridLayout {
@@ -132,16 +133,5 @@ PanelWindow {
         Power {
             Layout.alignment: Qt.AlignHCenter
         }
-    }
-
-    Wallpaper {
-        id: wallpaperPicker
-
-        showWidget: false
-        anchors.right: bar.vertical ? undefined : parent.right
-        anchors.rightMargin: Theme.pad
-        anchors.verticalCenter: bar.vertical ? undefined : parent.verticalCenter
-        anchors.bottom: bar.vertical ? parent.bottom : undefined
-        anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
     }
 }
