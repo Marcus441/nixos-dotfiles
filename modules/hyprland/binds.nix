@@ -45,6 +45,7 @@ _: {
               (bind "${mainMod} + Q" "hl.dsp.window.close()")
               (exec "${mainMod} + Return" terminal)
               (exec "${mainMod} + SHIFT + Return" terminalFallback)
+              (bind "${mainMod} + S" "layout.togglesplit")
               (bind "${mainMod} + P" "hl.dsp.window.pseudo()")
               (bind "${mainMod} + M" ''layout.set("monocle")'')
               (bind "${mainMod} + T" ''layout.set("dwindle")'')

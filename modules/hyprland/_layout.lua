@@ -66,6 +66,12 @@ function M.focus(dir)
   end
 end
 
+function M.togglesplit()
+  if not monocle() then
+    hl.dispatch(hl.dsp.layout("togglesplit"))
+  end
+end
+
 function M.cycle_next()
   if monocle() then
     hl.dispatch(hl.dsp.layout("cyclenext"))
