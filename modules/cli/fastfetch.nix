@@ -101,18 +101,6 @@ _: {
             };
 
             modules = [
-              "break"
-              {
-                type = "title";
-                format = "{user-name-colored}{at-symbol-colored}{host-name-colored}";
-                color = {
-                  user = colors.base0A;
-                  at = colors.base03;
-                  host = colors.base0C;
-                };
-              }
-              "break"
-
               (open "system")
               (sys "" "os" {type = "os";})
               (sys "" "kernel" {type = "kernel";})
