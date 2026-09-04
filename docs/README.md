@@ -15,6 +15,7 @@ decisions/     why one file made its call, grouped by area
   hosts.md             machine facts that need a reason
   sessions.md          dwl, Hyprland, the bars
   switcher.md          the Super+Tab tree of workspaces and windows
+  quickshell.md        the shell's overlays and the services behind them
   shells.md            bash, zsh, and which host logs into which
   terminal.md          the four terminals and the keys they intercept
   tui.md               yazi, thunar, btop, herdr, claude-code

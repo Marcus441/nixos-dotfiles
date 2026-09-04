@@ -21,7 +21,10 @@ human makes, not a cleanup you offer.
   instantiated at startup or the D-Bus name goes unclaimed —
   `docs/decisions/sessions.md#quickshell-notifs`.
   The tray's right-click menu is drawn in QML, not handed to `display()` —
-  `docs/decisions/sessions.md#quickshell-tray-menu`.
+  `docs/decisions/sessions.md#quickshell-tray-menu`. The overlays bind no
+  `screen`: a layer surface with a null output is placed by the compositor, and
+  Hyprland places it on the focused monitor —
+  `docs/decisions/quickshell.md#quickshell-overlay-screen`.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle
