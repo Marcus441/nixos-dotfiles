@@ -3,7 +3,6 @@ import QtQuick
 import QtQuick.Layouts
 import qs
 import qs.bar
-import qs.services
 
 PanelWindow {
     id: bar
@@ -29,12 +28,6 @@ PanelWindow {
         anchors.bottom: Config.barPosition === "top" ? undefined : parent.bottom
         width: bar.vertical ? 1 : parent.width
         height: bar.vertical ? parent.height : 1
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: Popups.toggle("wallpaper")
     }
 
     GridLayout {
@@ -127,6 +120,10 @@ PanelWindow {
             IdleInhibit {
                 Layout.alignment: Qt.AlignHCenter
                 bar: bar
+            }
+
+            Wallpaper {
+                Layout.alignment: Qt.AlignHCenter
             }
         }
 

@@ -18,7 +18,7 @@ _: {
         powerMenu.command = ipc "powermenu" "toggle";
 
         # load-bearing: docs/decisions/quickshell.md#quickshell-layer-namespaces
-        quickshell.overlayNamespaces = ["quickshell-powermenu" "quickshell-wallpaper"];
+        quickshell.overlayNamespaces = ["quickshell-powermenu"];
 
         media.playPause = ipc "media" "playPause";
         media.next = ipc "media" "next";

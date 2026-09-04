@@ -1,24 +1,14 @@
 pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Io
-import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Controls
 import qs
 import qs.lib
 
-Overlay {
+Item {
     id: root
-
-    WlrLayershell.namespace: "quickshell-wallpaper"
-
-    readonly property int sidebarWidth: 170
-    readonly property int gridWidth: 480
-    readonly property int panesHeight: 400
-
-    contentWidth: root.sidebarWidth + 1 + root.gridWidth + Theme.gap
-    contentHeight: header.height + root.panesHeight + Theme.gap
 
     property var categories: []
     property var allWalls: []
@@ -36,9 +26,11 @@ Overlay {
     property string rotatorCategory: ""
     readonly property bool rotatorMatchesView: root.rotatorEnabled && root.rotatorCategory === root.currentCategory
 
+    implicitWidth: widget.implicitWidth
+    implicitHeight: widget.implicitHeight
+
     onCurrentCategoryChanged: grid.positionViewAtBeginning()
 
-    // both halves arrive asynchronously; whichever lands second does the work
     function revealCurrent() {
         const i = (grid.model ?? []).findIndex(w => w.path === root.currentWall);
         if (i >= 0)
@@ -49,7 +41,7 @@ Overlay {
         Quickshell.execDetached([Config.setWallpaperScript, path]);
         root.currentWall = path;
         root.rotatorEnabled = false;
-        root.dismissed();
+        popup.visible = false;
     }
 
     function toggleRotator() {
@@ -73,7 +65,6 @@ Overlay {
             }
             root.categories = cats;
             root.allWalls = all;
-            Qt.callLater(root.revealCurrent);
         }
     }
 
@@ -84,10 +75,7 @@ Overlay {
         running: true
 
         stdout: StdioCollector {
-            onStreamFinished: {
-                root.currentWall = text.trim();
-                Qt.callLater(root.revealCurrent);
-            }
+            onStreamFinished: root.currentWall = text.trim()
         }
     }
 
@@ -110,68 +98,47 @@ Overlay {
         onExited: exitCode => root.rotatorEnabled = exitCode === 0
     }
 
-    // the surface takes exclusive keyboard focus, so it has to answer at least
-    // one key or Escape would be swallowed with no way out but the scrim
-    Item {
-        anchors.fill: parent
-        focus: true
-        Keys.onEscapePressed: root.dismissed()
+    BarWidget {
+        id: widget
 
-        Item {
-            id: header
+        text: "󰸉"
+        baseColor: root.rotatorEnabled ? Config.base0B : Config.textMuted
+        onClicked: popup.visible = !popup.visible
+    }
 
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: titleRow.implicitHeight + 24
+    BarPopup {
+        id: popup
 
-            Row {
-                id: titleRow
-
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.pad
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: Theme.pad
-
-                Text {
-                    text: "Wallpapers"
-                    color: Config.textPrimary
-                    font.family: Config.fontFamily
-                    font.pixelSize: Theme.fontLg
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                TextAction {
-                    text: root.rotatorEnabled ? "󰒝 shuffle: " + (root.rotatorCategory || "all") : "󰒝 shuffle off"
-                    toggled: root.rotatorMatchesView
-                    onTriggered: root.toggleRotator()
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: Theme.pad
-                anchors.rightMargin: Theme.pad
-                height: 1
-                color: Config.chrome
-            }
+        anchorItem: root
+        title: "Wallpapers"
+        visible: false
+        onVisibleChanged: {
+            if (visible) {
+                rotatorCheck.running = true;
+                currentCheck.running = true;
+                Qt.callLater(root.revealCurrent);
+            } else
+                root.currentCategory = "";
         }
+
+        headerContent: [
+            TextAction {
+                text: root.rotatorEnabled ? "󰒝 shuffle: " + (root.rotatorCategory || "all") : "󰒝 shuffle off"
+                toggled: root.rotatorMatchesView
+                onTriggered: root.toggleRotator()
+            }
+        ]
 
         Row {
             id: panes
 
-            anchors.top: header.bottom
-            anchors.topMargin: Theme.gap
-            anchors.left: parent.left
+            rightPadding: 4
 
             ListView {
                 id: sidebar
 
-                width: root.sidebarWidth
-                height: root.panesHeight
+                width: 170
+                height: 400
                 clip: true
                 model: root.sidebarModel
 
@@ -213,8 +180,8 @@ Overlay {
             GridView {
                 id: grid
 
-                width: root.gridWidth
-                height: root.panesHeight
+                width: 480
+                height: 400
                 clip: true
                 cellWidth: width / 3
                 cellHeight: 104

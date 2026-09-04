@@ -57,14 +57,6 @@ ShellRoot {
     }
 
     LazyLoader {
-        active: Popups.wallpaperOpen
-
-        WallpaperPicker {
-            onDismissed: Popups.close("wallpaper")
-        }
-    }
-
-    LazyLoader {
         active: Notifs.popups.length > 0
 
         Toasts {}

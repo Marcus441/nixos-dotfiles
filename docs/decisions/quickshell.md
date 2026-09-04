@@ -85,30 +85,30 @@ nothing; three launches, then two, then one leave
 a lost file degrades to the old alphabetical list. Watch for the opposite:
 counts that never persist look exactly like a launcher not yet used.
 
-<a id="quickshell-picker-overlay"></a>
-## `popups/WallpaperPicker.qml` — an Overlay, not a bar popup
+<a id="quickshell-picker-no-keyboard"></a>
+## `bar/Wallpaper.qml` — the picker takes no keyboard
 
-**Why** As a `BarPopup` it received no keyboard at all: an xdg_popup with no xdg
-grab, parented to a layer surface whose keyboard interactivity is None, never
-gets `wl_keyboard.enter`. Measured twice — in a nested compositor an item in the
-popup held focus (`forceActiveFocus()` true) and received nothing while an
-identical item in the bar took every keystroke — then confirmed on the machine,
-where a real `SearchField` there did nothing.
+**Why** It is a `PopupWindow` parented to the bar's layer surface, whose
+keyboard interactivity is None, and `HyprlandFocusGrab` grants dismissal on an
+outside click, not keyboard focus. No key reaches it: a search field is inert,
+and a selection index with nothing to move it paints an arbitrary cell.
 
-It stayed a mouse-only dropdown until the bar button went away. Once the trigger
-became a right-click on empty bar, a popup anchored where the button used to be
-pointed at nothing, and at 655x440 it was already the size class of the four
-modals. As an `Overlay` it is centred on the scrim like its siblings, and the
-keyboard follows from `WlrKeyboardFocus.Exclusive`.
+Measured twice. In a nested compositor an item in the popup holds focus
+(`forceActiveFocus()` reports true) and receives nothing while an identical
+item in the bar takes every keystroke — grab active, popup open, real click
+inside. Then on the machine a real `SearchField` there did nothing. Wayland
+specifies this for an xdg_popup with no xdg grab under a passive layer surface.
 
-**Breaks** Exclusive focus with no key handler traps the user: every key is
-swallowed and Escape does not dismiss. The `Item { focus: true }` wrapper
-answering `Keys.onEscapePressed` is the minimum any Overlay owes, and further
-key handling belongs beside it — never back inside a `BarPopup`, where it would
-lint, format and probe clean and do nothing.
+Giving it a keyboard would mean making it an `Overlay` — a scrim and a centred
+card instead of a dropdown beside its button. That shape change was declined.
+
+**Breaks** *Only as a false positive.* An audit reads "the one surface with no
+keyboard path" as an inconsistency with the four modals; it is not, since those
+are layer surfaces with exclusive focus and this is a popup. A `SearchField`
+added back compiles, lints and probes clean, and does nothing.
 
 <a id="quickshell-current-wallpaper"></a>
-## `popups/WallpaperPicker.qml` — the picker reads a symlink back
+## `bar/Wallpaper.qml` — the picker reads a symlink back
 
 **Why** Nothing in the manifest says which wallpaper is on screen. The only
 record is `current_wallpaper.img`, the symlink `wallpaper.set` writes beside
@@ -118,9 +118,7 @@ picker scrolls to it as well; switching category still returns to the top,
 because there the question is what is in this category, not where am I.
 
 `Qt.callLater` defers that scroll past layout. `positionViewAtIndex` on a
-GridView that has not been laid out yet silently does nothing. The manifest and
-the symlink arrive independently, so both call sites defer and whichever lands
-second does the work.
+GridView that has not been laid out yet silently does nothing.
 
 **Breaks** Silently, and only cosmetically: move or rename the symlink and the
 ring stops appearing with no error, the picker simply no longer says where you
