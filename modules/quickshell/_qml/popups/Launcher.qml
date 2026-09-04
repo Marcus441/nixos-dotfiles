@@ -63,7 +63,7 @@ Overlay {
 
             Rectangle {
                 anchors.fill: parent
-                color: row.index === filterList.selected ? Config.base02 : "transparent"
+                color: row.index === filterList.selected ? Config.selection : "transparent"
             }
 
             IconImage {
@@ -84,7 +84,7 @@ Overlay {
 
                 Text {
                     text: row.modelData.name
-                    color: Config.base05
+                    color: Config.textPrimary
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontLg
                 }
@@ -92,7 +92,7 @@ Overlay {
                 Text {
                     visible: (row.modelData.comment ?? "") !== ""
                     text: row.modelData.comment ?? ""
-                    color: Config.base03
+                    color: Config.textMuted
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize + 1
                 }

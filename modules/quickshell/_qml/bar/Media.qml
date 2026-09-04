@@ -41,7 +41,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             node: AudioService.sink
             active: MediaService.isPlaying
-            fill: MediaService.isPlaying ? Config.base0D : Config.base03
+            fill: MediaService.isPlaying ? Config.accent : Config.textMuted
             implicitHeight: Math.round(Config.fontSize * 0.85)
         }
 
@@ -66,7 +66,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
                 text: root.label
-                color: MediaService.isPlaying ? Config.base05 : Config.base04
+                color: MediaService.isPlaying ? Config.textPrimary : Config.textSecondary
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }
@@ -207,7 +207,7 @@ Item {
                     width: parent.width
                     elide: Text.ElideRight
                     text: MediaService.title !== "" ? MediaService.title : MediaService.active?.identity ?? ""
-                    color: Config.base05
+                    color: Config.textPrimary
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontMd
                 }
@@ -217,7 +217,7 @@ Item {
                     width: parent.width
                     elide: Text.ElideRight
                     text: MediaService.artist
-                    color: Config.base04
+                    color: Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
                 }
@@ -227,7 +227,7 @@ Item {
                     width: parent.width
                     elide: Text.ElideRight
                     text: MediaService.album
-                    color: Config.base03
+                    color: Config.textMuted
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontSm
                 }
@@ -282,7 +282,7 @@ Item {
                 width: seekRow.stampWidth
                 elide: Text.ElideRight
                 text: root.clock(seekRow.scrub >= 0 ? seekRow.scrub * MediaService.length : MediaService.position)
-                color: Config.base04
+                color: Config.textSecondary
                 font.family: Config.fontFamily
                 font.pixelSize: Theme.fontSm
             }
@@ -297,7 +297,7 @@ Item {
                 horizontalAlignment: Text.AlignRight
                 elide: Text.ElideRight
                 text: root.clock(MediaService.length)
-                color: Config.base04
+                color: Config.textSecondary
                 font.family: Config.fontFamily
                 font.pixelSize: Theme.fontSm
             }
@@ -371,7 +371,7 @@ Item {
 
                 Text {
                     text: MediaService.isPlayerPlaying(playerRow.modelData) ? "󰐊" : "󰏤"
-                    color: playerRow.modelData === MediaService.active ? Config.base0D : Config.base03
+                    color: playerRow.modelData === MediaService.active ? Config.accent : Config.textMuted
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize
                     anchors.verticalCenter: parent.verticalCenter
@@ -381,7 +381,7 @@ Item {
                     width: 240
                     elide: Text.ElideRight
                     text: playerRow.modelData?.trackTitle ? `${playerRow.modelData.identity} — ${playerRow.modelData.trackTitle}` : playerRow.modelData?.identity ?? ""
-                    color: playerRow.modelData === MediaService.active ? Config.base05 : Config.base04
+                    color: playerRow.modelData === MediaService.active ? Config.textPrimary : Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
                     anchors.verticalCenter: parent.verticalCenter
@@ -390,7 +390,7 @@ Item {
                 Text {
                     visible: playerRow.modelData === MediaService.picked
                     text: "󰐃"
-                    color: Config.base0D
+                    color: Config.accent
                     font.family: Config.iconFamily
                     font.pixelSize: Theme.fontSm
                     anchors.verticalCenter: parent.verticalCenter

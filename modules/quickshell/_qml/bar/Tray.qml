@@ -26,7 +26,7 @@ Row {
 
         anchors.verticalCenter: parent.verticalCenter
         text: root.expanded ? "󰅂" : "󰅁"
-        color: chevronMouse.containsMouse ? Config.base05 : Config.base03
+        color: chevronMouse.containsMouse ? Config.textPrimary : Config.textMuted
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
 

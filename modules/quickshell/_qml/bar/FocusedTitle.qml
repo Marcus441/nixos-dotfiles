@@ -6,7 +6,7 @@ Text {
     readonly property string title: ToplevelManager.activeToplevel?.title ?? ""
 
     text: title.length > 30 ? title.slice(0, 29) + "…" : title
-    color: Config.base03
+    color: Config.textMuted
     font.family: Config.fontFamily
     font.pixelSize: Config.fontSize
 }

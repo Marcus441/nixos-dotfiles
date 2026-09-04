@@ -29,14 +29,14 @@ Column {
 
             Text {
                 text: NetworkService.signalIcon(netRow.modelData?.signalStrength ?? 0)
-                color: netRow.modelData?.connected ? Config.base0D : Config.base04
+                color: netRow.modelData?.connected ? Config.accent : Config.textSecondary
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
 
             Text {
                 text: netRow.modelData?.name ?? ""
-                color: netRow.modelData?.connected ? Config.base05 : Config.base04
+                color: netRow.modelData?.connected ? Config.textPrimary : Config.textSecondary
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }
@@ -49,7 +49,7 @@ Column {
 
         Text {
             text: NetworkService.wifiEnabled ? "no known networks in range" : "wi-fi is off"
-            color: Config.base04
+            color: Config.textSecondary
             font.family: Config.fontFamily
             font.pixelSize: Theme.fontSm
         }

@@ -25,11 +25,11 @@ Item {
             return Config.base08;
         if (level === 1)
             return Config.base0A;
-        return Config.base04;
+        return Config.textSecondary;
     }
 
     function tint(level) {
-        return level > 0 ? root.severityColor(level) : Config.base0D;
+        return level > 0 ? root.severityColor(level) : Config.accent;
     }
 
     function capacity(blocks) {
@@ -162,7 +162,7 @@ Item {
                     meterValue: diskCard.busy / 100
                     meterColor: root.tint(diskCard.ioLevel)
                     subMeterValue: diskCard.totalK > 0 ? diskCard.usedK / diskCard.totalK : -1
-                    subMeterColor: diskCard.capLevel > 0 ? root.severityColor(diskCard.capLevel) : Config.base03
+                    subMeterColor: diskCard.capLevel > 0 ? root.severityColor(diskCard.capLevel) : Config.textMuted
                     subMeterLabel: diskCard.totalK > 0 ? `Storage  ${root.capacity(diskCard.usedK)} / ${root.capacity(diskCard.totalK)}` : "Storage  not mounted"
                     onToggled: {
                         Config.launchApp(Config.diskCommand);

@@ -61,12 +61,12 @@ PanelWindow {
                 id: card
 
                 required property Notification modelData
-                readonly property color accent: card.modelData?.urgency === NotificationUrgency.Critical ? Config.base08 : card.modelData?.urgency === NotificationUrgency.Low ? Config.base03 : Config.base0D
+                readonly property color accent: card.modelData?.urgency === NotificationUrgency.Critical ? Config.base08 : card.modelData?.urgency === NotificationUrgency.Low ? Config.textMuted : Config.accent
                 readonly property string iconSource: card.modelData?.image ? card.modelData.image : card.modelData?.appIcon ? Quickshell.iconPath(card.modelData.appIcon, true) : ""
 
                 width: column.width
                 height: header.height + bodyBlock.height + actionRow.height
-                color: Config.base10
+                color: Config.card
 
                 Timer {
                     interval: card.modelData ? Notifs.timeoutFor(card.modelData) : 0
@@ -92,7 +92,7 @@ PanelWindow {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: summaryText.implicitHeight + 16
-                    color: Config.base01
+                    color: Config.chrome
 
                     Text {
                         id: urgencyIcon
@@ -116,7 +116,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         text: card.modelData?.summary ? card.modelData.summary : card.modelData?.appName ?? ""
                         elide: Text.ElideRight
-                        color: Config.base05
+                        color: Config.textPrimary
                         font.family: Config.fontFamily
                         font.pixelSize: Config.fontSize
                     }
@@ -128,7 +128,7 @@ PanelWindow {
                         anchors.rightMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
                         text: card.modelData?.appName ?? ""
-                        color: Config.base04
+                        color: Config.textSecondary
                         font.family: Config.fontFamily
                         font.pixelSize: Theme.fontSm
                     }
@@ -140,7 +140,7 @@ PanelWindow {
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
                         text: "󰅖"
-                        color: closeMouse.containsMouse ? Config.base08 : Config.base04
+                        color: closeMouse.containsMouse ? Config.base08 : Config.textSecondary
                         font.family: Config.iconFamily
                         font.pixelSize: Config.fontSize
 
@@ -193,7 +193,7 @@ PanelWindow {
                         wrapMode: Text.Wrap
                         maximumLineCount: 3
                         elide: Text.ElideRight
-                        color: Config.base04
+                        color: Config.textSecondary
                         font.family: Config.fontFamily
                         font.pixelSize: Config.fontSize
                     }
@@ -219,7 +219,7 @@ PanelWindow {
                             required property NotificationAction modelData
 
                             text: actionText.modelData?.text ?? ""
-                            color: actionMouse.containsMouse ? Config.base0D : Config.base04
+                            color: actionMouse.containsMouse ? Config.accent : Config.textSecondary
                             font.family: Config.fontFamily
                             font.pixelSize: Config.fontSize
 

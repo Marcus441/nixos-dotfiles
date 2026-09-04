@@ -44,7 +44,7 @@ Column {
 
         width: parent.width
         height: search.implicitHeight + 24
-        color: Config.base01
+        color: Config.chrome
 
         Row {
             anchors.fill: parent
@@ -57,7 +57,7 @@ Column {
 
                 visible: root.searchIcon !== ""
                 text: root.searchIcon
-                color: Config.base04
+                color: Config.textSecondary
                 font.family: Config.iconFamily
                 font.pixelSize: root.searchPixelSize
                 anchors.verticalCenter: parent.verticalCenter
@@ -67,7 +67,7 @@ Column {
                 id: search
 
                 width: parent.width - (icon.visible ? parent.spacing + icon.width : 0)
-                color: Config.base05
+                color: Config.textPrimary
                 font.family: Config.fontFamily
                 font.pixelSize: root.searchPixelSize
                 focus: true
@@ -109,7 +109,7 @@ Column {
                 Text {
                     visible: search.text === ""
                     text: root.placeholder
-                    color: Config.base03
+                    color: Config.textMuted
                     font: search.font
                 }
             }

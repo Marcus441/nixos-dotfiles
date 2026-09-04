@@ -17,7 +17,7 @@ Item {
         id: widget
 
         text: Notifs.dnd ? "󰂛" : root.count > 0 ? "󰂚" : "󰂜"
-        baseColor: !Notifs.dnd && root.count > 0 ? Config.base0D : Config.base03
+        baseColor: !Notifs.dnd && root.count > 0 ? Config.accent : Config.textMuted
         onClicked: popup.visible = !popup.visible
         onRightClicked: Notifs.dnd = !Notifs.dnd
     }
@@ -47,7 +47,7 @@ Item {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
             text: "No notifications"
-            color: Config.base03
+            color: Config.textMuted
             font.family: Config.fontFamily
             font.pixelSize: Config.fontSize
         }
@@ -71,7 +71,7 @@ Item {
 
                 width: list.width
                 height: inner.implicitHeight + 12
-                color: rowMouse.containsMouse ? Config.base02 : "transparent"
+                color: rowMouse.containsMouse ? Config.selection : "transparent"
 
                 Column {
                     id: inner
@@ -88,7 +88,7 @@ Item {
 
                         Text {
                             text: row.modelData.summary !== "" ? row.modelData.summary : row.modelData.appName
-                            color: Config.base05
+                            color: Config.textPrimary
                             font.family: Config.fontFamily
                             font.pixelSize: Config.fontSize
                         }
@@ -96,7 +96,7 @@ Item {
                         Text {
                             visible: row.modelData.summary !== "" && row.modelData.appName !== ""
                             text: row.modelData.appName
-                            color: Config.base04
+                            color: Config.textSecondary
                             font.family: Config.fontFamily
                             font.pixelSize: Theme.fontSm
                             topPadding: 1
@@ -110,7 +110,7 @@ Item {
                         textFormat: Text.PlainText
                         elide: Text.ElideRight
                         maximumLineCount: 1
-                        color: Config.base04
+                        color: Config.textSecondary
                         font.family: Config.fontFamily
                         font.pixelSize: Config.fontSize
                     }
@@ -123,7 +123,7 @@ Item {
                     anchors.rightMargin: Theme.pad
                     anchors.verticalCenter: parent.verticalCenter
                     text: "󰅖"
-                    color: rowMouse.containsMouse ? Config.base08 : Config.base04
+                    color: rowMouse.containsMouse ? Config.base08 : Config.textSecondary
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize
 

@@ -45,7 +45,7 @@ ColumnLayout {
                     anchors.leftMargin: Theme.pad
                     anchors.rightMargin: Theme.pad
                     height: 1
-                    color: Config.base01
+                    color: Config.chrome
                 }
             }
 
@@ -82,7 +82,7 @@ ColumnLayout {
                                 return checked ? "󰐾" : "󰐽";
                             return checked ? "󰄲" : "󰄱";
                         }
-                        color: entry.modelData.enabled ? Config.base0D : Config.base03
+                        color: entry.modelData.enabled ? Config.accent : Config.textMuted
                         font.family: Config.iconFamily
                         font.pixelSize: Config.fontSize
                         anchors.verticalCenter: parent.verticalCenter
@@ -97,7 +97,7 @@ ColumnLayout {
 
                     Text {
                         text: entry.modelData.text
-                        color: entry.modelData.enabled ? Config.base05 : Config.base03
+                        color: entry.modelData.enabled ? Config.textPrimary : Config.textMuted
                         font.family: Config.fontFamily
                         font.pixelSize: Config.fontSize
                         anchors.verticalCenter: parent.verticalCenter
@@ -106,7 +106,7 @@ ColumnLayout {
                     Text {
                         visible: entry.modelData.hasChildren
                         text: entry.expanded ? "󰅀" : "󰅂"
-                        color: Config.base04
+                        color: Config.textSecondary
                         font.family: Config.iconFamily
                         font.pixelSize: Config.fontSize
                         anchors.verticalCenter: parent.verticalCenter

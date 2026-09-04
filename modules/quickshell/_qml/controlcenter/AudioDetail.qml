@@ -29,14 +29,14 @@ Column {
 
             Text {
                 text: "󰓃"
-                color: sinkRow.current ? Config.base0D : Config.base04
+                color: sinkRow.current ? Config.accent : Config.textSecondary
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
 
             Text {
                 text: AudioService.displayName(sinkRow.modelData)
-                color: sinkRow.current ? Config.base05 : Config.base04
+                color: sinkRow.current ? Config.textPrimary : Config.textSecondary
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }
@@ -49,7 +49,7 @@ Column {
 
         Text {
             text: "no outputs"
-            color: Config.base04
+            color: Config.textSecondary
             font.family: Config.fontFamily
             font.pixelSize: Theme.fontSm
         }
@@ -64,14 +64,14 @@ Column {
 
         Text {
             text: "󰘮"
-            color: Config.base04
+            color: Config.textSecondary
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
         }
 
         Text {
             text: "mixer"
-            color: Config.base04
+            color: Config.textSecondary
             font.family: Config.fontFamily
             font.pixelSize: Config.fontSize
         }

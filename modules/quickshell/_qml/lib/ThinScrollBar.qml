@@ -10,7 +10,7 @@ ScrollBar {
     contentItem: Rectangle {
         implicitWidth: 8
         radius: width / 2
-        color: Config.base03
+        color: Config.textMuted
         opacity: root.active ? 0.6 : 0
 
         Behavior on opacity {

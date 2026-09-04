@@ -8,7 +8,7 @@ Item {
 
     property PwNode node: null
     property bool active: false
-    property color fill: Config.base0D
+    property color fill: Config.accent
     property int bars: 5
     property int barWidth: 2
     property int gap: 2

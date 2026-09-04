@@ -27,6 +27,7 @@ _: {
           configs.default = import ./_config.nix {
             inherit pkgs barPosition;
             colors = config.desktop.colors;
+            roles = config.desktop.roles;
             font = config.desktop.font;
             cacheDir = config.xdg.cacheHome;
             lockCommand = config.lock.command;

@@ -4,7 +4,7 @@ import qs.services
 
 Text {
     text: LayoutState.monocle ? "" : "󰙀"
-    color: LayoutState.monocle ? Config.base0D : Config.base04
+    color: LayoutState.monocle ? Config.accent : Config.textSecondary
     font.family: Config.iconFamily
     font.pixelSize: Config.fontSize
 }

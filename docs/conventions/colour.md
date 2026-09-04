@@ -31,3 +31,31 @@ hyprlang (hyprlock) wants `rgb(rrggbb)` or `rgba(rrggbbaa)` — it rejects a bar
 palette through `rgb(…)` rather than stripping the `#` and pasting it.
 
 Full traps: `.claude/rules/theming-hazards.md`.
+
+<a id="shell-roles"></a>
+## `desktop.roles` — what a slot means to the shell
+
+**Why** Every quickshell file named a palette slot, so each popup re-decided
+what "muted" meant and the four of them drifted apart.
+
+| Role | Slot | |
+| --- | --- | --- |
+| `textPrimary` | base05 | text and icons at full strength |
+| `textSecondary` | base04 | the same, one step down |
+| `textMuted` | base03 | idle icons, hints, the scrollbar handle |
+| `accent` | base0D | the active, selected or playing state |
+| `selection` | base02 | row highlights, and a meter's track |
+| `chrome` | base01 | the bar, and the popup surfaces on it |
+| `card` | base10 | a modal's own surface, above the scrim |
+| `scrim` | — | `#66000000`, the dimmed backdrop behind a modal |
+
+`textSecondary` is base04 and not base03 because base03 cannot hold a light
+value — `tmtheme.nix` reads it as `lineHighlight`, a background. base04 is the
+lighter neutral, and carries ANSI 8. Rebalancing the neutrals moves both.
+Declared in the `quickshell` aspect, not `core`: nothing else has a use for
+`card` or `scrim`. The six hue slots stay raw — base08 means red wherever it
+appears, and a role would only rename it.
+
+**Breaks** *Silently.* `scrim` is eight hex digits, which Qt reads as
+`#aarrggbb` ([formats](#colour-formats)). Written `#rrggbbaa` it is an
+almost-opaque black, so the modal loses its backdrop rather than erroring.

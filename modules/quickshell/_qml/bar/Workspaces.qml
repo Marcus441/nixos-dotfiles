@@ -11,7 +11,7 @@ Rectangle {
 
     readonly property var wsIds: WorkspaceState.ids.filter(i => i > 0).sort((a, b) => a - b)
 
-    color: Config.base01
+    color: Config.chrome
     radius: bar.vertical ? 6 : height / 2
     implicitWidth: bar.vertical ? 22 : row.implicitWidth + 8
     implicitHeight: bar.vertical ? row.implicitHeight + 8 : 20
@@ -39,7 +39,7 @@ Rectangle {
                 width: root.bar.vertical ? 16 : (focused ? 28 : 16)
                 height: root.bar.vertical ? (focused ? 28 : 16) : 16
                 radius: 8
-                color: urgent ? Config.base08 : focused ? Config.base0D : "transparent"
+                color: urgent ? Config.base08 : focused ? Config.accent : "transparent"
 
                 Behavior on width {
                     NumberAnimation {
@@ -58,7 +58,7 @@ Rectangle {
                 Text {
                     anchors.centerIn: parent
                     text: pill.ws?.name ?? pill.modelData
-                    color: pill.focused || pill.urgent ? Config.base00 : pill.occupied ? Config.base05 : Config.base04
+                    color: pill.focused || pill.urgent ? Config.base00 : pill.occupied ? Config.textPrimary : Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize - 1
                     font.weight: 600

@@ -82,7 +82,7 @@ Item {
         id: widget
 
         text: "󰸉"
-        baseColor: root.rotatorEnabled ? Config.base0B : Config.base03
+        baseColor: root.rotatorEnabled ? Config.base0B : Config.textMuted
         onClicked: popup.visible = !popup.visible
     }
 
@@ -129,7 +129,7 @@ Item {
 
                     width: sidebar.width
                     height: catName.implicitHeight + 12
-                    color: selected ? Config.base02 : catMouse.containsMouse ? Config.base01 : "transparent"
+                    color: selected ? Config.selection : catMouse.containsMouse ? Config.chrome : "transparent"
 
                     Behavior on color {
                         ColorAnimation {
@@ -147,7 +147,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: catRow.modelData.name
                         elide: Text.ElideRight
-                        color: catRow.selected || catMouse.containsMouse ? Config.base05 : Config.base04
+                        color: catRow.selected || catMouse.containsMouse ? Config.textPrimary : Config.textSecondary
                         font.family: Config.fontFamily
                         font.pixelSize: Config.fontSize
                     }
@@ -159,7 +159,7 @@ Item {
                         anchors.rightMargin: Theme.pad
                         anchors.verticalCenter: parent.verticalCenter
                         text: catRow.modelData.count
-                        color: Config.base03
+                        color: Config.textMuted
                         font.family: Config.fontFamily
                         font.pixelSize: Theme.fontSm
                     }
@@ -178,7 +178,7 @@ Item {
             Rectangle {
                 width: 1
                 height: sidebar.height
-                color: Config.base01
+                color: Config.chrome
             }
 
             GridView {
@@ -230,7 +230,7 @@ Item {
                             text: (cell.modelData.category ? cell.modelData.category + " / " : "") + cell.modelData.name.replace(/[_-]/g, " ")
                             elide: Text.ElideRight
                             horizontalAlignment: Text.AlignHCenter
-                            color: cellMouse.containsMouse ? Config.base05 : Config.base04
+                            color: cellMouse.containsMouse ? Config.textPrimary : Config.textSecondary
                             font.family: Config.fontFamily
                             font.pixelSize: Theme.fontSm
                         }

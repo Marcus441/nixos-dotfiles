@@ -12,7 +12,7 @@ Rectangle {
     width: parent ? parent.width : implicitWidth
     implicitWidth: inner.implicitWidth + Theme.pad * 2
     implicitHeight: inner.implicitHeight + 12
-    color: root.hoverable && mouse.containsMouse ? Config.base02 : "transparent"
+    color: root.hoverable && mouse.containsMouse ? Config.selection : "transparent"
 
     Behavior on color {
         ColorAnimation {

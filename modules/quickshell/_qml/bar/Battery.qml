@@ -24,6 +24,6 @@ BarWidget {
             return Config.base08;
         if (pct <= 20)
             return Config.base0A;
-        return Config.base03;
+        return Config.textMuted;
     }
 }

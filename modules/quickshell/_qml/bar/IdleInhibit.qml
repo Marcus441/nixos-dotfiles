@@ -10,7 +10,7 @@ BarWidget {
     property bool active: false
 
     text: active ? "󰅶" : "󰛊"
-    baseColor: active ? Config.base0A : Config.base03
+    baseColor: active ? Config.base0A : Config.textMuted
     onClicked: active = !active
 
     IdleInhibitor {

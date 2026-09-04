@@ -59,7 +59,7 @@ Overlay {
 
             Rectangle {
                 anchors.fill: parent
-                color: row.index === filterList.selected ? Config.base02 : "transparent"
+                color: row.index === filterList.selected ? Config.selection : "transparent"
             }
 
             Text {
@@ -69,7 +69,7 @@ Overlay {
                 width: parent.width - Theme.pad * 2
                 text: row.modelData.text
                 elide: Text.ElideRight
-                color: Config.base05
+                color: Config.textPrimary
                 font.family: Config.monoFamily
                 font.pixelSize: Config.fontSize
             }

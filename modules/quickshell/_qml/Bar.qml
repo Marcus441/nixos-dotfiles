@@ -21,7 +21,7 @@ PanelWindow {
     color: Config.base00
 
     Rectangle {
-        color: Config.base01
+        color: Config.chrome
         anchors.left: parent.left
         anchors.right: Config.barPosition === "left" ? undefined : parent.right
         anchors.top: parent.top

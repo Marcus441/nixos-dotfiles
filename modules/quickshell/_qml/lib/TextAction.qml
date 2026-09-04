@@ -8,7 +8,7 @@ Text {
 
     property bool active: mouse.containsMouse
 
-    color: active ? Config.base0D : Config.base04
+    color: active ? Config.accent : Config.textSecondary
     font.family: Config.iconFamily
     font.pixelSize: Config.fontSize
 

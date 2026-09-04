@@ -1,6 +1,7 @@
 {
   pkgs,
   colors,
+  roles,
   font,
   barPosition,
   cacheDir,
@@ -79,6 +80,12 @@
       (name: value: "    readonly property color ${name}: \"${value}\"\n")
       colors);
 
+  roleProps =
+    lib.concatStrings
+    (lib.mapAttrsToList
+      (name: value: "    readonly property color ${name}: \"${value}\"\n")
+      roles);
+
   configQml = pkgs.writeText "quickshell-Config.qml" ''
     pragma Singleton
     import Quickshell
@@ -88,6 +95,7 @@
         id: root
 
     ${colorProps}
+    ${roleProps}
         readonly property string fontFamily: "Inter"
         readonly property string monoFamily: "${qml font.name}"
         readonly property string iconFamily: "Symbols Nerd Font Mono"

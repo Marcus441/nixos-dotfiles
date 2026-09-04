@@ -8,7 +8,7 @@ Text {
     signal rightClicked
     signal scrolled(int delta)
 
-    property color baseColor: Config.base03
+    property color baseColor: Config.textMuted
     property bool hover: mouse.containsMouse
 
     color: baseColor

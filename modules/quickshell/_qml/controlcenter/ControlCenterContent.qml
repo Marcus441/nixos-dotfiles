@@ -76,7 +76,7 @@ Column {
         primaryText: "Audio"
         secondaryText: AudioService.sink ? `${AudioService.displayName(AudioService.sink)}  ${Math.round(AudioService.volume * 100)}%` : "no sink"
         meterValue: AudioService.volume
-        meterColor: AudioService.muted ? Config.base08 : Config.base0D
+        meterColor: AudioService.muted ? Config.base08 : Config.accent
         meterInteractive: true
         onToggled: AudioService.toggleMute()
         onExpandClicked: root.host.toggleSection("audio")

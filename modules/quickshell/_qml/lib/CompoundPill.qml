@@ -16,12 +16,12 @@ Rectangle {
     property bool hoverable: true
     property string primaryText: ""
     property string secondaryText: ""
-    property color accentColor: Config.base0D
+    property color accentColor: Config.accent
     property real meterValue: -1
-    property color meterColor: Config.base0D
+    property color meterColor: Config.accent
     property bool meterInteractive: false
     property real subMeterValue: -1
-    property color subMeterColor: Config.base03
+    property color subMeterColor: Config.textMuted
     property string subMeterLabel: ""
 
     readonly property bool hasMeter: root.meterValue >= 0
@@ -30,7 +30,7 @@ Rectangle {
     width: parent ? parent.width : 220
     height: Math.max(48, bodyColumn.implicitHeight + 18)
     radius: 8
-    color: root.hoverable && (pillMouse.containsMouse || tileMouse.containsMouse) ? Config.base02 : Config.base01
+    color: root.hoverable && (pillMouse.containsMouse || tileMouse.containsMouse) ? Config.selection : Config.chrome
 
     Behavior on color {
         ColorAnimation {
@@ -109,7 +109,7 @@ Rectangle {
                 Text {
                     width: parent.width
                     text: root.primaryText
-                    color: Config.base05
+                    color: Config.textPrimary
                     elide: Text.ElideRight
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
@@ -119,7 +119,7 @@ Rectangle {
                     width: parent.width
                     text: root.secondaryText
                     visible: text.length > 0
-                    color: Config.base04
+                    color: Config.textSecondary
                     elide: Text.ElideRight
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontSm
@@ -140,7 +140,7 @@ Rectangle {
                     width: parent.width
                     text: root.subMeterLabel
                     visible: root.hasSubMeter && text.length > 0
-                    color: Config.base04
+                    color: Config.textSecondary
                     elide: Text.ElideRight
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontSm
@@ -163,7 +163,7 @@ Rectangle {
             visible: root.showExpandArea
             anchors.verticalCenter: parent.verticalCenter
             text: root.expanded ? "󰅀" : "󰅂"
-            color: pillMouse.containsMouse ? Config.base05 : Config.base04
+            color: pillMouse.containsMouse ? Config.textPrimary : Config.textSecondary
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
 

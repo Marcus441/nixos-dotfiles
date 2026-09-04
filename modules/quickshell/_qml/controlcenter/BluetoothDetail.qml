@@ -34,7 +34,7 @@ Column {
                     const battery = devRow.modelData.batteryAvailable ? `  ${Math.round(devRow.modelData.battery * 100)}%` : "";
                     return `${devRow.modelData.connected ? "󰂱" : "󰂯"} ${devRow.modelData.name}${battery}`;
                 }
-                color: devRow.modelData?.connected ? Config.base05 : Config.base04
+                color: devRow.modelData?.connected ? Config.textPrimary : Config.textSecondary
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
             }
@@ -47,7 +47,7 @@ Column {
 
         Text {
             text: "no paired devices"
-            color: Config.base04
+            color: Config.textSecondary
             font.family: Config.fontFamily
             font.pixelSize: Theme.fontSm
         }

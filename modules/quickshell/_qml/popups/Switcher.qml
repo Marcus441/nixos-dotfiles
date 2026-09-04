@@ -214,7 +214,7 @@ Overlay {
 
             Rectangle {
                 anchors.fill: parent
-                color: row.current ? Config.base02 : "transparent"
+                color: row.current ? Config.selection : "transparent"
             }
 
             Loader {
@@ -264,7 +264,7 @@ Overlay {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: node.entry.count > 0
                     text: root.collapsed[node.entry.id] ? "󰅂" : "󰅀"
-                    color: Config.base04
+                    color: Config.textSecondary
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize
                 }
@@ -272,7 +272,7 @@ Overlay {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: node.entry.name
-                    color: node.ws?.urgent ? Config.base08 : node.ws?.focused ? Config.base0D : Config.base05
+                    color: node.ws?.urgent ? Config.base08 : node.ws?.focused ? Config.accent : Config.textPrimary
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontMd
                     font.weight: 600
@@ -281,7 +281,7 @@ Overlay {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: node.entry.count === 0 ? "empty" : node.entry.count === 1 ? "1 window" : `${node.entry.count} windows`
-                    color: Config.base03
+                    color: Config.textMuted
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
                 }
@@ -293,7 +293,7 @@ Overlay {
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.pad
                 text: node.entry.monitor
-                color: Config.base03
+                color: Config.textMuted
                 font.family: Config.fontFamily
                 font.pixelSize: Config.fontSize
             }
@@ -333,7 +333,7 @@ Overlay {
                     width: Math.min(implicitWidth, parent.width - appLabel.width - parent.spacing)
                     text: leaf.tl?.title ?? ""
                     elide: Text.ElideRight
-                    color: leaf.tl?.wayland === ToplevelManager.activeToplevel ? Config.base0D : Config.base05
+                    color: leaf.tl?.wayland === ToplevelManager.activeToplevel ? Config.accent : Config.textPrimary
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontMd
                 }
@@ -343,7 +343,7 @@ Overlay {
 
                     anchors.verticalCenter: parent.verticalCenter
                     text: leaf.entry.appId
-                    color: Config.base03
+                    color: Config.textMuted
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
                 }

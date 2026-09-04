@@ -9,14 +9,14 @@ Rectangle {
     signal canceled
 
     property real value: 0
-    property color fill: Config.base0D
+    property color fill: Config.accent
     property bool interactive: false
 
     readonly property real fraction: Math.max(0, Math.min(root.value, 1))
 
     height: 6
     radius: 3
-    color: Config.base02
+    color: Config.selection
 
     Rectangle {
         width: root.fraction === 0 ? 0 : Math.max(root.height, root.width * root.fraction)

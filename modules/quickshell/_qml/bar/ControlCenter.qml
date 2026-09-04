@@ -30,7 +30,7 @@ Item {
                     return "󱘖";
                 return "󰤮";
             }
-            color: NetworkService.networkStatus === "disconnected" ? Config.base08 : Config.base03
+            color: NetworkService.networkStatus === "disconnected" ? Config.base08 : Config.textMuted
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
             verticalAlignment: Text.AlignVCenter
@@ -42,7 +42,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             visible: BluetoothService.available
             text: !BluetoothService.enabled ? "󰂲" : BluetoothService.connected ? "󰂱" : "󰂯"
-            color: BluetoothService.connected ? Config.base0D : Config.base03
+            color: BluetoothService.connected ? Config.accent : Config.textMuted
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
             verticalAlignment: Text.AlignVCenter
@@ -53,7 +53,7 @@ Item {
 
             Layout.alignment: Qt.AlignHCenter
             text: AudioService.muted ? "󰖁" : AudioService.volume >= 0.66 ? "󰕾" : AudioService.volume >= 0.33 ? "󰖀" : "󰕿"
-            color: AudioService.muted ? Config.base08 : Config.base03
+            color: AudioService.muted ? Config.base08 : Config.textMuted
             font.family: Config.iconFamily
             font.pixelSize: Config.fontSize
             verticalAlignment: Text.AlignVCenter

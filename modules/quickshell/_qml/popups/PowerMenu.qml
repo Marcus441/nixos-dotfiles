@@ -16,7 +16,7 @@ PanelWindow {
         {
             glyph: "󰌾",
             label: "Lock",
-            tint: Config.base0D,
+            tint: Config.accent,
             cmd: [Config.sh, "-c", Config.lockCommand],
             show: Config.lockCommand !== ""
         },
@@ -58,7 +58,7 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
     exclusionMode: ExclusionMode.Ignore
-    color: Config.base10
+    color: Config.card
 
     anchors {
         left: true
@@ -97,7 +97,7 @@ PanelWindow {
 
                     width: 180
                     height: 200
-                    color: tile.active ? Config.base02 : Config.base01
+                    color: tile.active ? Config.selection : Config.chrome
 
                     Behavior on color {
                         ColorAnimation {
@@ -120,7 +120,7 @@ PanelWindow {
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: tile.modelData.label
-                            color: Config.base05
+                            color: Config.textPrimary
                             font.family: Config.fontFamily
                             font.pixelSize: Theme.fontLg
                         }

@@ -22,7 +22,7 @@ Grid {
     Text {
         visible: Weather.icon !== ""
         text: root.vertical ? `${Weather.icon}\n${Weather.temp.replace("C", "")}` : `${Weather.icon} ${Weather.temp}`
-        color: Config.base05
+        color: Config.textPrimary
         font.family: Config.iconFamily
         font.pixelSize: Config.fontSize
         horizontalAlignment: Text.AlignHCenter
@@ -30,7 +30,7 @@ Grid {
 
     Text {
         text: root.vertical ? Qt.formatDateTime(clock.date, "HH\nmm") : Qt.formatDateTime(clock.date, "dddd HH:mm")
-        color: Config.base05
+        color: Config.textPrimary
         font.family: Config.fontFamily
         font.pixelSize: Config.fontSize
         horizontalAlignment: Text.AlignHCenter

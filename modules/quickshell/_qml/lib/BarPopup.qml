@@ -64,7 +64,7 @@ PopupWindow {
         anchors.bottomMargin: Config.barPosition === "bottom" ? root.barGap : 0
         anchors.leftMargin: Config.barPosition === "left" ? root.barGap : 0
         anchors.rightMargin: Config.barPosition === "right" ? root.barGap : 0
-        color: Config.base10
+        color: Config.card
     }
 
     Rectangle {
@@ -75,7 +75,7 @@ PopupWindow {
         anchors.left: frame.left
         anchors.right: frame.right
         height: visible ? headerRow.implicitHeight + 20 : 0
-        color: Config.base01
+        color: Config.chrome
 
         Row {
             id: headerRow
@@ -87,7 +87,7 @@ PopupWindow {
 
             Text {
                 text: root.title
-                color: Config.base05
+                color: Config.textPrimary
                 font.family: Config.fontFamily
                 font.pixelSize: Theme.fontMd
                 anchors.verticalCenter: parent.verticalCenter
