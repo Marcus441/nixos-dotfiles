@@ -86,6 +86,11 @@ the generator.
 Both belong to every host. Two sizes: `terminalSize` comes from the host
 record, being a property of the panel and not the theme; `size` is the desktop
 UI (shell) size, a plain default because 12 suits every panel the shell runs on.
+**The units differ, deliberately.** `terminalSize` is points, which is what
+foot, alacritty, ghostty and neovide all take. `size` is pixels: its only
+consumer is quickshell's `Config.fontSize`, which lands as `font.pixelSize` at
+every one of the 70 QML sites that size text, at none as `pointSize`, and as
+bar geometry in `Bar.qml`.
 
 <a id="neovide-font-size"></a>
 ## `editor/neovide.nix` — the point size is coerced to a float

@@ -15,7 +15,7 @@ _: {
           size = lib.mkOption {
             type = lib.types.int;
             default = 12;
-            description = "Desktop UI font size, in points; scales the shell.";
+            description = "Desktop UI font size, in pixels; scales the shell.";
           };
           terminalSize = lib.mkOption {
             type = lib.types.int;
