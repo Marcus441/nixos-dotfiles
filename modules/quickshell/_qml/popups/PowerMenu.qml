@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 import qs
 import qs.lib
@@ -56,6 +57,7 @@ Overlay {
         root.dismissed();
     }
 
+    WlrLayershell.namespace: "quickshell-powermenu"
     contentWidth: root.actions.length * root.tileWidth + (root.actions.length - 1) * root.tileGap + Theme.pad * 2
     contentHeight: root.tileHeight + Theme.pad * 2
 

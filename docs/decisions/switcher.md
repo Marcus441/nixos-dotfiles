@@ -19,10 +19,8 @@ it only marked the workspace urgent, the bar's red pill.
 **Breaks** *Silently, and it reads as the picker's fault.* Dispatching without
 the wait still picks the right window on a one-window workspace, so the bug
 survives every single-window test and appears only where a workspace holds two.
-**Also** the `quickshell-switcher` layershell namespace is string-matched in
-two files — here and the `quickshell.overlayNamespaces` entry in
-`switcher.nix`, which `quickshell/layers.nix` renders into a `no_anim` rule —
-both in the `quickshell` aspect. Rename it in one and the overlay animates.
+**Also** its layershell namespace is string-matched in two files —
+`docs/decisions/quickshell.md#quickshell-layer-namespaces`.
 
 ## `quickshell/_qml/popups/Switcher.qml` — a request names a window, never a bare workspace id
 

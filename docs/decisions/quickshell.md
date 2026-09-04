@@ -44,3 +44,21 @@ seeded row 0 it takes when the pointer rests above the list.
 **Breaks** *Silently, and it reads as the picker's fault.* The seeded selection
 is the casualty — alt-tab lands on the wrong window, and the launcher's first
 result is not the one that runs — so the seeding looks broken instead.
+
+<a id="quickshell-layer-namespaces"></a>
+## the overlays name their layer, in two files each
+
+**Why** An overlay opened from a keybind that animates in reads as lag, so
+`quickshell/layers.nix` renders every name in `quickshell.overlayNamespaces`
+into a Hyprland `layer_rule { no_anim = true }`. The match is on the string, so
+each name exists twice: once as `WlrLayershell.namespace` in the QML, once in
+the `overlayNamespaces` list. Each list entry sits in the file that owns the
+matching intent — launcher and clipboard in `launcher.nix`, switcher in
+`switcher.nix`, power menu in `quickshell.nix` — so a name arrives with the
+thing that opens it rather than in a central list.
+
+**Breaks** *Silently.* Rename one side and the rule stops matching: the overlay
+animates in, and nothing errors. An unnamed overlay is the same failure with
+nothing to rename — the clipboard and the power menu both fell back to the bare
+`quickshell` namespace, which no rule matches, so both animated while the
+launcher and the switcher did not.

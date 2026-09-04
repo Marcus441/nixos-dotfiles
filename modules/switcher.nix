@@ -21,6 +21,7 @@ _: {
         switcher.command = "${lib.getExe pkgs.quickshell} -c default ipc call switcher toggle";
 
         # load-bearing: docs/decisions/switcher.md#quickshell-switcher
+        # load-bearing: docs/decisions/quickshell.md#quickshell-layer-namespaces
         quickshell.overlayNamespaces = ["quickshell-switcher"];
       }
     )
