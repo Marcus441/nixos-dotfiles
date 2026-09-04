@@ -8,8 +8,8 @@ PanelWindow {
 
     signal dismissed
 
-    property int contentWidth: 600
-    property int contentHeight: 420
+    property int contentWidth: Theme.modalWidth
+    property int contentHeight: Theme.modalHeight
     default property alias content: panel.data
 
     WlrLayershell.layer: WlrLayer.Overlay

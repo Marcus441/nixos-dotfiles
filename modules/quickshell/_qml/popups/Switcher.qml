@@ -210,7 +210,7 @@ Overlay {
             readonly property bool current: index === filterList.selected
 
             width: filterList.width
-            height: modelData.kind === "ws" ? 32 : 40
+            height: modelData.kind === "ws" ? Theme.rowNode : Theme.rowLeaf
 
             Rectangle {
                 anchors.fill: parent

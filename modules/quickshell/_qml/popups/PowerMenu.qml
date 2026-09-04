@@ -114,7 +114,7 @@ PanelWindow {
                             text: tile.modelData.glyph
                             color: tile.modelData.tint
                             font.family: Config.iconFamily
-                            font.pixelSize: Config.fontSize + 28
+                            font.pixelSize: Theme.fontXxl
                         }
 
                         Text {

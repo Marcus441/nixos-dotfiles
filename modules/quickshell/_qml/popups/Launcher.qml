@@ -59,7 +59,7 @@ Overlay {
             required property int index
 
             width: filterList.width
-            height: 44
+            height: Theme.rowIcon
 
             Rectangle {
                 anchors.fill: parent

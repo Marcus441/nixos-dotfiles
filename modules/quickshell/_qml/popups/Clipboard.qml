@@ -55,7 +55,7 @@ Overlay {
             required property int index
 
             width: filterList.width
-            height: 28
+            height: Theme.rowText
 
             Rectangle {
                 anchors.fill: parent
