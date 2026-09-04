@@ -1,16 +1,16 @@
 pragma ComponentBehavior: Bound
 import Quickshell
-import Quickshell.Wayland
 import QtQuick
 import qs
 import qs.lib
 
-PanelWindow {
+Overlay {
     id: root
 
-    signal dismissed
-
     property int selected: 0
+    readonly property int tileWidth: 180
+    readonly property int tileHeight: 200
+    readonly property int tileGap: 12
 
     // lock delegates to lock.command (loginctl lock-session); never WlSessionLock
     readonly property var actions: [
@@ -56,23 +56,8 @@ PanelWindow {
         root.dismissed();
     }
 
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    exclusionMode: ExclusionMode.Ignore
-    color: Config.card
-
-    anchors {
-        left: true
-        right: true
-        top: true
-        bottom: true
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onClicked: root.dismissed()
-    }
+    contentWidth: root.actions.length * root.tileWidth + (root.actions.length - 1) * root.tileGap + Theme.pad * 2
+    contentHeight: root.tileHeight + Theme.pad * 2
 
     PointerGuard {
         id: hoverGuard
@@ -89,7 +74,7 @@ PanelWindow {
 
         Row {
             anchors.centerIn: parent
-            spacing: 12
+            spacing: root.tileGap
 
             Repeater {
                 model: root.actions
@@ -101,8 +86,8 @@ PanelWindow {
                     required property int index
                     readonly property bool active: mouse.containsMouse || root.selected === index
 
-                    width: 180
-                    height: 200
+                    width: root.tileWidth
+                    height: root.tileHeight
                     color: tile.active ? Config.selection : Config.chrome
 
                     Behavior on color {
