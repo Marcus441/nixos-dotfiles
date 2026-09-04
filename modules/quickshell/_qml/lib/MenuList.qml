@@ -43,8 +43,8 @@ ColumnLayout {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.leftMargin: Theme.pad
-                    anchors.rightMargin: Theme.pad
+                    anchors.leftMargin: Theme.pad + Theme.gap
+                    anchors.rightMargin: Theme.pad + Theme.gap
                     height: 1
                     color: Config.chrome
                 }

@@ -1,31 +1,47 @@
 import QtQuick
 import qs
 
-Rectangle {
+Item {
     id: root
 
     signal clicked
 
     property bool hoverable: true
+    property int insetX: Theme.gap
+    property int insetY: Theme.gap / 2
+    property bool highlighted: false
     readonly property alias hovered: mouse.containsMouse
     default property alias content: inner.data
     property alias trailing: trail.data
 
+    // the inset is drawn, not positioned: a ListView writes its delegate's x
+    // and y during layout, so an inset expressed as geometry is discarded
     width: parent ? parent.width : implicitWidth
-    implicitWidth: inner.implicitWidth + trail.implicitWidth + Theme.pad * 2 + (trail.implicitWidth > 0 ? Theme.gap : 0)
-    implicitHeight: Math.max(inner.implicitHeight, trail.implicitHeight) + 12
-    color: root.hoverable && mouse.containsMouse ? Config.selection : "transparent"
+    implicitWidth: inner.implicitWidth + trail.implicitWidth + Theme.pad * 2 + root.insetX * 2 + (trail.implicitWidth > 0 ? Theme.gap : 0)
+    implicitHeight: Math.max(inner.implicitHeight, trail.implicitHeight) + 12 + root.insetY * 2
 
-    Behavior on color {
-        ColorAnimation {
-            duration: Theme.durFast
+    Rectangle {
+        id: pill
+
+        anchors.fill: parent
+        anchors.leftMargin: root.insetX
+        anchors.rightMargin: root.insetX
+        anchors.topMargin: root.insetY
+        anchors.bottomMargin: root.insetY
+        radius: Theme.radius
+        color: root.highlighted ? Config.selection : root.hoverable && mouse.containsMouse ? Config.chrome : "transparent"
+
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.durFast
+            }
         }
     }
 
     Row {
         id: inner
 
-        anchors.left: parent.left
+        anchors.left: pill.left
         anchors.leftMargin: Theme.pad
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.gap
@@ -34,12 +50,13 @@ Rectangle {
     Row {
         id: trail
 
-        anchors.right: parent.right
+        anchors.right: pill.right
         anchors.rightMargin: Theme.pad
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.gap
     }
 
+    // the whole row is the hit target, so the gaps between pills are not dead
     MouseArea {
         id: mouse
 

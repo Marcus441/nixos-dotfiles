@@ -69,7 +69,6 @@ Item {
 
                 required property var modelData
 
-                width: list.width
                 onClicked: row.modelData.dismiss()
 
                 Column {
