@@ -92,7 +92,7 @@ Overlay {
                 Text {
                     visible: (row.modelData.comment ?? "") !== ""
                     text: row.modelData.comment ?? ""
-                    color: Config.textMuted
+                    color: Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize + 1
                 }

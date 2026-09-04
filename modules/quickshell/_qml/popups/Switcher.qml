@@ -343,7 +343,7 @@ Overlay {
 
                     anchors.verticalCenter: parent.verticalCenter
                     text: leaf.entry.appId
-                    color: Config.textMuted
+                    color: Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize
                 }
