@@ -17,11 +17,6 @@ Rectangle {
     property bool sideKeys: false
     property alias text: input.text
 
-    // a popup surface hands out no focus of its own; the consumer sets it
-    function focusInput(): void {
-        input.forceActiveFocus();
-    }
-
     height: input.implicitHeight + 24
     color: Config.chrome
 

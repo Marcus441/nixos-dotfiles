@@ -13,7 +13,9 @@ human makes, not a cleanup you offer.
   `switcher.command` intents, the power menu is a quickshell overlay (wleave is
   retired), the wallpaper picker is opened from its bar button only —
   quickshell sets no
-  `wallpaperMenu.command`, so no keybind renders; walker's implementation
+  `wallpaperMenu.command`, so no keybind renders, and the picker takes no
+  keyboard at all — a `PopupWindow` receives none, so it is mouse-only by
+  decision: `docs/decisions/quickshell.md#quickshell-picker-no-keyboard`; walker's implementation
   remains for a future walker host — the shell owns
   `org.freedesktop.Notifications` on Hyprland hosts (mako serves only dwl),
   and `walker` is its own aspect that no host currently takes. Waybar is

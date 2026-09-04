@@ -78,10 +78,32 @@ the launcher again would not rebuild, so deleting it must be harmless.
 and a parse failure falls back to empty counts.
 
 Measured in a nested compositor: a fresh shell lists alphabetically and writes
-nothing; three launches of one entry, two of another and one of a third leave
-`{"nvim":3,"btop":2,"org.kde.kdenlive":1}` and that order; a restarted shell
-reads it back and lists the same.
+nothing; three launches, then two, then one leave
+`{"nvim":3,"btop":2,"org.kde.kdenlive":1}`, and a restart reads it back.
 
 **Breaks** *Quietly, and in the safe direction.* Ties break alphabetically, so
 a lost file degrades to the old alphabetical list. Watch for the opposite:
 counts that never persist look exactly like a launcher not yet used.
+
+<a id="quickshell-picker-no-keyboard"></a>
+## `bar/Wallpaper.qml` — the picker takes no keyboard
+
+**Why** It is a `PopupWindow` parented to the bar's layer surface, whose
+keyboard interactivity is None, and `HyprlandFocusGrab` grants dismissal on an
+outside click, not keyboard focus. No key reaches it: a search field is inert,
+and a selection index with nothing to move it paints an arbitrary cell.
+
+Measured twice. In a nested compositor an item in the popup holds focus
+(`forceActiveFocus()` reports true) and receives nothing, while an identical
+item in the bar takes every keystroke in the same run — with the grab active,
+the popup open, and a real click inside it. Then on the machine, typing into a
+real `SearchField` there did nothing. Wayland specifies this for an xdg_popup
+with no xdg grab under a non-interactive layer surface.
+
+Giving it a keyboard would mean making it an `Overlay` — a scrim and a centred
+card instead of a dropdown beside its button. That shape change was declined.
+
+**Breaks** *Only as a false positive.* An audit reads "the one surface with no
+keyboard path" as an inconsistency with the four modals; it is not, since those
+are layer surfaces with exclusive focus and this is a popup. A `SearchField`
+added back compiles, lints and probes clean, and does nothing.
