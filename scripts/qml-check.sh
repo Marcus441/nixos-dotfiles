@@ -6,6 +6,7 @@
 #   ./scripts/qml-check.sh            format + lint
 #   ./scripts/qml-check.sh format     every .qml matches qmlformat
 #   ./scripts/qml-check.sh lint       qmllint, against the built config
+#   ./scripts/qml-check.sh probe      run the shell and open every popup
 #
 # Both tools come from the flake's own nixpkgs, never from PATH. A qmlformat
 # from a different Qt reformats the whole tree, and a qmllint from a different
@@ -150,15 +151,183 @@ check_lint() {
   fi
 }
 
+PROBE_SECONDS=${PROBE_SECONDS:-150}
+PROBE_DIR=
+PROBE_NOISE=
+PROBE_HYPRLAND=
+
+# 3. Running it. qmllint reads one file at a time and knows nothing about what
+#    happens when the objects are built: a binding loop, a null dereference and
+#    a popup that maps to no output all lint clean. quickshell has no --check,
+#    so the only way to find those is to start the shell and open every popup.
+#
+#    Two properties make that safe to run next to the live shell. The session
+#    gets a private bus, so Notifs cannot take org.freedesktop.Notifications
+#    from the real one; and a private XDG_RUNTIME_DIR with the host's wayland,
+#    pipewire and pulse sockets linked in, so `quickshell kill` and the Hyprland
+#    IPC can only ever see the probe. Every ipc call is addressed by --pid on
+#    top of that.
+#
+#    It is a nested compositor, so it needs a real one to display in: the
+#    headless backend wants a KMS device for its allocator and there is none
+#    without a seat. Inside a Hyprland session it is launched onto workspace 4
+#    silently, so it never takes focus.
+# Returns 0 clean, 1 the shell logged QML errors, 3 the nested session never
+# came up. 3 is not a verdict on the QML: nesting a compositor in a live one
+# fails occasionally, and a gate that reports a flake as a defect is worse than
+# no gate.
+probe_once() {
+  local t placed host_wayland
+  t=$(mktemp -d -t qml-probe-XXXXXX) || return 3
+  PROBE_DIR=$t
+
+  # The private runtime dir is the isolation. Only the sockets the shell has to
+  # reach are linked in; everything it creates stays inside.
+  mkdir -p "$t/run" && chmod 700 "$t/run"
+  local sock
+  for sock in pipewire-0 pipewire-0-manager pulse; do
+    [ -e "$XDG_RUNTIME_DIR/$sock" ] && ln -sfn "$XDG_RUNTIME_DIR/$sock" "$t/run/$sock"
+  done
+  # The host's wayland socket is NOT linked in: the nested compositor would
+  # then try to create its own under the same name and refuse to start. An
+  # absolute WAYLAND_DISPLAY reaches the host directly, which leaves the
+  # private dir free for the socket the probe creates.
+  host_wayland=$WAYLAND_DISPLAY
+  [[ $host_wayland == /* ]] || host_wayland=$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY
+
+  cat >"$t/driver.sh" <<EOF
+#!/bin/sh
+export PATH=$PROBE_HYPRLAND/bin:$QUICKSHELL/bin:\$PATH
+quickshell -p "$CONFIG" --no-color >"$t/shell.log" 2>&1 &
+qs=\$!
+sleep 6
+# a second output, so a popup that binds the wrong screen has somewhere wrong to go
+hyprctl output create headless >/dev/null 2>&1
+sleep 2
+hyprctl monitors | grep -E '^Monitor ' >"$t/monitors"
+for target in launcher clipboard switcher powermenu; do
+  echo "== \$target" >>"$t/surfaces"
+  quickshell ipc --pid \$qs call \$target toggle >>"$t/driver.log" 2>&1
+  sleep 2
+  hyprctl layers -j | grep -oE '"namespace": "[^"]*"' | sort | uniq -c >>"$t/surfaces"
+  quickshell ipc --pid \$qs call \$target toggle >>"$t/driver.log" 2>&1
+  sleep 1
+done
+quickshell ipc --pid \$qs call bar toggle >>"$t/driver.log" 2>&1
+sleep 1
+quickshell ipc --pid \$qs call bar toggle >>"$t/driver.log" 2>&1
+sleep 1
+kill \$qs 2>/dev/null
+sleep 2
+hyprctl dispatch exit
+EOF
+
+  cat >"$t/hypr.conf" <<EOF
+monitor = ,preferred,auto,1
+debug:disable_logs = 0
+animations:enabled = 0
+misc:disable_hyprland_logo = 1
+misc:disable_splash_rendering = 1
+misc:force_default_wallpaper = 0
+exec-once = $t/driver.sh
+EOF
+
+  # The timeout is the outer bound: a compositor that hangs must still leave
+  # the sentinel, or the caller waits for nothing.
+  cat >"$t/session.sh" <<EOF
+#!/bin/sh
+timeout $((PROBE_SECONDS - 20)) env -u HYPRLAND_INSTANCE_SIGNATURE \
+  XDG_RUNTIME_DIR="$t/run" WAYLAND_DISPLAY="$host_wayland" HYPRLAND_NO_CRASHREPORTER=1 \
+  dbus-run-session -- $PROBE_HYPRLAND/bin/Hyprland --config "$t/hypr.conf" >"$t/hypr.log" 2>&1
+touch "$t/done"
+EOF
+  chmod +x "$t/driver.sh" "$t/session.sh"
+
+  # Placed on workspace 4 and silent, so the nested compositor's window never
+  # takes focus. hyprctl's dispatch argument is Lua from 0.56 on; if that form
+  # is rejected the probe still runs, it just lands on the current workspace.
+  placed=
+  if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+    placed=$("$PROBE_HYPRLAND/bin/hyprctl" dispatch \
+      "hl.dsp.exec_cmd(\"[workspace 4 silent] $t/session.sh\")" 2>&1)
+  fi
+  if [[ $placed == ok ]]; then
+    echo "probe: running on workspace 4 — silent, it will not take focus"
+  else
+    echo "probe: running in this session's current workspace"
+    [[ -n $placed ]] && echo "  (hyprctl would not place it: ${placed%%$'\n'*})"
+    "$t/session.sh" &
+  fi
+
+  local waited=0
+  while [[ ! -e $t/done && $waited -lt $PROBE_SECONDS ]]; do
+    sleep 2
+    waited=$((waited + 2))
+  done
+
+  [[ -e $t/done ]] || return 3
+  [[ -s $t/shell.log ]] || return 3
+
+  # quickshell reports every QML runtime problem under the `scene` category —
+  # TypeError, binding loops, failed assignments. Nothing else does, so the
+  # whole gate is one grep. The two allowed lines are the nested session's own
+  # artefacts, not the shell's: no portal and, when a socket is missing, no
+  # pipewire.
+  PROBE_NOISE=$(grep -vE 'qt\.qpa\.services: Failed to register with host portal|quickshell\.service\.pipewire' "$t/shell.log" |
+    grep -E 'WARN scene:|ERROR')
+
+  echo "probe: $(grep -c '^Monitor ' "$t/monitors" 2>/dev/null || echo 0) output(s), $(grep -c '^==' "$t/surfaces" 2>/dev/null || echo 0) popup(s) opened and closed"
+  [[ -z $PROBE_NOISE ]]
+}
+
+check_probe() {
+  PROBE_HYPRLAND=$(pin 'hyprland^out')
+  if [[ -z $PROBE_HYPRLAND ]]; then
+    echo "error: could not build hyprland from the pin" >&2
+    return 2
+  fi
+  if [[ -z ${WAYLAND_DISPLAY:-} ]]; then
+    echo "error: probe needs a wayland session to nest in" >&2
+    return 2
+  fi
+
+  local attempt rc
+  for attempt in 1 2; do
+    PROBE_DIR= PROBE_NOISE=
+    probe_once
+    rc=$?
+    [[ $rc -eq 3 ]] || break
+    rm -rf "$PROBE_DIR"
+    [[ $attempt -eq 1 ]] && echo "probe: the nested session did not come up; retrying once"
+  done
+
+  case $rc in
+  0)
+    echo "probe: clean"
+    rm -rf "$PROBE_DIR"
+    ;;
+  3)
+    fail "probe: the nested session did not come up twice; this is the harness, not the QML"
+    ;;
+  *)
+    echo "$PROBE_NOISE" >&2
+    fail "probe: the shell logged QML errors"
+    echo "  full log: $PROBE_DIR/shell.log" >&2
+    ;;
+  esac
+}
+
+
 case ${1:-all} in
 format) check_format ;;
 lint) check_lint ;;
+probe) check_probe ;;
 all)
   check_format
   check_lint
   ;;
 *)
-  echo "usage: $0 [format|lint]" >&2
+  echo "usage: $0 [format|lint|probe]" >&2
   exit 2
   ;;
 esac
