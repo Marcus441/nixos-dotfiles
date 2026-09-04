@@ -15,10 +15,12 @@ PanelWindow {
         right: true
     }
 
+    // qmllint disable unqualified unresolved-type
     margins {
         top: 20
         right: 20
     }
+    // qmllint enable unqualified unresolved-type
 
     implicitWidth: 420
     implicitHeight: column.implicitHeight

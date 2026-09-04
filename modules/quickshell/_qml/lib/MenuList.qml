@@ -125,7 +125,9 @@ ColumnLayout {
                 onLoaded: {
                     submenu.item.handle = entry.modelData;
                     submenu.item.depth = root.depth + 1;
+                    // qmllint disable missing-property
                     submenu.item.activated.connect(root.activated);
+                    // qmllint enable missing-property
                 }
             }
         }
