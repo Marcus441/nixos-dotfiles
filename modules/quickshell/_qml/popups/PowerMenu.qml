@@ -90,6 +90,7 @@ Overlay {
 
                     width: root.tileWidth
                     height: root.tileHeight
+                    radius: Theme.radius
                     color: tile.active ? Config.selection : Config.chrome
 
                     Behavior on color {

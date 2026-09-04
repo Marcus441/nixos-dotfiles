@@ -22,6 +22,7 @@ Column {
     property int searchPixelSize: Theme.fontLg
     property alias delegate: list.delegate
     readonly property alias query: searchBox.text
+    readonly property int rowWidth: list.width
 
     function selectNext() {
         selected = Math.max(0, Math.min(filtered.length - 1, selected + 1));
@@ -66,6 +67,8 @@ Column {
             id: list
 
             anchors.fill: parent
+            anchors.leftMargin: Theme.gap
+            anchors.rightMargin: Theme.gap
             topMargin: Theme.gap
             bottomMargin: Theme.gap
             clip: true

@@ -63,11 +63,12 @@ Overlay {
             required property var modelData
             required property int index
 
-            width: filterList.width
+            width: filterList.rowWidth
             height: Theme.rowText
 
             Rectangle {
                 anchors.fill: parent
+                radius: Theme.radius
                 color: row.index === filterList.selected ? Config.selection : "transparent"
 
                 Behavior on color {

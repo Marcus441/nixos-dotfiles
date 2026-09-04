@@ -18,7 +18,7 @@ Rectangle {
     property alias text: input.text
 
     height: input.implicitHeight + 24
-    color: Config.chrome
+    color: "transparent"
 
     Row {
         anchors.fill: parent
@@ -87,5 +87,15 @@ Rectangle {
                 font: input.font
             }
         }
+    }
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: Theme.pad
+        anchors.rightMargin: Theme.pad
+        height: 1
+        color: Config.chrome
     }
 }

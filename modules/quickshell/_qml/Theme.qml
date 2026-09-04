@@ -4,6 +4,7 @@ import Quickshell
 Singleton {
     readonly property int pad: 14
     readonly property int gap: 8
+    readonly property int radius: 8
     readonly property int durFast: 150
     readonly property int durMed: 200
     readonly property int fontSm: Config.fontSize - 2

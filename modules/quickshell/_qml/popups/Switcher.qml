@@ -203,11 +203,12 @@ Overlay {
 
             readonly property bool current: index === filterList.selected
 
-            width: filterList.width
+            width: filterList.rowWidth
             height: modelData.kind === "ws" ? Theme.rowNode : Theme.rowLeaf
 
             Rectangle {
                 anchors.fill: parent
+                radius: Theme.radius
                 color: row.current ? Config.selection : "transparent"
             }
 
