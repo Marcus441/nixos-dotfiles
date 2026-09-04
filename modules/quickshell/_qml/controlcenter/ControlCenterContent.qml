@@ -2,6 +2,7 @@ import QtQuick
 import qs
 import qs.lib
 import qs.services
+import qs.controlcenter
 
 Column {
     id: root

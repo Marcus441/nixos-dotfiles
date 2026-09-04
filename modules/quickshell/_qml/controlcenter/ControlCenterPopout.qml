@@ -1,6 +1,7 @@
 import QtQuick
 import qs.lib
 import qs.services
+import qs.controlcenter
 
 BarPopup {
     id: root
