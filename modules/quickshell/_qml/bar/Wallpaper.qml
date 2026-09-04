@@ -12,6 +12,13 @@ Item {
     property var categories: []
     property var allWalls: []
     property string currentCategory: ""
+    property int selected: 0
+    readonly property int columns: 3
+    readonly property var filtered: {
+        const inCategory = root.currentCategory === "" ? root.allWalls : root.allWalls.filter(w => w.category === root.currentCategory);
+        const q = search.text.trim().toLowerCase();
+        return q === "" ? inCategory : inCategory.filter(w => w.search.includes(q));
+    }
     readonly property var current: root.categories.find(c => c.name === root.currentCategory) ?? null
     readonly property var sidebarModel: [
         {
@@ -28,11 +35,27 @@ Item {
     implicitHeight: widget.implicitHeight
 
     onCurrentCategoryChanged: grid.positionViewAtBeginning()
+    onFilteredChanged: root.selected = 0
 
     function pick(path) {
+        if (!path)
+            return;
         Quickshell.execDetached([Config.setWallpaperScript, path]);
         root.rotatorEnabled = false;
         popup.visible = false;
+    }
+
+    function move(delta) {
+        if (root.filtered.length === 0)
+            return;
+        root.selected = Math.max(0, Math.min(root.filtered.length - 1, root.selected + delta));
+        grid.positionViewAtIndex(root.selected, GridView.Contain);
+    }
+
+    function accept() {
+        const wall = root.filtered[root.selected];
+        if (wall)
+            root.pick(wall.path);
     }
 
     function toggleRotator() {
@@ -51,7 +74,8 @@ Item {
                         category: c.name,
                         name: w.name,
                         path: w.path,
-                        thumb: w.thumb
+                        thumb: w.thumb,
+                        search: `${c.name} ${w.name}`.replace(/[_-]/g, " ").toLowerCase()
                     });
             }
             root.categories = cats;
@@ -93,10 +117,13 @@ Item {
         title: "Wallpapers"
         visible: false
         onVisibleChanged: {
-            if (visible)
+            if (visible) {
                 rotatorCheck.running = true;
-            else
+                search.focusInput();
+            } else {
                 root.currentCategory = "";
+                search.text = "";
+            }
         }
 
         headerContent: [
@@ -107,142 +134,177 @@ Item {
             }
         ]
 
-        Row {
-            id: panes
+        Column {
+            spacing: Theme.gap
 
-            ListView {
-                id: sidebar
+            SearchField {
+                id: search
 
-                width: 150
-                height: 460
-                clip: true
-                model: root.sidebarModel
+                width: panes.width
+                placeholder: "Search wallpapers…"
+                glyph: "󰍉"
+                sideKeys: true
+                onDismissRequested: popup.visible = false
+                onAcceptRequested: root.accept()
+                onNextRequested: root.move(root.columns)
+                onPrevRequested: root.move(-root.columns)
+                onRightRequested: root.move(1)
+                onLeftRequested: root.move(-1)
+            }
 
-                ScrollBar.vertical: ThinScrollBar {}
+            Row {
+                id: panes
 
-                delegate: Rectangle {
-                    id: catRow
+                ListView {
+                    id: sidebar
 
-                    required property var modelData
+                    width: 150
+                    height: 460
+                    clip: true
+                    model: root.sidebarModel
 
-                    readonly property bool selected: catRow.modelData.all ? root.currentCategory === "" : root.currentCategory === catRow.modelData.name
+                    ScrollBar.vertical: ThinScrollBar {}
 
-                    width: sidebar.width
-                    height: catName.implicitHeight + 12
-                    color: selected ? Config.selection : catMouse.containsMouse ? Config.chrome : "transparent"
+                    delegate: Rectangle {
+                        id: catRow
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durFast
+                        required property var modelData
+
+                        readonly property bool selected: catRow.modelData.all ? root.currentCategory === "" : root.currentCategory === catRow.modelData.name
+
+                        width: sidebar.width
+                        height: catName.implicitHeight + 12
+                        color: selected ? Config.selection : catMouse.containsMouse ? Config.chrome : "transparent"
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Theme.durFast
+                            }
+                        }
+
+                        Text {
+                            id: catName
+
+                            anchors.left: parent.left
+                            anchors.leftMargin: Theme.pad
+                            anchors.right: catCount.left
+                            anchors.rightMargin: Theme.gap
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: catRow.modelData.name
+                            elide: Text.ElideRight
+                            color: catRow.selected || catMouse.containsMouse ? Config.textPrimary : Config.textSecondary
+                            font.family: Config.fontFamily
+                            font.pixelSize: Config.fontSize
+                        }
+
+                        Text {
+                            id: catCount
+
+                            anchors.right: parent.right
+                            anchors.rightMargin: Theme.pad
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: catRow.modelData.count
+                            color: Config.textMuted
+                            font.family: Config.fontFamily
+                            font.pixelSize: Theme.fontSm
+                        }
+
+                        MouseArea {
+                            id: catMouse
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.currentCategory = catRow.modelData.all ? "" : catRow.modelData.name
                         }
                     }
-
-                    Text {
-                        id: catName
-
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.pad
-                        anchors.right: catCount.left
-                        anchors.rightMargin: Theme.gap
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: catRow.modelData.name
-                        elide: Text.ElideRight
-                        color: catRow.selected || catMouse.containsMouse ? Config.textPrimary : Config.textSecondary
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
-                    }
-
-                    Text {
-                        id: catCount
-
-                        anchors.right: parent.right
-                        anchors.rightMargin: Theme.pad
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: catRow.modelData.count
-                        color: Config.textMuted
-                        font.family: Config.fontFamily
-                        font.pixelSize: Theme.fontSm
-                    }
-
-                    MouseArea {
-                        id: catMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.currentCategory = catRow.modelData.all ? "" : catRow.modelData.name
-                    }
                 }
-            }
 
-            Rectangle {
-                width: 1
-                height: sidebar.height
-                color: Config.chrome
-            }
+                Rectangle {
+                    width: 1
+                    height: sidebar.height
+                    color: Config.chrome
+                }
 
-            GridView {
-                id: grid
+                GridView {
+                    id: grid
 
-                width: 480
-                height: 460
-                clip: true
-                cellWidth: width / 3
-                cellHeight: 104
-                model: root.current ? root.current.walls : root.allWalls
+                    width: 480
+                    height: 460
+                    clip: true
+                    cellWidth: width / root.columns
+                    cellHeight: 104
+                    model: root.filtered
 
-                ScrollBar.vertical: ThinScrollBar {}
+                    ScrollBar.vertical: ThinScrollBar {}
 
-                delegate: Item {
-                    id: cell
+                    delegate: Item {
+                        id: cell
 
-                    required property var modelData
+                        required property var modelData
+                        required property int index
 
-                    width: grid.cellWidth
-                    height: grid.cellHeight
+                        width: grid.cellWidth
+                        height: grid.cellHeight
 
-                    Column {
-                        anchors.fill: parent
-                        anchors.margins: 4
-                        spacing: 4
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: 2
+                            color: cell.index === root.selected ? Config.selection : "transparent"
 
-                        Image {
-                            width: parent.width
-                            height: parent.height - label.height - parent.spacing
-                            source: "file://" + cell.modelData.thumb
-                            sourceSize.width: 240
-                            fillMode: Image.PreserveAspectCrop
-                            clip: true
-                            asynchronous: true
-                            opacity: cellMouse.containsMouse ? 1 : 0.82
-
-                            Behavior on opacity {
-                                NumberAnimation {
+                            Behavior on color {
+                                ColorAnimation {
                                     duration: Theme.durFast
                                 }
                             }
                         }
 
-                        Text {
-                            id: label
+                        Column {
+                            anchors.fill: parent
+                            anchors.margins: 4
+                            spacing: 4
 
-                            width: parent.width
-                            text: (cell.modelData.category ? cell.modelData.category + " / " : "") + cell.modelData.name.replace(/[_-]/g, " ")
-                            elide: Text.ElideRight
-                            horizontalAlignment: Text.AlignHCenter
-                            color: cellMouse.containsMouse ? Config.textPrimary : Config.textSecondary
-                            font.family: Config.fontFamily
-                            font.pixelSize: Theme.fontSm
+                            Image {
+                                width: parent.width
+                                height: parent.height - label.height - parent.spacing
+                                source: "file://" + cell.modelData.thumb
+                                sourceSize.width: 240
+                                fillMode: Image.PreserveAspectCrop
+                                clip: true
+                                asynchronous: true
+                                opacity: cellMouse.containsMouse ? 1 : 0.82
+
+                                Behavior on opacity {
+                                    NumberAnimation {
+                                        duration: Theme.durFast
+                                    }
+                                }
+                            }
+
+                            Text {
+                                id: label
+
+                                width: parent.width
+                                text: (root.currentCategory === "" ? cell.modelData.category + " / " : "") + cell.modelData.name.replace(/[_-]/g, " ")
+                                elide: Text.ElideRight
+                                horizontalAlignment: Text.AlignHCenter
+                                color: cellMouse.containsMouse ? Config.textPrimary : Config.textSecondary
+                                font.family: Config.fontFamily
+                                font.pixelSize: Theme.fontSm
+                            }
                         }
-                    }
 
-                    MouseArea {
-                        id: cellMouse
+                        MouseArea {
+                            id: cellMouse
 
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.pick(cell.modelData.path)
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                root.selected = cell.index;
+                                root.pick(cell.modelData.path);
+                            }
+                        }
                     }
                 }
             }
