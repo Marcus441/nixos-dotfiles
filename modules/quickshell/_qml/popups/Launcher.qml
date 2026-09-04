@@ -14,7 +14,11 @@ Overlay {
     contentWidth: 680
     contentHeight: 500
 
-    readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name))
+    readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name)).map(a => ({
+                entry: a,
+                name: a.name.toLowerCase(),
+                comment: (a.comment ?? "").toLowerCase()
+            }))
 
     onAppsChanged: {
         if (filterList)
@@ -24,7 +28,7 @@ Overlay {
     function launch(app) {
         if (!app)
             return;
-        Config.launchApp(`${app.id}.desktop`);
+        Config.launchApp(`${app.entry.id}.desktop`);
         root.dismissed();
     }
 
@@ -46,10 +50,9 @@ Overlay {
             const starts = [];
             const contains = [];
             for (const app of root.apps) {
-                const name = app.name.toLowerCase();
-                if (name.startsWith(q))
+                if (app.name.startsWith(q))
                     starts.push(app);
-                else if (name.includes(q) || (app.comment ?? "").toLowerCase().includes(q))
+                else if (app.name.includes(q) || app.comment.includes(q))
                     contains.push(app);
             }
             return starts.concat(contains);
@@ -85,7 +88,7 @@ Overlay {
                 anchors.leftMargin: Theme.pad
                 implicitSize: 28
                 asynchronous: true
-                source: Quickshell.iconPath(row.modelData.icon, true)
+                source: Quickshell.iconPath(row.modelData.entry.icon, true)
             }
 
             Column {
@@ -94,15 +97,15 @@ Overlay {
                 anchors.leftMargin: Theme.gap
 
                 Text {
-                    text: row.modelData.name
+                    text: row.modelData.entry.name
                     color: Config.textPrimary
                     font.family: Config.fontFamily
                     font.pixelSize: Theme.fontLg
                 }
 
                 Text {
-                    visible: (row.modelData.comment ?? "") !== ""
-                    text: row.modelData.comment ?? ""
+                    visible: row.modelData.comment !== ""
+                    text: row.modelData.entry.comment ?? ""
                     color: Config.textSecondary
                     font.family: Config.fontFamily
                     font.pixelSize: Config.fontSize + 1

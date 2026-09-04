@@ -31,9 +31,11 @@ Overlay {
             onStreamFinished: {
                 root.entries = text.split("\n").filter(line => line !== "").slice(0, 100).map(line => {
                     const tab = line.indexOf("\t");
+                    const body = line.slice(tab + 1);
                     return {
                         id: line.slice(0, tab),
-                        text: line.slice(tab + 1)
+                        text: body,
+                        search: body.toLowerCase()
                     };
                 });
                 filterList.refilter();
@@ -51,7 +53,7 @@ Overlay {
         anchors.fill: parent
         placeholder: "Clipboard history…"
         emptyText: filterList.query === "" ? "Clipboard is empty" : "No matches"
-        filterFn: q => q === "" ? root.entries : root.entries.filter(e => e.text.toLowerCase().includes(q))
+        filterFn: q => q === "" ? root.entries : root.entries.filter(e => e.search.includes(q))
         onDismissed: root.dismissed()
         onAccepted: root.pick(filterList.filtered[filterList.selected])
 
