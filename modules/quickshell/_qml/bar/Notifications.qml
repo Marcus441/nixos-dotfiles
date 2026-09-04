@@ -64,29 +64,18 @@ Item {
 
             ScrollBar.vertical: ThinScrollBar {}
 
-            delegate: Rectangle {
+            delegate: PopupRow {
                 id: row
 
                 required property var modelData
 
                 width: list.width
-                height: inner.implicitHeight + 12
-                color: rowMouse.containsMouse ? Config.selection : "transparent"
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durFast
-                    }
-                }
+                onClicked: row.modelData.dismiss()
 
                 Column {
-                    id: inner
+                    id: stack
 
-                    anchors.left: parent.left
-                    anchors.leftMargin: Theme.pad
-                    anchors.right: dismissBtn.left
-                    anchors.rightMargin: Theme.gap
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: row.width - dismissBtn.width - Theme.pad * 2 - Theme.gap
                     spacing: 2
 
                     Row {
@@ -111,7 +100,7 @@ Item {
 
                     Text {
                         visible: row.modelData.body !== ""
-                        width: inner.width
+                        width: stack.width
                         text: row.modelData.body
                         textFormat: Text.PlainText
                         elide: Text.ElideRight
@@ -122,14 +111,11 @@ Item {
                     }
                 }
 
-                Text {
+                trailing: Text {
                     id: dismissBtn
 
-                    anchors.right: parent.right
-                    anchors.rightMargin: Theme.pad
-                    anchors.verticalCenter: parent.verticalCenter
                     text: "󰅖"
-                    color: rowMouse.containsMouse ? Config.base08 : Config.textSecondary
+                    color: row.hovered ? Config.base08 : Config.textSecondary
                     font.family: Config.iconFamily
                     font.pixelSize: Config.fontSize
 
@@ -138,15 +124,6 @@ Item {
                             duration: Theme.durFast
                         }
                     }
-                }
-
-                MouseArea {
-                    id: rowMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: row.modelData.dismiss()
                 }
             }
         }

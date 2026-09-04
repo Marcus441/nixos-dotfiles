@@ -7,8 +7,6 @@ Rectangle {
     signal clicked
 
     property bool hoverable: true
-    property bool highlighted: false
-    property bool hoverHighlight: true
     readonly property alias hovered: mouse.containsMouse
     default property alias content: inner.data
     property alias trailing: trail.data
@@ -16,7 +14,7 @@ Rectangle {
     width: parent ? parent.width : implicitWidth
     implicitWidth: inner.implicitWidth + trail.implicitWidth + Theme.pad * 2 + (trail.implicitWidth > 0 ? Theme.gap : 0)
     implicitHeight: Math.max(inner.implicitHeight, trail.implicitHeight) + 12
-    color: root.highlighted || (root.hoverHighlight && root.hoverable && mouse.containsMouse) ? Config.selection : "transparent"
+    color: root.hoverable && mouse.containsMouse ? Config.selection : "transparent"
 
     Behavior on color {
         ColorAnimation {
