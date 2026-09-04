@@ -5,7 +5,7 @@ _: {
     stateVersion = "25.11";
     aspects = ["dev" "core" "kitty" "zsh" "hyprland" "quickshell" "yazi" "apps" "keychron"];
 
-    fontSize = 20;
+    fontSize = 16;
 
     hardware = ../../hosts/UM790pro/hardware-configuration.nix;
 

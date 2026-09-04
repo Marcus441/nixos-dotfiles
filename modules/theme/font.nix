@@ -9,7 +9,7 @@ _: {
         options.desktop.font = {
           name = lib.mkOption {
             type = lib.types.str;
-            default = "IosevkaTerm Nerd Font Mono";
+            default = "JetbrainsMono Nerd Font";
             description = "Primary monospace font family.";
           };
           size = lib.mkOption {
@@ -37,7 +37,7 @@ _: {
           dejavu_fonts
           font-awesome
           inter
-          nerd-fonts.iosevka-term
+          nerd-fonts.jetbrains-mono
           nerd-fonts.symbols-only
           noto-fonts
           noto-fonts-color-emoji
