@@ -17,12 +17,39 @@ Overlay {
     readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name)).map(a => ({
                 entry: a,
                 name: a.name.toLowerCase(),
-                comment: (a.comment ?? "").toLowerCase()
+                comment: (a.comment ?? "").toLowerCase(),
+                keywords: Array.from(a.keywords ?? []).map(k => k.toLowerCase()),
+                exec: (a.execString ?? "").toLowerCase()
             }))
 
     onAppsChanged: {
         if (filterList)
             filterList.refilter();
+    }
+
+    // every letter of the query in order, so "gimp" still finds GNU Image
+    // Manipulation Program
+    function subsequence(haystack, needle) {
+        let i = 0;
+        for (const ch of haystack) {
+            if (ch === needle[i] && ++i === needle.length)
+                return true;
+        }
+        return false;
+    }
+
+    function tierOf(app, q) {
+        if (app.name.startsWith(q))
+            return 0;
+        if (app.name.includes(q))
+            return 1;
+        if (app.keywords.some(k => k.includes(q)))
+            return 2;
+        if (app.comment.includes(q))
+            return 3;
+        if (app.exec.includes(q))
+            return 4;
+        return root.subsequence(app.name, q) ? 5 : -1;
     }
 
     function launch(app) {
@@ -47,15 +74,13 @@ Overlay {
         filterFn: q => {
             if (q === "")
                 return root.apps;
-            const starts = [];
-            const contains = [];
+            const tiers = [[], [], [], [], [], []];
             for (const app of root.apps) {
-                if (app.name.startsWith(q))
-                    starts.push(app);
-                else if (app.name.includes(q) || app.comment.includes(q))
-                    contains.push(app);
+                const tier = root.tierOf(app, q);
+                if (tier >= 0)
+                    tiers[tier].push(app);
             }
-            return starts.concat(contains);
+            return tiers[0].concat(tiers[1], tiers[2], tiers[3], tiers[4], tiers[5]);
         }
         onDismissed: root.dismissed()
         onAccepted: root.launch(filterList.filtered[filterList.selected])
