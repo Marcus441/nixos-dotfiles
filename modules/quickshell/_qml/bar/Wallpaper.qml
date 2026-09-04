@@ -102,7 +102,7 @@ Item {
         headerContent: [
             TextAction {
                 text: root.rotatorEnabled ? "󰒝 shuffle: " + (root.rotatorCategory || "all") : "󰒝 shuffle off"
-                active: root.rotatorMatchesView
+                toggled: root.rotatorMatchesView
                 onTriggered: root.toggleRotator()
             }
         ]

@@ -6,9 +6,9 @@ Text {
 
     signal triggered
 
-    property bool active: mouse.containsMouse
+    property bool toggled: false
 
-    color: active ? Config.accent : Config.textSecondary
+    color: root.toggled ? Config.accent : mouse.containsMouse ? Config.textPrimary : Config.textSecondary
     font.family: Config.iconFamily
     font.pixelSize: Config.fontSize
 

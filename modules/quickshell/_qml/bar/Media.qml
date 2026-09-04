@@ -158,13 +158,13 @@ Item {
         headerContent: [
             TextAction {
                 visible: MediaService.shuffleSupported
-                active: MediaService.shuffle
+                toggled: MediaService.shuffle
                 text: "󰒟"
                 onTriggered: MediaService.toggleShuffle()
             },
             TextAction {
                 visible: MediaService.loopSupported
-                active: MediaService.repeatMode !== "none"
+                toggled: MediaService.repeatMode !== "none"
                 text: MediaService.repeatMode === "track" ? "󰑘" : "󰑖"
                 onTriggered: MediaService.cycleRepeat()
             },

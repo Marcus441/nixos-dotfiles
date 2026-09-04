@@ -32,7 +32,7 @@ Item {
         headerContent: [
             TextAction {
                 text: "󰂛 dnd"
-                active: Notifs.dnd
+                toggled: Notifs.dnd
                 onTriggered: Notifs.dnd = !Notifs.dnd
             },
             TextAction {
