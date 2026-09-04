@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import qs
+import qs.lib
 
 Column {
     id: root
@@ -19,7 +20,7 @@ Column {
     property bool treeKeys: false
     property int searchPixelSize: Theme.fontLg
     property alias delegate: list.delegate
-    readonly property alias query: search.text
+    readonly property alias query: searchBox.text
 
     function selectNext() {
         selected = Math.max(0, Math.min(filtered.length - 1, selected + 1));
@@ -30,7 +31,7 @@ Column {
     }
 
     function refilter() {
-        const q = search.text.toLowerCase();
+        const q = searchBox.text.toLowerCase();
         filtered = filterFn(q);
         selected = selectFn ? selectFn(filtered, q) : 0;
     }
@@ -39,81 +40,21 @@ Column {
 
     Component.onCompleted: refilter()
 
-    Rectangle {
+    SearchField {
         id: searchBox
 
         width: parent.width
-        height: search.implicitHeight + 24
-        color: Config.chrome
-
-        Row {
-            anchors.fill: parent
-            anchors.leftMargin: Theme.pad
-            anchors.rightMargin: Theme.pad
-            spacing: Theme.gap
-
-            Text {
-                id: icon
-
-                visible: root.searchIcon !== ""
-                text: root.searchIcon
-                color: Config.textSecondary
-                font.family: Config.iconFamily
-                font.pixelSize: root.searchPixelSize
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            TextInput {
-                id: search
-
-                width: parent.width - (icon.visible ? parent.spacing + icon.width : 0)
-                color: Config.textPrimary
-                font.family: Config.fontFamily
-                font.pixelSize: root.searchPixelSize
-                focus: true
-                anchors.verticalCenter: parent.verticalCenter
-                onTextChanged: root.refilter()
-                Keys.onEscapePressed: root.dismissed()
-                Keys.onUpPressed: root.selectPrev()
-                Keys.onDownPressed: root.selectNext()
-                Keys.onReturnPressed: root.accepted()
-                Keys.onPressed: event => {
-                    if (event.modifiers !== Qt.ControlModifier)
-                        return;
-                    switch (event.key) {
-                    case Qt.Key_N:
-                        root.selectNext();
-                        break;
-                    case Qt.Key_P:
-                        root.selectPrev();
-                        break;
-                    case Qt.Key_Y:
-                        root.accepted();
-                        break;
-                    case Qt.Key_H:
-                        if (!root.treeKeys)
-                            return;
-                        root.collapsed();
-                        break;
-                    case Qt.Key_L:
-                        if (!root.treeKeys)
-                            return;
-                        root.expanded();
-                        break;
-                    default:
-                        return;
-                    }
-                    event.accepted = true;
-                }
-
-                Text {
-                    visible: search.text === ""
-                    text: root.placeholder
-                    color: Config.textMuted
-                    font: search.font
-                }
-            }
-        }
+        placeholder: root.placeholder
+        glyph: root.searchIcon
+        pixelSize: root.searchPixelSize
+        sideKeys: root.treeKeys
+        onTextChanged: root.refilter()
+        onDismissRequested: root.dismissed()
+        onAcceptRequested: root.accepted()
+        onNextRequested: root.selectNext()
+        onPrevRequested: root.selectPrev()
+        onLeftRequested: root.collapsed()
+        onRightRequested: root.expanded()
     }
 
     ListView {
