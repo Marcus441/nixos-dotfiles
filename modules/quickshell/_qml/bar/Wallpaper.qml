@@ -21,6 +21,7 @@ Item {
             all: true
         },
         ...root.categories]
+    property string currentWall: ""
     property bool rotatorEnabled: false
     property string rotatorCategory: ""
     readonly property bool rotatorMatchesView: root.rotatorEnabled && root.rotatorCategory === root.currentCategory
@@ -30,8 +31,15 @@ Item {
 
     onCurrentCategoryChanged: grid.positionViewAtBeginning()
 
+    function revealCurrent() {
+        const i = (grid.model ?? []).findIndex(w => w.path === root.currentWall);
+        if (i >= 0)
+            grid.positionViewAtIndex(i, GridView.Center);
+    }
+
     function pick(path) {
         Quickshell.execDetached([Config.setWallpaperScript, path]);
+        root.currentWall = path;
         root.rotatorEnabled = false;
         popup.visible = false;
     }
@@ -57,6 +65,17 @@ Item {
             }
             root.categories = cats;
             root.allWalls = all;
+        }
+    }
+
+    Process {
+        id: currentCheck
+
+        command: [Config.sh, "-c", `readlink "${Config.cacheDir}/current_wallpaper.img"`]
+        running: true
+
+        stdout: StdioCollector {
+            onStreamFinished: root.currentWall = text.trim()
         }
     }
 
@@ -94,9 +113,11 @@ Item {
         title: "Wallpapers"
         visible: false
         onVisibleChanged: {
-            if (visible)
+            if (visible) {
                 rotatorCheck.running = true;
-            else
+                currentCheck.running = true;
+                Qt.callLater(root.revealCurrent);
+            } else
                 root.currentCategory = "";
         }
 
@@ -173,6 +194,8 @@ Item {
 
                     required property var modelData
 
+                    readonly property bool isCurrent: cell.modelData.path === root.currentWall
+
                     width: grid.cellWidth
                     height: grid.cellHeight
 
@@ -186,9 +209,9 @@ Item {
                             height: parent.height - label.height - parent.spacing
                             radius: Theme.radius
                             color: "transparent"
-                            border.width: cellMouse.containsMouse ? 1 : 0
-                            border.color: Config.textSecondary
-                            opacity: cellMouse.containsMouse ? 1 : 0.82
+                            border.width: cell.isCurrent ? 2 : cellMouse.containsMouse ? 1 : 0
+                            border.color: cell.isCurrent ? Config.accent : Config.textSecondary
+                            opacity: cell.isCurrent || cellMouse.containsMouse ? 1 : 0.82
 
                             Behavior on opacity {
                                 NumberAnimation {
@@ -212,7 +235,7 @@ Item {
                             text: (cell.modelData.category ? cell.modelData.category + " / " : "") + cell.modelData.name.replace(/[_-]/g, " ")
                             elide: Text.ElideRight
                             horizontalAlignment: Text.AlignHCenter
-                            color: cellMouse.containsMouse ? Config.textPrimary : Config.textSecondary
+                            color: cell.isCurrent ? Config.accent : cellMouse.containsMouse ? Config.textPrimary : Config.textSecondary
                             font.family: Config.fontFamily
                             font.pixelSize: Theme.fontSm
                         }

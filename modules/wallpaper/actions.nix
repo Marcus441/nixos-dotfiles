@@ -31,6 +31,7 @@ _: {
       in {
         wallpaper = {
           directory = "${walls}";
+          # load-bearing: docs/decisions/quickshell.md#quickshell-current-wallpaper
           set = "${pkgs.writeShellScript "set-wallpaper" ''
             [ -f "$1" ] || exit 1
             ${pkgs.coreutils}/bin/rm -f "${cache}/wallpaper_rotator_enabled"

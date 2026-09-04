@@ -94,11 +94,10 @@ outside click, not keyboard focus. No key reaches it: a search field is inert,
 and a selection index with nothing to move it paints an arbitrary cell.
 
 Measured twice. In a nested compositor an item in the popup holds focus
-(`forceActiveFocus()` reports true) and receives nothing, while an identical
-item in the bar takes every keystroke in the same run — with the grab active,
-the popup open, and a real click inside it. Then on the machine, typing into a
-real `SearchField` there did nothing. Wayland specifies this for an xdg_popup
-with no xdg grab under a non-interactive layer surface.
+(`forceActiveFocus()` reports true) and receives nothing while an identical
+item in the bar takes every keystroke — grab active, popup open, real click
+inside. Then on the machine a real `SearchField` there did nothing. Wayland
+specifies this for an xdg_popup with no xdg grab under a passive layer surface.
 
 Giving it a keyboard would mean making it an `Overlay` — a scrim and a centred
 card instead of a dropdown beside its button. That shape change was declined.
@@ -107,3 +106,21 @@ card instead of a dropdown beside its button. That shape change was declined.
 keyboard path" as an inconsistency with the four modals; it is not, since those
 are layer surfaces with exclusive focus and this is a popup. A `SearchField`
 added back compiles, lints and probes clean, and does nothing.
+
+<a id="quickshell-current-wallpaper"></a>
+## `bar/Wallpaper.qml` — the picker reads a symlink back
+
+**Why** Nothing in the manifest says which wallpaper is on screen. The only
+record is `current_wallpaper.img`, the symlink `wallpaper.set` writes beside
+the rotator flag, so the picker resolves it with `readlink` and rings that
+cell. Marking it is worth nothing on its own at 364 thumbnails, so opening the
+picker scrolls to it as well; switching category still returns to the top,
+because there the question is what is in this category, not where am I.
+
+`Qt.callLater` defers that scroll past layout. `positionViewAtIndex` on a
+GridView that has not been laid out yet silently does nothing.
+
+**Breaks** Silently, and only cosmetically: move or rename the symlink and the
+ring stops appearing with no error, the picker simply no longer says where you
+are. The path is written in `modules/wallpaper/actions.nix` and read through
+`Config.cacheDir`, and the two have to agree.
