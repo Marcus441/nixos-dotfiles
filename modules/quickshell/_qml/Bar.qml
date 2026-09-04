@@ -30,6 +30,12 @@ PanelWindow {
         height: bar.vertical ? parent.height : 1
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: wallpaperPicker.toggle()
+    }
+
     GridLayout {
         id: startGroup
 
@@ -121,14 +127,21 @@ PanelWindow {
                 Layout.alignment: Qt.AlignHCenter
                 bar: bar
             }
-
-            Wallpaper {
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            Power {
-                Layout.alignment: Qt.AlignHCenter
-            }
         }
+
+        Power {
+            Layout.alignment: Qt.AlignHCenter
+        }
+    }
+
+    Wallpaper {
+        id: wallpaperPicker
+
+        showWidget: false
+        anchors.right: bar.vertical ? undefined : parent.right
+        anchors.rightMargin: Theme.pad
+        anchors.verticalCenter: bar.vertical ? undefined : parent.verticalCenter
+        anchors.bottom: bar.vertical ? parent.bottom : undefined
+        anchors.horizontalCenter: bar.vertical ? parent.horizontalCenter : undefined
     }
 }

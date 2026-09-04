@@ -11,8 +11,8 @@ human makes, not a cleanup you offer.
   rejects dwl hosts, the Hyprland binds drive it over `qs ipc call` through the
   `bar.toggle` / `launcher` / `clipboard.history` / `powerMenu.command` /
   `switcher.command` intents, the power menu is a quickshell overlay (wleave is
-  retired), the wallpaper picker is opened from its bar button only —
-  quickshell sets no
+  retired), the wallpaper picker is opened by right-clicking empty
+  bar — it has no widget of its own, quickshell sets no
   `wallpaperMenu.command`, so no keybind renders, and the picker takes no
   keyboard at all — a `PopupWindow` receives none, so it is mouse-only by
   decision: `docs/decisions/quickshell.md#quickshell-picker-no-keyboard`; walker's implementation

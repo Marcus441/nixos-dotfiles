@@ -21,15 +21,20 @@ Item {
             all: true
         },
         ...root.categories]
+    property bool showWidget: true
     property string currentWall: ""
     property bool rotatorEnabled: false
     property string rotatorCategory: ""
     readonly property bool rotatorMatchesView: root.rotatorEnabled && root.rotatorCategory === root.currentCategory
 
-    implicitWidth: widget.implicitWidth
-    implicitHeight: widget.implicitHeight
+    implicitWidth: root.showWidget ? widget.implicitWidth : 0
+    implicitHeight: root.showWidget ? widget.implicitHeight : 0
 
     onCurrentCategoryChanged: grid.positionViewAtBeginning()
+
+    function toggle() {
+        popup.visible = !popup.visible;
+    }
 
     function revealCurrent() {
         const i = (grid.model ?? []).findIndex(w => w.path === root.currentWall);
@@ -101,6 +106,7 @@ Item {
     BarWidget {
         id: widget
 
+        visible: root.showWidget
         text: "󰸉"
         baseColor: root.rotatorEnabled ? Config.base0B : Config.textMuted
         onClicked: popup.visible = !popup.visible

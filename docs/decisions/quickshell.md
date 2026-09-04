@@ -100,7 +100,7 @@ inside. Then on the machine a real `SearchField` there did nothing. Wayland
 specifies this for an xdg_popup with no xdg grab under a passive layer surface.
 
 Giving it a keyboard would mean making it an `Overlay` — a scrim and a centred
-card instead of a dropdown beside its button. That shape change was declined.
+card instead of a dropdown off the bar. That shape change was declined.
 
 **Breaks** *Only as a false positive.* An audit reads "the one surface with no
 keyboard path" as an inconsistency with the four modals; it is not, since those
