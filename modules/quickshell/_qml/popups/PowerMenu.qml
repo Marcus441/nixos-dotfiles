@@ -80,6 +80,7 @@ PanelWindow {
         Keys.onLeftPressed: root.selected = Math.max(0, root.selected - 1)
         Keys.onRightPressed: root.selected = Math.min(root.actions.length - 1, root.selected + 1)
         Keys.onReturnPressed: root.activate(root.actions[root.selected])
+        Keys.onEnterPressed: root.activate(root.actions[root.selected])
 
         Row {
             anchors.centerIn: parent

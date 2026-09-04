@@ -50,6 +50,7 @@ Rectangle {
             Keys.onUpPressed: root.prevRequested()
             Keys.onDownPressed: root.nextRequested()
             Keys.onReturnPressed: root.acceptRequested()
+            Keys.onEnterPressed: root.acceptRequested()
             Keys.onPressed: event => {
                 if (event.modifiers !== Qt.ControlModifier)
                     return;
