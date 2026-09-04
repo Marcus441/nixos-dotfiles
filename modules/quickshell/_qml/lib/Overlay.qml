@@ -26,7 +26,6 @@ PanelWindow {
 
     MouseArea {
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
         onClicked: root.dismissed()
     }
 
