@@ -72,11 +72,7 @@ rebuild the tree and reset the selection. Titles are therefore read in
 `rowsFor`, at filter time, not stored on the row — a build scrolling in a
 terminal would otherwise yank the selection back to the top mid-navigation.
 Measured: renaming a window leaves the `groups` revision and the selection
-untouched. Hover selects on `onPositionChanged` rather than `onEntered`, and
-only when the pointer's position actually differs from the last one seen,
-because a surface mapping under a still pointer draws a Wayland enter plus
-motion that Qt reports as a hover.
-**Breaks** *Silently, and only when a window happens to be busy.* Both bugs
-need a second window doing something, so a quiet desktop shows neither. The
-hover one also swallows the starting selection, which makes the seeded row look
-broken instead.
+untouched. The hover half of this left when three more popups turned out to
+need it — `docs/decisions/quickshell.md#quickshell-hover-guard`.
+**Breaks** *Silently, and only when a window happens to be busy.* It needs a
+second window doing something, so a quiet desktop never shows it.

@@ -25,3 +25,22 @@ HEADLESS-1 when HEADLESS-1 does, with no `screen` binding anywhere.
 `PanelWindow.screen` reads back as that first screen even while the surface sits
 on another. Reading the property is what makes this look broken; it is the
 compositor, not quickshell, that places the surface.
+
+<a id="quickshell-hover-guard"></a>
+## `lib/PointerGuard.qml` — hover selects on movement, not on entry
+
+**Why** A modal maps under wherever the pointer already is. Wayland then sends
+an enter plus a motion for a pointer that never moved, Qt reports both as a
+hover, and `onEntered` hands the selection to whatever row happens to sit under
+the cursor. Delegates select on `onPositionChanged` instead, and only when
+`PointerGuard.moved` says the position differs from the last one seen.
+Coordinates are mapped to the window first, because row-local ones are
+identical on every row.
+
+Measured, opening the launcher with the pointer parked and never moved: it
+takes row 1 with the pointer at y=598 and row 5 at y=750, rather than the
+seeded row 0 it takes when the pointer rests above the list.
+
+**Breaks** *Silently, and it reads as the picker's fault.* The seeded selection
+is the casualty — alt-tab lands on the wrong window, and the launcher's first
+result is not the one that runs — so the seeding looks broken instead.

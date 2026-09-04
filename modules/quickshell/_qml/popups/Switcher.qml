@@ -17,7 +17,6 @@ Overlay {
     contentHeight: 520
 
     property var collapsed: ({})
-    property var pointer: null
 
     readonly property bool showMonitor: {
         monWatch.rev;
@@ -100,16 +99,6 @@ Overlay {
         filterList.selected = Math.max(0, filterList.filtered.findIndex(r => r.kind === "ws" && r.id === id));
     }
 
-    // the surface maps under the pointer, and the enter-plus-motion Wayland
-    // sends then makes Qt report a hover with no movement in it; only a
-    // position that actually changed may take the selection
-    function hoverSelect(index, x, y) {
-        const moved = root.pointer !== null && (root.pointer.x !== x || root.pointer.y !== y);
-        root.pointer = Qt.point(x, y);
-        if (moved)
-            filterList.selected = index;
-    }
-
     function initialIndex(rows, q) {
         const leaf = rows.findIndex(r => r.kind === "win");
         if (q !== "")
@@ -160,6 +149,10 @@ Overlay {
     onGroupsChanged: {
         if (filterList)
             filterList.refilter();
+    }
+
+    PointerGuard {
+        id: hoverGuard
     }
 
     FilterList {
@@ -233,7 +226,8 @@ Overlay {
                 // otherwise discard the selection the list just computed
                 onPositionChanged: mouse => {
                     const p = row.mapToItem(null, mouse.x, mouse.y);
-                    root.hoverSelect(row.index, p.x, p.y);
+                    if (hoverGuard.moved(p.x, p.y))
+                        filterList.selected = row.index;
                 }
                 onClicked: mouse => {
                     const entry = row.modelData;
