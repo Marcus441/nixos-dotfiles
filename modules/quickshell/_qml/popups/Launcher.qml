@@ -5,6 +5,7 @@ import Quickshell.Widgets
 import QtQuick
 import qs
 import qs.lib
+import qs.services
 
 Overlay {
     id: root
@@ -52,9 +53,15 @@ Overlay {
         return root.subsequence(app.name, q) ? 5 : -1;
     }
 
+    // ties break alphabetically, so an unused list stays in name order
+    function byUse(list) {
+        return list.slice().sort((a, b) => LauncherUsage.score(b.entry.id) - LauncherUsage.score(a.entry.id) || a.name.localeCompare(b.name));
+    }
+
     function launch(app) {
         if (!app)
             return;
+        LauncherUsage.record(app.entry.id);
         Config.launchApp(`${app.entry.id}.desktop`);
         root.dismissed();
     }
@@ -73,14 +80,15 @@ Overlay {
         searchPixelSize: Theme.fontXl
         filterFn: q => {
             if (q === "")
-                return root.apps;
+                return root.byUse(root.apps);
             const tiers = [[], [], [], [], [], []];
             for (const app of root.apps) {
                 const tier = root.tierOf(app, q);
                 if (tier >= 0)
                     tiers[tier].push(app);
             }
-            return tiers[0].concat(tiers[1], tiers[2], tiers[3], tiers[4], tiers[5]);
+            const ranked = tiers.map(t => root.byUse(t));
+            return ranked[0].concat(ranked[1], ranked[2], ranked[3], ranked[4], ranked[5]);
         }
         onDismissed: root.dismissed()
         onAccepted: root.launch(filterList.filtered[filterList.selected])

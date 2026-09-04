@@ -24,7 +24,10 @@ human makes, not a cleanup you offer.
   `docs/decisions/sessions.md#quickshell-tray-menu`. The overlays bind no
   `screen`: a layer surface with a null output is placed by the compositor, and
   Hyprland places it on the focused monitor —
-  `docs/decisions/quickshell.md#quickshell-overlay-screen`.
+  `docs/decisions/quickshell.md#quickshell-overlay-screen`. The launcher's use
+  counts are a cache under `cacheDir`, safe to delete, and a singleton because
+  the popup is destroyed as it launches —
+  `docs/decisions/quickshell.md#quickshell-launcher-usage`.
 - **Quickshell never joins the security surface.** No `WlSessionLock`, ever —
   locking is `lock.command` (`loginctl lock-session`, hypridle runs hyprlock),
   wallpaper switching is hyprpaper IPC plus the cache symlink, and idle

@@ -62,3 +62,26 @@ animates in, and nothing errors. An unnamed overlay is the same failure with
 nothing to rename — the clipboard and the power menu both fell back to the bare
 `quickshell` namespace, which no rule matches, so both animated while the
 launcher and the switcher did not.
+
+<a id="quickshell-launcher-usage"></a>
+## `services/LauncherUsage.qml` — a singleton, and a cache
+
+**Why** Ranking results by use means writing a file at the moment one launches.
+The popup cannot own that file: `shell.qml` holds the Launcher in a
+`LazyLoader` keyed on `Popups.launcherOpen`, and `launch()` calls `dismissed()`
+on the line after it records, so an in-popup `FileView` would race its own
+destruction on every write. A singleton outlives the popup.
+
+It lives under `cacheDir` because it is a cache — it holds nothing that using
+the launcher again would not rebuild, so deleting it must be harmless.
+`printErrors: false` is what keeps a first run silent, there being no file yet,
+and a parse failure falls back to empty counts.
+
+Measured in a nested compositor: a fresh shell lists alphabetically and writes
+nothing; three launches of one entry, two of another and one of a third leave
+`{"nvim":3,"btop":2,"org.kde.kdenlive":1}` and that order; a restarted shell
+reads it back and lists the same.
+
+**Breaks** *Quietly, and in the safe direction.* Ties break alphabetically, so
+a lost file degrades to the old alphabetical list. Watch for the opposite:
+counts that never persist look exactly like a launcher not yet used.
