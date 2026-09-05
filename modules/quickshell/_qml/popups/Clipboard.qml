@@ -214,8 +214,6 @@ Overlay {
             }
 
             MouseArea {
-                id: rowMouse
-
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
@@ -230,7 +228,7 @@ Overlay {
             Text {
                 id: kill
 
-                visible: rowMouse.containsMouse || row.index === filterList.selected
+                visible: row.index === filterList.selected
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.pad
