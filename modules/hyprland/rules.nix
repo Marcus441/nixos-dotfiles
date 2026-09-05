@@ -75,16 +75,19 @@ _: {
               }
             ];
 
+          # load-bearing: docs/decisions/sessions.md#rounding-suppression
           workspace_rule = [
             {
               workspace = "f[1]";
               gaps_out = 0;
               gaps_in = 0;
+              no_rounding = true;
             }
             {
               workspace = "w[tv1]";
               gaps_out = 0;
               gaps_in = 0;
+              no_rounding = true;
             }
           ];
 

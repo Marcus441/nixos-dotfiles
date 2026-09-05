@@ -175,7 +175,7 @@ changing it in one place leaves the indicator frozen on its startup
 ## `hyprland/_layout.lua` — layout.set applies the per-layout visual profile
 
 **Why** Monocle should render edge-to-edge: no gaps, no border, no
-animations. Rules cannot express "when the layout is monocle" — the
+rounding, no animations. Rules cannot express "when the layout is monocle" — the
 `w[tv1]`/`f[1]` rules only fire with a single tiled window, so a monocle
 workspace with a stacked window kept its gaps and popin artifacts. The
 profile rides the same `hl.config` call that switches the layout, and the
@@ -233,6 +233,20 @@ And a raw dot in the tag regex is a wildcard — `^(term.floating)$` also matche
 **Why** The regexes arrive from separate files, so joining them would mean
 wrapping each in a group the contributing file cannot see it needs.
 **Breaks** An unwrapped alternation silently changes what each regex matches.
+
+<a id="rounding-suppression"></a>
+## `hyprland/rules.nix` — rounding is suppressed where a window fills the screen
+
+**Why** `decoration:rounding` is 8, but a window with no gap around it has
+nothing behind its corners, so the arc cuts to the wallpaper at the screen edge.
+The two `workspace_rule` entries that already zero the gaps — `f[1]` and
+`w[tv1]`, the single-window cases — carry `no_rounding` for the same reason.
+Monocle needs the same suppression and cannot use a rule: `w[tv1]` fires only
+with one tiled window, so a monocle workspace with a stacked window would keep
+its corners. It rides the visual profile instead (#monocle-visual-profile).
+**Breaks** *Only visually, and only at the four corners.* Without `no_rounding`
+a maximised window shows wallpaper in the notches; without the monocle half the
+suppression covers everything except the layout built to render edge-to-edge.
 
 ## `xdg.nix` — the environment file is Hyprland-only
 

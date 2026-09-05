@@ -11,6 +11,7 @@ local function profile()
     gaps_in = hl.get_config("general.gaps_in"),
     gaps_out = hl.get_config("general.gaps_out"),
     border_size = hl.get_config("general.border_size"),
+    rounding = hl.get_config("decoration.rounding"),
     animations = hl.get_config("animations.enabled"),
   }
 end
@@ -27,6 +28,7 @@ function M.set(name)
       end
       hl.config({
         general = { layout = "monocle", gaps_in = 0, gaps_out = 0, border_size = 0 },
+        decoration = { rounding = 0 },
         animations = { enabled = false },
       })
     else
@@ -39,6 +41,7 @@ function M.set(name)
           gaps_out = p.gaps_out,
           border_size = p.border_size,
         },
+        decoration = { rounding = p.rounding },
         animations = { enabled = p.animations },
       })
     end

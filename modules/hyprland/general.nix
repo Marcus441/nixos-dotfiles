@@ -21,7 +21,7 @@ _: {
             };
 
             decoration = {
-              rounding = 0;
+              rounding = 8;
               dim_inactive = true;
               dim_strength = 0.15;
               shadow = {
