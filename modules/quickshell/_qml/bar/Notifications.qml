@@ -62,7 +62,9 @@ Item {
             clip: true
             model: Notifs.tracked.slice().reverse()
 
-            ScrollBar.vertical: ThinScrollBar {}
+            ScrollBar.vertical: ThinScrollBar {
+                rightPadding: Theme.gap
+            }
 
             delegate: PopupRow {
                 id: row

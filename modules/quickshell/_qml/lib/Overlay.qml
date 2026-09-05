@@ -36,6 +36,9 @@ PanelWindow {
         width: root.contentWidth
         height: root.contentHeight
         color: Config.card
+        radius: Theme.radius
+        border.width: Theme.border
+        border.color: Config.chrome
 
         MouseArea {
             anchors.fill: parent

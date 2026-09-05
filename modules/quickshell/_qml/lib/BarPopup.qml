@@ -65,6 +65,9 @@ PopupWindow {
         anchors.leftMargin: Config.barPosition === "left" ? root.barGap : 0
         anchors.rightMargin: Config.barPosition === "right" ? root.barGap : 0
         color: Config.card
+        radius: Theme.radius
+        border.width: Theme.border
+        border.color: Config.chrome
     }
 
     Rectangle {
@@ -76,6 +79,8 @@ PopupWindow {
         anchors.right: frame.right
         height: visible ? headerRow.implicitHeight + 20 : 0
         color: Config.chrome
+        topLeftRadius: Theme.radius
+        topRightRadius: Theme.radius
 
         Row {
             id: headerRow
