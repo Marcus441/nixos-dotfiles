@@ -122,7 +122,7 @@ Overlay {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.pad
-                width: parent.width - Theme.pad * 2
+                width: parent.width - Theme.pad * 2 - (kill.visible ? kill.width + Theme.gap : 0)
                 text: row.modelData.text
                 elide: Text.ElideRight
                 color: Config.textPrimary
@@ -163,6 +163,8 @@ Overlay {
             }
 
             MouseArea {
+                id: rowMouse
+
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
@@ -172,6 +174,38 @@ Overlay {
                         filterList.selected = row.index;
                 }
                 onClicked: root.pick(row.modelData)
+            }
+
+            Text {
+                id: kill
+
+                visible: rowMouse.containsMouse || row.index === filterList.selected
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.pad
+                text: "󰅖"
+                color: killMouse.containsMouse ? Config.base08 : Config.textMuted
+                font.family: Config.iconFamily
+                font.pixelSize: Config.fontSize
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.durFast
+                    }
+                }
+
+                // the glyph is a small target on a 28px row, so the hit area is
+                // the row's full height and a gap wider than the mark
+                MouseArea {
+                    id: killMouse
+
+                    anchors.centerIn: parent
+                    width: parent.width + Theme.gap * 2
+                    height: row.height
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.remove(row.modelData)
+                }
             }
         }
     }
