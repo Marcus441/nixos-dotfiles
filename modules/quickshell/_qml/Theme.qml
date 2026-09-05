@@ -15,6 +15,7 @@ Singleton {
     readonly property int fontXxl: Config.fontSize + 28
     readonly property int modalWidth: 680
     readonly property int modalHeight: 520
+    readonly property int previewWidth: 420
     readonly property int rowText: 28
     readonly property int rowNode: 32
     readonly property int rowLeaf: 40

@@ -10,8 +10,40 @@ Overlay {
 
     WlrLayershell.namespace: "quickshell-clipboard"
 
+    // the list keeps the width every other modal has; the pane is additive, so
+    // no row is narrower here than it is in the launcher
+    contentWidth: Theme.modalWidth + Theme.previewWidth
+
     property var entries: []
     property int restoreIndex: 0
+    readonly property int decodeCap: 65536
+
+    function decode(entry) {
+        decodeProc.running = false;
+        root.body = "";
+        // never decode an image into a string: the bytes are not text
+        if (!entry || entry.image)
+            return;
+        decodeProc.command = [Config.sh, "-c", `${Config.cliphist} decode ${entry.id} | ${Config.head} -c ${root.decodeCap}`];
+        decodeProc.running = true;
+    }
+
+    property string body: ""
+
+    Process {
+        id: decodeProc
+
+        stdout: StdioCollector {
+            onStreamFinished: root.body = text
+        }
+    }
+
+    Timer {
+        id: decodeDebounce
+
+        interval: 120
+        onTriggered: root.decode(preview.entry)
+    }
 
     function pick(entry) {
         if (!entry)
@@ -85,7 +117,10 @@ Overlay {
     FilterList {
         id: filterList
 
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: Theme.modalWidth
         placeholder: "Clipboard history…"
         emptyText: filterList.query === "" ? "Clipboard is empty" : "No matches"
         searchIcon: "󰍉"
@@ -207,6 +242,108 @@ Overlay {
                     onClicked: root.remove(row.modelData)
                 }
             }
+        }
+    }
+
+    Rectangle {
+        id: paneEdge
+
+        anchors.left: filterList.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: Theme.border
+        color: Config.chrome
+    }
+
+    Item {
+        id: preview
+
+        readonly property var entry: filterList.filtered[filterList.selected] ?? null
+
+        anchors.left: paneEdge.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.margins: Theme.pad
+
+        onEntryChanged: decodeDebounce.restart()
+
+        Text {
+            id: previewLabel
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            text: "Preview"
+            color: Config.textMuted
+            font.family: Config.fontFamily
+            font.pixelSize: Theme.fontSm
+        }
+
+        Item {
+            id: previewBody
+
+            anchors.top: previewLabel.bottom
+            anchors.topMargin: Theme.gap
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: previewFoot.top
+            anchors.bottomMargin: Theme.gap
+            clip: true
+
+            Text {
+                id: previewText
+
+                anchors.fill: parent
+                text: preview.entry?.image ? `${preview.entry.dims}  ${preview.entry.format}  ${preview.entry.size}` : root.body
+                textFormat: Text.PlainText
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
+                color: preview.entry?.image ? Config.accent : Config.textSecondary
+                font.family: Config.monoFamily
+                font.pixelSize: Config.fontSize
+            }
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 36
+                visible: previewText.truncated
+
+                gradient: Gradient {
+                    GradientStop {
+                        position: 0.0
+                        color: Qt.rgba(Config.card.r, Config.card.g, Config.card.b, 0)
+                    }
+
+                    GradientStop {
+                        position: 1.0
+                        color: Config.card
+                    }
+                }
+            }
+        }
+
+        Text {
+            id: previewFoot
+
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            elide: Text.ElideRight
+            text: {
+                if (!preview.entry)
+                    return "";
+                if (preview.entry.image)
+                    return `image · ${preview.entry.size}`;
+                const chars = root.body.length;
+                const lines = root.body.split("\n").length;
+                const shape = `${chars} chars, ${lines} lines`;
+                return previewText.truncated ? `… truncated · ${shape} total` : shape;
+            }
+            color: previewText.truncated ? Config.base0A : Config.textMuted
+            font.family: Config.monoFamily
+            font.pixelSize: Theme.fontSm
         }
     }
 }
