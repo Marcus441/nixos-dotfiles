@@ -27,7 +27,7 @@ Overlay {
 
         stdout: StdioCollector {
             onStreamFinished: {
-                root.entries = text.split("\n").filter(line => line !== "").slice(0, 100).map(line => {
+                root.entries = text.split("\n").filter(line => line !== "").map(line => {
                     const tab = line.indexOf("\t");
                     const body = line.slice(tab + 1);
                     return {
