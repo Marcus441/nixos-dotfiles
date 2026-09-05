@@ -22,6 +22,7 @@ Overlay {
         decodeProc.running = false;
         imageProc.running = false;
         root.body = "";
+        root.bodyBytes = 0;
         root.imageSource = "";
         if (!entry)
             return;
@@ -32,11 +33,22 @@ Overlay {
             imageProc.running = true;
             return;
         }
-        decodeProc.command = [Config.sh, "-c", `${Config.cliphist} decode ${entry.id} | ${Config.head} -c ${root.decodeCap}`];
+        // the true size comes from the entry, not from the capped body, so the
+        // footer can never report the cap as though it were the whole entry
+        decodeProc.command = [Config.sh, "-c", `${Config.cliphist} decode ${entry.id} | ${Config.wc} -c; ${Config.cliphist} decode ${entry.id} | ${Config.head} -c ${root.decodeCap}`];
         decodeProc.running = true;
     }
 
+    function humanSize(bytes: int): string {
+        if (bytes < 1024)
+            return `${bytes} B`;
+        if (bytes < 1048576)
+            return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / 1048576).toFixed(1)} MB`;
+    }
+
     property string body: ""
+    property int bodyBytes: 0
     property string imageSource: ""
     readonly property string imagePath: `${Config.cacheDir}/quickshell-clipboard-preview`
 
@@ -44,7 +56,11 @@ Overlay {
         id: decodeProc
 
         stdout: StdioCollector {
-            onStreamFinished: root.body = text
+            onStreamFinished: {
+                const head = text.indexOf("\n");
+                root.bodyBytes = parseInt(text.slice(0, head), 10) || 0;
+                root.body = text.slice(head + 1);
+            }
         }
     }
 
@@ -366,12 +382,15 @@ Overlay {
                     return "";
                 if (preview.entry.image)
                     return `${preview.entry.dims} · ${preview.entry.format} · ${preview.entry.size}`;
-                const chars = root.body.length;
-                const lines = root.body.split("\n").length;
-                const shape = `${chars} chars, ${lines} lines`;
+                const size = root.humanSize(root.bodyBytes);
+                // the body stops at the cap, so its line count is only the
+                // whole entry's when the decode was not the thing that cut it
+                if (root.bodyBytes > root.decodeCap)
+                    return `… truncated · ${size} total, previewing the first ${root.humanSize(root.decodeCap)}`;
+                const shape = `${size}, ${root.body.split("\n").length} lines`;
                 return previewText.truncated ? `… truncated · ${shape} total` : shape;
             }
-            color: preview.entry?.image ? Config.accent : previewText.truncated ? Config.base0A : Config.textMuted
+            color: preview.entry?.image ? Config.accent : previewText.truncated || root.bodyBytes > root.decodeCap ? Config.base0A : Config.textMuted
             font.family: Config.monoFamily
             font.pixelSize: Theme.fontSm
         }

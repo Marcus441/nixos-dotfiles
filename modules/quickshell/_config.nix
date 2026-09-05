@@ -129,6 +129,7 @@
         readonly property string cliphist: "${pkgs.cliphist}/bin/cliphist"
         readonly property string wlCopy: "${pkgs.wl-clipboard}/bin/wl-copy"
         readonly property string head: "${pkgs.coreutils}/bin/head"
+        readonly property string wc: "${pkgs.coreutils}/bin/wc"
 
         function launch(cmd: string): void {
             Quickshell.execDetached([root.sh, "-c", cmd]);
