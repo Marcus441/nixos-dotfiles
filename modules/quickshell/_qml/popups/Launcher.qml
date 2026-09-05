@@ -12,9 +12,6 @@ Overlay {
 
     WlrLayershell.namespace: "quickshell-launcher"
 
-    contentWidth: 680
-    contentHeight: 500
-
     readonly property var apps: DesktopEntries.applications.values.filter(a => !a.noDisplay).sort((a, b) => a.name.localeCompare(b.name)).map(a => ({
                 entry: a,
                 name: a.name.toLowerCase(),

@@ -13,9 +13,6 @@ Overlay {
 
     WlrLayershell.namespace: "quickshell-switcher"
 
-    contentWidth: 640
-    contentHeight: 520
-
     property var collapsed: ({})
 
     readonly property bool showMonitor: {

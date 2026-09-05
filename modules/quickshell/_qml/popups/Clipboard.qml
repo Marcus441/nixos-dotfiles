@@ -9,8 +9,6 @@ Overlay {
     id: root
 
     WlrLayershell.namespace: "quickshell-clipboard"
-    contentWidth: 560
-    contentHeight: 420
 
     property var entries: []
 
