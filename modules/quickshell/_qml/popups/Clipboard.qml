@@ -27,12 +27,20 @@ Overlay {
 
         stdout: StdioCollector {
             onStreamFinished: {
+                // cliphist prints one binary preview, `[[ binary data <size>
+                // <type> <W>x<H> ]]`; anything else it prints is text
+                const binary = /^\[\[ binary data (.+) (\S+) (\d+x\d+) \]\]$/;
                 root.entries = text.split("\n").filter(line => line !== "").map(line => {
                     const tab = line.indexOf("\t");
                     const body = line.slice(tab + 1);
+                    const shape = binary.exec(body);
                     return {
                         id: line.slice(0, tab),
                         text: body,
+                        image: shape !== null,
+                        size: shape ? shape[1] : "",
+                        format: shape ? shape[2] : "",
+                        dims: shape ? shape[3] : "",
                         search: body.toLowerCase()
                     };
                 });
@@ -79,6 +87,7 @@ Overlay {
             }
 
             Text {
+                visible: !row.modelData.image
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.pad
@@ -88,6 +97,38 @@ Overlay {
                 color: Config.textPrimary
                 font.family: Config.monoFamily
                 font.pixelSize: Config.fontSize
+            }
+
+            Row {
+                visible: row.modelData.image
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.pad
+                spacing: Theme.gap
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "󰋩"
+                    color: Config.accent
+                    font.family: Config.iconFamily
+                    font.pixelSize: Config.fontSize
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: row.modelData.dims
+                    color: Config.accent
+                    font.family: Config.monoFamily
+                    font.pixelSize: Config.fontSize
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: `${row.modelData.format}  ${row.modelData.size}`
+                    color: Config.textMuted
+                    font.family: Config.monoFamily
+                    font.pixelSize: Config.fontSize
+                }
             }
 
             MouseArea {
