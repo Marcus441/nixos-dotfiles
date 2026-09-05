@@ -30,12 +30,6 @@ Item {
         anchors.bottomMargin: root.insetY
         radius: Theme.radius
         color: root.highlighted ? Config.selection : root.hoverable && mouse.containsMouse ? Config.chrome : "transparent"
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Theme.durFast
-            }
-        }
     }
 
     Row {

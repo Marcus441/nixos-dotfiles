@@ -103,12 +103,6 @@ Overlay {
                 anchors.fill: parent
                 radius: Theme.radius
                 color: row.index === filterList.selected ? Config.selection : "transparent"
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durFast
-                    }
-                }
             }
 
             IconImage {
