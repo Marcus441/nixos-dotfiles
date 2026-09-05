@@ -10,6 +10,7 @@ Column {
     signal accepted
     signal collapsed
     signal expanded
+    signal deleted
 
     property var filterFn: q => []
     property var selectFn: null
@@ -19,6 +20,7 @@ Column {
     property string emptyText: "No matches"
     property string searchIcon: ""
     property bool treeKeys: false
+    property bool deleteKeys: false
     property int searchPixelSize: Theme.fontLg
     property alias delegate: list.delegate
     readonly property alias query: searchBox.text
@@ -50,6 +52,7 @@ Column {
         glyph: root.searchIcon
         pixelSize: root.searchPixelSize
         sideKeys: root.treeKeys
+        deleteKeys: root.deleteKeys
         onTextChanged: root.refilter()
         onDismissRequested: root.dismissed()
         onAcceptRequested: root.accepted()
@@ -57,6 +60,7 @@ Column {
         onPrevRequested: root.selectPrev()
         onLeftRequested: root.collapsed()
         onRightRequested: root.expanded()
+        onDeleteRequested: root.deleted()
     }
 
     Item {

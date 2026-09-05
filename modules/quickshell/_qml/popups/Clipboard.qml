@@ -11,12 +11,37 @@ Overlay {
     WlrLayershell.namespace: "quickshell-clipboard"
 
     property var entries: []
+    property int restoreIndex: 0
 
     function pick(entry) {
         if (!entry)
             return;
         Config.launch(`${Config.cliphist} decode ${entry.id} | ${Config.wlCopy}`);
         root.dismissed();
+    }
+
+    function remove(entry) {
+        if (!entry || deleteProc.running)
+            return;
+        root.restoreIndex = filterList.selected;
+        deleteProc.entryId = entry.id;
+        deleteProc.stdinEnabled = true;
+        deleteProc.running = true;
+    }
+
+    Process {
+        id: deleteProc
+
+        property string entryId: ""
+
+        command: [Config.cliphist, "delete"]
+        // cliphist delete takes the entry on stdin, not as an argument, and an
+        // id and a tab are the whole of what it matches on
+        onStarted: {
+            deleteProc.write(`${deleteProc.entryId}\t`);
+            deleteProc.stdinEnabled = false;
+        }
+        onExited: listProc.running = true
     }
 
     Process {
@@ -45,6 +70,10 @@ Overlay {
                     };
                 });
                 filterList.refilter();
+                // refilter reseeds the cursor to 0, which after a delete would
+                // throw it to the top of the list rather than leave it in place
+                filterList.selected = Math.max(0, Math.min(filterList.filtered.length - 1, root.restoreIndex));
+                root.restoreIndex = 0;
             }
         }
     }
@@ -61,9 +90,11 @@ Overlay {
         emptyText: filterList.query === "" ? "Clipboard is empty" : "No matches"
         searchIcon: "󰍉"
         searchPixelSize: Theme.fontXl
+        deleteKeys: true
         filterFn: q => q === "" ? root.entries : root.entries.filter(e => e.search.includes(q))
         onDismissed: root.dismissed()
         onAccepted: root.pick(filterList.filtered[filterList.selected])
+        onDeleted: root.remove(filterList.filtered[filterList.selected])
 
         delegate: Item {
             id: row
