@@ -10,11 +10,13 @@ Rectangle {
     signal prevRequested
     signal leftRequested
     signal rightRequested
+    signal deleteRequested
 
     property string placeholder: ""
     property string glyph: ""
     property int pixelSize: Theme.fontLg
     property bool sideKeys: false
+    property bool deleteKeys: false
     property alias text: input.text
 
     height: input.implicitHeight + 24
@@ -52,6 +54,13 @@ Rectangle {
             Keys.onReturnPressed: root.acceptRequested()
             Keys.onEnterPressed: root.acceptRequested()
             Keys.onPressed: event => {
+                // Shift+Delete is Qt's Cut sequence, so this has to accept the
+                // event: a cut would reach the clipboard and be stored straight back
+                if (root.deleteKeys && event.key === Qt.Key_Delete && event.modifiers === Qt.ShiftModifier) {
+                    root.deleteRequested();
+                    event.accepted = true;
+                    return;
+                }
                 if (event.modifiers !== Qt.ControlModifier)
                     return;
                 switch (event.key) {
