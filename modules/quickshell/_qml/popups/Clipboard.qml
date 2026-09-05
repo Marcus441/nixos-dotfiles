@@ -240,7 +240,7 @@ Overlay {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.pad
-                text: "󰅖"
+                text: "󰆴"
                 color: killMouse.containsMouse ? Config.base08 : Config.textMuted
                 font.family: Config.iconFamily
                 font.pixelSize: Config.fontSize
