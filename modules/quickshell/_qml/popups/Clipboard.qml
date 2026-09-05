@@ -20,21 +20,43 @@ Overlay {
 
     function decode(entry) {
         decodeProc.running = false;
+        imageProc.running = false;
         root.body = "";
-        // never decode an image into a string: the bytes are not text
-        if (!entry || entry.image)
+        root.imageSource = "";
+        if (!entry)
             return;
+        // an image goes to a file: its bytes are not text, and an Image cannot
+        // read a process's output
+        if (entry.image) {
+            imageProc.command = [Config.sh, "-c", `${Config.cliphist} decode ${entry.id} > ${root.imagePath}`];
+            imageProc.running = true;
+            return;
+        }
         decodeProc.command = [Config.sh, "-c", `${Config.cliphist} decode ${entry.id} | ${Config.head} -c ${root.decodeCap}`];
         decodeProc.running = true;
     }
 
     property string body: ""
+    property string imageSource: ""
+    readonly property string imagePath: `${Config.cacheDir}/quickshell-clipboard-preview`
 
     Process {
         id: decodeProc
 
         stdout: StdioCollector {
             onStreamFinished: root.body = text
+        }
+    }
+
+    Process {
+        id: imageProc
+
+        // Image keys its cache on the URL, so a path whose contents changed is
+        // re-read only if the source is cleared first
+        onExited: exitCode => {
+            root.imageSource = "";
+            if (exitCode === 0)
+                root.imageSource = `file://${root.imagePath}`;
         }
     }
 
@@ -294,13 +316,29 @@ Overlay {
                 id: previewText
 
                 anchors.fill: parent
-                text: preview.entry?.image ? `${preview.entry.dims}  ${preview.entry.format}  ${preview.entry.size}` : root.body
+                visible: !(preview.entry?.image ?? false)
+                text: root.body
                 textFormat: Text.PlainText
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
-                color: preview.entry?.image ? Config.accent : Config.textSecondary
+                color: Config.textSecondary
                 font.family: Config.monoFamily
                 font.pixelSize: Config.fontSize
+            }
+
+            // bounded by the smaller of the image and the pane, so a large
+            // screenshot scales down and a small one is not blown up into blur
+            Image {
+                id: previewImage
+
+                anchors.centerIn: parent
+                visible: preview.entry?.image ?? false
+                source: root.imageSource
+                cache: false
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+                width: Math.min(implicitWidth, parent.width)
+                height: Math.min(implicitHeight, parent.height)
             }
 
             Rectangle {
@@ -308,7 +346,7 @@ Overlay {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 36
-                visible: previewText.truncated
+                visible: previewText.visible && previewText.truncated
 
                 gradient: Gradient {
                     GradientStop {
@@ -335,13 +373,13 @@ Overlay {
                 if (!preview.entry)
                     return "";
                 if (preview.entry.image)
-                    return `image · ${preview.entry.size}`;
+                    return `${preview.entry.dims} · ${preview.entry.format} · ${preview.entry.size}`;
                 const chars = root.body.length;
                 const lines = root.body.split("\n").length;
                 const shape = `${chars} chars, ${lines} lines`;
                 return previewText.truncated ? `… truncated · ${shape} total` : shape;
             }
-            color: previewText.truncated ? Config.base0A : Config.textMuted
+            color: preview.entry?.image ? Config.accent : previewText.truncated ? Config.base0A : Config.textMuted
             font.family: Config.monoFamily
             font.pixelSize: Theme.fontSm
         }
