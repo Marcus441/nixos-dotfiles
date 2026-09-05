@@ -51,6 +51,8 @@ Overlay {
         anchors.fill: parent
         placeholder: "Clipboard history…"
         emptyText: filterList.query === "" ? "Clipboard is empty" : "No matches"
+        searchIcon: "󰍉"
+        searchPixelSize: Theme.fontXl
         filterFn: q => q === "" ? root.entries : root.entries.filter(e => e.search.includes(q))
         onDismissed: root.dismissed()
         onAccepted: root.pick(filterList.filtered[filterList.selected])
