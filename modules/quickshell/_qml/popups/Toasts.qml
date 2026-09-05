@@ -67,6 +67,9 @@ PanelWindow {
                 width: column.width
                 height: header.height + bodyBlock.height + actionRow.height
                 color: Config.card
+                radius: Theme.radius
+                border.width: Theme.border
+                border.color: Config.chrome
 
                 Timer {
                     interval: card.modelData ? Notifs.timeoutFor(card.modelData) : 0
@@ -93,6 +96,8 @@ PanelWindow {
                     anchors.right: parent.right
                     height: summaryText.implicitHeight + 16
                     color: Config.chrome
+                    topLeftRadius: Theme.radius
+                    topRightRadius: Theme.radius
 
                     Text {
                         id: urgencyIcon
