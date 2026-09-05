@@ -93,12 +93,6 @@ Overlay {
                     radius: Theme.radius
                     color: tile.active ? Config.selection : Config.chrome
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durFast
-                        }
-                    }
-
                     Column {
                         anchors.centerIn: parent
                         spacing: 12
