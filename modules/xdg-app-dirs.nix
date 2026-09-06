@@ -29,6 +29,9 @@ _: {
           DOCKER_CONFIG = "${config.xdg.configHome}/docker";
           TF_CLI_CONFIG_FILE = "${config.xdg.configHome}/terraform/terraformrc";
           TF_PLUGIN_CACHE_DIR = "${config.xdg.cacheHome}/terraform/plugins";
+          AWS_CONFIG_FILE = "${config.xdg.configHome}/aws/config";
+          AWS_SHARED_CREDENTIALS_FILE = "${config.xdg.configHome}/aws/credentials";
+          AWS_LOGIN_CACHE_DIRECTORY = "${config.xdg.cacheHome}/aws/login";
           GOPATH = "${config.xdg.dataHome}/go";
           GOMODCACHE = "${config.xdg.cacheHome}/go/mod";
           PSQLRC = "${config.xdg.configHome}/pg/psqlrc";

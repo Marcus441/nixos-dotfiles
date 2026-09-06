@@ -19,7 +19,7 @@ depends on the systemd half for its `%C` specifier.
 
 ## `xdg-app-dirs.nix` — `dev`, not `core`
 
-**Why** Rust, Gradle, Android, .NET, npm, Go, PostgreSQL and Docker are
+**Why** Rust, Gradle, Android, .NET, npm, Go, PostgreSQL, AWS and Docker are
 toolchain state, and `gpc` takes neither the toolchains nor `dev`. It is the
 same test `dev/ccache.nix` already passes, in the same aspect. `XCOMPOSECACHE`
 is not a toolchain, so it is the one variable in that file declaring `core`.
@@ -75,7 +75,7 @@ goes.
 
 `.mozilla`, `.floorp`, `.pki`, `.icons`, `.cmake`, `.lldb`, `.omnisharp`,
 `.java`, `.gemini`, `.cursor`, `.android`, `.emulator_console_auth_token`,
-`.dotnet/corefx`.
+`.dotnet/corefx`, `.aws/cli`, `.aws/sso`.
 
 **Why** None of them honours a variable, and the alternatives cost more than
 the tidiness is worth — a `HOME`-rewriting wrapper per binary, or
@@ -83,6 +83,8 @@ the tidiness is worth — a `HOME`-rewriting wrapper per binary, or
 start. `.android` is now only adb's key pair: adb reads `HOME` and no
 `ANDROID_*` directory variable. The console token path is a literal in the
 emulator, and `.dotnet/corefx` is the runtime's X.509 store, which
-`DOTNET_CLI_HOME` does not reach. gdb needs nothing: history saving is off
-and its default file is `./.gdb_history`, not `$HOME`.
+`DOTNET_CLI_HOME` does not reach. awscli joins `~` to `.aws/cli/cache` and
+`.aws/sso/cache` in source; only its two files and the login cache take a
+variable. gdb needs nothing: history saving is off and its default file is
+`./.gdb_history`, not `$HOME`.
 **Also** listed here so the question is answered rather than re-opened.
