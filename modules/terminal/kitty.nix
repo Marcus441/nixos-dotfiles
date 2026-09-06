@@ -136,7 +136,8 @@ _: {
             "ctrl+shift+t" = "new_tab_with_cwd";
             "ctrl+shift+o" = "select_tab";
             # load-bearing: docs/decisions/terminal.md#kitty-splits-only
-            "ctrl+shift+l" = "clear_terminal to_cursor_scroll active";
+            # load-bearing: docs/decisions/shells.md#zsh-clear-through-shell
+            "ctrl+shift+l" = "combine : clear_terminal to_cursor_scroll active : send_text normal,application \\x0c";
 
             "XF86Copy" = "copy_to_clipboard";
             "XF86Cut" = "copy_or_noop";

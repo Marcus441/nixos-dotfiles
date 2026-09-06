@@ -223,6 +223,21 @@ replaced was already showing — the command just accepted has not run yet.
 `zle .reset-prompt` collapses the two-line prompt to one and emits a cursor-up,
 reclaiming the blank line; that is what makes the scrollback compact.
 
+<a id="zsh-clear-through-shell"></a>
+## `terminal/kitty.nix` — Ctrl-Shift-L clears through the shell
+
+**Why** kitty's `clear_terminal to_cursor_scroll` scrolls up to the *prompt
+start* mark, and shell integration emits that mark before the prompt's leading
+`\n` — so it sits on the blank line, and kitty faithfully keeps the blank line
+at the top. Nothing tells zsh the screen was cleared, so the `__prompt_topline`
+flag above never gets to suppress it. `combine :` keeps the scroll, which is
+what preserves the screen in the scrollback, and adds `send_text \x0c`: that
+reaches the `clear-screen` widget, which rebuilds the prompt without the blank
+line. `ctrl+l` cannot carry this instead — in kitty it moves a pane right.
+**Breaks** Only the top line of a cleared screen. Dropping the `send_text` half
+brings the blank line back; dropping the `clear_terminal` half loses the screen
+the shell then wipes, instead of scrolling it into the scrollback.
+
 ## Both shells stay configured
 
 bash remains swift5's login shell, stays installed on the Hyprland hosts, and
