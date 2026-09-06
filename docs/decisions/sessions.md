@@ -192,6 +192,18 @@ config — dwindle, normal gaps — and LayoutState's `configreloaded` re-query
 the Lua state, which is correct because the profile it saved died too.
 Hardcoding the restore values instead of snapshotting reintroduces drift.
 
+<a id="layout-resize-delta"></a>
+## `hyprland/_layout.lua` — resize is a delta, and dwindle-only
+
+**Why** `hl.dsp.window.resize({ x, y })` defaults to `relative = false`, which
+reads the pair as the window's *exact* target size — the flag is the whole
+difference between a 40-pixel step and a 40-pixel window. The monocle guard is
+the one `focus` and `togglesplit` already carry: monocle shows one window
+edge-to-edge, so there is no split for the bind to move, and a size applied
+there would outlive the switch back to dwindle.
+**Breaks** *Loudly, at the first keypress.* Without `relative = true` the active
+window collapses to 40×40 and the layout has to be undone by hand.
+
 <a id="hyprland-luarc"></a>
 ## `hyprland/hyprland.nix` — the `.luarc.json` is hand-written
 
