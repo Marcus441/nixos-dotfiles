@@ -175,22 +175,23 @@ changing it in one place leaves the indicator frozen on its startup
 ## `hyprland/_layout.lua` — layout.set applies the per-layout visual profile
 
 **Why** Monocle should render edge-to-edge: no gaps, no border, no
-rounding, no animations. Rules cannot express "when the layout is monocle" — the
-`w[tv1]`/`f[1]` rules only fire with a single tiled window, so a monocle
-workspace with a stacked window kept its gaps and popin artifacts. The
-profile rides the same `hl.config` call that switches the layout, and the
-restore branch replays a snapshot that entering monocle took from the live
-values (`hl.get_config`), so it can never drift from
-`general.nix`/`animations.nix` — it restores whatever the generated config
-set. The snapshot is only taken when not already in monocle, so a repeated
-`layout.set("monocle")` cannot capture the zeroed profile. Disabling
-`animations.enabled` is a master switch — layer animations pause in monocle
-too; per-leaf runtime control is not exposed through `hl.config`.
-**Breaks** A reload or restart while in monocle re-reads the generated
-config — dwindle, normal gaps — and LayoutState's `configreloaded` re-query
-(#layout-event) keeps the indicator in step with it; the snapshot dies with
-the Lua state, which is correct because the profile it saved died too.
-Hardcoding the restore values instead of snapshotting reintroduces drift.
+rounding, no animations. Rules cannot express "when the layout is monocle",
+so the profile rides the `hl.config` call that switches the layout; the
+restore replays a snapshot taken on entry from the live values
+(`hl.get_config`), so it cannot drift from `general.nix`/`animations.nix`.
+The snapshot is only taken outside monocle, so a repeated
+`layout.set("monocle")` cannot capture the zeroed profile; disabling
+`animations.enabled` is a master switch, so layer animations pause too.
+Leaving monocle flushes the refresh, then writes `rounding` again:
+Hyprland's refresh applies workspace rules before it swaps the layout, and
+`w[tv1]` treats monocle's stacked windows as invisible, so one refresh
+pinned `no_rounding` on every dwindle window until it was next focused. The
+flush lands the swap; the rewrite re-runs the rules with all windows shown.
+**Breaks** A reload or restart in monocle re-reads the generated config;
+LayoutState's `configreloaded` re-query (#layout-event) keeps the indicator
+in step. Hardcoding the restore values reintroduces drift; folding the
+`rounding` rewrite into the first `hl.config` merges the two refreshes and
+the corners stay square.
 
 <a id="layout-resize-delta"></a>
 ## `hyprland/_layout.lua` — resize is a delta, and dwindle-only
@@ -253,9 +254,9 @@ wrapping each in a group the contributing file cannot see it needs.
 nothing behind its corners, so the arc cuts to the wallpaper at the screen edge.
 The two `workspace_rule` entries that already zero the gaps — `f[1]` and
 `w[tv1]`, the single-window cases — carry `no_rounding` for the same reason.
-Monocle needs the same suppression and cannot use a rule: `w[tv1]` fires only
-with one tiled window, so a monocle workspace with a stacked window would keep
-its corners. It rides the visual profile instead (#monocle-visual-profile).
+Monocle's stacked windows count as invisible, so `w[tv1]` fires there too, but
+the rule pass runs before a layout swap and lags it; the visual profile zeroes
+`rounding` itself for the same reason (#monocle-visual-profile).
 **Breaks** *Only visually, and only at the four corners.* Without `no_rounding`
 a maximised window shows wallpaper in the notches; without the monocle half the
 suppression covers everything except the layout built to render edge-to-edge.
