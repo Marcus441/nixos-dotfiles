@@ -75,11 +75,6 @@ _: {
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
               };
 
-              "myallychou@gmail.com" = {
-                installation_mode = "force_installed";
-                install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-recommended-videos/latest.xpi";
-              };
-
               "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/refined-github-/latest.xpi";

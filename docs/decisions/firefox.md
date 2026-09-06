@@ -61,18 +61,17 @@ site's own colours.
 <a id="extension-managed-storage"></a>
 ## `firefox.nix` — extension configuration goes through `3rdparty`, not `ExtensionSettings`
 
-**Why** An `ExtensionSettings` entry takes only the keys in Firefox's
-`policies-schema.json`, and there are two disjoint sets: twelve for a named
-extension, ten for the `*` wildcard, overlapping but neither a superset of the
-other. Anything outside them is dropped, because the schema leaves
-`additionalProperties` unset and Firefox ignores what it does not know — a
-`settings = { … }` sub-attribute configures nothing. The channel that reaches an
-extension is `3rdparty.Extensions.<id>`, handed to `storage.managed` verbatim.
-Use `adminSettings` and not its sibling `toOverwrite`: the latter's `filterLists`
-*wins* over `adminSettings.selectedFilterLists` and replaces the selection
-wholesale, so it cannot be split across files the way this one is.
-`"user-filters"` leads the list because uBO gates `userFilters` on that token
-being selected, so dropping it stores the custom filters and never applies them.
+**Why** An `ExtensionSettings` entry takes only the keys Firefox's
+`policies-schema.json` names, and it names two overlapping sets neither of which
+contains the other: twelve for a named extension, ten for the `*` wildcard.
+Anything outside them is dropped — `additionalProperties` is unset and Firefox
+ignores what it does not know — so a `settings = { … }` sub-attribute configures
+nothing. What reaches an extension is `3rdparty.Extensions.<id>`, handed to
+`storage.managed` verbatim. Use `adminSettings`, not its sibling `toOverwrite`:
+the latter's `filterLists` *wins* and replaces the selection wholesale, so it
+could not be split across files the way this one is. `"user-filters"` leads the
+list because uBO gates `userFilters` on that token being selected, so dropping
+it stores the custom filters and never applies them.
 **Breaks** *Silently, in three different ways.* The wrong key writes valid JSON
 that no one reads; the wrong nesting reaches an extension that discards it; the
 missing token leaves a populated filter pane switched off. Nothing warns —
@@ -80,3 +79,24 @@ missing token leaves a populated filter pane switched off. Nothing warns —
 dashboard shows the truth.
 **Also** SponsorBlock reads no managed storage at all, so its segment map has
 no declarative home and lives in its options page.
+
+<a id="ubo-imported-lists"></a>
+## `firefox/youtube.nix` — a subscribed list URL needs `importedLists`, not just selecting
+
+**Why** `restoreAdminSettings` copies `adminSettings.selectedFilterLists` into
+storage, but nothing there registers an asset source. Only
+`userSettings.importedLists` does that: `getAvailableLists` turns each URL in it
+into a registered `user`-submitted asset, then walks every such asset and
+deletes from the selection any it did not just register. A URL selected but not
+imported is therefore removed on the first run, not merely left unfetched.
+`externalLists` is uBO's own deprecated mirror of the same list, regenerated
+from it on save, so setting one of the pair is enough.
+**Breaks** *Silently.* uBO starts, the stock lists load, and the subscribed list
+is simply absent from the filter pane — no error, nothing in
+`about:policies#errors`.
+**Also** two consequences of this being a policy rather than a setting.
+`restoreAdminSettings` runs on every launch and rewrites *My filters* whenever
+it differs, so a filter added by hand in the dashboard does not survive a
+restart — the Nix file is the only place to add one. And `vAPI.adminStorage`
+answers from a cached copy and refreshes it afterwards, so a changed policy
+lands on the *second* launch after the switch, not the first.
