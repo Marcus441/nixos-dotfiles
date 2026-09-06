@@ -57,3 +57,26 @@ page on Firefox's own `#2B2A33`.
 Its only lever, `browser.display.background_color`, is inert unless
 `browser.display.document_color_use = 2` — measured — and that overrides every
 site's own colours.
+
+<a id="extension-managed-storage"></a>
+## `firefox.nix` — extension configuration goes through `3rdparty`, not `ExtensionSettings`
+
+**Why** An `ExtensionSettings` entry takes only the keys in Firefox's
+`policies-schema.json`, and there are two disjoint sets: twelve for a named
+extension, ten for the `*` wildcard, overlapping but neither a superset of the
+other. Anything outside them is dropped, because the schema leaves
+`additionalProperties` unset and Firefox ignores what it does not know — a
+`settings = { … }` sub-attribute configures nothing. The channel that reaches an
+extension is `3rdparty.Extensions.<id>`, handed to `storage.managed` verbatim.
+Use `adminSettings` and not its sibling `toOverwrite`: the latter's `filterLists`
+*wins* over `adminSettings.selectedFilterLists` and replaces the selection
+wholesale, so it cannot be split across files the way this one is.
+`"user-filters"` leads the list because uBO gates `userFilters` on that token
+being selected, so dropping it stores the custom filters and never applies them.
+**Breaks** *Silently, in three different ways.* The wrong key writes valid JSON
+that no one reads; the wrong nesting reaches an extension that discards it; the
+missing token leaves a populated filter pane switched off. Nothing warns —
+`about:policies#errors` stays empty for all three. Only the extension's own
+dashboard shows the truth.
+**Also** SponsorBlock reads no managed storage at all, so its segment map has
+no declarative home and lives in its options page.
