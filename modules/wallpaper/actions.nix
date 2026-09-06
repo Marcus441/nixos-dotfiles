@@ -32,13 +32,15 @@ _: {
         wallpaper = {
           directory = "${walls}";
           # load-bearing: docs/decisions/quickshell.md#quickshell-current-wallpaper
+          # load-bearing: docs/decisions/sessions.md#quickshell-wallpaper-thumbs
           set = "${pkgs.writeShellScript "set-wallpaper" ''
             [ -f "$1" ] || exit 1
             ${pkgs.coreutils}/bin/rm -f "${cache}/wallpaper_rotator_enabled"
             ${pkgs.systemd}/bin/systemctl --user stop wallpaper-rotator.service
             ${pkgs.coreutils}/bin/ln -sf "$1" "${cache}/current_wallpaper.img"
             ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ",$1"
-            ${pkgs.libnotify}/bin/notify-send -u low -i media-playback-stop "Wallpaper" "$(${pkgs.coreutils}/bin/basename "$1")"
+            thumb=$(${pkgs.jq}/bin/jq -r --arg path "$1" '.categories[].walls[] | select(.path == $path) | .thumb' "${config.wallpaper.thumbnailManifest}" 2>/dev/null)
+            ${pkgs.libnotify}/bin/notify-send -u low -h "string:image-path:''${thumb:-$1}" "Wallpaper" "$(${pkgs.coreutils}/bin/basename "$1")"
           ''}";
           enableRotator = "${pkgs.writeShellScript "enable-rotator" ''
             ${pkgs.coreutils}/bin/printf '%s' "''${1-}" >"${cache}/wallpaper_rotator_enabled"
