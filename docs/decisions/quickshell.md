@@ -141,3 +141,17 @@ The server advertises `bodyMarkupSupported` because it now honours it.
 drops `elide` and `maximumLineCount`, which the centre's one-line rows and
 the toast's three-line cap depend on. Adding `img` to the whitelist re-opens
 the fetch.
+
+<a id="quickshell-toast-picture"></a>
+## `popups/Toasts.qml` — a path or pixels is a picture, a name is an icon
+
+**Why** `Notification.image` carries every image a sender can attach: an
+`image-path` hint or `-i` flag arrives as `image://icon/<name>` for a theme
+icon and `image://icon//<path>` for a file, `image-data` as a `qsimage` URL.
+Only the icon-name form is drawn at 32 px through `IconImage`; the rest is a
+96×54 crop, so a wallpaper toast shows the wallpaper. The `Image` requests
+`sourceSize` in both dimensions: measured, the icon provider answers a
+one-sided request with a 2×2 image and fits a two-sided one inside the box
+with its aspect kept.
+**Breaks** `sourceSize.height` alone puts a 2×2 blur in every picture toast;
+treating every `image` as a picture upsizes each `-i media-*` icon into one.
