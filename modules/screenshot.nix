@@ -20,12 +20,17 @@ _: {
   ];
 
   flake.modules.homeManager.hyprland = [
-    {
-      screenshot = {
-        screen = "uwsm app -- grimblast --notify --freeze copysave screen";
-        area = "uwsm app -- grimblast --notify --freeze copysave area";
-      };
-    }
+    (
+      {config, ...}: {
+        screenshot = {
+          screen = "uwsm app -- grimblast --notify --freeze copysave screen";
+          area = "uwsm app -- grimblast --notify --freeze copysave area";
+        };
+
+        # load-bearing: docs/decisions/xdg.md#screenshots-user-dir
+        xdg.userDirs.extraConfig.SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
+      }
+    )
   ];
 
   flake.modules.homeManager.dwl = [
