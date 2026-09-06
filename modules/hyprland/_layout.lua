@@ -2,6 +2,15 @@ local M = {}
 
 local saved = nil
 
+local resize_step = 40
+
+local resize_delta = {
+  l = { -resize_step, 0 },
+  r = { resize_step, 0 },
+  u = { 0, -resize_step },
+  d = { 0, resize_step },
+}
+
 local function monocle()
   return hl.get_config("general.layout") == "monocle"
 end
@@ -65,6 +74,15 @@ function M.focus(dir)
       hl.dispatch(hl.dsp.layout("cycleprev"))
     else
       hl.dispatch(hl.dsp.layout("cyclenext"))
+    end
+  end
+end
+
+function M.resize(dir)
+  return function()
+    if not monocle() then
+      local d = resize_delta[dir]
+      hl.dispatch(hl.dsp.window.resize({ x = d[1], y = d[2], relative = true }))
     end
   end
 end

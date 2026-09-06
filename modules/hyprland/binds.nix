@@ -18,6 +18,7 @@ _: {
         wayland.windowManager.hyprland = {
           # load-bearing: docs/decisions/sessions.md#monocle-visual-profile
           # load-bearing: docs/decisions/sessions.md#layout-event
+          # load-bearing: docs/decisions/sessions.md#layout-resize-delta
           extraLuaFiles.layout = ./_layout.lua;
 
           settings.layout = {_var = mkLuaInline ''require("layout")'';};
@@ -76,6 +77,11 @@ _: {
               (bind "${mainMod} + SHIFT + L" ''hl.dsp.window.swap({ direction = "r" })'')
               (bind "${mainMod} + SHIFT + K" ''hl.dsp.window.swap({ direction = "u" })'')
               (bind "${mainMod} + SHIFT + J" ''hl.dsp.window.swap({ direction = "d" })'')
+
+              (bindOpts "${mainMod} + ALT + H" ''layout.resize("l")'' {repeating = true;})
+              (bindOpts "${mainMod} + ALT + L" ''layout.resize("r")'' {repeating = true;})
+              (bindOpts "${mainMod} + ALT + K" ''layout.resize("u")'' {repeating = true;})
+              (bindOpts "${mainMod} + ALT + J" ''layout.resize("d")'' {repeating = true;})
             ]
             ++ map (i: bind "${mainMod} + ${toString i}" "hl.dsp.focus({ workspace = ${toString i} })") (lib.range 1 9)
             ++ map (i: bind "${mainMod} + SHIFT + ${toString i}" "hl.dsp.window.move({ workspace = ${toString i} })") (lib.range 1 9)
