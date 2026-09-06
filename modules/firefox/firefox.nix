@@ -68,37 +68,11 @@ _: {
               "uBlock0@raymondhill.net" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
-                settings = {
-                  selectedFilterLists = [
-                    "ublock-filters"
-                    "ublock-badware"
-                    "ublock-privacy"
-                    "ublock-unbreak"
-                    "ublock-quick-fixes"
-
-                    "privacy-tracking"
-                    "urlhaus-1"
-                    "ublock-annoyances"
-                  ];
-                };
               };
 
               "sponsorBlocker@ajay.app" = {
                 installation_mode = "force_installed";
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
-                settings = {
-                  segmentSeverity = {
-                    sponsor = "skip";
-                    selfpromo = "skip";
-                    interaction = "skip";
-                    intro = "skip";
-                    outro = "skip";
-                    preview = "skip";
-                    music_offtopic = "skip";
-                    filler = "ignore";
-                    poi_highlight = "ignore";
-                  };
-                };
               };
 
               "myallychou@gmail.com" = {
@@ -136,6 +110,21 @@ _: {
                 install_url = "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi";
               };
             };
+
+            # load-bearing: docs/decisions/firefox.md#extension-managed-storage
+            "3rdparty".Extensions."uBlock0@raymondhill.net".adminSettings.selectedFilterLists = [
+              "user-filters"
+
+              "ublock-filters"
+              "ublock-badware"
+              "ublock-privacy"
+              "ublock-unbreak"
+              "ublock-quick-fixes"
+
+              "privacy-tracking"
+              "urlhaus-1"
+              "ublock-annoyances"
+            ];
           };
 
           profiles.default = {
