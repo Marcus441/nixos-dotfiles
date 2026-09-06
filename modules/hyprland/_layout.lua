@@ -53,6 +53,8 @@ function M.set(name)
         decoration = { rounding = p.rounding },
         animations = { enabled = p.animations },
       })
+      hl.exec_scheduled_prop_refresh_immediately()
+      hl.config({ decoration = { rounding = p.rounding } })
     end
     announce(name)
   end
