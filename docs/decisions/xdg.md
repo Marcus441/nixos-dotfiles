@@ -35,6 +35,23 @@ switch: relocating the directory without rewriting `path=` in each `.ini`
 leaves Android Studio pointing at a directory that no longer exists, and the
 AVD list comes up empty. There is nothing to regenerate it from.
 
+<a id="screenshots-user-dir"></a>
+## `screenshot.nix` — `SCREENSHOTS` is a user-dirs entry, not a variable
+
+**Why** `XDG_SCREENSHOTS_DIR` is grimblast's extension to the user-dirs spec,
+not part of it, and grimblast sources `user-dirs.dirs` itself before reading the
+variable — so `xdg.userDirs.extraConfig` reaches it without exporting anything,
+which is what `setSessionVariables = false` asks for. The value is derived from
+`xdg.userDirs.pictures`, so shots land under the pictures directory rather than
+in a third top-level directory of their own, and `createDirectories` makes it.
+**Breaks** *Quietly, one shot at a time.* Delete the entry and grimblast falls
+back to `XDG_PICTURES_DIR`, dropping shots loose in `~/Pictures`. Spelling the
+key `XDG_SCREENSHOTS_DIR` still works but warns — home-manager normalises the
+long form only below stateVersion 26.05.
+**Also** it was a `home.sessionVariables` line in `hosts/generator.nix` pointing
+at `~/Screenshots`; the wiring never had a reason to know where a screenshot
+goes.
+
 ## What stays in `$HOME`
 
 `.mozilla`, `.floorp`, `.pki`, `.icons`, `.cmake`, `.lldb`, `.omnisharp`,
