@@ -99,16 +99,11 @@ Item {
                         }
                     }
 
-                    Text {
+                    NotifBody {
                         visible: row.modelData.body !== ""
                         width: stack.width
-                        text: row.modelData.body
-                        textFormat: Text.PlainText
-                        elide: Text.ElideRight
+                        body: row.modelData.body
                         maximumLineCount: 1
-                        color: Config.textSecondary
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
                     }
                 }
 

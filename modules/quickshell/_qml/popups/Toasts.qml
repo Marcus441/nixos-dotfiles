@@ -5,6 +5,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 import qs
+import qs.lib
 import qs.services
 
 PanelWindow {
@@ -185,7 +186,7 @@ PanelWindow {
                         source: card.iconSource
                     }
 
-                    Text {
+                    NotifBody {
                         id: bodyText
 
                         anchors.left: icon.visible ? icon.right : parent.left
@@ -193,14 +194,9 @@ PanelWindow {
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
-                        text: card.modelData?.body ?? ""
-                        textFormat: Text.PlainText
+                        body: card.modelData?.body ?? ""
                         wrapMode: Text.Wrap
                         maximumLineCount: 3
-                        elide: Text.ElideRight
-                        color: Config.textSecondary
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
                     }
                 }
 

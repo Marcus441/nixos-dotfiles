@@ -124,3 +124,20 @@ GridView that has not been laid out yet silently does nothing.
 ring stops appearing with no error, the picker simply no longer says where you
 are. The path is written in `modules/wallpaper/actions.nix` and read through
 `Config.cacheDir`, and the two have to agree.
+
+<a id="quickshell-notif-body"></a>
+## `lib/NotifBody.qml` — one body renderer, styled text from Pango
+
+**Why** Senders write Pango markup — hyprpicker's `<span color='#…'>` is the
+case that surfaced it — and a `PlainText` body showed the tags. The toast and
+the notification centre both draw a body through this one `Text`, so it reads
+the same in either. It rewrites Pango into Qt's styled-text subset: `<span>`
+attributes become `<font color>`, `<b>`, `<i>`, `<u>`, `<s>`, `<small>` or
+`<big>` with a stack pairing each close tag to its span; bare `&` and `<` are
+escaped so plain-text senders survive; newlines become `<br>`; every other tag
+is dropped, `<img>` included, so a body can never make the shell fetch a URL.
+The server advertises `bodyMarkupSupported` because it now honours it.
+**Breaks** `Text.RichText` would take the markup unconverted but silently
+drops `elide` and `maximumLineCount`, which the centre's one-line rows and
+the toast's three-line cap depend on. Adding `img` to the whitelist re-opens
+the fetch.
