@@ -13,6 +13,27 @@ zsh-autosuggestions and nix-zsh-completions into the closure of a host that
 never runs them. swift5 carries no zsh and stays the control that proves a shell
 change moved nothing.
 
+<a id="direnv-nix-json-for-neovim"></a>
+## `dev/direnv.nix` — nix logs JSON when Neovim is the reader
+
+**Why** Neovim's direnv integration draws its progress bar from nix's
+`--log-format internal-json` stream, and that format is a flag with no
+environment or `nix.conf` equivalent. nix-direnv calls nix through its `_nix`
+wrapper, and direnv sources `direnvrc` after `lib/*.sh`, so redefining `_nix`
+in `programs.direnv.stdlib` adds the flag without forking nix-direnv. It is
+gated on `$NVIM` — set in every process Neovim spawns — and on stderr not being
+a terminal, which keeps a `:terminal` inside Neovim, and every shell, on
+direnv's ordinary output.
+**Breaks** *Silently, in the editor.* The consumer is `modules/direnv.lua` in
+`Marcus441/neovim.nix`; this flake pins that repository by revision, and with
+a pin that predates it every `@nix {…}` line lands in the editor as text. Bump
+the pin before switching this on. The override also restates nix-direnv's own
+flags (`--no-warn-dirty`, `--extra-experimental-features`); a nix-direnv bump
+that changes them changes nothing here.
+**Also** `$_nix_direnv_nix` is set by nix-direnv's preflight before any `_nix`
+call, so the override binds late and needs no nix path of its own. devenv is
+untouched: it renders its own progress and drops it on a pipe.
+
 <a id="zsh-nixos-surface"></a>
 ## The NixOS surface is three lines, and each is load-bearing
 
