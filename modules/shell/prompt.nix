@@ -60,6 +60,8 @@ in {
         programs.zsh.initContent = ''
           autoload -Uz add-zsh-hook
 
+          __prompt_sigil="%B%(?.%F{${colors16.${slot.ok}}}❯.%F{${colors16.${slot.err}}}✗)%f%b "
+
           # Prompt: a blank line, then cwd, git branch and status, dev
           # environment, and a sigil.
           __prompt() {
@@ -122,7 +124,13 @@ in {
             fi
             [[ -n $VIRTUAL_ENV ]] && env="''${env:+$env,}venv:''${VIRTUAL_ENV##*/}"
 
-            PROMPT=$'\n'"%B%F{${colors16.${slot.cwd}}}''${dir//\%/%%}%f%b"
+            if (( __prompt_topline )); then
+              __prompt_topline=0
+              PROMPT=""
+            else
+              PROMPT=$'\n'
+            fi
+            PROMPT+="%B%F{${colors16.${slot.cwd}}}''${dir//\%/%%}%f%b"
             [[ -w $PWD ]] || PROMPT+="%F{${colors16.${slot.err}}}${mark.readOnly}%f"
             PROMPT+=" "
             if (( inrepo )); then
@@ -131,9 +139,30 @@ in {
               [[ -n $gs ]] && PROMPT+="%F{${colors16.${slot.git}}}$gs%f"
             fi
             [[ -n $env ]] && PROMPT+="%F{${colors16.${slot.env}}}(''${env//\%/%%})%f "
-            PROMPT+="%B%(?.%F{${colors16.${slot.ok}}}❯.%F{${colors16.${slot.err}}}✗)%f%b "
+            PROMPT+=$__prompt_sigil
           }
           add-zsh-hook precmd __prompt
+
+          # Transient: the sigil alone replaces the prompt a command was run
+          # at, and a cleared screen drops the leading blank line.
+          typeset -g __prompt_topline=1
+          __prompt_transient() {
+            PROMPT=$__prompt_sigil
+            zle .reset-prompt
+          }
+          zmodload zsh/zle
+          autoload -Uz add-zle-hook-widget
+          add-zle-hook-widget line-finish __prompt_transient
+          __prompt_clear() {
+            __prompt_topline=1
+            __prompt
+            zle .clear-screen
+          }
+          zle -N clear-screen __prompt_clear
+          __prompt_preexec() {
+            [[ ''${1%% *} == (clear|reset) ]] && __prompt_topline=1
+          }
+          add-zsh-hook preexec __prompt_preexec
 
           # OSC 7: report the cwd, so a new window opens in it.
           __osc7_cwd() { printf '\e]7;file://%s%s\e\\' "$HOST" "$PWD" }

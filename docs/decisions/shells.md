@@ -182,6 +182,26 @@ survive, in that order — which nothing reveals until two are set at once.
 meant to read as clean. `(detached)` in `# branch.head` is the cue to show the
 short oid, where `symbolic-ref` used to drop the segment entirely.
 
+## The prompt is transient, and its blank line is conditional
+
+**Why** `add_newline` is a leading `\n` in `PROMPT`, which lands a blank line at
+the top of a freshly cleared screen. A `__prompt_topline` flag suppresses it for
+the first prompt of a session, after `clear` or `reset` (caught in `preexec`),
+and on Ctrl-L — where the `clear-screen` widget is overridden to rebuild the
+prompt before calling `.clear-screen`, because that widget redraws the existing
+`PROMPT` rather than running `precmd`.
+**Breaks** *Silently, and completely.* `add-zle-hook-widget` opens with
+`zmodload -e zsh/zle || return 1`, and `zsh/zle` is not yet loaded while
+`.zshrc` runs — so the call returns 1, registers nothing, and reports nothing.
+The explicit `zmodload zsh/zle` above it is the whole reason transience works;
+measured with `zle -l`, which listed no `zle-line-finish` without it. The later
+`zle -N clear-screen` is what used to pull the module in, too late to help.
+**Also** the transient prompt is the sigil alone, sharing `__prompt_sigil` with
+the full one, so `%(?…)` at `line-finish` reports the status the prompt being
+replaced was already showing — the command just accepted has not run yet.
+`zle .reset-prompt` collapses the two-line prompt to one and emits a cursor-up,
+reclaiming the blank line; that is what makes the scrollback compact.
+
 ## Both shells stay configured
 
 bash remains swift5's login shell, stays installed on the Hyprland hosts, and
