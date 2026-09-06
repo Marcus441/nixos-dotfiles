@@ -150,13 +150,57 @@ word, so scripts and `command nix` are untouched.
 ## The prompt is one file, two implementations
 
 **Why** zsh cannot reuse a line of the bash prompt — `%~` for `\w`, `precmd` for
-`PROMPT_COMMAND`, `%F{#rrggbb}` for a hand-written SGR. What must not drift is
-which palette slot means cwd, git, dev environment, ok and error, so that is a
-slot map in the file's outer `let` and both elements close over it.
-**Also** `%F{#rrggbb}` rather than raw escapes in `%{…%}` lets zle compute the
-prompt width itself, which is the whole of the classic zsh prompt-corruption
-bug. The sigil colour is `%(?.….…)`, so nothing has to capture `$?` as its first
-statement the way the bash half must.
+`PROMPT_COMMAND`, `%F{#rrggbb}` for a hand-written SGR. They no longer draw the
+same prompt either: the zsh half took a starship layout the bash half has not,
+so the two share the slot map in the file's outer `let` and nothing else. What
+must not drift is which palette slot means cwd, git, dev environment, ok and
+error, and pinning that is the map's whole job.
+**Also** `%F{#rrggbb}` rather than raw escapes lets zle compute the prompt width
+itself, which is the whole of the classic zsh prompt-corruption bug. The one
+exception is the branch's italic, which has no prompt escape — it is wrapped in
+`%{…%}`, the zero-width marker, and measured: at 40 columns zsh wraps a typed
+line as though the escape were not there. The sigil colour is `%(?.….…)`, so
+nothing has to capture `$?` as its first statement the way the bash half must —
+measured too, now that `__prompt` runs commands of its own.
+
+<a id="zsh-prompt-git"></a>
+## The zsh prompt reads git once, in porcelain v2
+
+**Why** The layout wants a branch, an upstream divergence and three file states
+— the toml leaves stashed, staged, renamed and deleted as empty strings, so
+nothing looks for them. One `git --no-optional-locks status --porcelain=v2
+--branch` answers the rest in the single fork the old `symbolic-ref` already
+cost — 3.8 ms against 2.1 ms here, so starship's `command_timeout` has no
+equivalent and needs none. `--no-optional-locks` keeps a prompt from taking the
+index lock against a concurrent git, and the repo root is found by walking
+`$PWD` for a `.git`, which is stat calls rather than a second fork.
+**Breaks** *Silently, twice.* A computed segment is still prompt-expanded, so a
+`%` in a branch name or a path is an escape unless doubled. And the marker order
+is starship's `$all_status` — of its seven, conflicted, modified and untracked
+survive, in that order — which nothing reveals until two are set at once.
+**Also** an empty marker is a decision, not an omission: a fully staged tree is
+meant to read as clean. `(detached)` in `# branch.head` is the cue to show the
+short oid, where `symbolic-ref` used to drop the segment entirely.
+
+## The prompt is transient, and its blank line is conditional
+
+**Why** `add_newline` is a leading `\n` in `PROMPT`, which lands a blank line at
+the top of a freshly cleared screen. A `__prompt_topline` flag suppresses it for
+the first prompt of a session, after `clear` or `reset` (caught in `preexec`),
+and on Ctrl-L — where the `clear-screen` widget is overridden to rebuild the
+prompt before calling `.clear-screen`, because that widget redraws the existing
+`PROMPT` rather than running `precmd`.
+**Breaks** *Silently, and completely.* `add-zle-hook-widget` opens with
+`zmodload -e zsh/zle || return 1`, and `zsh/zle` is not yet loaded while
+`.zshrc` runs — so the call returns 1, registers nothing, and reports nothing.
+The explicit `zmodload zsh/zle` above it is the whole reason transience works;
+measured with `zle -l`, which listed no `zle-line-finish` without it. The later
+`zle -N clear-screen` is what used to pull the module in, too late to help.
+**Also** the transient prompt is the sigil alone, sharing `__prompt_sigil` with
+the full one, so `%(?…)` at `line-finish` reports the status the prompt being
+replaced was already showing — the command just accepted has not run yet.
+`zle .reset-prompt` collapses the two-line prompt to one and emits a cursor-up,
+reclaiming the blank line; that is what makes the scrollback compact.
 
 ## Both shells stay configured
 
