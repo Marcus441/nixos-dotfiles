@@ -11,6 +11,7 @@ derivation hashes.
 | Host | Aspects |
 | --- | --- |
 | `gpc` | `core wayland firefox kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
+| `mbp` | `dev core kitty zsh apps office xcode vscode` |
 | `swift5` | `dev core wayland firefox foot laptop dwl dwl-bar keychron` |
 | `UM790pro` | `dev core wayland firefox kitty zsh hyprland quickshell yazi apps keychron` |
 
