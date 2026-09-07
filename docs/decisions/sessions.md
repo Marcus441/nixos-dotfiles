@@ -304,7 +304,9 @@ cost) and emits `manifest.json` — categories with counts, covers and
 per-image `{name, path, thumb}` — so the shell runs no `fd` and computes
 nothing: covers are the first file alphabetically, chosen at build time.
 `path` keys stay full-resolution store paths so a click hands the original
-to `wallpaper.set`.
+to `wallpaper.set`. `wallpaper.set` reads the manifest back in turn for its
+own toast — the `thumb` of the `path` it was handed — so no notification asks
+the shell to decode a 4K file; a path the manifest lacks falls back to itself.
 **Breaks** Pointing the shell back at the image directory restores in-shell
 4K decodes. The manifest's paths self-reference the derivation and the walls
 fetch — relativizing them breaks every consumer that resolves `file://` URLs.

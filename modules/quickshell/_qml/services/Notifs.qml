@@ -34,6 +34,7 @@ Singleton {
 
         actionsSupported: true
         bodySupported: true
+        bodyMarkupSupported: true
         imageSupported: true
         persistenceSupported: true
         keepOnReload: true

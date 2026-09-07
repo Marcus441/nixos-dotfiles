@@ -23,7 +23,11 @@ human makes, not a cleanup you offer.
   instantiated at startup or the D-Bus name goes unclaimed —
   `docs/decisions/sessions.md#quickshell-notifs`.
   The tray's right-click menu is drawn in QML, not handed to `display()` —
-  `docs/decisions/sessions.md#quickshell-tray-menu`. The overlays bind no
+  `docs/decisions/sessions.md#quickshell-tray-menu`. A notification body is
+  Pango markup rendered as styled text through one `NotifBody`, never
+  `RichText` — `docs/decisions/quickshell.md#quickshell-notif-body` — and a
+  toast draws a path or pixel image as a picture, an icon name as an icon —
+  `docs/decisions/quickshell.md#quickshell-toast-picture`. The overlays bind no
   `screen`: a layer surface with a null output is placed by the compositor, and
   Hyprland places it on the focused monitor —
   `docs/decisions/quickshell.md#quickshell-overlay-screen`. The launcher's use

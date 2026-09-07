@@ -5,6 +5,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 import qs
+import qs.lib
 import qs.services
 
 PanelWindow {
@@ -62,7 +63,10 @@ PanelWindow {
 
                 required property Notification modelData
                 readonly property color accent: card.modelData?.urgency === NotificationUrgency.Critical ? Config.base08 : card.modelData?.urgency === NotificationUrgency.Low ? Config.textMuted : Config.accent
-                readonly property string iconSource: card.modelData?.image ? card.modelData.image : card.modelData?.appIcon ? Quickshell.iconPath(card.modelData.appIcon, true) : ""
+                readonly property string image: card.modelData?.image ?? ""
+                // an icon name arrives as image://icon/<name>; a file path or raw pixels are a picture
+                readonly property bool picture: card.image !== "" && !/^image:\/\/icon\/[^\/]/.test(card.image)
+                readonly property string iconSource: card.picture ? "" : card.image !== "" ? card.image : card.modelData?.appIcon ? Quickshell.iconPath(card.modelData.appIcon, true) : ""
 
                 width: column.width
                 height: header.height + bodyBlock.height + actionRow.height
@@ -172,7 +176,31 @@ PanelWindow {
                     anchors.top: header.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: Math.max(bodyText.implicitHeight, icon.visible ? icon.height : 0) + 16
+                    height: Math.max(bodyText.implicitHeight, preview.visible ? preview.height : icon.visible ? icon.height : 0) + 16
+
+                    ClippingRectangle {
+                        id: preview
+
+                        visible: card.picture
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: Math.min(96, Math.round(height * pictureImage.implicitWidth / Math.max(1, pictureImage.implicitHeight)))
+                        height: 54
+                        radius: Theme.radius
+                        color: "transparent"
+
+                        Image {
+                            id: pictureImage
+
+                            anchors.fill: parent
+                            source: card.image
+                            // both dimensions: the icon provider serves a one-sided request as a 2x2 image
+                            sourceSize: Qt.size(192, 108)
+                            fillMode: Image.PreserveAspectCrop
+                            asynchronous: true
+                        }
+                    }
 
                     IconImage {
                         id: icon
@@ -185,22 +213,17 @@ PanelWindow {
                         source: card.iconSource
                     }
 
-                    Text {
+                    NotifBody {
                         id: bodyText
 
-                        anchors.left: icon.visible ? icon.right : parent.left
+                        anchors.left: preview.visible ? preview.right : icon.visible ? icon.right : parent.left
                         anchors.leftMargin: 12
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
-                        text: card.modelData?.body ?? ""
-                        textFormat: Text.PlainText
+                        body: card.modelData?.body ?? ""
                         wrapMode: Text.Wrap
                         maximumLineCount: 3
-                        elide: Text.ElideRight
-                        color: Config.textSecondary
-                        font.family: Config.fontFamily
-                        font.pixelSize: Config.fontSize
                     }
                 }
 
