@@ -40,6 +40,7 @@ Enumerate the files behind any row with
 | `quickshell` | `homeManager` | 6 |
 | `tearing` | `homeManager` | 1 |
 | `thunar` | `homeManager nixos` | 2 |
+| `vscode` | `darwin homeManager` | 2 |
 | `walker` | `homeManager` | 4 |
 | `wayland` | `homeManager nixos` | 11 |
 | `xcode` | `darwin` | 1 |
@@ -58,12 +59,13 @@ Declared in the file that creates the dependency, never in a central table.
 | `tearing` | `gaming hyprland` | `gaming/tearing.nix` |
 | `walker` | `hyprland` | `launcher/walker.nix` |
 | `yazi` | `apps` | `filemanager/yazi.nix` |
+| `vscode` | `dev` | `editor/vscode.nix` |
 
 ## Counts
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 143 |
-| of those, declaring more than one aspect or class | 44 |
-| `load-bearing:` pointers | 156 |
-| anchors defined in `docs/` | 136 |
+| files declaring at least one aspect | 144 |
+| of those, declaring more than one aspect or class | 45 |
+| `load-bearing:` pointers | 157 |
+| anchors defined in `docs/` | 137 |

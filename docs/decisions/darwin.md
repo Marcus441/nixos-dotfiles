@@ -26,3 +26,16 @@ form is invisible to them.
 has nothing to answer on, and every `neighboring_window` call fails.
 **Also** `macos_option_as_alt` is set there too, or the `alt+hjkl` resizes
 type accented letters instead of resizing.
+
+<a id="vscode-settings-path"></a>
+## `editor/vscode.nix` — `settings.json` is a `home.file`, at the path VS Code reads
+
+**Why** VS Code keeps user settings under `~/Library/Application Support` on
+macOS and under `$XDG_CONFIG_HOME` on Linux, so the file is placed by
+platform, the way Home Manager's own `programs.vscode` places it. That module
+is not used because it also installs the editor from nixpkgs, and the Mac
+takes the cask, with extensions from the Brewfile rather than nixpkgs.
+**Breaks** *Silently.* A file at the wrong path is a file VS Code never
+opens: the defaults apply and no setting complains.
+**Also** the file is read-only, so a tweak made in the settings UI fails to
+save; it belongs in the workspace's `.vscode/settings.json` or here.
