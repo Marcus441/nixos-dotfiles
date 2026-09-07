@@ -44,7 +44,7 @@ broken power path is not.
 ## `editor/claude-code.nix`, `gaming/launchers.nix`, `nvidia/nvtop.nix` — `homeManager`, unfree included
 
 **Why** User apps default to `homeManager` (AGENTS.md §6), and unfree is no
-bar: `unfree.nix` sets `nixpkgs.config.allowUnfree` in **both classes**, and
+bar: `unfree.nix` sets `nixpkgs.config.allowUnfree` in **every class**, and
 standalone Home Manager honours the home-module option — its `misc/nixpkgs.nix`
 re-imports `pkgs.path` with it and injects the result as `pkgs`. An earlier
 entry here recorded the opposite ("accepted and then ignored"); that was wrong
@@ -58,7 +58,7 @@ stays `nixos`: `programs.steam` has no home-manager side (32-bit GL, firewall).
 
 ## `unfree.nix` — `core`, not `gaming`
 
-Not a gaming fact, and one file for both classes. It was only ever in gpc's
+Not a gaming fact, and one file for every class. It was only ever in gpc's
 host file because that is where the first unfree package happened to be needed.
 
 ## `brightnessctl.nix` — two audiences, neither `core`

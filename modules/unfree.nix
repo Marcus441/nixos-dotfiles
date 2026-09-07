@@ -9,4 +9,9 @@ _: {
       nixpkgs.config.allowUnfree = true;
     }
   ];
+  flake.modules.darwin.core = [
+    {
+      nixpkgs.config.allowUnfree = true;
+    }
+  ];
 }

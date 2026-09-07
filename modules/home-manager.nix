@@ -9,4 +9,8 @@
       }
     )
   ];
+
+  flake.modules.darwin.core = [
+    ({pkgs, ...}: {environment.systemPackages = [pkgs.home-manager];})
+  ];
 }

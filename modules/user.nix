@@ -22,4 +22,8 @@ _: {
       }
     )
   ];
+
+  flake.modules.darwin.core = [
+    ({user, ...}: {system.primaryUser = user;})
+  ];
 }
