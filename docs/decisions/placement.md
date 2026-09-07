@@ -11,7 +11,17 @@ the value inertly — swift5 builds byte-identical.
 ## `mime.nix` — associations live with the aspect that installs
 
 An association for a program this aspect does not install is a dead default.
-What is left here is `core`'s own.
+What is left here is `core`'s own — but `xdg.mimeApps` asserts Linux, so the
+file sits in `wayland`, the aspect every Linux session takes, not in `core`.
+
+## `wayland` — the Linux session's userland glue
+
+A file goes to `wayland` when its module asserts Linux or its packages exist
+only there: the Wayland clipboard, GTK and Qt theming, XDG associations, the
+cursor, BlueZ. `core` keeps the option namespaces those files set
+(`clipboard.history`, `desktop.cursor`, `audioMixer.command`), so a host
+without the session still evaluates every reader. Not a session choice —
+dwl and Hyprland hosts both take it — so it is not `hyprland` or `dwl`.
 
 ## `discord.nix` — `equibop.desktop`
 
@@ -56,7 +66,8 @@ neither entry — it interpolates the store path into compiled config, and
 
 Both sessions bind a clipboard-history key, and the picker renders through the
 same menu program as the launcher — so the aspect providing one provides the
-other.
+other. The namespace stays in `core`; `wl-clipboard` and `cliphist` are
+Wayland's, and sit in `wayland`.
 
 ## `launcher/wmenu.nix` — theming belongs to neither intent
 

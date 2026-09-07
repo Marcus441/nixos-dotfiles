@@ -16,7 +16,7 @@ Inv. 3 working, not a violation.
 | `lock.command` | `lock/lock.nix` | `lock/lock.nix` (`hyprland`, `dwl`) |
 | `logout.command` | `powermenu/logout.nix` | `powermenu/logout.nix` (`hyprland`) |
 | `powerMenu.command` | `powermenu/powermenu.nix` | `quickshell/quickshell.nix` (`quickshell`) |
-| `audioMixer.command` | `media/toolbox.nix` | `media/toolbox.nix` (`core`) |
+| `audioMixer.command` | `media/toolbox.nix` | `media/pavucontrol.nix` (`wayland`) |
 | `systemMonitor.command` / `.processorCommand` / `.memoryCommand` / `.temperatureCommand` | `cli/btop.nix` | `cli/btop.nix` (`apps`) |
 | `bar.toggle` | `bar/bar.nix` | `quickshell/quickshell.nix` (`quickshell`) |
 | `wallpaperMenu.command` | `wallpaper/menu.nix` | `wallpaper/picker.nix` (`walker`) |

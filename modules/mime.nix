@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.core = [
+  flake.modules.homeManager.wayland = [
     ({config, ...}: {
       xdg.mimeApps = {
         enable = true;

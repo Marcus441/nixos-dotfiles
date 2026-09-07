@@ -4,7 +4,6 @@ _: {
       {
         pkgs,
         lib,
-        config,
         ...
       }: {
         # load-bearing: docs/decisions/theming.md#cursor
@@ -25,21 +24,25 @@ _: {
             description = "Cursor size, in pixels.";
           };
         };
+      }
+    )
+  ];
 
-        config = {
-          home.pointerCursor = {
-            enable = true;
-            name = config.desktop.cursor.name;
-            package = config.desktop.cursor.package;
-            size = config.desktop.cursor.size;
-            gtk.enable = true;
-            x11.enable = true;
-          };
+  flake.modules.homeManager.wayland = [
+    (
+      {config, ...}: {
+        home.pointerCursor = {
+          enable = true;
+          name = config.desktop.cursor.name;
+          package = config.desktop.cursor.package;
+          size = config.desktop.cursor.size;
+          gtk.enable = true;
+          x11.enable = true;
+        };
 
-          home.sessionVariables = {
-            XCURSOR_THEME = config.desktop.cursor.name;
-            XCURSOR_SIZE = toString config.desktop.cursor.size;
-          };
+        home.sessionVariables = {
+          XCURSOR_THEME = config.desktop.cursor.name;
+          XCURSOR_SIZE = toString config.desktop.cursor.size;
         };
       }
     )

@@ -1,5 +1,5 @@
 _: {
-  flake.modules.homeManager.core = [
+  flake.modules.homeManager.wayland = [
     (
       {
         config,
@@ -139,7 +139,7 @@ _: {
     )
   ];
 
-  flake.modules.nixos.core = [
+  flake.modules.nixos.wayland = [
     {
       programs.dconf.enable = true;
     }
