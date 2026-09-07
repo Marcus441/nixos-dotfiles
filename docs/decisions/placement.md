@@ -14,6 +14,12 @@ An association for a program this aspect does not install is a dead default.
 What is left here is `core`'s own — but `xdg.mimeApps` asserts Linux, so the
 file sits in `wayland`, the aspect every Linux session takes, not in `core`.
 
+## `firefox/` — its own aspect, requiring `wayland`
+
+The Mac uses Safari, so a host says no: that is the test for an aspect. It
+requires `wayland` because `style.nix` reads `gtk.font.name`, which `gtk.nix`
+sets there, and the browser's own mime associations travel with it.
+
 ## `wayland` — the Linux session's userland glue
 
 A file goes to `wayland` when its module asserts Linux or its packages exist

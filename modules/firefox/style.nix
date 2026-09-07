@@ -1,5 +1,7 @@
 _: {
-  flake.modules.homeManager.core = [
+  aspectRequires.firefox = ["wayland"];
+
+  flake.modules.homeManager.firefox = [
     (
       {
         config,

@@ -10,9 +10,9 @@ derivation hashes.
 
 | Host | Aspects |
 | --- | --- |
-| `gpc` | `core wayland kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
-| `swift5` | `dev core wayland foot laptop dwl dwl-bar keychron` |
-| `UM790pro` | `dev core wayland kitty zsh hyprland quickshell yazi apps keychron` |
+| `gpc` | `core wayland firefox kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
+| `swift5` | `dev core wayland firefox foot laptop dwl dwl-bar keychron` |
+| `UM790pro` | `dev core wayland firefox kitty zsh hyprland quickshell yazi apps keychron` |
 
 ## Aspects
 
@@ -23,10 +23,11 @@ Enumerate the files behind any row with
 | --- | --- | --- |
 | `alacritty` | `homeManager nixos` | 2 |
 | `apps` | `homeManager nixos` | 16 |
-| `core` | `homeManager nixos` | 63 |
+| `core` | `homeManager nixos` | 60 |
 | `dev` | `homeManager nixos` | 8 |
 | `dwl` | `homeManager nixos` | 11 |
 | `dwl-bar` | `homeManager nixos` | 2 |
+| `firefox` | `homeManager` | 3 |
 | `foot` | `homeManager nixos` | 2 |
 | `gaming` | `homeManager nixos` | 11 |
 | `ghostty` | `homeManager nixos` | 2 |
@@ -50,6 +51,7 @@ Declared in the file that creates the dependency, never in a central table.
 | Aspect | Requires | Declared in |
 | --- | --- | --- |
 | `dwl-bar` | `dwl` | `bar/dwl-bar.nix` |
+| `firefox` | `wayland` | `firefox/style.nix` |
 | `quickshell` | `hyprland` | `quickshell/quickshell.nix` |
 | `tearing` | `gaming hyprland` | `gaming/tearing.nix` |
 | `walker` | `hyprland` | `launcher/walker.nix` |
