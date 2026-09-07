@@ -157,7 +157,7 @@ nix flake check                  # cheap eval sweep
 migrate it in the same change, or state why not. Item numbers are stable
 identities — closed items are deleted and survivors keep their numbers.
 
-7. **No darwin.** `systems = ["x86_64-linux"]`; `mbp` is planned, not present.
+7. **No darwin host.** The wiring exists; `mbp` is planned, not present.
 
 ## 9. Anti-patterns
 
