@@ -113,8 +113,10 @@ Each of these was measured. Rationale in `docs/decisions/`.
 - **A second `ExecStart=` on a non-oneshot systemd service refuses to load.**
   NixOS merges `systemd.user.services.<name>` as a drop-in *over* the packaged
   unit, so an override adding install wiring must not restate `ExecStart`.
-- **`throwIf` order is fold order.** Checks built by folding a list wrap the
-  accumulator, so the **last** entry is outermost and fires **first**.
+- **`throwIf` order is fold order.** `lib.foldl'` forces every step as it
+  goes, so the **first** entry of a folded check list fires **first**; the
+  list is written in firing order. Measured, after the register said the
+  opposite for a year.
 - **A strict argument pattern is a wiring check.** `makeSystem` matches
   `monitors` and `input` without using them, so a newly declared host option
   must be wired there rather than silently ignored.

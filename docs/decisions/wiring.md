@@ -39,8 +39,10 @@ derivation hashes, on every host.
 
 **Why** A bogus aspect name must be reported before the requirements that could
 not resolve because of it.
-**Breaks** Each fold step wraps the accumulator, so the **last** entry is
-outermost and fires **first**. Appending a check makes it fire first.
+**Breaks** `foldl'` forces every step as it goes, so the **first** entry fires
+**first** and the list reads in firing order. Measured: a host with a bogus
+aspect and an unmet requirement reports the bogus aspect. Appending a check
+makes it fire last.
 
 <a id="generator-strict"></a>
 ## `hosts/generator.nix` — the strict argument pattern

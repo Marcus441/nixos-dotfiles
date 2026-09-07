@@ -39,24 +39,24 @@
   checkHost = name: host:
     lib.foldl' (acc: c: lib.throwIf c.cond c.msg acc) host [
       {
-        cond = unmetRequires host.aspects != [];
-        msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
-      }
-      {
-        cond = unknownAspects host.aspects != [];
-        msg = "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}";
-      }
-      {
-        cond = unknownRequireKeys != [];
-        msg = "aspectRequires: unknown aspect ${lib.concatStringsSep ", " unknownRequireKeys}";
+        cond = unknownClasses != [];
+        msg = "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}";
       }
       {
         cond = host.hostname != name;
         msg = "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name";
       }
       {
-        cond = unknownClasses != [];
-        msg = "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}";
+        cond = unknownRequireKeys != [];
+        msg = "aspectRequires: unknown aspect ${lib.concatStringsSep ", " unknownRequireKeys}";
+      }
+      {
+        cond = unknownAspects host.aspects != [];
+        msg = "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}";
+      }
+      {
+        cond = unmetRequires host.aspects != [];
+        msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
       }
     ];
 
