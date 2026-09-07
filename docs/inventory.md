@@ -10,9 +10,9 @@ derivation hashes.
 
 | Host | Aspects |
 | --- | --- |
-| `gpc` | `core kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
-| `swift5` | `dev core foot laptop dwl dwl-bar keychron` |
-| `UM790pro` | `dev core kitty zsh hyprland quickshell yazi apps keychron` |
+| `gpc` | `core wayland kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
+| `swift5` | `dev core wayland foot laptop dwl dwl-bar keychron` |
+| `UM790pro` | `dev core wayland kitty zsh hyprland quickshell yazi apps keychron` |
 
 ## Aspects
 
@@ -39,6 +39,7 @@ Enumerate the files behind any row with
 | `tearing` | `homeManager` | 1 |
 | `thunar` | `homeManager nixos` | 2 |
 | `walker` | `homeManager` | 4 |
+| `wayland` | `homeManager` | 1 |
 | `yazi` | `homeManager` | 1 |
 | `zsh` | `homeManager nixos` | 3 |
 
@@ -58,7 +59,7 @@ Declared in the file that creates the dependency, never in a central table.
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 133 |
+| files declaring at least one aspect | 134 |
 | of those, declaring more than one aspect or class | 36 |
 | `load-bearing:` pointers | 150 |
 | anchors defined in `docs/` | 132 |
