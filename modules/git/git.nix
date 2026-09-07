@@ -3,6 +3,10 @@ _: {
     ({pkgs, ...}: {environment.systemPackages = [pkgs.gh];})
   ];
 
+  flake.modules.darwin.core = [
+    ({pkgs, ...}: {environment.systemPackages = [pkgs.gh];})
+  ];
+
   flake.modules.homeManager.core = [
     (
       {pkgs, ...}: {
