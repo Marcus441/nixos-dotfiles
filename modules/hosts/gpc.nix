@@ -30,7 +30,7 @@ _: {
       ];
     };
 
-    nixos = {
+    machine = {
       stateVersion,
       hostname,
       ...

@@ -26,7 +26,7 @@ _: {
       ];
     };
 
-    nixos = {
+    machine = {
       stateVersion,
       hostname,
       pkgs,

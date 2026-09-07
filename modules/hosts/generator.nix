@@ -72,7 +72,7 @@
     fontSize,
     bar,
     packages,
-    nixos,
+    machine,
   }:
     nixpkgs.lib.nixosSystem {
       modules = [
@@ -85,7 +85,7 @@
             {imports = aspectModules "nixos" aspects;}
           ];
         }
-        nixos
+        machine
       ];
     };
 
