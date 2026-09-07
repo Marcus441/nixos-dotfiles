@@ -47,6 +47,9 @@ untouched: it renders its own progress and drops it on a pipe.
   `~/.zshrc`; the default would run a second from `/etc/zshrc`.
 
 `enableCompletion` stays on — it is what puts `/share/zsh` in `pathsToLink`.
+**Also** nix-darwin's `programs.zsh` ships the same two defaults — the `suse`
+prompt and a global `compinit` — so the `darwin` half neutralises them
+alike; `enable` is already its default, and macOS logs the user into zsh.
 **Also** `user.nix` declares a `loginShell` option defaulting to bash; the
 aspect sets it. `mkDefault` on the shell does not work — nixpkgs' `users-groups.nix`
 already defines it at that priority, so lowering ours conflicts rather than

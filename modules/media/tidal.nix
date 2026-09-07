@@ -1,5 +1,17 @@
 _: {
   flake.modules.homeManager.apps = [
-    ({pkgs, ...}: {home.packages = [pkgs.sone];})
+    (
+      {
+        lib,
+        pkgs,
+        ...
+      }: {
+        home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [pkgs.sone];
+      }
+    )
+  ];
+
+  flake.modules.darwin.apps = [
+    {homebrew.casks = ["tidal"];}
   ];
 }
