@@ -1,8 +1,12 @@
 _: {
   flake.modules.homeManager.apps = [
     (
-      {pkgs, ...}: {
-        programs.obs-studio = {
+      {
+        lib,
+        pkgs,
+        ...
+      }: {
+        programs.obs-studio = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
           enable = true;
           plugins = with pkgs.obs-studio-plugins; [
             wlrobs

@@ -1,5 +1,13 @@
 _: {
   flake.modules.homeManager.apps = [
-    ({pkgs, ...}: {home.packages = [pkgs.kdePackages.kdenlive];})
+    (
+      {
+        lib,
+        pkgs,
+        ...
+      }: {
+        home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [pkgs.kdePackages.kdenlive];
+      }
+    )
   ];
 }
