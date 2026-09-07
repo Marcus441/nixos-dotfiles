@@ -125,4 +125,14 @@ _: {
       }
     )
   ];
+
+  flake.modules.darwin.zsh = [
+    {
+      programs.zsh = {
+        # load-bearing: docs/decisions/shells.md#zsh-nixos-surface
+        promptInit = "";
+        enableGlobalCompInit = false;
+      };
+    }
+  ];
 }
