@@ -52,5 +52,5 @@ repo depends on `flake-parts` and `import-tree` only.
 
 ## Verify
 
-`./scripts/verify.sh build` — all six targets. `nix flake check` is a cheap
-eval sweep, not a substitute.
+`./scripts/verify.sh build` — every target the flake produces. `nix flake
+check` is a cheap eval sweep, not a substitute.

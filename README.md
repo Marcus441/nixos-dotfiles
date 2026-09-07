@@ -56,8 +56,8 @@ edition](https://discourse.nixos.org/t/search-for-best-dotfiles-structure-dendri
 complexity outgrowing the configuration it serves, fuzzy-finding by filename
 getting worse, and NixOS and home-manager configurations becoming hard to
 decouple. That last one shaped two choices here — Home Manager stays
-**standalone**, and `verify.sh` builds all six targets rather than trusting
-`nixos-rebuild` to cover them. The alternatives raised there (`flake-aspects`,
+**standalone**, and `verify.sh` builds every target the flake produces rather
+than trusting `nixos-rebuild` to cover them. The alternatives raised there (`flake-aspects`,
 `den`, `flake-fhs`, `unify`) are deliberately not used; this repo stays on
 flake-parts and import-tree.
 
@@ -76,9 +76,10 @@ it, and the aspect dependencies. Regenerate with `./scripts/inventory.sh`.
 
 An aspect is a decision or a capability that some host declines. It is not a
 magnitude and not a host archetype — the archetype is the *list*, not an entry
-in it. Six build targets: three `nixosConfigurations.<host>` and three
+in it. Every host is two build targets: its system —
+`nixosConfigurations.<host>` or `darwinConfigurations.<host>` — and its home,
 `homeConfigurations."marcus@<host>"`. Home Manager is **standalone**, activated
-separately rather than as a NixOS module.
+separately rather than as a NixOS or nix-darwin module.
 
 ## Installing
 
@@ -154,7 +155,9 @@ nix flake check                 # cheap eval sweep
 
 `verify.sh` compares output store paths, which is a proof of equivalence rather
 than an eyeball judgement — `./scripts/verify.sh HEAD` on a clean tree must
-report 6 PASS.
+report no FAIL. A target for another platform cannot be built here, so it is
+compared by evaluation instead: the output path is fixed by evaluation alone,
+and the row reads `PASS (eval)`.
 
 ## Working on it
 

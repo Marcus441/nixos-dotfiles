@@ -32,8 +32,9 @@ open them directly.
 fact from it in prose — that is how it went stale before.
 
 **dwl, not dwm.** dwl is the Wayland compositor. Nothing here is X11.
-User is `marcus`. Six build targets: three
-`nixosConfigurations.<host>.config.system.build.toplevel` and three
+User is `marcus`. Two build targets per host: its system,
+`nixosConfigurations.<host>.config.system.build.toplevel` or
+`darwinConfigurations.<host>.system`, and its home,
 `homeConfigurations."marcus@<host>".activationPackage`.
 
 ## 1. Invariants
@@ -142,10 +143,10 @@ been `homeManager` is a line to port later.
   the laptop.
 
 Do not claim a config builds without having built it. `nixos-rebuild build`
-covers only three of six targets — use `verify.sh`.
+covers only the NixOS systems, not the homes or the Mac — use `verify.sh`.
 
 ```bash
-./scripts/verify.sh build        # all six targets — the real check
+./scripts/verify.sh build        # every target the flake produces — the real check
 ./scripts/docs-check.sh          # pointers, orphan anchors, budgets, inventory
 nix flake check                  # cheap eval sweep
 ./scripts/verify.sh <ref>        # structural: prove nothing changed but order
@@ -220,7 +221,7 @@ across `#`, `//` and `/* */`. A `load-bearing:` pointer does not belong in a
   still one. Never split a coherent change because the message got long — a long
   body is fine, an incoherent history is not. A refactor or a reformat travels in
   its own commit, never folded into a behavioural one. Rationale in the commit
-  message: why, not what. Predict the six-target `verify.sh` signature and
+  message: why, not what. Predict the per-target `verify.sh` signature and
   justify every FAIL. `.githooks/commit-msg` checks the mechanical half;
   `core.hooksPath` is per-clone, set once (README, step 1).
 - **Branch off `main`**, rebase onto it before opening a PR, and keep the
