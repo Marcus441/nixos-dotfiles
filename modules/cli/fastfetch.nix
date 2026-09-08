@@ -4,6 +4,7 @@ _: {
       {
         config,
         lib,
+        pkgs,
         ...
       }: let
         # load-bearing: docs/decisions/theming.md#fastfetch-palette
@@ -39,7 +40,7 @@ _: {
         programs.fastfetch = {
           enable = true;
 
-          settings = {
+          settings = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
             logo = {
               source = ''
                         $1██      $2███  ██
