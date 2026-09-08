@@ -3,7 +3,7 @@ _: {
     hostname = "gpc";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["core" "kitty" "zsh" "gaming" "nvidia" "hyprland" "tearing" "quickshell" "thunar" "apps"];
+    aspects = ["core" "wayland" "firefox" "kitty" "zsh" "gaming" "nvidia" "hyprland" "tearing" "quickshell" "thunar" "apps"];
 
     fontSize = 20;
 
@@ -30,7 +30,7 @@ _: {
       ];
     };
 
-    nixos = {
+    machine = {
       stateVersion,
       hostname,
       ...

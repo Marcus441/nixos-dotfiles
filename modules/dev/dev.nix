@@ -8,12 +8,6 @@ _: {
               emulatedSystems = ["aarch64-linux"];
             };
           }
-          {
-            virtualisation.docker = {
-              enable = true;
-              enableOnBoot = false;
-            };
-          }
           (
             {pkgs, ...}: {
               services.usbmuxd = {

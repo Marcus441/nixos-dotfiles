@@ -72,7 +72,7 @@
     fontSize,
     bar,
     packages,
-    nixos,
+    machine,
   }:
     nixpkgs.lib.nixosSystem {
       modules = [
@@ -85,7 +85,7 @@
             {imports = aspectModules "nixos" aspects;}
           ];
         }
-        nixos
+        machine
       ];
     };
 
@@ -118,10 +118,6 @@
             username = user;
             homeDirectory = "/home/${user}";
             stateVersion = homeStateVersion;
-            sessionVariables = {
-              NIXOS_OZONE_WL = "1";
-              QT_QPA_PLATFORM = "wayland";
-            };
           };
         }
       ];

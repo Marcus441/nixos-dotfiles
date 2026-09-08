@@ -1,7 +1,7 @@
 _: let
   shorts = "https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt";
 in {
-  flake.modules.homeManager.core = [
+  flake.modules.homeManager.firefox = [
     {
       programs.firefox.policies = {
         ExtensionSettings = {

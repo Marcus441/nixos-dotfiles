@@ -11,17 +11,22 @@ _: {
     )
     (
       {pkgs, ...}: {
-        audioMixer.command = "pavucontrol";
-        windowTags.floating-window = ["^(org.pulseaudio.pavucontrol)$"];
-
         home.packages = with pkgs; [
-          imv
           ffmpeg
           imagemagick
           mediainfo
-          pavucontrol
-          playerctl
           yt-dlp
+        ];
+      }
+    )
+  ];
+
+  flake.modules.homeManager.wayland = [
+    (
+      {pkgs, ...}: {
+        home.packages = with pkgs; [
+          imv
+          playerctl
         ];
       }
     )

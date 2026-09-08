@@ -56,8 +56,8 @@ option to be wired here.
 **Breaks** Otherwise the generator's strict pattern reports it as a missing
 argument at the far end.
 
-<a id="record-nixos"></a>
-## `hosts/record.nix` — `nixos` has no default
+<a id="record-machine"></a>
+## `hosts/record.nix` — `machine` has no default
 
 **Why** Every host sets `networking.hostName` and `system.stateVersion` here and
 nowhere else.

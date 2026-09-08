@@ -1,5 +1,5 @@
 _: {
-  flake.modules.nixos.core = [
+  flake.modules.nixos.wayland = [
     {
       hardware = {
         bluetooth.enable = true;
@@ -15,7 +15,7 @@ _: {
     }
   ];
 
-  flake.modules.homeManager.core = [
+  flake.modules.homeManager.wayland = [
     {
       windowTags.floating-window = ["^(blueman-manager)$"];
       # load-bearing: docs/decisions/audio.md#mpris-proxy

@@ -3,7 +3,7 @@ _: {
     hostname = "UM790pro";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "kitty" "zsh" "hyprland" "quickshell" "yazi" "apps" "keychron"];
+    aspects = ["dev" "core" "wayland" "firefox" "kitty" "zsh" "hyprland" "quickshell" "yazi" "apps" "keychron"];
 
     fontSize = 16;
 
@@ -26,7 +26,7 @@ _: {
       ];
     };
 
-    nixos = {
+    machine = {
       stateVersion,
       hostname,
       pkgs,

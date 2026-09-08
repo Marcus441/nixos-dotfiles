@@ -3,7 +3,7 @@ _: {
     hostname = "swift5";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "foot" "laptop" "dwl" "dwl-bar" "keychron"];
+    aspects = ["dev" "core" "wayland" "firefox" "foot" "laptop" "dwl" "dwl-bar" "keychron"];
 
     fontSize = 16;
 
@@ -23,7 +23,7 @@ _: {
       ];
     };
 
-    nixos = {
+    machine = {
       pkgs,
       stateVersion,
       hostname,

@@ -91,8 +91,8 @@
         description = "Machine-specific system packages that no aspect owns.";
       };
 
-      # load-bearing: docs/decisions/wiring.md#record-nixos
-      nixos = lib.mkOption {
+      # load-bearing: docs/decisions/wiring.md#record-machine
+      machine = lib.mkOption {
         type = lib.types.deferredModule;
         description = "Machine facts with nowhere else to sit -- hostname, stateVersion, quirks of this box.";
       };
