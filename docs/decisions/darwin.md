@@ -3,16 +3,23 @@
 What the Mac does differently from the Linux hosts, and what it must not.
 
 <a id="homebrew-cleanup"></a>
-## `homebrew.nix` — `onActivation.cleanup = "zap"`
+## `homebrew.nix` — activation never uninstalls; cleanup is a command
 
-**Why** Homebrew is the only package source here that Nix does not own, so it
-is the only one where a `brew install` by hand would outlive the declaration
-that never mentioned it. `zap` makes a switch converge: every cask and App
-Store app not declared in some `darwin` file is uninstalled, with its
-preferences, so the Brewfile is the whole truth the way `home.packages` is.
-**Breaks** *Silently, and outward.* A cask installed by hand for an
-afternoon is gone at the next switch, without a prompt. Declare it, or expect
-to lose it.
+**Why** `brew bundle install --force-cleanup`, which is what every
+`onActivation.cleanup` other than `none` runs, removes every kind of thing
+Homebrew knows, and since Homebrew 4.7 that includes Mac App Store apps —
+Apple's own, and Safari's extensions, which are App Store apps too. The
+install path passes no type switches to its cleanup, so
+`HOMEBREW_BUNDLE_CLEANUP_NO_MAS` cannot reach it. Measured on the first
+switch: seven App Store apps installed by hand were uninstalled, and the two
+Safari extension apps survived only because macOS refused the ownership
+change. So activation only installs. Removing an undeclared cask or editor
+extension is `brew bundle cleanup --force --zap`, by hand: `global.brewfile`
+points it at the generated Brewfile, and the exported
+`HOMEBREW_BUNDLE_CLEANUP_NO_MAS` keeps it off the App Store even then.
+**Breaks** *Silently, the other way.* A cask installed for an afternoon stays
+until someone runs the command; `darwin-rebuild` prints what it would remove
+at check time and touches nothing.
 
 <a id="kitty-listen-socket"></a>
 ## `terminal/kitty.nix` — `listen_on` is a path on macOS, abstract on Linux
