@@ -16,7 +16,6 @@ _: {
         "ms-azuretools.vscode-containers"
         "humao.rest-client"
         "eamodio.gitlens"
-        "qufiwefefwoyn.kanagawa"
       ];
     }
   ];
@@ -35,7 +34,6 @@ _: {
           "editor.fontFamily" = font.name;
           "editor.fontSize" = font.terminalSize;
           "editor.fontLigatures" = font.ligatures;
-          "workbench.colorTheme" = "Kanagawa";
 
           "editor.formatOnSave" = true;
           "editor.inlayHints.enabled" = "onUnlessPressed";
