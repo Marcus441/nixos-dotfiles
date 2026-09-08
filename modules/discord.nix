@@ -8,12 +8,15 @@ _: {
         ...
       }: let
         c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
+        inherit (pkgs.stdenv.hostPlatform) isLinux;
       in {
-        xdg.mimeApps.defaultApplications."x-scheme-handler/discord" = "equibop.desktop";
+        xdg.mimeApps.defaultApplications = lib.optionalAttrs isLinux {
+          "x-scheme-handler/discord" = "equibop.desktop";
+        };
 
         home = {
-          packages = with pkgs; [equibop];
-          file = {
+          packages = lib.optionals isLinux [pkgs.equibop];
+          file = lib.optionalAttrs isLinux {
             ".config/equibop/settings.json".source = ./discord/equibop-settings.json;
             ".config/equibop/settings/settings.json".source =
               ./discord/equibop-plugin-settings.json;

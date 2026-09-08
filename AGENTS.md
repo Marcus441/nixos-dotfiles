@@ -126,8 +126,8 @@ A working model, not a mechanism. **Measure; do not predict** — recipe in
 | theming, fonts config, cursor | compositor/session registration, PAM |
 
 **Default to `homeManager`. Justify the exception.** Home Manager is
-standalone; `mbp` does not exist yet, so every line in `nixos` that could have
-been `homeManager` is a line to port later.
+standalone, and `mbp` takes only `homeManager` and `darwin`, so every line in
+`nixos` that could have been `homeManager` is a line the Mac does not get.
 
 ## 7. Hazards and verification
 
@@ -158,7 +158,7 @@ nix flake check                  # cheap eval sweep
 migrate it in the same change, or state why not. Item numbers are stable
 identities — closed items are deleted and survivors keep their numbers.
 
-7. **No darwin host.** The wiring exists; `mbp` is planned, not present.
+No open items.
 
 ## 9. Anti-patterns
 

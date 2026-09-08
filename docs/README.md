@@ -25,6 +25,7 @@ decisions/     why one file made its call, grouped by area
   gaming.md            Steam, Proton, the scheduler, the GPU
   audio.md             PipeWire, BlueZ, and what LE Audio switches on
   xdg.md               which app state leaves $HOME, and which stays
+  darwin.md            what the Mac does differently, and what it must not
 ```
 
 Each entry is **Why** the value is what it is and **Breaks** what goes wrong if

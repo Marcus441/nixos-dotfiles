@@ -126,6 +126,13 @@ Each of these was measured. Rationale in `docs/decisions/`.
 - **Eval-time vs config-time.** `lib.mkIf pkgs.stdenv.isLinux { … pkgs.grim … }`
   still evaluates `pkgs.grim`. Exclude by attribute (`lib.optionalAttrs`), not
   by value (`lib.mkIf`).
+- **A platform guard over a whole module body is infinite recursion.**
+  `lib.optionalAttrs pkgs.stdenv.isLinux { … }` as the module, or under
+  `config =`, recurses: `pkgs` is a module argument, and the merge needs the
+  attribute names before it can supply one. Under Home Manager `home = …`
+  and `xdg = …` recurse the same way (measured). Guard the leaf —
+  `home.packages = lib.optionals …`, `home.file = lib.optionalAttrs …`,
+  `programs.x = lib.optionalAttrs …`.
 - **`config` shadowing** inside `flake.modules.*` — see *Sharing values* above.
 - **An interpolation at column 0 reindents a whole generated file.** `''` strips
   the least indentation; a line beginning `${...}` has none.

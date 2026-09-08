@@ -11,6 +11,7 @@ derivation hashes.
 | Host | Aspects |
 | --- | --- |
 | `gpc` | `core wayland firefox kitty zsh gaming nvidia hyprland tearing quickshell thunar apps` |
+| `mbp` | `dev core kitty zsh apps office xcode vscode` |
 | `swift5` | `dev core wayland firefox foot laptop dwl dwl-bar keychron` |
 | `UM790pro` | `dev core wayland firefox kitty zsh hyprland quickshell yazi apps keychron` |
 
@@ -22,9 +23,9 @@ Enumerate the files behind any row with
 | Aspect | Classes | Files |
 | --- | --- | --- |
 | `alacritty` | `homeManager nixos` | 2 |
-| `apps` | `homeManager nixos` | 16 |
-| `core` | `homeManager nixos` | 60 |
-| `dev` | `homeManager nixos` | 8 |
+| `apps` | `darwin homeManager nixos` | 17 |
+| `core` | `darwin homeManager nixos` | 71 |
+| `dev` | `darwin homeManager nixos` | 11 |
 | `dwl` | `homeManager nixos` | 11 |
 | `dwl-bar` | `homeManager nixos` | 2 |
 | `firefox` | `homeManager` | 3 |
@@ -36,13 +37,16 @@ Enumerate the files behind any row with
 | `kitty` | `homeManager nixos` | 2 |
 | `laptop` | `homeManager nixos` | 3 |
 | `nvidia` | `homeManager nixos` | 4 |
+| `office` | `darwin` | 4 |
 | `quickshell` | `homeManager` | 6 |
 | `tearing` | `homeManager` | 1 |
 | `thunar` | `homeManager nixos` | 2 |
+| `vscode` | `darwin homeManager` | 2 |
 | `walker` | `homeManager` | 4 |
 | `wayland` | `homeManager nixos` | 11 |
+| `xcode` | `darwin` | 1 |
 | `yazi` | `homeManager` | 1 |
-| `zsh` | `homeManager nixos` | 3 |
+| `zsh` | `darwin homeManager nixos` | 4 |
 
 ## Aspect requirements
 
@@ -56,12 +60,13 @@ Declared in the file that creates the dependency, never in a central table.
 | `tearing` | `gaming hyprland` | `gaming/tearing.nix` |
 | `walker` | `hyprland` | `launcher/walker.nix` |
 | `yazi` | `apps` | `filemanager/yazi.nix` |
+| `vscode` | `dev` | `editor/vscode.nix` |
 
 ## Counts
 
 | | |
 | --- | --- |
-| files declaring at least one aspect | 135 |
-| of those, declaring more than one aspect or class | 38 |
-| `load-bearing:` pointers | 153 |
-| anchors defined in `docs/` | 134 |
+| files declaring at least one aspect | 147 |
+| of those, declaring more than one aspect or class | 45 |
+| `load-bearing:` pointers | 156 |
+| anchors defined in `docs/` | 135 |

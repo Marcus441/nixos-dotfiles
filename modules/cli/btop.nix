@@ -45,10 +45,14 @@ _: {
         pkgs,
         ...
       }: let
-        btop = pkgs.btop.override {
-          rocmSupport = true;
-          cudaSupport = true;
-        };
+        btop =
+          if pkgs.stdenv.hostPlatform.isLinux
+          then
+            pkgs.btop.override {
+              rocmSupport = true;
+              cudaSupport = true;
+            }
+          else pkgs.btop;
 
         settings = {
           color_theme = "kanagawa-dragon";

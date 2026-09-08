@@ -7,4 +7,8 @@ _: {
       };
     }
   ];
+
+  flake.modules.darwin.dev = [
+    {homebrew.casks = ["docker-desktop"];}
+  ];
 }

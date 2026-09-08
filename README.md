@@ -94,8 +94,8 @@ separately rather than as a NixOS or nix-darwin module.
    ```
 
    The location is load-bearing: `modules/nh.nix` points `programs.nh.flake` at
-   `/home/<user>/.dotfiles/flake`, so `nh os switch` finds nothing if the tree
-   lives anywhere else.
+   `/home/<user>/.dotfiles/flake` (`NH_FLAKE` at `/Users/<user>/…` on a Mac),
+   so `nh os switch` finds nothing if the tree lives anywhere else.
 
    The hooks in `.githooks/` are tracked, but `core.hooksPath` is per-clone
    local config: it is not cloned, so the line above is run once per checkout
@@ -142,6 +142,34 @@ separately rather than as a NixOS or nix-darwin module.
    anyone else.
 
    After that it is `nh os` / `nh home` as the daily driver.
+
+### On a Mac
+
+nix-darwin drives Homebrew and the App Store but installs neither, and the
+first switch runs before the config that enables flakes exists, so the
+bootstrap is by hand once:
+
+1. `xcode-select --install`, then upstream Nix, multi-user:
+   `sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)`.
+2. Homebrew's own install script, and sign into the App Store — `mas` needs
+   the account to fetch Xcode and Bitwarden.
+3. Clone to `~/.dotfiles/flake` and set `core.hooksPath` as in step 1. Check
+   `dscl . -read /Groups/nixbld PrimaryGroupID` is 350 (else set
+   `ids.gids.nixbld` in the host's `machine`), and move the installer's
+   `/etc/nix/nix.conf` — and `/etc/zshrc`, `/etc/bashrc` if asked — aside as
+   `*.before-nix-darwin`.
+4. First switch, with flakes enabled on the command line:
+
+   ```bash
+   sudo nix --extra-experimental-features 'nix-command flakes' \
+     run github:nix-darwin/nix-darwin/master#darwin-rebuild -- \
+     switch --flake ~/.dotfiles/flake#<hostname>
+   home-manager switch --flake ~/.dotfiles/flake#<user>@<hostname>
+   ```
+
+   The system switch renames the machine, installs the casks and App Store
+   apps, and brings the `home-manager` CLI the second line needs. Log out and
+   in for the Dark appearance. After that it is `nh darwin` / `nh home`.
 
 ## Verifying
 

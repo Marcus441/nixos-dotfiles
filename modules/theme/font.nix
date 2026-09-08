@@ -3,14 +3,19 @@ _: {
     (
       {
         lib,
+        pkgs,
         fontSize,
         ...
       }: {
         options.desktop.font = {
           name = lib.mkOption {
             type = lib.types.str;
-            default = "JetbrainsMono Nerd Font";
-            description = "Primary monospace font family.";
+            # load-bearing: docs/decisions/darwin.md#font-family-darwin
+            default =
+              if pkgs.stdenv.hostPlatform.isDarwin
+              then "JetBrainsMono Nerd Font Mono"
+              else "JetbrainsMono Nerd Font";
+            description = "Primary monospace font family, as the platform's font matcher names it.";
           };
           size = lib.mkOption {
             type = lib.types.int;
