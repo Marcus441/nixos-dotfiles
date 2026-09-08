@@ -3,6 +3,7 @@ _: {
     {
       homebrew = {
         enable = true;
+        enableZshIntegration = true;
         # load-bearing: docs/decisions/darwin.md#homebrew-cleanup
         onActivation.cleanup = "none";
         global.brewfile = true;
