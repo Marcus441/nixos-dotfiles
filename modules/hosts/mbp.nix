@@ -5,7 +5,7 @@ _: {
     stateVersion = 7;
     aspects = ["dev" "core" "kitty" "zsh" "apps" "office" "xcode" "vscode"];
 
-    fontSize = 14;
+    fontSize = 24;
 
     hardware = null;
 
