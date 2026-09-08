@@ -132,3 +132,5 @@ one but `man`.
   `home-manager switch` is how a host is driven.
 - `dev/ccache.nix` — ccache plus the CMake launcher env, for
   out-of-nix C/C++ builds.
+- `dev/colima.nix` — darwin-only by guard, not aspect: a Linux host runs
+  Docker natively and has nothing to ask a VM for.
