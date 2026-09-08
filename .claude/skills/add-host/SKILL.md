@@ -2,8 +2,8 @@
 description: >-
   Use when adding a new host to the Nix flake, or editing an existing host's
   aspect list or machine facts. Covers creating the host file, what the
-  generator rejects, aspectRequires, class placement, and the planned darwin
-  host. Triggers: add a host, new machine, host record, aspect list, monitors,
+  generator rejects, aspectRequires, class placement, and darwin hosts.
+  Triggers: add a host, new machine, host record, aspect list, monitors,
   stateVersion, hardware-configuration, aspectRequires, mbp, darwin, aarch64.
 ---
 
@@ -15,7 +15,8 @@ Manager overlay trap are `.claude/rules/host-wiring.md`. This is the procedure.
 ## Steps
 
 1. **Copy the hardware config** to `hosts/<hostname>/hardware-configuration.nix`.
-   It is machine-generated and never edited by hand.
+   It is machine-generated and never edited by hand. A Mac has none: write
+   `hardware = null` in the record.
 2. **Write `modules/hosts/<hostname>.nix`** — the aspect list plus machine
    facts. `modules/hosts/record.nix` is the typed record; the argument pattern
    is strict, so a missing field is an evaluation error rather than a silently
@@ -30,7 +31,9 @@ Manager overlay trap are `.claude/rules/host-wiring.md`. This is the procedure.
 
 - a `hostname` that disagrees with its attribute name;
 - aspect names that resolve in no class;
-- an unmet `aspectRequires`.
+- an unmet `aspectRequires`;
+- a `hardware` that disagrees with the platform: `null` on a NixOS host, a
+  path on a darwin host.
 
 **When an aspect depends on another, declare `aspectRequires` in the file that
 creates the dependency** — a central table would not know when a file stops
@@ -45,11 +48,14 @@ is a *decision*, and decisions belong in the aspect list.
 
 ## The Mac
 
-`mbp` (`aarch64-darwin`) is planned, not present — `systems` is
-`["x86_64-linux"]`. Every line put in `nixos` that could have lived in
-`homeManager` is a line to port later. Adding `aarch64-darwin` will immediately
-fail any Linux-only `perSystem.packages` — see
-`.claude/rules/perSystem-platform.md`.
+A host whose `system` ends in `-darwin` is built by nix-darwin; the class is
+derived from the platform, never written down. Its `stateVersion` is
+nix-darwin's integer, its `machine` block sets `networking.hostName`,
+`computerName` and `localHostName`, and its aspects are the ones with a
+`darwin` half — `docs/inventory.md` lists the classes each aspect declares.
+Every line put in `nixos` that could have lived in `homeManager` is a line the
+Mac does not get. Nothing here can build or switch a darwin target: the Mac
+does that itself (README, "Installing").
 
 ## Build where it hurts least
 

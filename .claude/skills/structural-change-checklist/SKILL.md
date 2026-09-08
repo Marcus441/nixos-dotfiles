@@ -35,14 +35,14 @@ not explain — `windowTags` rendered in reverse of aspect-list order.
 ## 3. Verify
 
 ```bash
-./scripts/verify.sh build        # all six targets build
+./scripts/verify.sh build        # every target builds, or evaluates if foreign
 ./scripts/verify.sh <ref>        # no arg = HEAD~1; proves nothing moved but order
 ./scripts/docs-check.sh          # pointers, orphan anchors, budgets, inventory
 ./scripts/inventory.sh           # regenerate docs/inventory.md if aspects changed
 nix flake check                  # cheap eval sweep
 ```
 
-Predict the six-target signature **before** running it, and justify every FAIL.
+Predict the per-target signature **before** running it, and justify every FAIL.
 An empty `diff-closures` with a differing path is `buildEnv` order; a version
 change, an unintended package, or a diff on a host you predicted identical is
 not. `swift5` takes neither Hyprland nor `apps` — a useful control.

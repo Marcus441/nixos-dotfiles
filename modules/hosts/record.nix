@@ -53,8 +53,8 @@
       system = lib.mkOption {type = lib.types.str;};
 
       stateVersion = lib.mkOption {
-        type = lib.types.str;
-        description = "The NixOS release this machine was installed at. Never bumped to follow nixpkgs.";
+        type = lib.types.either lib.types.str lib.types.int;
+        description = "The release this machine was installed at: NixOS's as a string, nix-darwin's as an int. Never bumped to follow nixpkgs.";
       };
 
       aspects = lib.mkOption {
@@ -62,9 +62,10 @@
         description = "Order is load-bearing: it sets merge order, which reaches derivation hashes. AGENTS.md §5.";
       };
 
+      # load-bearing: docs/decisions/wiring.md#record-hardware-null
       hardware = lib.mkOption {
-        type = lib.types.path;
-        description = "Machine-generated hardware-configuration.nix. Never edited, not regenerable without the machine.";
+        type = lib.types.nullOr lib.types.path;
+        description = "Machine-generated hardware-configuration.nix. Never edited, not regenerable without the machine. A darwin host has none and writes null.";
       };
 
       fontSize = lib.mkOption {type = lib.types.ints.positive;};

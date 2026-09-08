@@ -23,7 +23,7 @@ provider/consumer shape `.claude/rules/modules.md`. This is the procedure.
 3. **Add the aspect name to the relevant hosts** (`modules/hosts/<hostname>.nix`).
    Position in the list is load-bearing — `.claude/rules/host-wiring.md`.
 4. **Verify:** `./scripts/verify.sh build`, then `./scripts/verify.sh HEAD~1`
-   against a predicted six-target signature.
+   against a predicted per-target signature.
 
 ## Extend a feature
 

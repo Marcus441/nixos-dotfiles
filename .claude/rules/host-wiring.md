@@ -14,7 +14,9 @@ facts (hostname, `hostPlatform`, `stateVersion`, disk layout, monitors).
 
 - a `hostname` that disagrees with its attribute name;
 - aspect names that resolve in no class;
-- an unmet `aspectRequires`.
+- an unmet `aspectRequires`;
+- a `hardware` that disagrees with the platform: `null` on a NixOS host, a
+  path on a darwin host.
 
 **When an aspect depends on another, declare `aspectRequires` in the file that
 creates the dependency** — a central table would not know when a file stops
@@ -48,9 +50,13 @@ on Hyprland hosts, and nothing invokes either by command.
 
 ## The Mac
 
-`mbp` does not exist yet and `systems` is `["x86_64-linux"]`. Every line put in
-`nixos` that could have lived in `homeManager` is a line to be ported later.
-Default to `homeManager`; justify the exception.
+A host whose `system` ends in `-darwin` is built by nix-darwin into
+`darwinConfigurations`, with its home in `homeConfigurations` beside the
+Linux ones; the class is derived from the platform, never written down. It
+writes `hardware = null` and an integer `stateVersion`. Every line in `nixos`
+that could have lived in `homeManager` is a line the Mac does not get: default
+to `homeManager`, justify the exception, and give a `nixos` file a `darwin`
+half when the Mac needs the same thing.
 
 `perSystem` is where platform breakage bites first — see
 `perSystem-platform.md`.

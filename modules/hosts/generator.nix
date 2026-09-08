@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  inherit (inputs) home-manager nixpkgs;
+  inherit (inputs) home-manager nix-darwin nixpkgs;
 
   user = "marcus";
   homeStateVersion = "25.11";
@@ -16,7 +16,11 @@
     aspects;
 
   # load-bearing: docs/decisions/wiring.md#generator-classes
-  classes = ["nixos" "homeManager"];
+  classes = ["nixos" "homeManager" "darwin"];
+
+  # load-bearing: docs/decisions/wiring.md#generator-partition
+  isDarwinSystem = lib.hasSuffix "-darwin";
+  isDarwin = host: isDarwinSystem host.system;
 
   unknownClasses =
     lib.filter (c: !lib.elem c classes) (lib.attrNames config.flake.modules);
@@ -39,24 +43,32 @@
   checkHost = name: host:
     lib.foldl' (acc: c: lib.throwIf c.cond c.msg acc) host [
       {
-        cond = unmetRequires host.aspects != [];
-        msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
-      }
-      {
-        cond = unknownAspects host.aspects != [];
-        msg = "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}";
-      }
-      {
-        cond = unknownRequireKeys != [];
-        msg = "aspectRequires: unknown aspect ${lib.concatStringsSep ", " unknownRequireKeys}";
+        cond = unknownClasses != [];
+        msg = "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}";
       }
       {
         cond = host.hostname != name;
         msg = "hosts.${name}: hostname is \"${host.hostname}\"; the attribute name is the host name";
       }
       {
-        cond = unknownClasses != [];
-        msg = "flake.modules: unknown class ${lib.concatStringsSep ", " unknownClasses}; expected one of ${lib.concatStringsSep ", " classes}";
+        cond = unknownRequireKeys != [];
+        msg = "aspectRequires: unknown aspect ${lib.concatStringsSep ", " unknownRequireKeys}";
+      }
+      {
+        cond = unknownAspects host.aspects != [];
+        msg = "hosts.${name}: unknown aspect ${lib.concatStringsSep ", " (unknownAspects host.aspects)}";
+      }
+      {
+        cond = unmetRequires host.aspects != [];
+        msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
+      }
+      {
+        # load-bearing: docs/decisions/wiring.md#record-hardware-null
+        cond = (host.hardware == null) != isDarwin host;
+        msg =
+          if isDarwin host
+          then "hosts.${name}: a darwin host has no hardware-configuration.nix; write hardware = null"
+          else "hosts.${name}: hardware is null, and a NixOS host needs its hardware-configuration.nix";
       }
     ];
 
@@ -83,6 +95,33 @@
             hardware
             packages
             {imports = aspectModules "nixos" aspects;}
+          ];
+        }
+        machine
+      ];
+    };
+
+  makeDarwin = {
+    hostname,
+    system,
+    stateVersion,
+    aspects,
+    hardware,
+    monitors,
+    input,
+    fontSize,
+    bar,
+    packages,
+    machine,
+  }:
+    nix-darwin.lib.darwinSystem {
+      modules = [
+        {_module.args = {inherit stateVersion hostname user;};}
+        {nixpkgs.hostPlatform = system;}
+        {
+          imports = [
+            packages
+            {imports = aspectModules "darwin" aspects;}
           ];
         }
         machine
@@ -116,23 +155,28 @@
         {
           home = {
             username = user;
-            homeDirectory = "/home/${user}";
+            homeDirectory =
+              if isDarwinSystem system
+              then "/Users/${user}"
+              else "/home/${user}";
             stateVersion = homeStateVersion;
           };
         }
       ];
     };
+
+  checked = lib.mapAttrs checkHost config.hosts;
 in {
   config = {
-    systems = ["x86_64-linux"];
+    systems = ["x86_64-linux" "aarch64-darwin"];
 
     flake.nixosConfigurations =
-      lib.mapAttrs (name: host: makeSystem (checkHost name host)) config.hosts;
+      lib.mapAttrs (_: makeSystem) (lib.filterAttrs (_: host: !isDarwin host) checked);
+
+    flake.darwinConfigurations =
+      lib.mapAttrs (_: makeDarwin) (lib.filterAttrs (_: isDarwin) checked);
 
     flake.homeConfigurations =
-      lib.mapAttrs' (
-        name: host: lib.nameValuePair "${user}@${name}" (mkHome (checkHost name host))
-      )
-      config.hosts;
+      lib.mapAttrs' (name: host: lib.nameValuePair "${user}@${name}" (mkHome host)) checked;
   };
 }
