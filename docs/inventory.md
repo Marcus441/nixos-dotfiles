@@ -68,5 +68,5 @@ Declared in the file that creates the dependency, never in a central table.
 | --- | --- |
 | files declaring at least one aspect | 147 |
 | of those, declaring more than one aspect or class | 45 |
-| `load-bearing:` pointers | 155 |
-| anchors defined in `docs/` | 134 |
+| `load-bearing:` pointers | 156 |
+| anchors defined in `docs/` | 135 |

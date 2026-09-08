@@ -46,3 +46,15 @@ takes the cask, with extensions from the Brewfile rather than nixpkgs.
 opens: the defaults apply and no setting complains.
 **Also** the file is read-only, so a tweak made in the settings UI fails to
 save; it belongs in the workspace's `.vscode/settings.json` or here.
+
+<a id="font-family-darwin"></a>
+## `theme/font.nix` — the family is `JetBrainsMono Nerd Font Mono` on macOS
+
+**Why** kitty on macOS asks CoreText only for faces it flags monospace, and
+the plain Nerd Font variant, whose icons are two cells wide, is not one; the
+Mono variant is. CoreText names a family by its typographic name, exactly
+cased, so `JetBrainsMono Nerd Font Mono` is the one string kitty, Neovide
+and VS Code all resolve there. Linux keeps the wide-icon variant under
+fontconfig, which indexes every name in the table and ignores case.
+**Breaks** Loudly in kitty's log, `falling back to Menlo`, and silently in
+Neovide, which draws its bundled default. Measured on the first switch.
