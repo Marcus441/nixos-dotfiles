@@ -8,8 +8,6 @@ _: {
         "ms-dotnettools.csdevkit"
         "ms-dotnettools.csharp"
         "ms-dotnettools.vscode-dotnet-runtime"
-        "ms-dotnettools.vscodeintellicode-csharp"
-        "ms-dotnettools.dotnet-interactive-vscode"
         "csharpier.csharpier-vscode"
         "tintoy.msbuild-project-tools"
         "editorconfig.editorconfig"
