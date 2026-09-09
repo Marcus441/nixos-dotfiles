@@ -28,8 +28,8 @@
     then ''
       /* foreground, background, border */
       static uint32_t colors[][3] = {
-        [SchemeNorm] = { ${toBar colors.base0D}, ${toBar colors.base00}, ${toBar colors.base0D} },
-        [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base0D} },
+        [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
+        [SchemeSel]  = { ${toBar colors.base0D}, ${toBar colors.base00}, ${toBar colors.base0D} },
         [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
       };''
     else ''
