@@ -42,7 +42,6 @@
       };
     };
   });
-  # load-bearing: docs/decisions/wiring.md#record-strict
   host = lib.types.submodule {
     options = {
       hostname = lib.mkOption {
@@ -59,10 +58,9 @@
 
       aspects = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        description = "Order is load-bearing: it sets merge order, which reaches derivation hashes. AGENTS.md §5.";
+        description = "Order is load-bearing: it sets merge order, which reaches derivation hashes. ";
       };
 
-      # load-bearing: docs/decisions/wiring.md#record-hardware-null
       hardware = lib.mkOption {
         type = lib.types.nullOr lib.types.path;
         description = "Machine-generated hardware-configuration.nix. Never edited, not regenerable without the machine. A darwin host has none and writes null.";
@@ -92,7 +90,6 @@
         description = "Machine-specific system packages that no aspect owns.";
       };
 
-      # load-bearing: docs/decisions/wiring.md#record-machine
       machine = lib.mkOption {
         type = lib.types.deferredModule;
         description = "Machine facts with nowhere else to sit -- hostname, stateVersion, quirks of this box.";

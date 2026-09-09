@@ -122,7 +122,6 @@ _: {
               };
             };
 
-            # load-bearing: docs/decisions/firefox.md#extension-managed-storage
             "3rdparty".Extensions."uBlock0@raymondhill.net".adminSettings.selectedFilterLists = [
               "user-filters"
 
@@ -346,7 +345,6 @@ _: {
               "font.name-list.emoji" = "emoji";
 
               "general.autoScroll" = true;
-              # load-bearing: docs/decisions/firefox.md#main-thread-autoscroll
               "apz.autoscroll.enabled" = false;
               "general.smoothScroll" = true;
               "general.smoothScroll.msdPhysics.enabled" = true;

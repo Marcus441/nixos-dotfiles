@@ -7,14 +7,11 @@ _: {
         programs.zsh = {
           enable = true;
 
-          # load-bearing: docs/decisions/shells.md#zsh-dotdir
           dotDir = "${config.xdg.configHome}/zsh";
 
-          # load-bearing: docs/decisions/shells.md#zsh-keymap
           defaultKeymap = "emacs";
 
           shellAliases = {
-            # load-bearing: docs/decisions/shells.md#noglob-nix
             nix = "noglob nix";
           };
 
@@ -81,7 +78,6 @@ _: {
             };
           };
 
-          # load-bearing: docs/decisions/shells.md#zsh-menu-select
           initContent = ''
             # Globbing: extended patterns; empty expansion instead of an error.
             setopt extended_glob null_glob interactivecomments
@@ -115,7 +111,6 @@ _: {
     (
       {pkgs, ...}: {
         programs.zsh = {
-          # load-bearing: docs/decisions/shells.md#zsh-nixos-surface
           enable = true;
           promptInit = "";
           enableGlobalCompInit = false;

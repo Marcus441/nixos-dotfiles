@@ -60,7 +60,6 @@ _: {
 
   flake.modules.nixos.dwl = [
     {
-      # load-bearing: docs/decisions/sessions.md#swaylock-pam
       security.pam.services.swaylock = {};
     }
   ];

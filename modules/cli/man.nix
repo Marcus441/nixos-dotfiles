@@ -14,7 +14,6 @@ _: {
           man-pages-posix
         ];
 
-        # load-bearing: docs/decisions/placement.md#man-pager-colours
         home.sessionVariables = {
           GROFF_NO_SGR = 1;
           LESS_TERMCAP_mb = "${esc}[1;38;2;${colorsRgb.base08}m";

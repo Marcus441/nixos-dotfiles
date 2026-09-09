@@ -6,7 +6,6 @@ _: {
         pkgs,
         ...
       }: let
-        # load-bearing: docs/decisions/sessions.md#dwl-idle-dpms
         lockNow = "pgrep -x swaylock > /dev/null || swaylock -f";
       in {
         home.packages = [
@@ -35,7 +34,6 @@ _: {
     )
   ];
 
-  # load-bearing: docs/decisions/sessions.md#dwl-autostart
   flake.modules.nixos.dwl = [
     {dwl.autostart = ["dwl-idle"];}
   ];
