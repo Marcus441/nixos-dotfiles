@@ -3,7 +3,6 @@ _: {
     {
       xdg.enable = true;
 
-      # load-bearing: docs/decisions/xdg.md#prefer-xdg-directories
       home.preferXdgDirectories = true;
 
       xdg.userDirs = {
@@ -15,7 +14,7 @@ _: {
     }
   ];
 
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.mango = [
     (
       {config, ...}: {
         xdg.configFile."uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";

@@ -12,7 +12,6 @@ _: {
         hardware.nvidia = {
           modesetting.enable = true;
 
-          # load-bearing: docs/decisions/gaming.md#nvidia-preserve-vram
           powerManagement.enable = true;
 
           powerManagement.finegrained = false;

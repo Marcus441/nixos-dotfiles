@@ -19,7 +19,6 @@ in {
         "3rdparty".Extensions."uBlock0@raymondhill.net".adminSettings = {
           selectedFilterLists = [shorts];
 
-          # load-bearing: docs/decisions/firefox.md#ubo-imported-lists
           userSettings.importedLists = [shorts];
 
           userFilters = ''

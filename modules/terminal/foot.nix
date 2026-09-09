@@ -1,5 +1,4 @@
 _: {
-  # load-bearing: docs/decisions/terminal.md#terminal-daemons
   flake.modules.nixos.foot = [
     {dwl.autostart = ["foot --server"];}
   ];
@@ -31,25 +30,20 @@ _: {
 
         programs.foot = {
           enable = true;
-          # load-bearing: docs/decisions/terminal.md#terminal-daemons
           server.enable = true;
           settings = {
             main = {
               font = fontStr;
               pad = "8x8";
               initial-color-theme = "dark";
-              # load-bearing: docs/decisions/terminal.md#terminal-stroke-weight
               gamma-correct-blending = "yes";
             };
             scrollback.lines = 10000;
             mouse.hide-when-typing = "yes";
-            # load-bearing: docs/decisions/terminal.md#terminal-alt-scroll
             mouse.alternate-scroll-mode = "no";
 
-            # load-bearing: docs/decisions/terminal.md#terminal-clipboard-keys
             key-bindings.clipboard-copy = "Control+Shift+c XF86Copy XF86Cut";
 
-            # load-bearing: docs/decisions/terminal.md#terminal-ansi
             colors-dark =
               {
                 foreground = strip colors16.base05;

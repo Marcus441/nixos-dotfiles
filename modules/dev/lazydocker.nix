@@ -8,7 +8,6 @@ _: {
           enable = true;
           settings = {
             gui.theme = {
-              # load-bearing: docs/decisions/theming.md#lazygit
               selectedLineBgColor = ["default"];
 
               activeBorderColor = [colors.base0D "bold"];

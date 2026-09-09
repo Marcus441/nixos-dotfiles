@@ -1,24 +1,15 @@
 _: {
-  aspectRequires.walker = ["hyprland"];
+  aspectRequires.walker = ["mango"];
 
   flake.modules.homeManager.walker = [
     {
       launcher.argv = ["walker"];
       clipboard.history = "walker -m clipboard";
 
-      wayland.windowManager.hyprland.settings.layer_rule = [
-        {
-          name = "no-anim-walker";
-          match = {namespace = "walker";};
-          no_anim = true;
-        }
-      ];
-
       services.walker = {
         enable = true;
         systemd.enable = true;
 
-        # load-bearing: docs/decisions/theming.md#walker-style
         settings = {
           force_keyboard_focus = true;
           selection_wrap = true;

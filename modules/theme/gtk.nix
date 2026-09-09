@@ -8,7 +8,6 @@ _: {
       }: let
         inherit (config.desktop) colors;
 
-        # load-bearing: docs/decisions/theming.md#gtk-adw
         paletteCss = ''
           @define-color accent_color ${colors.base0D};
           @define-color accent_bg_color ${colors.base0D};

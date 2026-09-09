@@ -37,7 +37,7 @@ _: {
           inherit lib pkgs config ocr-copy;
         });
 
-        dwl-suckless = pkgs.dwl.overrideAttrs (old: {
+        dwl-desktop = pkgs.dwl.overrideAttrs (old: {
           patches = (old.patches or []) ++ config.dwl.patches;
           buildInputs = (old.buildInputs or []) ++ config.dwl.buildInputs;
 
@@ -49,7 +49,7 @@ _: {
         });
       in {
         home.packages = [
-          dwl-suckless
+          dwl-desktop
           pkgs.wl-clipboard
           ocr-copy
           pkgs.grim
@@ -59,7 +59,6 @@ _: {
     )
   ];
 
-  # load-bearing: docs/decisions/sessions.md#dwl-autostart-core
   flake.modules.nixos.core = [
     (
       {lib, ...}: {
@@ -105,16 +104,13 @@ _: {
 
         autostart = lib.concatMapStrings (c: " ${c} &") config.dwl.autostart;
 
-        # load-bearing: docs/decisions/sessions.md#dwl-session
         dwl-session = pkgs.writeShellScript "dwl-session" ''
-          # The home-manager session environment: PATH, XDG_DATA_DIRS, dbus.
           hm_vars="$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           [ -f "$hm_vars" ] && . "$hm_vars"
           export PATH="$HOME/.nix-profile/bin:$PATH"
           export XDG_CURRENT_DESKTOP=dwl
           export XDG_SESSION_TYPE=wayland
 
-          # -s autostart, then dwl.autostart. The pipe is the status feed.
           ${statusFeed}dwl -s 'dwl-monitors; ${pkgs.swaybg}/bin/swaybg -i ${wallpaperImage} -m fill & mako &${autostart}'
         '';
 

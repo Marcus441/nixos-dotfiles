@@ -1,5 +1,4 @@
 _: {
-  # load-bearing: docs/decisions/terminal.md#terminal-daemons
   flake.modules.nixos.alacritty = [
     {dwl.autostart = ["alacritty --daemon"];}
   ];
@@ -14,7 +13,6 @@ _: {
       }: let
         inherit (config.desktop) ansi font colors16;
 
-        # load-bearing: docs/decisions/terminal.md#terminal-ansi
         names = ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "white"];
         slots = offset:
           lib.listToAttrs (lib.imap0 (
@@ -23,7 +21,6 @@ _: {
             names);
       in {
         terminal = {
-          # load-bearing: docs/decisions/terminal.md#terminal-daemons
           argv = ["${pkgs.alacritty}/bin/alacritty" "msg" "create-window"];
           fallbackArgv = ["${pkgs.alacritty}/bin/alacritty"];
           appIdArgv = id: ["--class" id];
@@ -33,7 +30,6 @@ _: {
           binary = "alacritty";
         };
 
-        # load-bearing: docs/decisions/terminal.md#terminal-daemons
         systemd.user.services.alacritty = {
           Unit = {
             Description = "Alacritty daemon, resident so that opening a window costs nothing";
@@ -66,7 +62,6 @@ _: {
             scrolling.history = 10000;
             mouse.hide_when_typing = true;
 
-            # load-bearing: docs/decisions/terminal.md#terminal-clipboard-keys
             keyboard.bindings = [
               {
                 key = "Cut";
@@ -74,7 +69,6 @@ _: {
               }
             ];
 
-            # load-bearing: docs/decisions/terminal.md#terminal-ansi
             colors = {
               primary = {
                 foreground = colors16.base05;

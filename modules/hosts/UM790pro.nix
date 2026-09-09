@@ -3,7 +3,18 @@ _: {
     hostname = "UM790pro";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "wayland" "firefox" "foot" "dwl" "dwl-bar" "keychron"];
+    aspects = [
+      "dev"
+      "core"
+      "zsh"
+      "wayland"
+      "firefox"
+      "foot"
+      "dwl"
+      "dwl-bar"
+      "apps"
+      "keychron"
+    ];
 
     fontSize = 16;
 
