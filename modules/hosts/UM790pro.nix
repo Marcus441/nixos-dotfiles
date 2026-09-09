@@ -3,7 +3,7 @@ _: {
     hostname = "UM790pro";
     system = "x86_64-linux";
     stateVersion = "25.11";
-    aspects = ["dev" "core" "wayland" "firefox" "kitty" "zsh" "hyprland" "quickshell" "yazi" "apps" "keychron"];
+    aspects = ["dev" "core" "wayland" "firefox" "foot" "dwl" "dwl-bar" "keychron"];
 
     fontSize = 16;
 
@@ -36,7 +36,6 @@ _: {
       networking.networkmanager.wifi.powersave = false;
       programs.nix-ld.enable = true;
 
-      # load-bearing: docs/decisions/hosts.md#nix-ld-emulator
       programs.nix-ld.libraries = with pkgs; [
         libbsd
         dbus

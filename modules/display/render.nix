@@ -1,6 +1,5 @@
 {lib, ...}: {
   flake.lib.monitors = rec {
-    # load-bearing: docs/decisions/display-and-boot.md#render-identify
     identify = m:
       if m.description != null
       then "desc:${m.description}"
