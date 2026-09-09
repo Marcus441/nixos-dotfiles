@@ -6,7 +6,6 @@ _: {
         lib,
         ...
       }: {
-        # load-bearing: docs/decisions/terminal.md#terminal-namespace
         options.terminal = {
           argv = lib.mkOption {
             type = lib.types.listOf lib.types.str;
@@ -19,21 +18,18 @@ _: {
             description = "Terminal that does not depend on a running server. Defaults to `argv`, which is the honest answer for a terminal with no daemon.";
           };
 
-          # load-bearing: docs/decisions/terminal.md#terminal-transient
           transientArgv = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = config.terminal.argv;
             description = "Terminal for a TUI opened, used and closed in one sitting. A session renders that however it likes; the default is `argv`.";
           };
 
-          # load-bearing: docs/decisions/terminal.md#terminal-exec
           exec = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [];
             description = "Arguments introducing the command to run, appended after every option and immediately before it. Empty where the terminal takes a bare trailing command.";
           };
 
-          # load-bearing: docs/decisions/terminal.md#terminal-appid
           appIdArgv = lib.mkOption {
             type = lib.types.functionTo (lib.types.listOf lib.types.str);
             description = "Arguments making the terminal announce the given app-id. A function because the three spellings differ in shape, not just in name.";
@@ -44,7 +40,6 @@ _: {
             description = "`transientArgv` at `compactSize`, so a TUI needing 24 rows fits a session's floating window.";
           };
 
-          # load-bearing: docs/decisions/terminal.md#terminal-compact
           compactSize = lib.mkOption {
             type = lib.types.int;
             readOnly = true;
@@ -52,7 +47,6 @@ _: {
             description = "Font size at which a TUI needing 24 rows fits a session's floating window.";
           };
 
-          # load-bearing: docs/decisions/terminal.md#terminal-desktopfile
           desktopFile = lib.mkOption {
             type = lib.types.str;
             description = "The terminal's own desktop entry. No default: two terminal aspects on one host collide here, by name, instead of silently concatenating their argv.";
@@ -90,12 +84,14 @@ _: {
     )
   ];
 
-  flake.modules.homeManager.hyprland = [
-    (
-      {config, ...}: {
-        terminal.transientArgv =
-          config.terminal.argv ++ config.terminal.appIdArgv config.floatingWindow.term;
-      }
-    )
+  flake.modules.homeManager.mango = [
+    # (
+    # TODO: move to mango
+
+    # {config, ...}: {
+    #   terminal.transientArgv =
+    #     config.terminal.argv ++ config.terminal.appIdArgv config.floatingWindow.term;
+    # }
+    # )
   ];
 }

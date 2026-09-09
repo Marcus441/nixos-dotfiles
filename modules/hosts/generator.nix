@@ -9,16 +9,13 @@
   user = "marcus";
   homeStateVersion = "25.11";
 
-  # load-bearing: docs/decisions/wiring.md#generator-depth
   aspectModules = class: aspects:
     lib.concatMap
     (name: config.flake.modules.${class}.${name} or [])
     aspects;
 
-  # load-bearing: docs/decisions/wiring.md#generator-classes
   classes = ["nixos" "homeManager" "darwin"];
 
-  # load-bearing: docs/decisions/wiring.md#generator-partition
   isDarwinSystem = lib.hasSuffix "-darwin";
   isDarwin = host: isDarwinSystem host.system;
 
@@ -39,7 +36,6 @@
 
   unknownRequireKeys = unknownAspects (lib.attrNames config.aspectRequires);
 
-  # load-bearing: docs/decisions/wiring.md#generator-checks
   checkHost = name: host:
     lib.foldl' (acc: c: lib.throwIf c.cond c.msg acc) host [
       {
@@ -63,7 +59,6 @@
         msg = "hosts.${name}: unmet aspect requirement -- ${lib.concatStringsSep "; " (unmetRequires host.aspects)}";
       }
       {
-        # load-bearing: docs/decisions/wiring.md#record-hardware-null
         cond = (host.hardware == null) != isDarwin host;
         msg =
           if isDarwin host
@@ -72,7 +67,6 @@
       }
     ];
 
-  # load-bearing: docs/decisions/wiring.md#generator-strict
   makeSystem = {
     hostname,
     system,

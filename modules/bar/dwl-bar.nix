@@ -21,7 +21,6 @@ _: {
 
   flake.modules.nixos.dwl-bar = [
     {
-      # load-bearing: docs/decisions/sessions.md#dwl-bar-status
       dwl.statusCommand = "while :; do date '+%a %d %b  %H:%M'; sleep 30; done";
     }
   ];

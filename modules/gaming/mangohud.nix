@@ -2,7 +2,6 @@ _: {
   flake.modules.nixos.gaming = [
     (
       {pkgs, ...}: {
-        # load-bearing: docs/decisions/gaming.md#mangohud-fhs
         programs.steam.extraPackages = [pkgs.mangohud];
       }
     )

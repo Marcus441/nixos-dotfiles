@@ -4,7 +4,6 @@ _: {
       {config, ...}: let
         inherit (config.desktop) colors;
 
-        # load-bearing: docs/decisions/theming.md#zathura-alpha
         translucent = c: "${c}80";
       in {
         programs.zathura = {

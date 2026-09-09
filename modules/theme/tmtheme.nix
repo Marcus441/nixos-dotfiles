@@ -39,7 +39,6 @@ _: {
           settings = {inherit fontStyle foreground;};
         };
       in {
-        # load-bearing: docs/decisions/theming.md#tmtheme
         options.desktop.syntaxTheme = lib.mkOption {
           type = lib.types.path;
           readOnly = true;

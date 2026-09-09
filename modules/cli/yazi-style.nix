@@ -65,7 +65,6 @@ _: {
             btn_labels = ["  󰄬 Yes  " "  󰅖 No  "];
           };
 
-          # load-bearing: docs/decisions/tui.md#yazi-blocks
           cmp = {
             border = {
               fg = colors16.base01;
@@ -153,7 +152,6 @@ _: {
             bold = true;
           };
 
-          # load-bearing: docs/decisions/tui.md#yazi-frames
           indicator = {
             padding = {
               open = "▐";
@@ -176,7 +174,6 @@ _: {
             };
           };
 
-          # load-bearing: docs/decisions/tui.md#yazi-reset
           mode = {
             normal_main = {
               fg = colors16.base00;

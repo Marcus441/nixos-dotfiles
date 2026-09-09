@@ -6,7 +6,6 @@ _: {
         lib,
         ...
       }: {
-        # load-bearing: docs/decisions/theming.md#colors-hash
         options.desktop.colors = lib.mkOption {
           type = lib.types.attrsOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           description = "base24 colour palette (hex, with leading '#').";
@@ -19,7 +18,6 @@ _: {
           description = "the base16 subset of `desktop.colors`.";
         };
 
-        # load-bearing: docs/decisions/terminal.md#terminal-ansi
         options.desktop.ansi = lib.mkOption {
           type = lib.types.listOf (lib.types.strMatching "#[0-9a-fA-F]{6}");
           readOnly = true;

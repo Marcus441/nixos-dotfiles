@@ -56,7 +56,6 @@ in {
       {config, ...}: let
         inherit (config.desktop) colors16;
       in {
-        # load-bearing: docs/decisions/shells.md#zsh-prompt-git
         programs.zsh.initContent = ''
           autoload -Uz add-zsh-hook
 

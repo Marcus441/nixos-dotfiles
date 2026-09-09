@@ -16,9 +16,7 @@ _: {
           CARGO_HOME = "${config.xdg.dataHome}/cargo";
           RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
           GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
-          # load-bearing: docs/decisions/xdg.md#android-user-home
           ANDROID_USER_HOME = "${config.xdg.dataHome}/android";
-          # load-bearing: docs/decisions/xdg.md#android-emulator-home
           ANDROID_EMULATOR_HOME = "${config.xdg.dataHome}/android";
           ANDROID_HOME = "${config.xdg.dataHome}/android/sdk";
           DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";

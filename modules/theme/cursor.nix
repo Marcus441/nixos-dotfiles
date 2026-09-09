@@ -6,7 +6,6 @@ _: {
         lib,
         ...
       }: {
-        # load-bearing: docs/decisions/theming.md#cursor
         options.desktop.cursor = {
           name = lib.mkOption {
             type = lib.types.str;
@@ -48,7 +47,7 @@ _: {
     )
   ];
 
-  flake.modules.homeManager.hyprland = [
+  flake.modules.homeManager.mango = [
     (
       {pkgs, ...}: {
         desktop.cursor = {

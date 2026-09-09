@@ -13,7 +13,6 @@ _: {
               theme = {
                 lightTheme = false;
 
-                # load-bearing: docs/decisions/theming.md#lazygit
                 selectedLineBgColor = ["default"];
 
                 activeBorderColor = [colors.base0D "bold"];

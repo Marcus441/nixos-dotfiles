@@ -1,8 +1,7 @@
 _: let
   gameClass = "^(steam_app_\\d+|gamescope)$";
 in {
-  # load-bearing: docs/decisions/gaming.md#tearing-intersection
-  aspectRequires.tearing = ["gaming" "hyprland"];
+  aspectRequires.tearing = ["gaming" "mango"];
 
   flake.modules.homeManager.gaming = [
     {windowTags.no-anim = [gameClass];}
@@ -10,22 +9,24 @@ in {
 
   flake.modules.homeManager.tearing = [
     {
-      wayland.windowManager.hyprland.settings = {
-        config = {
-          general.allow_tearing = true;
-          render.direct_scanout = 1;
-        };
+      # TODO: Move to mango
 
-        window_rule = [
-          {
-            name = "game-immediate";
-            match = {class = gameClass;};
-            immediate = true;
-            content = "game";
-            idle_inhibit = "fullscreen";
-          }
-        ];
-      };
+      # wayland.windowManager.hyprland.settings = {
+      #   config = {
+      #     general.allow_tearing = true;
+      #     render.direct_scanout = 1;
+      #   };
+      #
+      #   window_rule = [
+      #     {
+      #       name = "game-immediate";
+      #       match = {class = gameClass;};
+      #       immediate = true;
+      #       content = "game";
+      #       idle_inhibit = "fullscreen";
+      #     }
+      #   ];
+      # };
     }
   ];
 }

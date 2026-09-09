@@ -17,11 +17,10 @@
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
 
-  # load-bearing: docs/decisions/sessions.md#dwl-column0
   barAppearance = lib.optionalString hasBar ''
     static const int showbar                   = 1;  /* 0 means no bar */
     static const int topbar                    = 1;  /* 0 means bottom bar */
-    static const char *fonts[]                 = {"${font.name}:size=10"};
+    static const char *fonts[]                 = {"${font.name}:size=12"};
   '';
 
   colorTable =
@@ -30,13 +29,13 @@
       /* foreground, background, border */
       static uint32_t colors[][3] = {
         [SchemeNorm] = { ${toBar colors.base05}, ${toBar colors.base00}, ${toBar colors.base01} },
-        [SchemeSel]  = { ${toBar colors.base05}, ${toBar colors.base02}, ${toBar colors.base03} },
+        [SchemeSel]  = { ${toBar colors.base0D}, ${toBar colors.base00}, ${toBar colors.base0D} },
         [SchemeUrg]  = { ${toBar colors.base00}, ${toBar colors.base08}, ${toBar colors.base08} },
       };''
     else ''
       /* unfocused, focused, urgent */
       static const float bordercolor[]           = COLOR(${toBar colors.base01});
-      static const float focuscolor[]            = COLOR(${toBar colors.base03});
+      static const float focuscolor[]            = COLOR(${toBar colors.base0D});
       static const float urgentcolor[]           = COLOR(${toBar colors.base08});'';
 
   tagging =
@@ -46,7 +45,6 @@
 
   toggleBarKey = lib.optionalString hasBar "  { MODKEY,                    XKB_KEY_b,      togglebar,        {0} },                /* super+b       -> toggle bar */";
 
-  # load-bearing: docs/decisions/sessions.md#dwl-column0
   lockKey =
     lib.optionalString (config.lock.command != "")
     "  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_x, spawn, SHCMD(\"${cEsc config.lock.command}\") }, /* super+shift+x -> lock */";
@@ -82,12 +80,12 @@ in ''
                           ((hex >> 8) & 0xFF) / 255.0f, \
                           (hex & 0xFF) / 255.0f }
 
-  static const int sloppyfocus               = 1;  /* focus follows mouse */
-  static const int bypass_surface_visibility = 0;
-  static const unsigned int borderpx         = 1;  /* border pixel of windows */
+  static const int sloppyfocus                               = 1;  /* focus follows mouse */
+  static const int bypass_surface_visibility                 = 0;
+  static const unsigned int borderpx                         = 1;  /* border pixel of windows */
   ${barAppearance}static const float rootcolor[]             = COLOR(${toBar colors.base00});
   /* Set the alpha to zero to restore the old (pre xdg-protocol) behaviour. */
-  static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
+  static const float fullscreen_bg[]                         = {0.0f, 0.0f, 0.0f, 1.0f};
 
   ${colorTable}
 
@@ -161,7 +159,7 @@ in ''
   static const char *playpausecmd[] = { "${playerctl}", "play-pause", NULL };
 
   static const Key keys[] = {
-    /* --- applications & screenshots (mirror the hyprland binds) --- */
+    /* --- applications & screenshots  --- */
     { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },   /* super+enter   -> terminal      */
     { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return, spawn, {.v = termfbcmd} }, /* super+ctrl+enter -> terminal (server-down fallback) */
     { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
@@ -189,7 +187,7 @@ in ''
     { MODKEY,                    XKB_KEY_m,      setlayout,        {.v = &layouts[2]} }, /* super+m       -> monocle    */
     { MODKEY,                    XKB_KEY_space,  setlayout,        {0} },                /* super+space   -> last layout */
 
-    /* --- tags (hyprland workspaces 1-9): super+N view, super+shift+N move --- */
+    /* --- tags : super+N view, super+shift+N move --- */
     { MODKEY,                    XKB_KEY_Tab,        view, {0} },        /* super+tab       -> last tag  */
     { MODKEY,                    XKB_KEY_0,          view, {.ui = ~0} }, /* super+0         -> all tags  */
     { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,  {.ui = ~0} }, /* super+shift+0   -> tag all   */

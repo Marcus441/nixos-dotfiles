@@ -9,7 +9,6 @@ _: {
       }: let
         inherit (config.desktop) colors;
 
-        # load-bearing: docs/decisions/theming.md#qt-roleorder
         roleOrder = [
           "WindowText"
           "Button"
@@ -80,7 +79,6 @@ _: {
           inactive_colors=${row active}
         '';
 
-        # load-bearing: docs/decisions/theming.md#qt-font
         qfont = family: size: ''"${family},${toString size},-1,5,50,0,0,0,0,0"'';
 
         conf = ''
@@ -98,7 +96,6 @@ _: {
       in {
         qt = {
           enable = true;
-          # load-bearing: docs/decisions/theming.md#qt-platformtheme
           platformTheme.name = "qtct";
         };
 

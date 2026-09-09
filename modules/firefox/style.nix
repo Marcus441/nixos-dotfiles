@@ -10,11 +10,9 @@ _: {
       }: let
         c = lib.mapAttrs (_: lib.removePrefix "#") config.desktop.colors;
 
-        # load-bearing: docs/decisions/firefox.md#chrome-font
         ui = config.gtk.font.name;
       in {
         programs.firefox.profiles.default = {
-          # load-bearing: docs/decisions/firefox.md#userchrome-important
           userChrome = ''
             :root {
               /* tab strip and nav-bar are one flat base00 surface. */
@@ -63,7 +61,6 @@ _: {
             }
           '';
 
-          # load-bearing: docs/decisions/firefox.md#content-backgrounds
           userContent = ''
             :root {
               /* --newtab-* is namespaced, so it needs no fence; hover and

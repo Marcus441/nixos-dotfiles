@@ -4,21 +4,13 @@ _: {
       hardware = {
         bluetooth.enable = true;
         bluetooth.powerOnBoot = true;
-        # load-bearing: docs/decisions/audio.md#le-audio
-        bluetooth.settings.General = {
-          Experimental = true;
-          KernelExperimental = "6fbaf188-05e0-496a-9885-d6ddfdb4e03e";
-        };
       };
-      # load-bearing: docs/decisions/sessions.md#blueman-autostart
       services.blueman.enable = true;
     }
   ];
 
   flake.modules.homeManager.wayland = [
     {
-      windowTags.floating-window = ["^(blueman-manager)$"];
-      # load-bearing: docs/decisions/audio.md#mpris-proxy
       services.mpris-proxy.enable = true;
     }
   ];
