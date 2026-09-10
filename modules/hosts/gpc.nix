@@ -12,7 +12,6 @@ _: {
       "nvidia"
       # "mango"
       # "tearing"
-      "quickshell"
       "apps"
     ];
 
