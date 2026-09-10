@@ -11,21 +11,11 @@ _: {
 
         cliphist = "${pkgs.cliphist}/bin/cliphist";
         wlCopy = "${pkgs.wl-clipboard}/bin/wl-copy";
-      in {
-        options.wmenu.flags = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          description = "Flags themed to match dwl's bar schemes; vertical, 10 lines.";
-        };
 
-        config.home.packages = [pkgs.wmenu];
-
-        config.launcher.argv = ["${pkgs.wmenu}/bin/wmenu-run"] ++ config.wmenu.flags;
-
-        config.clipboard.history = "${cliphist} list | ${pkgs.wmenu}/bin/wmenu ${lib.escapeShellArgs config.wmenu.flags} | ${cliphist} decode | ${wlCopy}";
-
-        config.wmenu.flags = [
+        wmenu = "${pkgs.wmenu}/bin/wmenu";
+        flags = lib.escapeShellArgs [
           "-f"
-          "${font.name} 10"
+          "${font.name} 12"
           "-l"
           "10"
           "-N"
@@ -41,6 +31,22 @@ _: {
           "-s"
           colors.base05
         ];
+      in {
+        options.wmenu.cliphist-command = lib.mkOption {
+          type = lib.types.str;
+          description = "Command to spawn the clipboard history in wmenu";
+        };
+        options.wmenu.launcher-command = lib.mkOption {
+          type = lib.types.str;
+          description = "Command to spawn the .desktop app launcher in wmenu";
+        };
+
+        config = {
+          home.packages = [pkgs.wmenu];
+
+          wmenu.cliphist-command = "${cliphist} list | ${wmenu} ${flags} | ${cliphist} decode | ${wlCopy} ";
+          wmenu.launcher-command = "${pkgs.wmenu}/bin/wmenu-run ${flags} ";
+        };
       }
     )
   ];

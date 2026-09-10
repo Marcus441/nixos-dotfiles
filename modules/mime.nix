@@ -1,6 +1,6 @@
 _: {
   flake.modules.homeManager.wayland = [
-    ({config, ...}: {
+    ({pkgs, ...}: {
       xdg.mimeApps = {
         enable = true;
         defaultApplications = {
@@ -46,7 +46,7 @@ _: {
           "text/x-script.python" = "nvim.desktop";
           "text/x-shellscript" = "nvim.desktop";
 
-          "x-scheme-handler/terminal" = config.terminal.desktopFile;
+          "x-scheme-handler/terminal" = "${pkgs.foot}/bin/footclient.desktop";
         };
       };
     })

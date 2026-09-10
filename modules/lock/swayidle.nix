@@ -21,7 +21,7 @@ _: {
             text = ''
               exec swayidle -w \
                 timeout 180 'brightnessctl -s set 30' resume 'brightnessctl -r' \
-                timeout 300 '${config.lock.command}' \
+                timeout 300 'loginctl lock-session' \
                 timeout 600 'wlopm --off "*"' resume 'wlopm --on "*"' \
                 timeout 1200 'systemctl suspend' \
                 before-sleep '${lockNow}' \

@@ -30,7 +30,7 @@ _: {
         scale = 1.5;
       }
     ];
-    input.sensitivity = 1;
+    input.sensitivity = 0;
 
     packages = {pkgs, ...}: {
       environment.systemPackages = with pkgs; [

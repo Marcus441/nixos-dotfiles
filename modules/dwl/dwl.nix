@@ -31,10 +31,12 @@ _: {
         config,
         ...
       }: let
+        areashot = pkgs.callPackage ../_pkgs/areashot.nix {};
         ocr-copy = pkgs.callPackage ../_pkgs/ocr-copy.nix {};
+        screenshot = pkgs.callPackage ../_pkgs/screenshot.nix {};
 
         configH = pkgs.writeText "dwl-config.h" (import ./_config-h.nix {
-          inherit lib pkgs config ocr-copy;
+          inherit lib pkgs config ocr-copy areashot screenshot;
         });
 
         dwl-desktop = pkgs.dwl.overrideAttrs (old: {
@@ -49,11 +51,13 @@ _: {
         });
       in {
         home.packages = [
+          areashot
           dwl-desktop
-          pkgs.wl-clipboard
           ocr-copy
           pkgs.grim
           pkgs.slurp
+          pkgs.wl-clipboard
+          screenshot
         ];
       }
     )

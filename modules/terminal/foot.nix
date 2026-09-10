@@ -19,15 +19,6 @@ _: {
 
         strip = c: lib.removePrefix "#" c;
       in {
-        terminal = {
-          argv = ["${pkgs.foot}/bin/footclient"];
-          fallbackArgv = ["${pkgs.foot}/bin/foot"];
-          appIdArgv = id: ["--app-id" id];
-          compactArgv = config.terminal.transientArgv ++ ["--override" "main.font=${fontAt config.terminal.compactSize}"];
-          desktopFile = "footclient.desktop";
-          binary = "footclient";
-        };
-
         programs.foot = {
           enable = true;
           server.enable = true;

@@ -1,17 +1,16 @@
 {
-  lib,
-  pkgs,
+  areashot,
   config,
+  lib,
   ocr-copy,
+  pkgs,
+  screenshot,
+  ...
 }: let
   inherit (config.desktop) colors font;
   hasBar = config.dwl.bar;
 
   toBar = hex: "0x" + lib.toLower (lib.removePrefix "#" hex) + "ff";
-  argvC = lib.concatMapStringsSep ", " (a: ''"${a}"'');
-  cEsc = lib.replaceStrings [''\'' ''"''] [''\\'' ''\"''];
-
-  menuArgvC = argvC config.launcher.argv;
 
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
@@ -44,10 +43,6 @@
     else "#define TAGCOUNT (9) /* must be no greater than 31 */";
 
   toggleBarKey = lib.optionalString hasBar "  { MODKEY,                    XKB_KEY_b,      togglebar,        {0} },                /* super+b       -> toggle bar */";
-
-  lockKey =
-    lib.optionalString (config.lock.command != "")
-    "  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_x, spawn, SHCMD(\"${cEsc config.lock.command}\") }, /* super+shift+x -> lock */";
 
   buttons =
     if hasBar
@@ -144,9 +139,8 @@ in ''
   #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
   /* absolute store paths; termfbcmd needs no running server */
-  static const char *termcmd[]      = { ${argvC config.terminal.argv}, NULL };
-  static const char *termfbcmd[]    = { ${argvC config.terminal.fallbackArgv}, NULL };
-  static const char *menucmd[]      = { ${menuArgvC}, NULL };
+  static const char *termcmd[]      = { "${pkgs.foot}/bin/footclient", NULL };
+  static const char *termfbcmd[]    = { "${pkgs.foot}/bin/foot", NULL };
   static const char *ocrcmd[]       = { "${ocr-copy}/bin/ocr-copy", NULL };
   static const char *volupcmd[]     = { "${wpctl}", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "5%+", NULL };
   static const char *voldncmd[]     = { "${wpctl}", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-", NULL };
@@ -162,14 +156,15 @@ in ''
     /* --- applications & screenshots  --- */
     { MODKEY,                    XKB_KEY_Return, spawn, {.v = termcmd} },   /* super+enter   -> terminal      */
     { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return, spawn, {.v = termfbcmd} }, /* super+ctrl+enter -> terminal (server-down fallback) */
-    { MODKEY,                    XKB_KEY_d,      spawn, {.v = menucmd} },   /* super+d       -> launcher      */
+    { MODKEY,                    XKB_KEY_d,      spawn,                     /* super+d       -> launcher      */
+      SHCMD("${config.wmenu.launcher-command}") },
     { MODKEY,                    XKB_KEY_c,      spawn, {.v = ocrcmd} },    /* super+c       -> OCR to clip   */
     { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,      spawn,                     /* super+shift+s -> shot (screen) */
-      SHCMD("${cEsc config.screenshot.screen}") },
+      SHCMD("${screenshot}/bin/screenshot") },
     { 0,                         XKB_KEY_Print,  spawn,                     /* print         -> shot (area)   */
-      SHCMD("${cEsc config.screenshot.area}") },
+      SHCMD("${areashot}/bin/areashot") },
     { MODKEY,                    XKB_KEY_v,      spawn,                     /* super+v       -> clipboard     */
-      SHCMD("${cEsc config.clipboard.history}") },
+      SHCMD("${config.wmenu.cliphist-command}") },
 
     /* --- window & layout management --- */
     { MODKEY,                    XKB_KEY_q,      killclient,       {0} },                /* super+q       -> close      */
@@ -220,10 +215,10 @@ in ''
     { 0,      XKB_KEY_XF86AudioPause,       spawn, {.v = playpausecmd} },
 
     /* --- lock, exit & VT switching --- */
-  ${lockKey}
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_z, quit, {0} }, /* super+shift+z -> exit dwl */
+    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_x, spawn, SHCMD("loginctl lock-session") }, /* super+shift+x -> lock */
+    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_z, quit, {0} },                             /* super+shift+z -> exit dwl */
     { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_Terminate_Server, quit, {0} },
-  #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
+    #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
     CHVT(1), CHVT(2), CHVT(3), CHVT(4),  CHVT(5),  CHVT(6),
     CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
   };
